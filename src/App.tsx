@@ -5,6 +5,7 @@ import Header from './components/header';
 import Home from './components/home';
 import NotFound from './components/not-found';
 import styles from './styles/App.module.css';
+import { initSetup } from './utils/setup';
 
 function App() {
   useEffect(() => {
@@ -16,10 +17,7 @@ function App() {
       // console.log('~~', reason);
     });
 
-    socket.on('hello2', (arg) => {
-      console.log('-->', arg);
-    });
-    socket.emit('hello1', 'world1');
+    initSetup(socket);
 
     return () => {
       socket.disconnect();

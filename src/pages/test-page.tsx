@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useDeviceStatus } from '../labhub/status';
-import { setLeader, setSelectedMode } from '../labhub/actions';
+import { joinAsLeader, joinAsMember, resetLeader, setSelectedMode, resetAll } from '../labhub/actions';
 import { LABHUB_CLIENT_ID } from '../utils/const';
 
 function TestPage(props: TestPageProps) {
@@ -13,13 +13,17 @@ function TestPage(props: TestPageProps) {
         <code>{JSON.stringify(status, null, 2)}</code>
       </pre>
       <br />
-      <button onClick={() => setLeader(localStorage.getItem(LABHUB_CLIENT_ID))} disabled={status?.leaderSelected !== null}>Set Leader</button>
+      <button onClick={() => joinAsLeader()} disabled={status?.leaderSelected !== null}>Set Leader</button>
       <br />
-      <button onClick={() => setLeader(null)} disabled={!status || status.leaderSelected === null}>Unset Leader</button>
+      <button onClick={() => resetLeader()} disabled={!status || status.leaderSelected === null}>Unset Leader</button>
+      <br /><br />
+      <button onClick={() => joinAsMember()} disabled={!status?.leaderSelected || !localStorage.getItem(LABHUB_CLIENT_ID) || status.leaderSelected === localStorage.getItem(LABHUB_CLIENT_ID) || status.membersJoined.includes(localStorage.getItem(LABHUB_CLIENT_ID) || '')}>Set Member</button>
       <br /><br />
       <button onClick={() => setSelectedMode('manual')} disabled={status?.modeSelected !== null}>Set manual mode</button>
       <br />
       <button onClick={() => setSelectedMode(null)} disabled={!status || status.modeSelected === null}>Unset mode</button>
+      <br /><br />
+      <button onClick={() => resetAll()}>Reset All</button>
       <br /><br />
       <Link to='/'>Go Home</Link>
     </div>

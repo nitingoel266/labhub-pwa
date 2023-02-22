@@ -15,11 +15,11 @@ function TestPage(props: TestPageProps) {
       <br />
       <button onClick={() => setLeader(localStorage.getItem(LABHUB_CLIENT_ID))} disabled={status?.leaderSelected !== null}>Set Leader</button>
       <br />
-      <button onClick={() => setLeader(null)} disabled={status?.leaderSelected === null}>Unset Leader</button>
+      <button onClick={() => setLeader(null)} disabled={!status || status.leaderSelected === null}>Unset Leader</button>
       <br /><br />
       <button onClick={() => setSelectedMode('manual')} disabled={status?.modeSelected !== null}>Set manual mode</button>
       <br />
-      <button onClick={() => setSelectedMode(null)} disabled={status?.modeSelected === null}>Unset mode</button>
+      <button onClick={() => setSelectedMode(null)} disabled={!status || status.modeSelected === null}>Unset mode</button>
       <br /><br />
       <Link to='/'>Go Home</Link>
     </div>

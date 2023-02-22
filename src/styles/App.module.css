@@ -5,3 +5,9 @@
 .app main {
   padding: 0 0.5rem;
 }
+
+.testIcon {
+  position: fixed;
+  bottom: 0.8rem;
+  left: 0.8rem;
+}

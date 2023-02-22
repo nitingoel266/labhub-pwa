@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import Header from './components/header';
 import Home from './pages/home';
@@ -7,6 +7,7 @@ import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
 import { initSetup, uninitSetup } from './labhub/setup';
 import styles from './styles/App.module.css';
+import { GrTest } from '@react-icons/all-files/gr/GrTest';
 
 function App() {
   useEffect(() => {
@@ -35,6 +36,9 @@ function App() {
           <Route path='*' element={<NotFound />} />
         </Routes>
       </main>
+      <div className={styles.testIcon}>
+        <Link to='/test'><GrTest /></Link>
+      </div>
     </div>
   );
 }

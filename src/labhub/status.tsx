@@ -30,7 +30,7 @@ export const setSelectedFunction = (func: string) => {
 
 export const getDeviceApiResponse = (): DeviceApiResponse => {
   return {
-    version: '2.10',
+    version: '2.11',
     forceUpdate: false,
   };
 };
@@ -42,7 +42,7 @@ export interface DeviceStatus {
   leaderSelected: string | null;  // leader ID
   membersRegistered: string[];
   modeSelected: 'manual' | 'project' | null;
-  functionSelected: string | null;
+  functionSelected: string | null; // Data Setup, Sensors, Heater, and RGB Spect
 }
 
 export interface DeviceApiResponse {

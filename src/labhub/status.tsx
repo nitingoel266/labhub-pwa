@@ -1,31 +1,19 @@
+import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
+import { DeviceStatus, DeviceStatusUpdate } from '../types/common';
 
-const initialDeviceStatus: DeviceStatus = {
-  deviceName: 'LabHub',
-  deviceVersion: '2.10',
-  batteryLevel: 75,
-  leaderSelected: null,
-  membersRegistered: [],
-  modeSelected: null,
-  functionSelected: null,
-};
+export const deviceStatus = new BehaviorSubject<DeviceStatus | null>(null);
+export const deviceStatusUpdate = new BehaviorSubject<DeviceStatusUpdate | null>(null);
 
-export const deviceStatus = new BehaviorSubject<DeviceStatus>(initialDeviceStatus);
+export const useDeviceStatus = () => {
+  const [status, setStatus] = useState(deviceStatus.value);
 
-export const getStatus = (): DeviceStatus => {
-  return deviceStatus.value;
-};
+  useEffect(() => {
+    const subs = deviceStatus.subscribe(value => setStatus(value));
+    return () => subs.unsubscribe();
+  }, []);
 
-export const setLeader = (leaderId: string) => {
-  deviceStatus.next({ ...deviceStatus.value, leaderSelected: leaderId });
-};
-
-export const setSelectedMode = (mode: 'manual' | 'project') => {
-  deviceStatus.next({ ...deviceStatus.value, modeSelected: mode });
-};
-
-export const setSelectedFunction = (func: string) => {
-  deviceStatus.next({ ...deviceStatus.value, functionSelected: func });
+  return [status];
 };
 
 export const getDeviceApiResponse = (): DeviceApiResponse => {
@@ -34,16 +22,6 @@ export const getDeviceApiResponse = (): DeviceApiResponse => {
     forceUpdate: false,
   };
 };
-
-export interface DeviceStatus {
-  deviceName: string;
-  deviceVersion: string;
-  batteryLevel: number;  // in percentage
-  leaderSelected: string | null;  // leader ID
-  membersRegistered: string[];
-  modeSelected: 'manual' | 'project' | null;
-  functionSelected: string | null; // Data Setup, Sensors, Heater, and RGB Spect
-}
 
 export interface DeviceApiResponse {
   version: string;

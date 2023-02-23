@@ -1,6 +1,6 @@
 import { LABHUB_CLIENT_ID } from '../utils/const';
 import { deviceStatusUpdate } from './status';
-import { SetupData } from '../types/common';
+import { SensorSelect, SetupData } from '../types/common';
 
 export const joinAsLeader = () => {
   const leaderId = localStorage.getItem(LABHUB_CLIENT_ID);
@@ -27,6 +27,10 @@ export const setSelectedFunction = (func: 'data_setup' | 'sensors' | 'heater' | 
 export const setupData = (data?: SetupData) => {
   const setupData: SetupData = data || { dataRate: 1, dataSample: 'cont' };
   deviceStatusUpdate.next({ setupData });
+};
+
+export const simulateSensor = (sensor: SensorSelect) => {
+  deviceStatusUpdate.next({ sensorConnected: sensor });
 };
 
 export const resetAll = () => {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useDeviceStatus } from '../labhub/status';
-import { joinAsLeader, joinAsMember, resetLeader, setSelectedMode, setSelectedFunction, resetAll } from '../labhub/actions';
+import { joinAsLeader, joinAsMember, resetLeader, setSelectedMode, setSelectedFunction, resetAll, setupData } from '../labhub/actions';
 import { LABHUB_CLIENT_ID } from '../utils/const';
 
 function TestPage(props: TestPageProps) {
@@ -26,6 +26,10 @@ function TestPage(props: TestPageProps) {
       <button onClick={() => setSelectedFunction('sensors')} disabled={status?.funcSelected !== null}>Set sensors func</button>
       <br />
       <button onClick={() => setSelectedFunction(null)} disabled={!status || status.funcSelected === null}>Unset func</button>
+      <br /><br />
+      <button onClick={() => setupData({ dataRate: 5, dataSample: 100 })} disabled={status?.setupData.dataRate !== 1}>Set data rate</button>
+      <br />
+      <button onClick={() => setupData()} disabled={!status || status.setupData.dataRate === 1}>Reset data rate</button>
       <br /><br />
       <button onClick={() => resetAll()}>Reset All</button>
       <br /><br />

@@ -19,9 +19,9 @@ export const setSelectedMode = (mode: 'manual' | 'project' | null) => {
   deviceStatusUpdate.next({ modeSelected: mode });
 };
 
-// export const setSelectedFunction = (func: string) => {
-//   deviceStatusUpdate.next({ functionSelected: func });
-// };
+export const setSelectedFunction = (func: 'data_setup' | 'sensors' | 'heater' | 'rgb_spect' | null) => {
+  deviceStatusUpdate.next({ funcSelected: func });
+};
 
 export const resetAll = () => {
   deviceStatusUpdate.next({ resetAll: true });

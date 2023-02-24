@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSocketConnected, useDeviceStatus, useDeviceDataStream } from '../labhub/status';
-import { getClientType, joinAsLeader, joinAsMember, unjoinMember, resetLeader, setSelectedMode, setSelectedFunction, resetAll, setupData, simulateSensor, startSensorExperiment } from '../labhub/actions';
+import { joinAsLeader, joinAsMember, unjoinMember, resetLeader, setSelectedMode, setSelectedFunction, resetAll, setupData, simulateSensor, startSensorExperiment } from '../labhub/actions';
+import { getClientType } from '../labhub/utils';
 
 function TestPage(props: TestPageProps) {
   const [connected] = useSocketConnected();

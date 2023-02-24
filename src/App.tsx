@@ -7,11 +7,15 @@ import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
 import { socketConnected } from './labhub/status';
 import { initSetup, uninitSetup } from './labhub/setup';
+import { assertClientId } from './labhub/utils';
 import styles from './styles/App.module.css';
 import { GrTest } from '@react-icons/all-files/gr/GrTest';
 
 function App() {
   useEffect(() => {
+    const clientId = assertClientId();
+    if (!clientId) return;
+
     const socket = io('http://localhost:4000');
     socket.on('connect', () => {
       // console.log(socket.connected, socket.id);

@@ -16,7 +16,7 @@ function App() {
     const clientId = assertClientId();
     if (!clientId) return;
 
-    const socket = io('http://localhost:4000');
+    const socket = io('http://localhost:4000', { query: { clientId } });
     socket.on('connect', () => {
       // console.log(socket.connected, socket.id);
       socketConnected.next(true);

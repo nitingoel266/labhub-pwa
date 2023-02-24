@@ -17,7 +17,8 @@ const ModeSelection = () => {
     }
     const handleSubmit = () => {
         if(selectedItem){
-            setSelectedMode(selectedItem)
+            let mode = selectedItem.slice(0,selectedItem.indexOf(" ")).toLowerCase()
+            setSelectedMode(mode)
             navigate(selectedItem === "Manual Mode" ? "/function-selection" : "/project-mode")
         }
 

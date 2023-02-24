@@ -15,7 +15,7 @@ export const joinAsMember = () => {
   if (clientId) deviceStatusUpdate.next({ memberJoined: clientId });
 };
 
-export const setSelectedMode = (mode: 'Manual Mode' | 'Project Mode' | null) => {
+export const setSelectedMode = (mode: 'manual' | 'project' | null) => {
   deviceStatusUpdate.next({ modeSelected: mode });
 };
 

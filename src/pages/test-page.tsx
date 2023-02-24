@@ -23,6 +23,9 @@ function TestPage(props: TestPageProps) {
     );
   }
 
+  // @ts-ignore
+  const cond1 = status?.setupData.dataRate !== 5 || status?.setupData.dataSample !== 10 || (status?.setupData.dataRate === 'manual' && status?.setupData.dataSample === 'cont');
+
   return (
     <div>
       <h2>Test Page {isLeader ? '(Leader)' : (isMember ? '(Member)' : '')}</h2>
@@ -54,6 +57,8 @@ function TestPage(props: TestPageProps) {
       <button onClick={() => setSelectedFunction(null)} disabled={!isLeader || !status || status.funcSelected === null}>Unset func</button>
       <br /><br />
       <button onClick={() => setupData({ dataRate: 5, dataSample: 10 })} disabled={!isLeader || status?.setupData.dataRate !== 1 || status?.setupData.dataSample !== 'cont'}>Set data rate</button>
+      <br />
+      <button onClick={() => setupData({ dataRate: 'manual', dataSample: 'cont' })} disabled={!isLeader || cond1}>Set user data rate</button>
       <br />
       <button onClick={() => setupData()} disabled={!isLeader || !status || (status.setupData.dataRate === 1 && status.setupData.dataSample === 'cont')}>Reset data rate</button>
       <br /><br />

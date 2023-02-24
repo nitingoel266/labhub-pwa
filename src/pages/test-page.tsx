@@ -52,9 +52,9 @@ function TestPage(props: TestPageProps) {
       <br />
       <button onClick={() => setSelectedFunction(null)} disabled={!isLeader || !status || status.funcSelected === null}>Unset func</button>
       <br /><br />
-      <button onClick={() => setupData({ dataRate: 5, dataSample: 100 })} disabled={!isLeader || status?.setupData.dataRate !== 1}>Set data rate</button>
+      <button onClick={() => setupData({ dataRate: 5, dataSample: 10 })} disabled={!isLeader || status?.setupData.dataRate !== 1 || status?.setupData.dataSample !== 'cont'}>Set data rate</button>
       <br />
-      <button onClick={() => setupData()} disabled={!isLeader || !status || status.setupData.dataRate === 1}>Reset data rate</button>
+      <button onClick={() => setupData()} disabled={!isLeader || !status || (status.setupData.dataRate === 1 && status.setupData.dataSample === 'cont')}>Reset data rate</button>
       <br /><br />
       <button onClick={() => resetAll()} disabled={!isLeader}>Reset Device Status</button>
       <br /><br />

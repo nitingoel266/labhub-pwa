@@ -1,4 +1,26 @@
-.appHeader {
-  border-bottom: 1px solid gainsboro;
-  min-height: 3rem;
+.FistHeaderWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #424C58;
+  height:36px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.FistHeaderSubWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.SecondHeaderWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #424C58;
+  height:40px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-top: 2px solid #6E747E;
 }

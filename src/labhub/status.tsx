@@ -1,9 +1,23 @@
 import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { DeviceStatus, DeviceStatusUpdate } from '../types/common';
+import { DeviceStatus, DeviceStatusUpdate, DeviceDataStream, DeviceDataStatusUpdate } from '../types/common';
 
+export const socketConnected = new BehaviorSubject<boolean | null>(null);
 export const deviceStatus = new BehaviorSubject<DeviceStatus | null>(null);
 export const deviceStatusUpdate = new BehaviorSubject<DeviceStatusUpdate | null>(null);
+export const deviceDataStream = new BehaviorSubject<DeviceDataStream | null>(null);
+export const deviceDataStatusUpdate = new BehaviorSubject<DeviceDataStatusUpdate | null>(null);
+
+export const useSocketConnected = () => {
+  const [connected, setConnected] = useState(socketConnected.value);
+
+  useEffect(() => {
+    const subs = socketConnected.subscribe(value => setConnected(value));
+    return () => subs.unsubscribe();
+  }, []);
+
+  return [connected];
+};
 
 export const useDeviceStatus = () => {
   const [status, setStatus] = useState(deviceStatus.value);
@@ -14,6 +28,17 @@ export const useDeviceStatus = () => {
   }, []);
 
   return [status];
+};
+
+export const useDeviceDataStream = () => {
+  const [data, setData] = useState(deviceDataStream.value);
+
+  useEffect(() => {
+    const subs = deviceDataStream.subscribe(value => setData(value));
+    return () => subs.unsubscribe();
+  }, []);
+
+  return [data];
 };
 
 export const getDeviceApiResponse = (): DeviceApiResponse => {

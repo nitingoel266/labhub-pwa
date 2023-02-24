@@ -6,6 +6,7 @@ import Home from './pages/home';
 import ScanDevice from "./pages/scanDevices/index"
 import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
+import { socketConnected } from './labhub/status';
 import { initSetup, uninitSetup } from './labhub/setup';
 import styles from './styles/App.module.css';
 import { GrTest } from '@react-icons/all-files/gr/GrTest';
@@ -18,15 +19,17 @@ function App() {
     const socket = io('http://localhost:4000');
     socket.on('connect', () => {
       // console.log(socket.connected, socket.id);
+      socketConnected.next(true);
     });
     socket.on('disconnect', (reason) => {
       // console.log('disconnected:', reason);
+      socketConnected.next(false);
     });
 
-    const [subs1] = initSetup(socket);
+    const [subs1, subs2] = initSetup(socket);
 
     return () => {
-      uninitSetup(socket, subs1);
+      uninitSetup(socket, subs1, subs2);
     };
   }, []);
 

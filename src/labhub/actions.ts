@@ -2,10 +2,14 @@ import { LABHUB_CLIENT_ID } from '../utils/const';
 import { deviceStatus, deviceStatusUpdate, deviceDataStatusUpdate } from './status';
 import { SensorSelect, SetupData, ClientType } from '../types/common';
 
+export const getClientId = () => {
+  return localStorage.getItem(LABHUB_CLIENT_ID);
+};
+
 export const getClientType =  (): ClientType => {
   const leaderSelected = deviceStatus.value?.leaderSelected;
   const membersJoined = deviceStatus.value?.membersJoined;
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientId = getClientId();
   if (leaderSelected && clientId) {
     if (leaderSelected === clientId) {
       return 'leader';
@@ -19,8 +23,8 @@ export const getClientType =  (): ClientType => {
 export const joinAsLeader = () => {
   const leaderSelected = deviceStatus.value?.leaderSelected;
   if (leaderSelected || getClientType() !== null) return;
-  const leaderId = localStorage.getItem(LABHUB_CLIENT_ID);
-  if (leaderId) deviceStatusUpdate.next({ leaderSelected: leaderId });
+  const clientId = getClientId();
+  if (clientId) deviceStatusUpdate.next({ leaderSelected: clientId });
 };
 
 export const resetLeader = () => {
@@ -31,13 +35,13 @@ export const resetLeader = () => {
 export const joinAsMember = () => {
   const leaderSelected = deviceStatus.value?.leaderSelected;
   if (!leaderSelected || getClientType() !== null) return;
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientId = getClientId();
   if (clientId) deviceStatusUpdate.next({ memberJoined: clientId });
 };
 
 export const unjoinMember = () => {
   if (getClientType() !== 'member') return;
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientId = getClientId();
   if (clientId) deviceStatusUpdate.next({ memberUnjoin: clientId });
 };
 

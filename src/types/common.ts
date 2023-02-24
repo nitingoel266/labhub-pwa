@@ -4,13 +4,13 @@ export interface DeviceStatus {
   batteryLevel: number;  // in percentage
   leaderSelected: string | null;  // leader ID
   membersJoined: string[];
-  modeSelected: 'manual' | 'project' | null;
+  modeSelected: 'Manual Mode' | 'Project Mode' | null;
   functionSelected: string | null;  // Data Setup, Sensors, Heater, and RGB Spect
 }
 
 export interface DeviceStatusUpdate {
   leaderSelected?: string | null;
   memberJoined?: string | null;
-  modeSelected?: 'manual' | 'project' | null;
+  modeSelected?: 'Manual Mode' | 'Project Mode' | null;
   resetAll?: boolean;
 }

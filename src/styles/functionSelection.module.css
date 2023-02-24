@@ -1,0 +1,56 @@
+.HeaderText {
+    font-weight: 500;
+    margin-top: 25px;
+    margin-left: 25px;
+    margin-bottom: 20px;
+}
+
+.ButtonWrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+.Button {
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    flex:1;
+    background-color: #FFFFFF;
+    height: 75px;
+    max-width: 200px;
+    min-width: 200px;
+    border-radius: 10px;
+    margin-left: 25px;
+    box-shadow: 0px 3px #B6B5B5;
+    margin-bottom: 20px;
+}
+.SubButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex:1;
+    cursor: pointer;
+}
+.IButtonWrapper {
+    background-color: #424C58;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    cursor: pointer;
+}
+
+
+@media (min-width:600px) {
+    .HeaderText {
+        margin-left: 20%;
+    }
+    .Button {
+        /* margin-left: 30%; */
+    }
+    .ButtonWrapper {
+        justify-content: center;
+    }
+}

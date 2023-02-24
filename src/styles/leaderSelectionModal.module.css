@@ -1,0 +1,63 @@
+.TopWrapper {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    background-color: #000000;
+    opacity: 50%;
+}
+.TopSecondWrapper {
+    top: 150px;
+    left: 40%;
+    position: fixed;
+    transition: all 0.3s ease-out;
+
+}
+.TextContainer {
+    height: 150px;
+    width: 280px;
+    background-color: #D9D9D9;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0px 10px;
+}
+.ButtonWrapper {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.Buttons {
+    background-color: #D9D9D9;
+    padding: 7px;
+    border-radius: 5px;
+    margin-right: 10px;
+    width:55px;
+    text-align: center;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+@media (max-width:300px) {
+    .TopSecondWrapper {
+        left: 5%;
+    }
+    .TextContainer{
+        height: 150px;
+        width: 220px;
+    }
+}
+@media  (width >= 300px) and (width <= 600px) {
+    .TopSecondWrapper {
+        left: 20%;
+    }
+    .TextContainer{
+        height: 150px;
+        width: 220px;
+    }
+}

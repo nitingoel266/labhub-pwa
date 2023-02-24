@@ -1,9 +1,11 @@
 .app {
   min-height: 100vh;
+  overflow: hidden;
+  background-color: #EFEFEF;
 }
 
 .app main {
-  padding: 0 0.5rem;
+  /* padding: 0 0.5rem; */
 }
 
 .testIcon {

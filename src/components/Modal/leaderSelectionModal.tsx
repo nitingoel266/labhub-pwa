@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {WarningIcon} from "../../images/index";
-import { joinAsLeader} from '../../labhub/actions';
+import { joinAsLeader,joinAsMember} from '../../labhub/actions';
+import {useDeviceStatus} from "../../labhub/status";
 import styles from "../../styles/leaderSelectionModal.module.css";
 
 
@@ -10,6 +12,14 @@ type Props= {
 }
 
 const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
+  const [status] = useDeviceStatus();
+    useEffect(() => {
+        if(status?.leaderSelected){
+            joinAsMember()
+            setModal(false)
+            navigate("/mode-selection")
+        }
+    },[status?.leaderSelected])
     const navigate = useNavigate();
     const submitHandler = () => {
         joinAsLeader()
@@ -26,6 +36,7 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
         <div
         className={styles.TopSecondWrapper}
         style={{
+        left:0,
         opacity: isOpen ? 1 : 0,
         transform: isOpen ? "translateY(0)" : "translateY(-100vh)"
         }}

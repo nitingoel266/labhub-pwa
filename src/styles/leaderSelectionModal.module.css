@@ -9,7 +9,11 @@
 }
 .TopSecondWrapper {
     top: 150px;
-    left: 40%;
+    /* left: 40%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
     position: fixed;
     transition: all 0.3s ease-out;
 
@@ -43,19 +47,7 @@
     cursor: pointer;
 }
 
-@media (max-width:300px) {
-    .TopSecondWrapper {
-        left: 5%;
-    }
-    .TextContainer{
-        height: 150px;
-        width: 220px;
-    }
-}
-@media  (width >= 300px) and (width <= 600px) {
-    .TopSecondWrapper {
-        left: 20%;
-    }
+@media (max-width:680px) {
     .TextContainer{
         height: 150px;
         width: 220px;

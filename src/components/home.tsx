@@ -11,9 +11,10 @@ function Home(props: HomeProps) {
     return () => {
       clearTimeout(timer)
     }
-  },[])
+  },[navigate])
+
   return (
-    <div className={styles.bodyWrapper} style={{height:window.innerHeight}}>
+    <div className={styles.bodyWrapper} style={{height:window.innerHeight-40}}>
       <img src={LabHubText} className={styles.LabHubText} alt="lab hub text"/>
       <img src={LabIcon} className={styles.LabHubImage} alt="labIcon"/>
     </div>

@@ -5,7 +5,6 @@ import { getClientType, joinAsLeader, joinAsMember, unjoinMember, resetLeader, s
 function TestPage(props: TestPageProps) {
   const [connected] = useSocketConnected();
   const [status] = useDeviceStatus();
-  console.log("??>> status ",status)
   const [dataStream] = useDeviceDataStream();
 
   const clientType = getClientType();

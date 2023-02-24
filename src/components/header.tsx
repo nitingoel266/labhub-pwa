@@ -1,32 +1,51 @@
-
+import {useDeviceStatus} from "../labhub/status";
+import {resetLeader,unjoinMember}from "../labhub/actions";
 import styles from '../styles/header.module.css';
 import {DeviceIcon,BatteryIcon,BackIcon,ShareIcon,TextIcon} from "../images/index"
 import { useNavigate } from 'react-router-dom';
+import MemberDisconnect from "./Modal/MemberDisconnectModal";
+import { useState } from "react";
 
 
 function Header(props: HeaderProps) {  
+  const [status] = useDeviceStatus();
+  const clientId = localStorage.getItem('labhub_client_id')
   const navigate = useNavigate();
+  const [isOpen,setModal] = useState("")
+
   const handleBack = () => {
     navigate(-1)
   }
-  const handleLeader = () => {
-
+  const handleClick = (value:any) => {
+    setModal(value)
   }
-  return (<>
-    <FirstHeader handleLeader={handleLeader}/>
+  const handleDisconnectLeaderMember = () => {
+    if(clientId === status?.leaderSelected){
+      resetLeader()
+    }else if(clientId && status?.membersJoined && status?.membersJoined.includes(clientId)){
+      unjoinMember()
+    }
+    setModal("")
+  }
+  const handleDisconnectDevice = () => {
+    setModal("")
+  }
+  return (<div>
+    <FirstHeader handleClick={handleClick} status={status} clientId={clientId}/>
     <SecondHeader handleBack={handleBack}/>
-  </>);
+    <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "device" ? handleDisconnectDevice : handleDisconnectLeaderMember} message={isOpen === "device" ? `Are you sure to Disconnect from ${status?.deviceName}!` : "Are you sure to Disconnect!"}/>
+  </div>);
 }
 
 export default Header;
 
-const FirstHeader = ({handleLeader}:FirstHeaderProps) => {
+const FirstHeader = ({handleClick,status,clientId}:FirstHeaderProps) => {
   return <div className={styles.FistHeaderWrapper}>
     <div className={styles.FistHeaderSubWrapper}>
       <img src={DeviceIcon} alt="Device Icon"/>
       <div className={styles.FistHeaderSubWrapper}>
-        <div style={{color:"white",marginLeft:8,fontSize:15}}>LabHub Device 2</div>
-        <div onClick={handleLeader} style={{color:"white",marginLeft:8,fontSize:15}}>(Leader)</div>
+        <div onClick={() => handleClick("device")} style={{color:"white",marginLeft:8,fontSize:15,cursor:"pointer"}}>{status?.deviceName}</div>
+        <div onClick={() => handleClick("leaderMember")} style={{color:"white",marginLeft:8,fontSize:15}}>{status?.leaderSelected && (clientId === status?.leaderSelected ? "(Leader)" : "(Member)") }</div>
     </div>
     </div>
     <img src={BatteryIcon} alt="battery Icon"/>
@@ -45,7 +64,9 @@ const SecondHeader = ({handleBack}:SecondHeaderprops) => {
 }
 
 type FirstHeaderProps = {
-  handleLeader:() => void;
+  handleClick:(value:any) => void;
+  status:any;
+  clientId?:any;
 }
 
 type SecondHeaderprops = {

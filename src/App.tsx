@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import Header from './components/header';
-import Home from './pages/home';
+import Home from './components/home';
 import ScanDevice from "./pages/scanDevices/index"
 import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
@@ -13,6 +13,7 @@ import { GrTest } from '@react-icons/all-files/gr/GrTest';
 import FunctionSelection from './pages/functionProcedure/FunctionSelection';
 import ModeSelection from './pages/modeProcedure/ModeSelection';
 import ProjectMode from './components/projectMode';
+import LeaderDisconnect from './components/Modal/LeaderDisconnect';
 
 function App() {
   useEffect(() => {
@@ -50,6 +51,7 @@ function App() {
       <div className={styles.testIcon}>
         <Link to='/test'><GrTest /></Link>
       </div>
+      <LeaderDisconnect />
     </div>
   );
 }

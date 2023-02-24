@@ -1,7 +1,7 @@
 import styles from '../../styles/scanDevice.module.css';
 import {LabHubSticker,BluetoothIcon} from "../../images/index";
 import { useDeviceStatus } from '../../labhub/status';
-import LeadeSelectionModal from './leaderSelectionModal';
+import LeadeSelectionModal from '../../components/Modal/leaderSelectionModal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,7 +17,6 @@ const ScanDevices = () => {
             setModal(true)
         }
     }
-    console.log("??>> status ",status)
     return <div className={styles.ScanDeviceWrapper}>
         <img src={LabHubSticker} className={styles.LabHubStickerWrapper} alt="al"/>
         <div className={styles.ScanDeviceButton} onClick={handleSubmit}>

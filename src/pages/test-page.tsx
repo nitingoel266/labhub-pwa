@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSocketConnected, useDeviceStatus, useDeviceDataStream } from '../labhub/status';
 import { joinAsLeader, joinAsMember, unjoinMember, resetLeader, setSelectedMode, setSelectedFunction, resetAll, setupData, simulateSensor, startSensorExperiment } from '../labhub/actions';
+import { initSetup, uninitSetup } from '../labhub/setup';
 import { getClientType } from '../labhub/utils';
 
 function TestPage(props: TestPageProps) {
@@ -14,31 +15,33 @@ function TestPage(props: TestPageProps) {
   const isMember = clientType === 'member';
   const leaderSelected = !!(status?.leaderSelected);
 
+  // @ts-ignore
+  const cond1 = status?.setupData.dataRate !== 5 || status?.setupData.dataSample !== 10 || (status?.setupData.dataRate === 'manual' && status?.setupData.dataSample === 'cont');
+
   if (!connected) {
     return (
       <div>
-        <h2 style={{ color: 'deeppink' }}>Mock data server not connected.</h2>
-        <span>First start mock data server at http://localhost:4000</span>
+        <h2 style={{ color: 'deeppink' }}>LabHub device not connected.</h2>
+        <button onClick={() => initSetup()}>Connect Device</button>
+        <br /><br />
+        <span>Mock data server: http://localhost:4000</span>
       </div>
     );
   }
 
-  // @ts-ignore
-  const cond1 = status?.setupData.dataRate !== 5 || status?.setupData.dataSample !== 10 || (status?.setupData.dataRate === 'manual' && status?.setupData.dataSample === 'cont');
-
   return (
     <div>
       <h2>Test Page {isLeader ? '(Leader)' : (isMember ? '(Member)' : '')}</h2>
-      {!unknownClientType && (
-        <>
-          <pre>
-            <code>{JSON.stringify(status, null, 2)}</code>
-          </pre>
-          <pre>
-            <code>{JSON.stringify(dataStream, null, 2)}</code>
-          </pre>
-        </>
-      )}
+      <button onClick={() => uninitSetup()}>Disconnect Device</button>
+
+      <>
+        <pre>
+          <code>{JSON.stringify(status, null, 2)}</code>
+        </pre>
+        <pre>
+          <code>{JSON.stringify(dataStream, null, 2)}</code>
+        </pre>
+      </>
       <br />
       <button onClick={() => joinAsLeader()} disabled={leaderSelected || !unknownClientType}>Set Leader</button>
       <br />

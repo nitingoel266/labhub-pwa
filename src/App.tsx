@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
-import { io } from 'socket.io-client';
 import Header from './components/header';
 import Home from './components/home';
 import ScanDevice from "./pages/scanDevices/index"
@@ -8,6 +7,7 @@ import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
 import { socketConnected ,useDeviceStatus} from './labhub/status';
 import { initSetup, uninitSetup } from './labhub/setup';
+import { assertClientId } from './labhub/utils';
 import styles from './styles/App.module.css';
 import { GrTest } from '@react-icons/all-files/gr/GrTest';
 import FunctionSelection from './pages/functionProcedure/FunctionSelection';
@@ -31,21 +31,10 @@ import RGBRecord from './components/RGBRecods';
 function App() {
   const [status] = useDeviceStatus();
   useEffect(() => {
-    const socket = io('http://localhost:4000');
-    socket.on('connect', () => {
-      // console.log(socket.connected, socket.id);
-      socketConnected.next(true);
-    });
-    socket.on('disconnect', (reason) => {
-      // console.log('disconnected:', reason);
-      socketConnected.next(false);
-    });
-
-    const [subs1, subs2] = initSetup(socket);
-
-    return () => {
-      uninitSetup(socket, subs1, subs2);
-    };
+    const clientId = assertClientId();
+    if (!clientId) {
+      console.error('Could not set clientId in localStorage');
+    }
   }, []);
 
   return (

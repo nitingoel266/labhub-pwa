@@ -14,7 +14,7 @@ type Props= {
 const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
   const [status] = useDeviceStatus();
     useEffect(() => {
-        if(status?.leaderSelected){
+        if(status && status?.leaderSelected){
             joinAsMember()
             setModal(false)
             navigate("/mode-selection")

@@ -1,0 +1,42 @@
+.DataSetupWrapper {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.DataRateWapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.RateMeasureRightSide {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.DataMeasureButtom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 8px;
+    margin-right: 10px;
+}
+.TextStyle {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: 500;
+}
+.IButton {
+    width: 22px;
+    cursor: pointer;
+}
+@media (min-width:580px) {
+    .DataSetupWrapper {
+        margin-top: 50px;
+        margin-left:100px;
+        margin-right: 100px;
+    }
+}

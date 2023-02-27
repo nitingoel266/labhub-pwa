@@ -24,3 +24,30 @@
   padding-right: 15px;
   border-top: 2px solid #6E747E;
 }
+.BatteryWapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.BatteryInnerWapper {
+  width: 30px;
+  height: 15px;
+  border: 2px solid #000000;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+.BatteryIcon {
+  position: absolute;
+  width: 12px;
+  margin-left: 10px;
+  margin-top: 4px;
+}
+.BatteryHandle {
+  border: 1px solid #000000;
+  width: 1px;
+  height: 7px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}

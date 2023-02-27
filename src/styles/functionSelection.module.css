@@ -1,8 +1,23 @@
+.HeaderTextWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 25px 5px 25px;
+    font-weight: 500;
+}
 .HeaderText {
     font-weight: 500;
     margin-top: 25px;
     margin-left: 25px;
     margin-bottom: 20px;
+}
+.HeaderSubText {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .ButtonWrapper {
@@ -17,7 +32,7 @@
     flex:1;
     background-color: #FFFFFF;
     height: 75px;
-    max-width: 200px;
+    max-width: 210px;
     min-width: 200px;
     border-radius: 10px;
     margin-left: 25px;
@@ -43,6 +58,29 @@
     cursor: pointer;
 }
 
+.RateMeasureRightSide {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.DataMeasureButtom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 8px;
+    margin-right: 10px;
+}
+.TextStyle {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: 500;
+}
+.IButton {
+    width: 22px;
+    cursor: pointer;
+}
 
 @media (min-width:600px) {
     .HeaderText {
@@ -53,5 +91,8 @@
     }
     .ButtonWrapper {
         justify-content: center;
+    }
+    .HeaderTextWrapper{
+        margin: 20px 100px 0px 100px;
     }
 }

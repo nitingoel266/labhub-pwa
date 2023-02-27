@@ -1,0 +1,95 @@
+.HeaderTextWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 25px 5px 25px;
+    font-weight: 500;
+}
+.RateMeasureRightSide {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.DataMeasureButtom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    padding: 8px;
+    margin-right: 10px;
+}
+.TextStyle {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: 500;
+}
+.IButton {
+    width: 22px;
+    cursor: pointer;
+}
+.HeaterElementWraper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+.TemperatureWrapper {
+    display: flex;
+    flex-direction: row;
+    font-weight: 600;
+    font-size: 20px;
+}
+.TemperatureDegree {
+    border: 2px solid #000000;
+    border-radius: 100px;
+    width:2px;
+    height: 2px;
+    margin-right: 4px;
+}
+.HeaderSubTextWrapper {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: 12px;
+}
+.HeaterEelementImage {
+    height: 180px;
+}
+.HeaterElementText {
+    /* margin-left: 20px; */
+    font-weight: 500;
+}
+.ButtonWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-right: 40px;
+}
+.Button {
+    background-color: #424C58;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 20px;
+    padding:20px 13px;
+    border-radius: 100px;
+    cursor: pointer;
+}
+
+@media (max-width:300px) {
+    .ButtonWrapper{
+        margin-right: 20px;
+    }
+}
+
+@media (min-width:600px) {
+    .HeaderTextWrapper{
+        margin: 20px 100px 0px 100px;
+    }
+}

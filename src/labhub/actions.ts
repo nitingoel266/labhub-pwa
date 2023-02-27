@@ -50,7 +50,7 @@ export const setSelectedMode = (mode: 'manual' | 'project' | null) => {
   deviceStatusUpdate.next({ modeSelected: mode });
 };
 
-export const setSelectedFunction = (func: 'data_setup' | 'sensors' | 'heater' | 'rgb_spect' | null) => {
+export const setSelectedFunction = (func: 'data_setup' | 'sensor' | 'heater' | 'rgb_spect' | null) => {
   if (getClientType() !== 'leader') return;
   deviceStatusUpdate.next({ funcSelected: func });
 };

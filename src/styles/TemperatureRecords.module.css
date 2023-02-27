@@ -1,0 +1,44 @@
+.Wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+.ColumnWrapper {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    width: 200px;
+    margin-right: 10px;
+}
+.ColumnHeader {
+    background-color: #424C58;
+    color: #FFFFFF;
+    font-weight: 400;
+    height: 45px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.ColumnBodyWrapper {
+    background-color: #EFEFEF;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    box-shadow: 1px 2px 5px 1px #B6B5B5;
+    margin-top: -2px;
+    padding-top: 4px;
+}
+.ColumnBody {
+    height: 35px;
+    padding-top: 4px;
+    border:1px solid #9CD5CD;
+    display: flex;
+    margin-bottom:1px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

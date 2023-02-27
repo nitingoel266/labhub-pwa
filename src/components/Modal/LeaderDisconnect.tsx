@@ -6,12 +6,12 @@ const LeaderDisconnect = () => {
     const [isOpen,setModal] = useState(false)
   const [status] = useDeviceStatus();
     useEffect(() => {
-        if(!status?.leaderSelected){
+        if(status && !status.leaderSelected){
             setModal(true)
         }
     },[status?.leaderSelected])
     return <>
-        <LeadeSelectionModal isOpen={isOpen} setModal={(value) => setModal(value)}/>
+        {isOpen && <LeadeSelectionModal isOpen={isOpen} setModal={(value) => setModal(value)}/>}
     </>
 }
 

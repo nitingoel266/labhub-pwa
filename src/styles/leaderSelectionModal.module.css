@@ -46,6 +46,28 @@
     font-weight: 700;
     cursor: pointer;
 }
+.IButtonTopWrapper {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    background-color: #000000;
+    opacity: 0%;
+}
+.IButtonTextContainer {
+    background-color: #424C58;
+    padding: 10px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    width: 70%;
+}
+.IButtonHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
 
 @media (max-width:680px) {
     .TextContainer{

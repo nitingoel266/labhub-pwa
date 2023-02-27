@@ -10,6 +10,16 @@
 
 .testIcon {
   position: fixed;
-  bottom: 0.8rem;
+  bottom: 2rem;
   left: 50vw;
+}
+
+.version {
+  position: fixed;
+  bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  font-size: 14px;
 }

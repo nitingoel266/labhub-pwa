@@ -55,7 +55,7 @@ function TestPage(props: TestPageProps) {
       <br />
       <button onClick={() => setSelectedMode(null)} disabled={!isLeader || !status || status.modeSelected === null}>Unset mode</button>
       <br /><br />
-      <button onClick={() => setSelectedFunction('sensors')} disabled={!isLeader || status?.funcSelected !== null}>Set sensors func</button>
+      <button onClick={() => setSelectedFunction('sensor')} disabled={!isLeader || status?.funcSelected !== null}>Set sensors func</button>
       <br />
       <button onClick={() => setSelectedFunction(null)} disabled={!isLeader || !status || status.funcSelected === null}>Unset func</button>
       <br /><br />

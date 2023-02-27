@@ -15,6 +15,22 @@ import DeviceIcon from "../assets/Device-Icon.png";
 import ShareIcon from "../assets/Share-Icon.png";
 import BackIcon from "../assets/Back-Icon.png";
 import TextIcon from "../assets/Text-Icon.png";
+import CloseIcon from "../assets/Close-Icon.png";
+import BlackIButtonIcon from "../assets/Black-I-Button-Icon.png";
+import ExpandIcon from "../assets/Expand-Icon.png";
+import CollapsedIcon from "../assets/Collapsed-Icon.png";
+import TempratureGraph from "../assets/Temprature-Graph.png";
+import TemperatureProbeIcon from "../assets/Temperature-Probe-Icon.png";
+import FileIcon from "../assets/File-Icon.png";
+import TimeIcon from "../assets/Time-Icon.png";
+import EditIcon from "../assets/Edit-Icon.png";
+import BlackShareIcon from "../assets/Black-Share_Icon.png";
+import DownloadIcon from "../assets/Download-Icon.png";
+import DeleteIcon from "../assets/Delete-Icon.png";
+import CalenderIcon from "../assets/Calender-Icon.png";
+import WhiteDeleteIcon from "../assets/White-Delete-Icon.png";
+import WhiteDownloadIcon from "../assets/White-Download-Icon.png";
+import WhiteShareIcon from "../assets/White-Share-Icon.png";
 
 export {
     LabIcon,
@@ -33,5 +49,21 @@ export {
     DeviceIcon,
     ShareIcon,
     BackIcon,
-    TextIcon
+    TextIcon,
+    CloseIcon,
+    BlackIButtonIcon,
+    ExpandIcon,
+    CollapsedIcon,
+    TempratureGraph,
+    TemperatureProbeIcon,
+    FileIcon,
+    TimeIcon,
+    EditIcon,
+    BlackShareIcon,
+    DownloadIcon,
+    DeleteIcon,
+    CalenderIcon,
+    WhiteDeleteIcon,
+    WhiteDownloadIcon,
+    WhiteShareIcon
 };

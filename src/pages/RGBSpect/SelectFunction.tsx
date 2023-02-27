@@ -1,7 +1,5 @@
-
-
 import { useEffect, useState } from "react";
-import {DataSetupIcon,IButtonIcon,SensorIcon} from "../../images/index";
+import {DataSetupIcon,IButtonIcon,RGBSpectIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
 import {setSelectedMode} from "../../labhub/actions"
@@ -9,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import {useDeviceStatus} from "../../labhub/status";
 
-const ModeSelection = () => {
+const SelectFunction = () => {
     const navigate = useNavigate();
     const [status] = useDeviceStatus();
     const [selectedItem,setSelectedItem] = useState<any>("")
@@ -27,21 +25,21 @@ const ModeSelection = () => {
         }
 
     }
-    useEffect(() => {
-        if(status?.modeSelected){
-            let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
-            setSelectedItem(result)
-        }
-    },[navigate])
-    const extraStyle = {backgroundColor:"#9CD5CD"} 
-    const getDescription:any = {"Manual Mode":"This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.","Project Mode":"This mode is currently contains no any parameters."}
+    // useEffect(() => {
+    //     if(status?.modeSelected){
+    //         let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
+    //         setSelectedItem(result)
+    //     }
+    // },[navigate])
+    const extraStyle = {backgroundColor:"#9CD5CD",maxWidth:220} 
+    const getDescription:any = {"Manual Mode":"This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.","Calibrate Spectrophotometer":"This mode is currently contains no any parameters."}
     return <div style={{position:"relative"}}>
         <div className={styles.HeaderText}>Select Function</div>
         <div className={styles.ButtonWrapper}>
-            {[{icon:DataSetupIcon,title:"Manual Mode"},{icon:SensorIcon,title:"Project Mode"}].map(el => (
-              <div key={el.title} className={styles.Button} style={el.title === selectedItem ? extraStyle : {}}>
+            {[{icon:DataSetupIcon,title:"Calibrate Spectrophotometer"},{icon:RGBSpectIcon,title:"Measure Absorbance"}].map(el => (
+              <div key={el.title} className={styles.Button} style={el.title === selectedItem ? extraStyle : {maxWidth:220}}>
                  <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
-                     <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
+                     <img src={el.icon} style={{height:35,marginLeft:10}} alt={el.title + "icon"}/>
                      <div style={{marginLeft:10}}>{el.title}</div>
                  </div>
                  <div onClick={() => setModal(el.title)} className={styles.IButtonWrapper}>
@@ -55,4 +53,4 @@ const ModeSelection = () => {
     </div>
 }
 
-export default ModeSelection
+export default SelectFunction

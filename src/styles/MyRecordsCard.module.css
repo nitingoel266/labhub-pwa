@@ -1,0 +1,62 @@
+.HeaderWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #424C58;
+    height:28px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    color:#FFFFFF;
+    font-size: 12px;
+    font-weight: 500;
+    padding-left: 10px;
+}
+.CadWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+}
+.oneCardWrapper {
+    background-color: #FFFFFF;
+    cursor: pointer;
+    width:300px;
+    min-width: 250px;
+    padding-top: 20px;
+    margin-top: 5px;
+    margin-right: 25px;
+    border-radius: 5px;
+    margin-bottom: 2px;
+    box-shadow: 0px 2px #B6B5B5;
+}  
+.CardTitleWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 10px;
+} 
+.CardTitleWrapperLeft {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 25px;
+    margin-bottom: 20px;
+}
+.FooterWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    height: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-top: 2px solid #E4E4E4;
+}
+
+.FooterIcons {
+    margin-right: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    width: 20px;
+}

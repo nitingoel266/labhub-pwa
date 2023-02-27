@@ -1,0 +1,152 @@
+.TopWrapper {
+    margin-top: 30px;
+}
+.HeaderWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+.HeaderRightWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.SecondaryHeaderWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+   margin-top: 20px;
+   font-size: 14px;
+}
+.TextBody {
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    justify-content: center;
+    margin-top: 10px;
+}
+.GraphStyle {
+    width: 250px;
+    /* height: 300px; */
+}
+.ButtonWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    margin-left: 10px;
+}
+.RestartButton {
+    background-color: #424C58;
+    color: #FFFFFF;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    width:50px;
+    padding: 16px 0px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.StopButton {
+    background-color: #424C58;
+    color: #FFFFFF;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    width: 40px;
+    padding: 12px 0px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.CaptureButton {
+    background-color: #424C58;
+    color: #FFFFFF;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.FooterTextWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    align-items: center;
+}
+.FooterInnerTextWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    width: 270px;
+    margin-right: 60px;
+    font-size: 14px;
+}
+.FooterText {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FFFFFF;
+    margin-top: 15px;
+    padding-left:20px;
+    height: 29px;
+    border-radius: 20px;
+    font-size: 10px;
+}
+.SaveButton {
+    font-size: 12px;
+    color: #FFFFFF;
+    font-weight: 500;
+    background-color: #424C58;
+    border-radius: 20px;
+    /* height: 25px; */
+    padding:8px 0px;
+    width: 60px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.DegreeStyle {
+    width:1px;
+    height: 2px;
+    border: 1px solid #000000;
+    border-radius: 100px;
+    margin-left: 4px;
+    margin-bottom: 8px;
+}
+.TempratureDegree {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 22px;
+    width: 40px;
+    font-size: 11px;
+}
+.TempratureDegreeIcon {
+    height: 2px;
+    width: 2px;
+    border-radius: 100px;
+    margin-left: 4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+
+@media (min-width:580px) {
+    .GraphStyle {
+        width: 400px;
+    }
+    .FooterInnerTextWrapper {
+        width: 420px;
+    }
+    .ButtonWrapper {
+        margin-left: 20px;
+    }
+}

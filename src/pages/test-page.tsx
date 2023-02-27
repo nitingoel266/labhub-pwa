@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSocketConnected, useDeviceStatus, useDeviceDataStream } from '../labhub/status';
-import { joinAsLeader, joinAsMember, unjoinMember, resetLeader, setSelectedMode, setSelectedFunction, resetAll, setupData, simulateSensor, startSensorExperiment } from '../labhub/actions';
+import { joinAsLeader, joinAsMember, unjoinMember, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment } from '../labhub/actions';
+// import { setSelectedMode, setSelectedFunction } from '../labhub/actions-client';
 import { initSetup, uninitSetup } from '../labhub/setup';
 import { getClientType } from '../labhub/utils';
 
@@ -51,14 +52,16 @@ function TestPage(props: TestPageProps) {
       <br />
       <button onClick={() => unjoinMember()} disabled={!leaderSelected || !isMember}>Unset Member</button>
       <br /><br />
-      <button onClick={() => setSelectedMode('manual')} disabled={!isLeader || status?.modeSelected !== null}>Set manual mode</button>
+
+      {/* <button onClick={() => setSelectedMode('manual')} disabled={!isLeader || status?.modeSelected !== null}>Set manual mode</button>
       <br />
       <button onClick={() => setSelectedMode(null)} disabled={!isLeader || !status || status.modeSelected === null}>Unset mode</button>
       <br /><br />
       <button onClick={() => setSelectedFunction('sensor')} disabled={!isLeader || status?.funcSelected !== null}>Set sensors func</button>
       <br />
       <button onClick={() => setSelectedFunction(null)} disabled={!isLeader || !status || status.funcSelected === null}>Unset func</button>
-      <br /><br />
+      <br /><br /> */}
+
       <button onClick={() => setupData({ dataRate: 5, dataSample: 10 })} disabled={!isLeader || status?.setupData.dataRate !== 1 || status?.setupData.dataSample !== 'cont'}>Set data rate</button>
       <br />
       <button onClick={() => setupData({ dataRate: 'manual', dataSample: 'cont' })} disabled={!isLeader || cond1}>Set user data rate</button>

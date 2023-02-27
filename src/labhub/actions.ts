@@ -27,16 +27,6 @@ export const unjoinMember = () => {
   if (clientId) deviceStatusUpdate.next({ memberUnjoin: clientId });
 };
 
-export const setSelectedMode = (mode: 'manual' | 'project' | null) => {
-  if (getClientType() !== 'leader') return;
-  deviceStatusUpdate.next({ modeSelected: mode });
-};
-
-export const setSelectedFunction = (func: 'data_setup' | 'sensor' | 'heater' | 'rgb_spect' | null) => {
-  if (getClientType() !== 'leader') return;
-  deviceStatusUpdate.next({ funcSelected: func });
-};
-
 export const setupData = (data?: SetupData) => {
   if (getClientType() !== 'leader') return;
   const setupData: SetupData = data || { dataRate: 1, dataSample: 'cont' };

@@ -5,8 +5,7 @@ import Home from './components/home';
 import ScanDevice from "./pages/scanDevices/index"
 import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
-import { socketConnected ,useDeviceStatus} from './labhub/status';
-import { initSetup, uninitSetup } from './labhub/setup';
+import { useDeviceStatus} from './labhub/status';
 import { assertClientId } from './labhub/utils';
 import styles from './styles/App.module.css';
 import { GrTest } from '@react-icons/all-files/gr/GrTest';

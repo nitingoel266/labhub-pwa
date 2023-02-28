@@ -24,6 +24,12 @@ function Header(props: HeaderProps) {
     }
     if(getPathFunc[location.pathname])
     getPathFunc[location.pathname]()
+    if(location.pathname === "/mode-selection" && connected){
+      if(clientId === status?.leaderSelected){
+        resetLeader()
+      }
+      uninitSetup()
+    }
     navigate(-1)
   }
   const handleClick = (value:any) => {
@@ -90,7 +96,7 @@ const FirstHeader = ({handleClick,status,clientId,connected}:FirstHeaderProps) =
 const SecondHeader = ({handleBack,handleMyRecord,status,clientId,setModal}:SecondHeaderprops) => {
   const location = useLocation();
   return <div className={styles.SecondHeaderWrapper}>
-    <img onClick={handleBack} src={BackIcon} style={{cursor:"pointer",width:25}} alt="Back Icon"/>
+    <img onClick={location?.pathname === "/scan-devices" ? () =>{} : handleBack} src={BackIcon} style={{cursor:location?.pathname === '/scan-devices' ? "not-allowed" : "pointer",width:25}} alt="Back Icon"/>
     {!["/temperature-records","/voltage-records","/rgb-records"].includes(location?.pathname) && <div className={styles.FistHeaderSubWrapper}>
       <img onClick={handleMyRecord} src={TextIcon} style={{cursor:"pointer",width:37,marginRight:5}} alt="Text Icon"/>
       <img src={ShareIcon} style={{cursor:"pointer",width:25}} alt="Share Icon"/>

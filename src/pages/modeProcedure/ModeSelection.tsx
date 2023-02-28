@@ -32,11 +32,12 @@ const ModeSelection = () => {
             let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
             setSelectedItem(result)
         }
-    },[navigate])
+    },[navigate,status?.modeSelected])
+
     const extraStyle = {backgroundColor:"#9CD5CD"} 
     const getDescription:any = {"Manual Mode":"This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.","Project Mode":"This mode is currently contains no any parameters."}
     return <div style={{position:"relative"}}>
-        <div className={styles.HeaderText}>Select Function</div>
+        <div className={styles.HeaderText}>Select Mode</div>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:"Manual Mode"},{icon:SensorIcon,title:"Project Mode"}].map(el => (
               <div key={el.title} className={styles.Button} style={el.title === selectedItem ? extraStyle : {}}>

@@ -5,7 +5,7 @@ import Home from './components/home';
 import ScanDevice from "./pages/scanDevices/index"
 import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
-import { useDeviceStatus} from './labhub/status';
+import { useDeviceStatus,useSocketConnected} from './labhub/status';
 import { assertClientId } from './labhub/utils';
 import styles from './styles/App.module.css';
 import { GrTest } from '@react-icons/all-files/gr/GrTest';
@@ -29,6 +29,7 @@ import RGBRecord from './components/RGBRecods';
 
 function App() {
   const [status] = useDeviceStatus();
+  const [connected] = useSocketConnected();
   useEffect(() => {
     const clientId = assertClientId();
     if (!clientId) {
@@ -68,7 +69,7 @@ function App() {
       <div className={styles.testIcon}>
         <Link to='/test'><GrTest /></Link>
       </div>
-      <div className={styles.version}>Firmware version: {status?.deviceVersion}</div>
+      <div className={styles.version}>Firmware version: {connected ? status?.deviceVersion : ""}</div>
       <LeaderDisconnect />
     </div>
   );

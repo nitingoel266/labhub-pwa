@@ -22,7 +22,7 @@ const FunctionSelection = () => {
             }
             setSelectedItem(result.join(" "))
         }
-    },[navigate])
+    },[navigate,status?.funcSelected])
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
         setSelectedItem("")

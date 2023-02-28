@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {WarningIcon} from "../../images/index";
 import { joinAsLeader,joinAsMember} from '../../labhub/actions';
-import {useDeviceStatus} from "../../labhub/status";
+import {useDeviceStatus,useSocketConnected} from "../../labhub/status";
 import styles from "../../styles/leaderSelectionModal.module.css";
 
 
@@ -13,8 +13,9 @@ type Props= {
 
 const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
   const [status] = useDeviceStatus();
+  const [connected] = useSocketConnected();
     useEffect(() => {
-        if(status && status?.leaderSelected){
+        if(connected && status && status?.leaderSelected){
             joinAsMember()
             setModal(false)
             navigate("/mode-selection")

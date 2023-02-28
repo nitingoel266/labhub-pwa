@@ -31,6 +31,7 @@ import CalenderIcon from "../assets/Calender-Icon.png";
 import WhiteDeleteIcon from "../assets/White-Delete-Icon.png";
 import WhiteDownloadIcon from "../assets/White-Download-Icon.png";
 import WhiteShareIcon from "../assets/White-Share-Icon.png";
+import SyncIcon from "../assets/Syn-Icon.png";
 
 export {
     LabIcon,
@@ -65,5 +66,6 @@ export {
     CalenderIcon,
     WhiteDeleteIcon,
     WhiteDownloadIcon,
-    WhiteShareIcon
+    WhiteShareIcon,
+    SyncIcon
 };

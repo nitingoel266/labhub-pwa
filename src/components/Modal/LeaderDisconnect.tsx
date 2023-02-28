@@ -1,17 +1,30 @@
 import { useEffect, useState } from "react"
-import {useDeviceStatus} from "../../labhub/status";
+import {useDeviceStatus,useSocketConnected} from "../../labhub/status";
 import LeadeSelectionModal from "./leaderSelectionModal"
 
 const LeaderDisconnect = () => {
     const [isOpen,setModal] = useState(false)
   const [status] = useDeviceStatus();
+  const [connected] = useSocketConnected();
+
     useEffect(() => {
-        if(status && !status.leaderSelected){
+        if(connected && status && !status.leaderSelected){
             setModal(true)
         }
     },[status?.leaderSelected])
+
+    useEffect(() => {
+        const timer = setTimeout(()=>{
+            if(connected && status && !status.leaderSelected){
+                setModal(true)
+            }
+        },3000)
+        return () => {
+            clearTimeout(timer)
+        }
+    },[isOpen])
     return <>
-        {isOpen && <LeadeSelectionModal isOpen={isOpen} setModal={(value) => setModal(value)}/>}
+        {connected && !status?.leaderSelected && isOpen && <LeadeSelectionModal isOpen={isOpen} setModal={(value) => setModal(value)}/>}
     </>
 }
 

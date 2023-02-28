@@ -69,7 +69,7 @@ function App() {
       <div className={styles.testIcon}>
         <Link to='/test'><GrTest /></Link>
       </div>
-      <div className={styles.version}>Firmware version: {connected && status?.deviceVersion || ""}</div>
+      <div className={styles.version}>Firmware version: {connected ? status?.deviceVersion : ""}</div>
       <LeaderDisconnect />
     </div>
   );

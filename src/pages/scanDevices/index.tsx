@@ -1,16 +1,12 @@
 import styles from '../../styles/scanDevice.module.css';
 import {LabHubSticker,BluetoothIcon} from "../../images/index";
-import { useDeviceStatus ,useSocketConnected} from '../../labhub/status';
+import { useSocketConnected} from '../../labhub/status';
 import {initSetup} from "../../labhub/setup";
-import LeadeSelectionModal from '../../components/Modal/leaderSelectionModal';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useState } from 'react';
 
 
 const ScanDevices = () => {
-    const [status] = useDeviceStatus();
-    const [isOpen,setModal] = useState(false)
-    const navigate = useNavigate();
+    // const [isOpen,setModal] = useState(false)
   const [connected] = useSocketConnected();
 
     const handleSubmit = () => {
@@ -22,7 +18,7 @@ const ScanDevices = () => {
         if(!connected){
             initSetup()
         }
-        setModal(true)
+        // setModal(true)
     }
     return <div className={styles.ScanDeviceWrapper}>
         <img src={LabHubSticker} className={styles.LabHubStickerWrapper} alt="al"/>

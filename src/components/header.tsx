@@ -1,6 +1,6 @@
 import {useDeviceStatus,useSocketConnected} from "../labhub/status";
 import {uninitSetup} from "../labhub/setup";
-import {resetLeader,unjoinMember,setSelectedMode,setSelectedFunction,setupData}from "../labhub/actions";
+import {resetLeader,unjoinMember,setSelectedMode,setSelectedFunction}from "../labhub/actions";
 import styles from '../styles/header.module.css';
 import {DeviceIcon,BatteryIcon,BackIcon,ShareIcon,TextIcon,WhiteShareIcon,SyncIcon,WhiteDownloadIcon,WhiteDeleteIcon} from "../images/index"
 import { useNavigate ,useLocation} from 'react-router-dom';
@@ -77,7 +77,7 @@ const FirstHeader = ({handleClick,status,clientId,connected}:FirstHeaderProps) =
     <div className={styles.FistHeaderSubWrapper}>
       <img src={DeviceIcon} alt="Device Icon"/>
       <div className={styles.FistHeaderSubWrapper}>
-        <div onClick={() => handleClick("device")} style={{color:"white",marginLeft:8,fontSize:15,cursor:"pointer"}}>{connected && status?.deviceName || ""}</div>
+        <div onClick={() => handleClick("device")} style={{color:"white",marginLeft:8,fontSize:15,cursor:"pointer"}}>{connected ? status?.deviceName : ""}</div>
         <div onClick={() => handleClick("leaderMember")} style={{color:"white",marginLeft:8,fontSize:15,cursor:"pointer"}}>{connected && status?.leaderSelected && (clientId === status?.leaderSelected ? "(Leader)" : "(Member)") }</div>
     </div>
     </div>
@@ -97,11 +97,11 @@ const SecondHeader = ({handleBack,handleMyRecord,status,clientId,setModal}:Secon
   const location = useLocation();
   return <div className={styles.SecondHeaderWrapper}>
     <img onClick={location?.pathname === "/scan-devices" ? () =>{} : handleBack} src={BackIcon} style={{cursor:location?.pathname === '/scan-devices' ? "not-allowed" : "pointer",width:25}} alt="Back Icon"/>
-    {!["/temperature-records","/voltage-records","/rgb-records"].includes(location?.pathname) && <div className={styles.FistHeaderSubWrapper}>
+    {!["/temperature-records","/voltage-records","/rgb-records"].includes(location?.pathname) ? <div className={styles.FistHeaderSubWrapper}>
       <img onClick={handleMyRecord} src={TextIcon} style={{cursor:"pointer",width:37,marginRight:5}} alt="Text Icon"/>
       <img src={ShareIcon} style={{cursor:"pointer",width:25}} alt="Share Icon"/>
       {clientId !== status?.leaderSelected && <img src={SyncIcon} style={{cursor:"pointer",marginLeft:10,width:20}} alt="syn button"/>}
-    </div> || 
+    </div> :
     <div className={styles.FistHeaderSubWrapper}>
       <img src={WhiteShareIcon} style={{cursor:"pointer",width:20,marginRight:15}} alt="Share Icon"/>
       <img src={WhiteDownloadIcon} style={{cursor:"pointer",width:20,marginRight:15}} alt="Download Icon"/>

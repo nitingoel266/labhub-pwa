@@ -14,14 +14,14 @@ type Props= {
 const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
   const [status] = useDeviceStatus();
   const [connected] = useSocketConnected();
+  const navigate = useNavigate();
     useEffect(() => {
-        if(connected && status && status?.leaderSelected){
-            joinAsMember()
-            setModal(false)
-            navigate("/mode-selection")
-        }
+            if(connected && status && status?.leaderSelected){
+                joinAsMember()
+                setModal(false)
+                navigate("/mode-selection")
+            }
     },[status?.leaderSelected])
-    const navigate = useNavigate();
     const submitHandler = () => {
         joinAsLeader()
         setModal(false)

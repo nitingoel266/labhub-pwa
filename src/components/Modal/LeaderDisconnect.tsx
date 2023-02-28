@@ -11,7 +11,7 @@ const LeaderDisconnect = () => {
         if(connected && status && !status.leaderSelected){
             setModal(true)
         }
-    },[status?.leaderSelected])
+    },[connected,status, status?.leaderSelected])
 
     useEffect(() => {
         const timer = setTimeout(()=>{

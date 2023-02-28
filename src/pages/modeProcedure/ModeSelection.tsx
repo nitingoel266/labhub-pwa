@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {DataSetupIcon,IButtonIcon,SensorIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
-import {setSelectedMode} from "../../labhub/actions"
+import {setSelectedMode} from "../../labhub/actions-client"
 import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import {useDeviceStatus} from "../../labhub/status";
@@ -27,12 +27,13 @@ const ModeSelection = () => {
         }
 
     }
-    useEffect(() => {
-        if(status?.modeSelected){
-            let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
-            setSelectedItem(result)
-        }
-    },[navigate,status?.modeSelected])
+    // set the initial value from modes
+    // useEffect(() => {
+    //     if(status?.modeSelected){
+    //         let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
+    //         setSelectedItem(result)
+    //     }
+    // },[navigate,status?.modeSelected])
 
     const extraStyle = {backgroundColor:"#9CD5CD"} 
     const getDescription:any = {"Manual Mode":"This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.","Project Mode":"This mode is currently contains no any parameters."}

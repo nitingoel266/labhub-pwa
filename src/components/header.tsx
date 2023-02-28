@@ -1,6 +1,7 @@
 import {useDeviceStatus,useSocketConnected} from "../labhub/status";
 import {uninitSetup} from "../labhub/setup";
-import {resetLeader,unjoinMember,setSelectedMode,setSelectedFunction}from "../labhub/actions";
+import {resetLeader,unjoinMember}from "../labhub/actions";
+import {setSelectedFunction,setSelectedMode} from "../labhub/actions-client";
 import styles from '../styles/header.module.css';
 import {DeviceIcon,BatteryIcon,BackIcon,ShareIcon,TextIcon,WhiteShareIcon,SyncIcon,WhiteDownloadIcon,WhiteDeleteIcon} from "../images/index"
 import { useNavigate ,useLocation} from 'react-router-dom';

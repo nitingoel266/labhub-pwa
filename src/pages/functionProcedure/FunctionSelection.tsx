@@ -5,7 +5,8 @@ import {DataSetupIcon,IButtonIcon,SensorIcon,RGBSpectIcon,HeaterIcon} from "../.
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
 import IButtonModal from "../../components/Modal/IButtonModal";
-import {setSelectedFunction} from "../../labhub/actions";
+import {setSelectedFunction} from "../../labhub/actions-client";
+import {navStatus} from "../../labhub/status-client";
 import {useDeviceStatus} from "../../labhub/status";
 import { useNavigate } from "react-router-dom";
 
@@ -14,15 +15,16 @@ const FunctionSelection = () => {
     const [isOpen,setModal] = useState("");
     const navigate = useNavigate();
     const [status] = useDeviceStatus();
-    useEffect(() => {
-        if(status?.funcSelected){
-            let result = []
-            for(let one of status.funcSelected.split("_")){
-                result.push(one[0].toUpperCase()+one.slice(1))
-            }
-            setSelectedItem(result.join(" "))
-        }
-    },[navigate,status?.funcSelected])
+    // set the initial value from function selection
+    // useEffect(() => {
+    //     if(navStatus?.funcSelected){
+    //         let result = []
+    //         for(let one of navStatus.funcSelected.split("_")){
+    //             result.push(one[0].toUpperCase()+one.slice(1))
+    //         }
+    //         setSelectedItem(result.join(" "))
+    //     }
+    // },[navigate,navStatus?.funcSelected])
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
         setSelectedItem("")

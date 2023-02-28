@@ -1,6 +1,7 @@
 import styles from '../styles/dataSetup.module.css';
 import {useDeviceStatus} from "../labhub/status";
-import {setupData,setSelectedFunction} from "../labhub/actions";
+import {setupData} from "../labhub/actions";
+import {setSelectedFunction} from "../labhub/actions-client";
 import { useEffect, useState } from 'react';
 import RightArrow from './RightArrow';
 import {BlackIButtonIcon,ExpandIcon,CollapsedIcon} from "../images/index"

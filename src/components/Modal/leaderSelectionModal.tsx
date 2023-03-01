@@ -21,7 +21,7 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
     const submitHandler = () => {
         joinAsLeader()
         setModal(false)
-        navigate("/mode-selection")
+        // navigate("/mode-selection")
     }
     return (
         <div>

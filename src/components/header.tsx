@@ -99,7 +99,7 @@ const SecondHeader = ({handleBack,handleMyRecord,handleClick,connected,status,cl
   return <div className={styles.SecondHeaderWrapper}>
     <img onClick={location?.pathname === "/scan-devices" ? () =>{} : handleBack} src={BackIcon} style={{cursor:location?.pathname === '/scan-devices' ? "not-allowed" : "pointer",width:25}} alt="Back Icon"/>
     {!["/temperature-records","/voltage-records","/rgb-records"].includes(location?.pathname) ? <div className={styles.FistHeaderSubWrapper}>
-      <img onClick={handleMyRecord} src={TextIcon} style={{cursor:"pointer",width:37,marginRight:5}} alt="Text Icon"/>
+      <img onClick={() => connected ? handleMyRecord() : {}} src={TextIcon} style={{cursor:"pointer",width:37,marginRight:5}} alt="Text Icon"/>
       <img onClick={() => connected ? handleClick("device") : {}} src={ShareIcon} style={{cursor:"pointer",width:25}} alt="Share Icon"/>
       {clientId !== status?.leaderSelected && <img src={SyncIcon} style={{cursor:"pointer",marginLeft:10,width:20}} alt="syn button"/>}
     </div> :

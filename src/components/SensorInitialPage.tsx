@@ -9,7 +9,7 @@ const Sensor = () => {
 
     }
     return <div className={styles.TopWrapper} style={{height:window.innerHeight-150}}>
-            <div className={styles.PimaryText}>{status?.sensorConnected ? `Temperature/Voltage sensor connected` :"Sensors not Detected"}</div>
+            <div className={styles.PimaryText}>{status?.sensorConnected ? `${status?.sensorConnected[0].toUpperCase()+status?.sensorConnected.slice(1)} sensor connected` :"Sensors not Detected"}</div>
             <div className={styles.SecondaryText}>{status?.sensorConnected ? "Press right arrow to start measuring" :"Connect sensor to proceed"}</div>
             <RightArrow isSelected={status?.sensorConnected ? true : false} handleSubmit = {handleSubmit}/>
     </div>

@@ -27,7 +27,9 @@
 .TextStyle {
     margin-left: 10px;
     margin-right: 10px;
+    width: 25px;
     font-weight: 500;
+    text-align: center;
 }
 .IButton {
     width: 22px;

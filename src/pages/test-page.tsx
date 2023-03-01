@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useSocketConnected, useDeviceStatus, useDeviceDataStream } from '../labhub/status';
-import { joinAsLeader, joinAsMember, unjoinMember, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment } from '../labhub/actions';
+import { joinAsLeader, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment } from '../labhub/actions';
 // import { setSelectedMode, setSelectedFunction } from '../labhub/actions-client';
 import { initSetup, uninitSetup } from '../labhub/setup';
 import { getClientType } from '../labhub/utils';
@@ -11,7 +11,7 @@ function TestPage(props: TestPageProps) {
   const [dataStream] = useDeviceDataStream();
 
   const clientType = getClientType();
-  const unknownClientType = clientType === null;
+  // const unknownClientType = clientType === null;
   const isLeader = clientType === 'leader';
   const isMember = clientType === 'member';
   const leaderSelected = !!(status?.leaderSelected);
@@ -44,14 +44,15 @@ function TestPage(props: TestPageProps) {
         </pre>
       </>
       <br />
-      <button onClick={() => joinAsLeader()} disabled={leaderSelected || !unknownClientType}>Set Leader</button>
+      <button onClick={() => joinAsLeader()} disabled={leaderSelected}>Set Leader</button>
       <br />
       <button onClick={() => resetLeader()} disabled={!isLeader || !status || status.leaderSelected === null}>Unset Leader</button>
       <br /><br />
-      <button onClick={() => joinAsMember()} disabled={!leaderSelected || !unknownClientType}>Set Member</button>
+
+      {/* <button onClick={() => joinAsMember()} disabled={!leaderSelected || !unknownClientType}>Set Member</button>
       <br />
       <button onClick={() => unjoinMember()} disabled={!leaderSelected || !isMember}>Unset Member</button>
-      <br /><br />
+      <br /><br /> */}
 
       {/* <button onClick={() => setSelectedMode('manual')} disabled={!isLeader || status?.modeSelected !== null}>Set manual mode</button>
       <br />

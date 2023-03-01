@@ -3,10 +3,10 @@ import { getClientId, getClientType } from './utils';
 import { SensorSelect, SetupData } from '../types/common';
 
 export const joinAsLeader = () => {
-  const leaderSelected = deviceStatus.value?.leaderSelected;
-  if (leaderSelected || getClientType() !== null) return;
   const clientId = getClientId();
-  if (clientId) deviceStatusUpdate.next({ leaderSelected: clientId });
+  const leaderSelected = deviceStatus.value?.leaderSelected;
+  if (!clientId || leaderSelected || getClientType() !== 'member') return;
+  deviceStatusUpdate.next({ leaderSelected: clientId });
 };
 
 export const resetLeader = () => {
@@ -14,18 +14,18 @@ export const resetLeader = () => {
   deviceStatusUpdate.next({ leaderSelected: null });
 };
 
-export const joinAsMember = () => {
-  const leaderSelected = deviceStatus.value?.leaderSelected;
-  if (!leaderSelected || getClientType() !== null) return;
-  const clientId = getClientId();
-  if (clientId) deviceStatusUpdate.next({ memberJoined: clientId });
-};
+// export const joinAsMember = () => {
+//   const leaderSelected = deviceStatus.value?.leaderSelected;
+//   if (!leaderSelected || getClientType() !== null) return;
+//   const clientId = getClientId();
+//   if (clientId) deviceStatusUpdate.next({ memberJoined: clientId });
+// };
 
-export const unjoinMember = () => {
-  if (getClientType() !== 'member') return;
-  const clientId = getClientId();
-  if (clientId) deviceStatusUpdate.next({ memberUnjoin: clientId });
-};
+// export const unjoinMember = () => {
+//   if (getClientType() !== 'member') return;
+//   const clientId = getClientId();
+//   if (clientId) deviceStatusUpdate.next({ memberUnjoin: clientId });
+// };
 
 export const setupData = (data?: SetupData) => {
   if (getClientType() !== 'leader') return;

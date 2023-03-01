@@ -17,15 +17,15 @@ export const assertClientId = () => {
 };
 
 export const getClientType =  (): ClientType => {
+  const clientId = getClientId();
+  if (!clientId) return null;
   const leaderSelected = deviceStatus.value?.leaderSelected;
   const membersJoined = deviceStatus.value?.membersJoined;
-  const clientId = getClientId();
-  if (leaderSelected && clientId) {
-    if (leaderSelected === clientId) {
-      return 'leader';
-    } else if (membersJoined && membersJoined.includes(clientId)) {
-      return 'member';
-    }
+  if (leaderSelected === clientId) {
+    return 'leader';
+  } else if (membersJoined && membersJoined.includes(clientId)) {
+    return 'member';
+  } else {
+    return null;
   }
-  return null;
 };

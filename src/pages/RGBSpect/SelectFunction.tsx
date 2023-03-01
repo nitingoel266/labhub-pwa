@@ -5,6 +5,7 @@ import RightArrow from "../../components/RightArrow";
 import {setSelectedMode} from "../../labhub/actions-client"
 import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
+import IButtonContent from "../../components/IButtonContent";
 
 const SelectFunction = () => {
     const navigate = useNavigate();
@@ -30,7 +31,6 @@ const SelectFunction = () => {
     //     }
     // },[navigate])
     const extraStyle = {backgroundColor:"#9CD5CD",maxWidth:220} 
-    const getDescription:any = {"Manual Mode":"This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.","Calibrate Spectrophotometer":"This mode is currently contains no any parameters."}
     return <div style={{position:"relative"}}>
         <div className={styles.HeaderText}>Select Function</div>
         <div className={styles.ButtonWrapper}>
@@ -47,7 +47,7 @@ const SelectFunction = () => {
             ))}
             </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription[isOpen]} setModal={(value) => setModal(value)}/>
+        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={IButtonContent[isOpen.replaceAll(" ","_")]} setModal={(value) => setModal(value)}/>
     </div>
 }
 

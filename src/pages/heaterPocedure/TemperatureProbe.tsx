@@ -4,10 +4,14 @@ import {ExpandIcon,CollapsedIcon,BlackIButtonIcon,HeaterIcon} from "../../images
 import { useState } from 'react';
 import IButtonModal from "../../components/Modal/IButtonModal";
 import RightArrow from "../../components/RightArrow";
+import {useDeviceStatus} from "../../labhub/status";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import { useNavigate } from "react-router-dom";
+import IButtonContent from '../../components/IButtonContent';
 
 const TemperatureProbe = () => {
+    const clientId = localStorage.getItem('labhub_client_id');
+    const [status] = useDeviceStatus();
     const navigate = useNavigate();
     const [isOpen,setModal] = useState("");
     const [temperature,setTemperature] =useState<number>(0);
@@ -27,7 +31,7 @@ const TemperatureProbe = () => {
     const handleSubmit = () => {
 
     }
-    const getDescription:any = {"Setpoint Temperature":"...."}
+    const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
              <div className={styles.HeaderTextWrapper}>
             <div>Setpoint Temperature</div>
@@ -55,12 +59,12 @@ const TemperatureProbe = () => {
             <div className={styles.HeaterElementText}>Power: <span style={{color:"#DC2828"}}>0 W</span></div>
         </div>
         <div className={styles.ButtonWrapper}>
-            <div onClick={() => setModal('start')} className={styles.Button}>Start</div>
-            <div onClick={() => setModal('stop')} className={styles.Button}>Stop</div>
+            <div onClick={() => clientId === status?.leaderSelected ? setModal('start') : {}} className={styles.Button} style={extraStyle}>Start</div>
+            <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.Button} style={extraStyle}>Stop</div>
         </div>
         <MemberDisconnect isOpen={isOpen && isOpen !== "Setpoint Temperature" ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'start' ? handleStart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>
         <RightArrow isSelected={temperature ? true : false} handleSubmit={handleSubmit}/>
-        <IButtonModal isOpen={isOpen === "Setpoint Temperature" ? true : false} title={isOpen} description={getDescription[isOpen]} setModal={(value) => setModal(value)}/>
+        <IButtonModal isOpen={isOpen === "Setpoint Temperature" ? true : false} title={isOpen} description={IButtonContent[isOpen.replaceAll(" ","_")]} setModal={(value) => setModal(value)}/>
 
     </div>
 }

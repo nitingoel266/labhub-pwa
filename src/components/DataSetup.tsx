@@ -7,6 +7,7 @@ import RightArrow from './RightArrow';
 import {BlackIButtonIcon,ExpandIcon,CollapsedIcon} from "../images/index"
 import IButtonModal from './Modal/IButtonModal';
 import { useNavigate } from 'react-router-dom';
+import IButtonContent from './IButtonContent';
 
 const DataSetup = () => {
     const [status] = useDeviceStatus();
@@ -39,10 +40,6 @@ const DataSetup = () => {
         if(title === 'add' && dataSampleIndex < dataSampleOption.length-1)
         setDataSampleIndex(dataSampleIndex + 1)
     }
-    const getDescription:any = {
-        "Data Rate":"Choose your desired data sampling rate: 1 s, 5 s, 10 s, 30 s, 	1 min, 10 min, 30 min, 1 hr, USER (manually select when each measurement is recorded).",
-        "Number of samples":"Choose the number of samples to take: 5, 10, 	25, 50, 100, 200, CONT (no set endpoint)."
-    }
     return <div className={styles.DataSetupWrapper}>
         <div style={{fontWeight:500}}>Setup</div>
         <div className={styles.DataRateWapper}>
@@ -68,7 +65,7 @@ const DataSetup = () => {
             </div>
         </div>
         <RightArrow isSelected={dataRateIndex && dataSampleIndex ? true : false} handleSubmit = {handleSubmit}/>
-        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription[isOpen]} setModal={(value) => setModal(value)}/>
+        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={IButtonContent[isOpen.replaceAll(" ","_")]} setModal={(value) => setModal(value)}/>
         
     </div>
 }

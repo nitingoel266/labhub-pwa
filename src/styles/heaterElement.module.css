@@ -24,6 +24,8 @@
     margin-left: 10px;
     margin-right: 10px;
     font-weight: 500;
+    width: 25px;
+    text-align: center;
 }
 .IButton {
     width: 22px;

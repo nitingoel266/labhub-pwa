@@ -11,6 +11,9 @@ const Temperature_Probe = "This mode is currently contains no any parameters.";
 const Setpoint_Temperature = "....";
 const Measure_Absorbance = "";
 const Calibrate_Spectrophotometer = "This mode is currently contains no any parameters.";
+const Calibrate = "......";
+const Test_Calibrate = "Test Calibrate.....";
+const Measure = "Measure Measure"
 
 const IButtonContent:any = {
     Manual_Mode,
@@ -26,6 +29,9 @@ const IButtonContent:any = {
     Heater_Element,
     Setpoint_Temperature,
     Temperature_Probe,
+    Calibrate,
+    Test_Calibrate,
+    Measure
 }
 
 export default IButtonContent

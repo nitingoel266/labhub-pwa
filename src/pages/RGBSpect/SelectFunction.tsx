@@ -18,9 +18,9 @@ const SelectFunction = () => {
     }
     const handleSubmit = () => {
         if(selectedItem){
-            let mode = selectedItem.slice(0,selectedItem.indexOf(" ")).toLowerCase()
-            setSelectedMode(mode)
-            navigate(selectedItem === "Manual Mode" ? "/function-selection" : "/project-mode")
+            // let mode = selectedItem.slice(0,selectedItem.indexOf(" ")).toLowerCase()
+            // setSelectedMode(mode)
+            navigate(selectedItem === "Calibrate Spectrophotometer" ? "/calibrate-spectrophotometer" : "/cuvette-insertion")
         }
 
     }

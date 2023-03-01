@@ -1,20 +1,20 @@
 
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {DataSetupIcon,IButtonIcon,SensorIcon,RGBSpectIcon,HeaterIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import {setSelectedFunction} from "../../labhub/actions-client";
-import {navStatus} from "../../labhub/status-client";
-import {useDeviceStatus} from "../../labhub/status";
+// import {navStatus} from "../../labhub/status-client";
+// import {useDeviceStatus} from "../../labhub/status";
 import { useNavigate } from "react-router-dom";
 
 const FunctionSelection = () => {
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
     const navigate = useNavigate();
-    const [status] = useDeviceStatus();
+    // const [status] = useDeviceStatus();
     // set the initial value from function selection
     // useEffect(() => {
     //     if(navStatus?.funcSelected){

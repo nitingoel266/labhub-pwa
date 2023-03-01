@@ -6,7 +6,7 @@ import styles from '../styles/header.module.css';
 import {DeviceIcon,BatteryIcon,BackIcon,ShareIcon,TextIcon,WhiteShareIcon,SyncIcon,WhiteDownloadIcon,WhiteDeleteIcon} from "../images/index"
 import { useNavigate ,useLocation} from 'react-router-dom';
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 function Header(props: HeaderProps) {  
@@ -25,12 +25,6 @@ function Header(props: HeaderProps) {
     }
     if(getPathFunc[location.pathname])
     getPathFunc[location.pathname]()
-    if(location.pathname === "/mode-selection" && connected){
-      if(clientId === status?.leaderSelected){
-        resetLeader()
-      }
-      uninitSetup()
-    }
     navigate(-1)
   }
   const handleClick = (value:any) => {
@@ -62,9 +56,15 @@ function Header(props: HeaderProps) {
     setModal("")
 
   }
+  useEffect(() => { // if connection is refused then scan devices screen
+    if(!connected){
+       navigate("/scan-devices")
+    }
+  },[connected,navigate])
+  // console.log("??>>> connected and status",connected,"status :- ",status)
   return (<div>
     <FirstHeader handleClick={handleClick} status={status} connected={connected} clientId={clientId}/>
-    <SecondHeader handleBack={handleBack} status={status} clientId={clientId} handleMyRecord={handleMyRecord} setModal={(value) => setModal(value)}/>
+    <SecondHeader handleBack={handleBack} handleClick={handleClick} status={status} connected={connected} clientId={clientId} handleMyRecord={handleMyRecord} setModal={(value) => setModal(value)}/>
     <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "device" ? handleDisconnectDevice : (isOpen === 'delete' ? handleDelete : handleDisconnectLeaderMember)} message={isOpen === "device" ? `Are you sure to Disconnect from ${status?.deviceName}!` : (isOpen === 'delete' ? "Aye you sure you want to Delete?" : "Are you sure to Disconnect!")}/>
   </div>);
 }
@@ -78,7 +78,7 @@ const FirstHeader = ({handleClick,status,clientId,connected}:FirstHeaderProps) =
     <div className={styles.FistHeaderSubWrapper}>
       <img src={DeviceIcon} alt="Device Icon"/>
       <div className={styles.FistHeaderSubWrapper}>
-        <div onClick={() => handleClick("device")} style={{color:"white",marginLeft:8,fontSize:15,cursor:"pointer"}}>{connected ? status?.deviceName : ""}</div>
+        <div style={{color:"white",marginLeft:8,fontSize:15,cursor:"pointer"}}>{connected ? status?.deviceName : ""}</div>
         <div onClick={() => handleClick("leaderMember")} style={{color:"white",marginLeft:8,fontSize:15,cursor:"pointer"}}>{connected && status?.leaderSelected && (clientId === status?.leaderSelected ? "(Leader)" : "(Member)") }</div>
     </div>
     </div>
@@ -94,13 +94,13 @@ const FirstHeader = ({handleClick,status,clientId,connected}:FirstHeaderProps) =
 }
 
 
-const SecondHeader = ({handleBack,handleMyRecord,status,clientId,setModal}:SecondHeaderprops) => {
+const SecondHeader = ({handleBack,handleMyRecord,handleClick,connected,status,clientId,setModal}:SecondHeaderprops) => {
   const location = useLocation();
   return <div className={styles.SecondHeaderWrapper}>
     <img onClick={location?.pathname === "/scan-devices" ? () =>{} : handleBack} src={BackIcon} style={{cursor:location?.pathname === '/scan-devices' ? "not-allowed" : "pointer",width:25}} alt="Back Icon"/>
     {!["/temperature-records","/voltage-records","/rgb-records"].includes(location?.pathname) ? <div className={styles.FistHeaderSubWrapper}>
       <img onClick={handleMyRecord} src={TextIcon} style={{cursor:"pointer",width:37,marginRight:5}} alt="Text Icon"/>
-      <img src={ShareIcon} style={{cursor:"pointer",width:25}} alt="Share Icon"/>
+      <img onClick={() => connected ? handleClick("device") : {}} src={ShareIcon} style={{cursor:"pointer",width:25}} alt="Share Icon"/>
       {clientId !== status?.leaderSelected && <img src={SyncIcon} style={{cursor:"pointer",marginLeft:10,width:20}} alt="syn button"/>}
     </div> :
     <div className={styles.FistHeaderSubWrapper}>
@@ -124,6 +124,8 @@ type SecondHeaderprops = {
   handleBack:() => void;
   handleMyRecord:() => void;
   setModal:(value:string) => void;
+  handleClick:(value:any) => void;
+  connected?:any;
 }
 
 export interface HeaderProps {}

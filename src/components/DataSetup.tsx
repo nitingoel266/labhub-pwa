@@ -19,7 +19,7 @@ const DataSetup = () => {
            setDataRate(status?.setupData?.dataRate || 0)
            setNuOfSamples(status?.setupData?.dataSample || 0)
         }
-    },[navigate])
+    },[navigate,status?.setupData])
     const handleSubmit = () => {
         setupData({ dataRate, dataSample })
         setSelectedFunction(null)

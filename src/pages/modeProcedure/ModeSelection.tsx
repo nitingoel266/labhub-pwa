@@ -1,17 +1,17 @@
 
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {DataSetupIcon,IButtonIcon,SensorIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
 import {setSelectedMode} from "../../labhub/actions-client"
 import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
-import {useDeviceStatus} from "../../labhub/status";
+// import {useDeviceStatus} from "../../labhub/status";
 
 const ModeSelection = () => {
     const navigate = useNavigate();
-    const [status] = useDeviceStatus();
+    // const [status] = useDeviceStatus();
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
     const clickHandler = (item:string) => {

@@ -1,0 +1,87 @@
+.HeaderText {
+    margin: 50px 10px 25px 10px;
+    text-align: center;
+}
+
+.HeaderHighLightText {
+    margin: 50px 10px 25px 10px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+}
+.ButtonWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.Button {
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    flex:1;
+    background-color: #FFFFFF;
+    height: 75px;
+    max-width: 200px;
+    min-width: 180px;
+    border-radius: 10px;
+    margin-left: 25px;
+    box-shadow: 0px 3px #B6B5B5;
+    margin-bottom: 20px;
+}
+
+.SubButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex:1;
+    cursor: pointer;
+}
+
+.IButtonWrapper{
+    background-color: #424C58;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    cursor: pointer;
+}
+.BodyWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.BodyBollWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 20px;
+}
+.BodyRedBoll {
+    height: 75px;
+    width: 75px;
+    background-color: #D08080;
+    border-radius: 100px;
+}
+.BodyGreenBoll {
+    height: 75px;
+    width: 75px;
+    border-radius: 100px;
+    background-color: #7BAA81;
+}
+.BodyBlueBoll {
+    height: 75px;
+    width: 75px;
+    border-radius: 100px;
+    background-color: #8AA3BB;
+}
+.BodyText {
+    margin-top: 10px;
+    color: #A3A7AD;
+}

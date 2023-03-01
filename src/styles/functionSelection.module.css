@@ -76,6 +76,8 @@
     margin-left: 10px;
     margin-right: 10px;
     font-weight: 500;
+    text-align: center;
+    width: 25px;
 }
 .IButton {
     width: 22px;
@@ -86,9 +88,9 @@
     .HeaderText {
         margin-left: 20%;
     }
-    .Button {
-        /* margin-left: 30%; */
-    }
+    /* .Button {
+         margin-left: 30%; 
+    } */
     .ButtonWrapper {
         justify-content: center;
     }

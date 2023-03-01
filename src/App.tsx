@@ -26,6 +26,13 @@ import MyRecordList from './pages/myRecords/MyRecordList';
 import TemperatureRecord from './components/TemperatureRecords';
 import VoltageRecord from './components/VoltageRecords';
 import RGBRecord from './components/RGBRecods';
+import InsertReferenceCuvette from './components/CalibrateSpectrophotometer/InsertReferenceCuvette';
+import CuvetteInsertion from './components/MeasureAbsorbance/CuvetteInsertion';
+import CalibrationTesting from './components/CalibrateSpectrophotometer/CalibrationTesting';
+import SpectrophotometerCalibration from './components/CalibrateSpectrophotometer/SpectrophotometerCalibration';
+import SpectrophotometerTesting from './components/CalibrateSpectrophotometer/SpectrophotometerTesting';
+import AbsorbanceMeasuring from './components/MeasureAbsorbance/AbsorbanceMeasuring';
+import InsertionAbsorbanceMeasuring from './components/MeasureAbsorbance/InsertionAbsorbanceMeasuring';
 
 function App() {
   const [status] = useDeviceStatus();
@@ -49,14 +56,21 @@ function App() {
           <Route path='/function-selection' element={<FunctionSelection />} />
           <Route path='/data-setup' element={<DataSetup />} />
           <Route path='/sensor' element={<Sensor />} />
-          <Route path='/measuring-temprature' element={<MeasuringTemprature />} />
-          <Route path='/measuring-voltage' element={<MeasuringVoltage />} />
+          <Route path='/temperature-sensor' element={<MeasuringTemprature />} />
+          <Route path='/voltage-sensor' element={<MeasuringVoltage />} />
           <Route path='/heater' element={<HeaterInitialPage />} />
           <Route path='/method-selection' element={<MethodSelection />} />
           <Route path='/heater-element' element={<HeaterElement />} />
           <Route path='/temperature-probe' element={<TemperatureProbe />} />
           <Route path='/rgb-spect' element={<SelectFunction />} />
-          
+          <Route path='/calibrate-spectrophotometer' element={<InsertReferenceCuvette />} />
+          <Route path='/spectrophotometer-calibration' element={<SpectrophotometerCalibration />} />
+          <Route path='/calibration-testing' element={<CalibrationTesting />} />
+          <Route path='/spectrophotometer-testing' element={<SpectrophotometerTesting />} />
+
+          <Route path='/cuvette-insertion' element={<CuvetteInsertion />} />
+          <Route path='/absorbance-insertion' element={<InsertionAbsorbanceMeasuring />} />
+          <Route path='/measure-absorbance' element={<AbsorbanceMeasuring />} />
 
           <Route path="/my-records" element={<MyRecordList />} />
           <Route path="/temperature-records" element={<TemperatureRecord />} />

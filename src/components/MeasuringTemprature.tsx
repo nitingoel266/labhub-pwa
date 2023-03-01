@@ -1,14 +1,18 @@
 import styles from '../styles/measuringTemprature.module.css';
 import {TempratureGraph} from "../images/index";
 import RightArrow from './RightArrow';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import {useDeviceStatus} from "../labhub/status";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
 
 const MeasuringTemprature = () => {
+    const clientId = localStorage.getItem('labhub_client_id');
+    const [status] = useDeviceStatus();
     const navigate = useNavigate();
     const [isOpen,setModal] = useState<string>("");
     const [temprature,setTemprature] = useState<any>(0)
+    const [isMobile,setIsMobile] = useState<boolean>(false)
     const [tempratureUnit,setTempratureUnit] = useState<string>('c')
     const handleSubmit = () => {
 
@@ -27,6 +31,18 @@ const MeasuringTemprature = () => {
     const handleSave = () => {
 
     }
+    useEffect(() => {
+        window.addEventListener('resize', () =>{
+            if(window.innerWidth <= 580)
+            setIsMobile(true)
+            else 
+            setIsMobile(false)
+        });
+        return () => {
+            window.removeEventListener('resize', () => {setIsMobile(false)})
+        }
+    },[])
+    const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>
             <div style={{fontWeight:500}}>Measuring Temperature</div>
@@ -48,12 +64,12 @@ const MeasuringTemprature = () => {
         </div>
         <div className={styles.TextBody}>
             <img src={TempratureGraph} className={styles.GraphStyle} alt="graph"/>
-            <div className={styles.ButtonWrapper}>
-                <div onClick={() => setModal('restart')} className={styles.RestartButton}>Restart</div>
-                <div onClick={() => setModal('stop')} className={styles.StopButton}>Stop</div>
+            {!isMobile ? <div className={styles.ButtonWrapper}>
+                <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartButton} style={extraStyle}>Restart</div>
+                <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.StopButton} style={extraStyle}>Stop</div>
                 <div className={styles.CaptureButton}>Capture</div>
 
-            </div>
+            </div> : null}
         </div>
         <div className={styles.FooterTextWrapper}>
             <div className={styles.FooterInnerTextWrapper}>
@@ -64,6 +80,13 @@ const MeasuringTemprature = () => {
             </div>
             </div>
         </div>
+        {isMobile ? <div className={styles.ButtonHorizontalWrapper}>
+            <div className={styles.ButtonHorizontalInnerWrapper}>
+                <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartHorizontalButton} style={extraStyle}>Restart</div>
+                <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.StopHorizontalButton} style={extraStyle}>Stop</div>
+                <div className={styles.CaptureHorizontalButton}>Capture</div>
+            </div>
+        </div> : null}
         <MemberDisconnect isOpen={isOpen ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'restart' ? handleRestart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>
         <RightArrow isSelected={temprature ? true : false} handleSubmit={handleSubmit}/>
     </div>

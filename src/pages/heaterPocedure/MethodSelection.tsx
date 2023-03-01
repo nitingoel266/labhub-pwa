@@ -6,6 +6,7 @@ import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
 import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
+import IButtonContent from "../../components/IButtonContent";
 
 const MethodSelection = () => {
     const navigate = useNavigate();
@@ -39,7 +40,6 @@ const MethodSelection = () => {
         // }
     },[navigate])
     const extraStyle = {backgroundColor:"#9CD5CD"} 
-    const getDescription:any = {"Heater Element":"This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.","Temperature Probe":"This mode is currently contains no any parameters.","Setpoint Temperature":"...."}
     return <div style={{position:"relative"}}>
          <div className={styles.HeaderTextWrapper}>
             <div>Setpoint Temperature</div>
@@ -67,7 +67,7 @@ const MethodSelection = () => {
             ))}
             </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription[isOpen]} setModal={(value) => setModal(value)}/>
+        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={IButtonContent[isOpen.replaceAll(" ","_")]} setModal={(value) => setModal(value)}/>
     </div>
 }
 

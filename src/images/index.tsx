@@ -32,6 +32,7 @@ import WhiteDeleteIcon from "../assets/White-Delete-Icon.png";
 import WhiteDownloadIcon from "../assets/White-Download-Icon.png";
 import WhiteShareIcon from "../assets/White-Share-Icon.png";
 import SyncIcon from "../assets/Syn-Icon.png";
+import WhiteTickIcon from "../assets/White-Tick-Icon.png";
 
 export {
     LabIcon,
@@ -67,5 +68,6 @@ export {
     WhiteDeleteIcon,
     WhiteDownloadIcon,
     WhiteShareIcon,
-    SyncIcon
+    SyncIcon,
+    WhiteTickIcon
 };

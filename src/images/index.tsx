@@ -34,6 +34,7 @@ import WhiteShareIcon from "../assets/White-Share-Icon.png";
 import SyncIcon from "../assets/Syn-Icon.png";
 import WhiteTickIcon from "../assets/White-Tick-Icon.png";
 import BlackBluetoothIcon from "../assets/Black-Bluetooth-Icon.png";
+import WhiteWarningIcon from "../assets/White-Warning-Icon.png";
 
 export {
     LabIcon,
@@ -71,5 +72,6 @@ export {
     WhiteShareIcon,
     SyncIcon,
     WhiteTickIcon,
-    BlackBluetoothIcon
+    BlackBluetoothIcon,
+    WhiteWarningIcon
 };

@@ -8,6 +8,7 @@ const Sensor = () => {
     const navigate = useNavigate();
     const [status] = useDeviceStatus();
     const handleSubmit = () => {
+        if(status?.sensorConnected)
         navigate(`/${status?.sensorConnected}-sensor`)
     }
     return <div className={styles.TopWrapper} style={{height:window.innerHeight-150}}>

@@ -8,18 +8,20 @@ import {useDeviceStatus} from "../../labhub/status";
 import { useNavigate } from "react-router-dom";
 import IButtonContent from "../../components/IButtonContent";
 
+let temperatureTimmer:any;
 const HeaterElement = () => {
     const clientId = localStorage.getItem('labhub_client_id');
     const [status] = useDeviceStatus();
     const navigate = useNavigate();
     const [isOpen,setModal] = useState("");
     const [temperature,setTemperature] =useState<number>(0);
+    const [temperatureShouldBe,setTemperatureShouldBe] =useState<number>(0);
 
     const handleTemperature = (title:string) => {
         if(title === 'sub' && temperature > 0)
-        setTemperature(temperature - 1)
-        if(title === 'add' && temperature < 60)
-        setTemperature(temperature + 1)
+        setTemperature((temp) => temp > 0 ? temp - 1 : temp)
+        if(title === 'add' && temperature < 100)
+        setTemperature((temp) => temp <100 ? temp + 1 : temp)
     }
     const handleStart = () => {
 
@@ -30,15 +32,39 @@ const HeaterElement = () => {
     const handleSubmit = () => {
 
     }
+    const handleMouseDownEvent = (event:string,title:string) => {
+        if(title === 'add'){
+            if(event === 'enter'){
+                temperatureTimmer = setInterval(() =>handleTemperature(title),100)
+                setTemperatureShouldBe(temperature +1)
+            }
+             if(event === 'leave'){
+                 clearInterval(temperatureTimmer)
+                if(temperatureShouldBe > temperature) handleTemperature(title)
+                setTemperatureShouldBe(0)
+             }
+        }
+        if(title === 'sub'){
+            if(event === 'enter'){
+                temperatureTimmer = setInterval(() => handleTemperature(title),100)
+                setTemperatureShouldBe(temperature - 1)
+            }
+             if(event === 'leave'){
+                 clearInterval(temperatureTimmer)
+                 if(temperatureShouldBe < temperature) handleTemperature(title)
+                setTemperatureShouldBe(0)
+             }
+        }
+    }
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
              <div className={styles.HeaderTextWrapper}>
             <div>Setpoint Temperature</div>
             <div className={styles.RateMeasureRightSide}>
                 <div className={styles.DataMeasureButtom}>
-                    <img onClick={() => handleTemperature('sub')} src={ExpandIcon} style={{cursor:"pointer"}} alt="subtract"/>
+                    <img onMouseDown={() => handleMouseDownEvent('enter','sub')} onMouseUp={() => handleMouseDownEvent('leave','sub')} src={ExpandIcon} style={{cursor:"pointer"}} alt="subtract"/>
                     <div className={styles.TextStyle}>{temperature}</div>
-                    <img onClick={() => handleTemperature('add')} src={CollapsedIcon} style={{cursor:"pointer"}} alt="add"/>
+                    <img onMouseDown={() => handleMouseDownEvent('enter','add')} onMouseUp={() => handleMouseDownEvent('leave','add')} src={CollapsedIcon} style={{cursor:"pointer"}} alt="add"/>
                 </div>
                 <img onClick={() => setModal("Setpoint Temperature")} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
             </div>

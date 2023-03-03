@@ -57,10 +57,10 @@ function Header(props: HeaderProps) {
 
   }
   useEffect(() => { // if connection is refused then scan devices screen
-    if(!connected){
+    if(!connected && location.pathname !== "/"){
        navigate("/scan-devices")
     }
-  },[connected,navigate])
+  },[connected,navigate,location?.pathname])
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (<div>
     <FirstHeader handleClick={handleClick} status={status} connected={connected} clientId={clientId}/>

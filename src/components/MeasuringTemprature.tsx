@@ -1,10 +1,10 @@
 import styles from '../styles/measuringTemprature.module.css';
-import {TempratureGraph} from "../images/index";
 import RightArrow from './RightArrow';
 import { useEffect, useState } from 'react';
 import {useDeviceStatus} from "../labhub/status";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
+import TemperatureGraph from './Graphs/TemperatureGraph';
 
 const MeasuringTemprature = () => {
     const clientId = localStorage.getItem('labhub_client_id');
@@ -13,7 +13,20 @@ const MeasuringTemprature = () => {
     const [isOpen,setModal] = useState<string>("");
     const [temprature,setTemprature] = useState<any>(0)
     const [isMobile,setIsMobile] = useState<boolean>(false)
-    const [tempratureUnit,setTempratureUnit] = useState<string>('c')
+    const [tempratureUnit,setTempratureUnit] = useState<string>('c');
+    const graphData = [
+        {id:1,x:1,y:9},
+        {id:2,x:2,y:9.2},
+        {id:3,x:3,y:4.5},
+        {id:4,x:4,y:6},
+        {id:4,x:5,y:10},
+        {id:4,x:6,y:1.5},
+        {id:4,x:7,y:3},
+        {id:4,x:8,y:8.9},
+        {id:4,x:9,y:9},
+        {id:4,x:10,y:7},
+
+    ]
     const handleSubmit = () => {
 
     }
@@ -63,7 +76,9 @@ const MeasuringTemprature = () => {
             <div>{tempratureUnit.toUpperCase()}</div>
         </div>
         <div className={styles.TextBody}>
-            <img src={TempratureGraph} className={styles.GraphStyle} alt="graph"/>
+            <div className={styles.GraphStyle}>
+                <TemperatureGraph data={graphData}/>
+            </div>
             {!isMobile ? <div className={styles.ButtonWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartButton} style={extraStyle}>Restart</div>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.StopButton} style={extraStyle}>Stop</div>

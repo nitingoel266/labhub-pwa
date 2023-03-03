@@ -7,7 +7,6 @@
 
 # testing
 /coverage
-package-lock.json
 backup.txt
 
 # production

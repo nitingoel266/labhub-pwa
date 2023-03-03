@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom";
 import {useDeviceStatus,useSocketConnected} from "../../labhub/status";
-import {joinAsMember} from "../../labhub/actions";
+// import {joinAsMember} from "../../labhub/actions";
 import LeadeSelectionModal from "./leaderSelectionModal";
 
 const LeaderDisconnect = () => {
@@ -30,7 +30,7 @@ const LeaderDisconnect = () => {
 
     useEffect(() => { // if leader selected and connection established the all members should be on mode selection screen
             if(connected && status && status?.leaderSelected){
-                joinAsMember()
+                // joinAsMember()
                 // setModal(false)
                 if(location.pathname === '/scan-devices')
                 navigate("/mode-selection")

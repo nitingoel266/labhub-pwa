@@ -15,12 +15,24 @@
     flex-direction: row;
     align-items: center;
 }
+.RateMeasureRightSideSubWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.OuterText {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #A0A0A0;
+    cursor: pointer;
+    height: 20px;
+}
 .DataMeasureButtom {
     display: flex;
     flex-direction: row;
     align-items: center;
-    border: 2px solid #000000;
-    border-radius: 5px;
+    border-top: 2px solid #A5A5A5;
+    border-bottom: 2px solid #A5A5A5;
     padding: 8px;
     margin-right: 10px;
 }

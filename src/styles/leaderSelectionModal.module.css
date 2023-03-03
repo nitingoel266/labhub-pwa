@@ -19,31 +19,74 @@
 
 }
 .TextContainer {
-    height: 150px;
-    width: 280px;
-    background-color: #D9D9D9;
+    width: 320px;
+    background-color: #EFEFEF;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    padding: 0px 10px;
+    flex:1;
 }
-.ButtonWrapper {
-    margin-top: 10px;
+.Headertext {
+    background-color: #424C58;
+    height: 30px;
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding-left: 15px;
+    color: #FFFFFF;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+.BodyWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 120px;
+    margin:10px 0px;
+    flex:1;
+}
+.Bodytext {
+    margin: 10px;
+    display: flex;
+    flex:1;
+    min-height: 50px;
+    flex-direction: column;
     justify-content: center;
 }
-.Buttons {
-    background-color: #D9D9D9;
+.BodyPrimaryText {
+    font-weight: 400;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+.BodySecondaryText {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+.ButtonWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+.CancelButton {
+    background-color: #424C58;
     padding: 7px;
     border-radius: 5px;
     margin-right: 10px;
     width:55px;
     text-align: center;
-    font-weight: 700;
+    font-weight: 400;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.YesButton {
+    background-color: #9CD5CD;
+    padding: 7px;
+    border-radius: 5px;
+    margin-right: 10px;
+    width:55px;
+    text-align: center;
+    font-weight: 400;
     cursor: pointer;
 }
 .IButtonTopWrapper {

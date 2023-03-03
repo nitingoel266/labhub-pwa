@@ -1,6 +1,6 @@
 import {useDeviceStatus,useSocketConnected} from "../labhub/status";
 import {uninitSetup} from "../labhub/setup";
-import {resetLeader,unjoinMember}from "../labhub/actions";
+import {resetLeader/* ,unjoinMember */}from "../labhub/actions";
 import {setSelectedFunction,setSelectedMode} from "../labhub/actions-client";
 import styles from '../styles/header.module.css';
 import {DeviceIcon,BatteryIcon,BackIcon,ShareIcon,TextIcon,WhiteShareIcon,SyncIcon,WhiteDownloadIcon,WhiteDeleteIcon} from "../images/index"
@@ -36,9 +36,9 @@ function Header(props: HeaderProps) {
   const handleDisconnectLeaderMember = () => {
     if(clientId === status?.leaderSelected){
       resetLeader()
-      navigate("/scan-devices")
+      // navigate("/scan-devices")
     }if(clientId && status?.membersJoined && status?.membersJoined.includes(clientId)){
-      unjoinMember()
+      // unjoinMember()
     }
     setModal("")
   }

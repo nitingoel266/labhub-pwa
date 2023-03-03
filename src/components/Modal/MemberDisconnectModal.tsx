@@ -1,4 +1,4 @@
-import {WarningIcon} from "../../images/index";
+import {WhiteWarningIcon} from "../../images/index";
 import styles from "../../styles/leaderSelectionModal.module.css";
 
 
@@ -25,12 +25,19 @@ const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen
         }}
         >
             <div className={styles.TextContainer}>
-                <img src={WarningIcon} alt="warning"/>
-                <div style={{textAlign:"center",fontSize:"16px",marginBottom:20}}>{message}</div>
-            </div>
-            <div className={styles.ButtonWrapper}>
-                <div onClick={handleDisconnect} className={styles.Buttons}>Yes</div>
-                <div onClick={() => setModal("")} className={styles.Buttons}>Cancel</div>
+                <div className={styles.Headertext}>
+                    <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
+                    <div>Title</div>
+                </div>
+                <div className={styles.BodyWrapper}>
+                    <div className={styles.Bodytext}>
+                        <div>{message}</div>
+                    </div>
+                    <div className={styles.ButtonWrapper}>
+                        <div onClick={() => setModal("")} className={styles.CancelButton}>Cancel</div>
+                        <div onClick={handleDisconnect} className={styles.YesButton}>Yes</div>
+                    </div>
+                </div>
             </div>
         </div>
         </div>)

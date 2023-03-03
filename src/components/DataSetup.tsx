@@ -45,10 +45,14 @@ const DataSetup = () => {
         <div className={styles.DataRateWapper}>
             <div>Data Rate</div>
             <div className={styles.RateMeasureRightSide}>
-                <div className={styles.DataMeasureButtom}>
-                    <img onClick={() => handleDataRate('sub')} src={ExpandIcon} style={{cursor:"pointer"}} alt="subtract"/>
-                    <div className={styles.TextStyle}>{dataRateOption[dataRateIndex]}</div>
-                    <img onClick={() => handleDataRate('add')} src={CollapsedIcon} style={{cursor:"pointer"}} alt="add"/>
+                <div className={styles.RateMeasureRightSideSubWrapper}>
+                    <div onClick={() => handleDataRate('add')} className={styles.OuterText}>{dataRateOption[dataRateIndex + 1] || " "}</div>
+                    <div className={styles.DataMeasureButtom}>
+                        <img onClick={() => handleDataRate('sub')} src={ExpandIcon} style={{cursor:"pointer"}} alt="subtract"/>
+                        <div className={styles.TextStyle}>{dataRateOption[dataRateIndex]}</div>
+                        <img onClick={() => handleDataRate('add')} src={CollapsedIcon} style={{cursor:"pointer"}} alt="add"/>
+                    </div>
+                    <div onClick={() => handleDataRate('sub')} className={styles.OuterText}>{dataRateOption[dataRateIndex -1]}</div>
                 </div>
                 <img onClick={() => setModal("Data Rate")} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
             </div>
@@ -56,10 +60,14 @@ const DataSetup = () => {
         <div className={styles.DataRateWapper}>
             <div>Number of samples</div>
             <div className={styles.RateMeasureRightSide}>
-                <div className={styles.DataMeasureButtom}>
-                    <img onClick={() => handleDataSample('sub')} src={ExpandIcon} style={{cursor:"pointer"}} alt="subtract"/>
-                    <div className={styles.TextStyle}>{dataSampleOption[dataSampleIndex]}</div>
-                    <img onClick={() => handleDataSample('add')} src={CollapsedIcon} style={{cursor:"pointer"}} alt="add"/>
+                <div className={styles.RateMeasureRightSideSubWrapper}>
+                    <div onClick={() => handleDataSample('add')} className={styles.OuterText}>{dataSampleOption[dataSampleIndex + 1] || " "}</div>
+                    <div className={styles.DataMeasureButtom}>
+                        <img onClick={() => handleDataSample('sub')} src={ExpandIcon} style={{cursor:"pointer"}} alt="subtract"/>
+                        <div className={styles.TextStyle}>{dataSampleOption[dataSampleIndex]}</div>
+                        <img onClick={() => handleDataSample('add')} src={CollapsedIcon} style={{cursor:"pointer"}} alt="add"/>
+                    </div>
+                    <div onClick={() => handleDataSample('sub')} className={styles.OuterText}>{dataSampleOption[dataSampleIndex -1]}</div>
                 </div>
                 <img onClick={() => setModal("Number of samples")} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
             </div>

@@ -1,5 +1,5 @@
 import styles from '../../styles/scanDevice.module.css';
-import {LabHubSticker,BluetoothIcon} from "../../images/index";
+import {LabHubSticker,BluetoothIcon,BlackBluetoothIcon} from "../../images/index";
 import { useSocketConnected,useDeviceStatus} from '../../labhub/status';
 import {resetLeader} from "../../labhub/actions"
 import {initSetup,uninitSetup} from "../../labhub/setup";
@@ -34,9 +34,9 @@ const ScanDevices = () => {
     // console.log("In the scan screen ",status, "connected ",connected)
     return <div className={styles.ScanDeviceWrapper}>
         <img src={LabHubSticker} className={styles.LabHubStickerWrapper} alt="al"/>
-        <div className={styles.ScanDeviceButton} onClick={handleSubmit}>
-            <img src={BluetoothIcon} className={styles.BluetoothIconWrapper} alt="bluetoothIcon"/>
-            <div className={styles.ScanDeviceText}>Scan Devices</div>
+        <div className={styles.ScanDeviceButton} style={connected ? {} : {backgroundColor:"#FFFFFF",boxShadow:"0px 1px 2px 1px #B6B5B5"}} onClick={handleSubmit}>
+            <img src={connected ? BluetoothIcon : BlackBluetoothIcon} className={styles.BluetoothIconWrapper} alt="bluetoothIcon"/>
+            <div className={styles.ScanDeviceText} style={connected ? {} :{color:"#424C58"}}>Scan Devices</div>
         </div>
         {connected ? <div className={styles.ScanDeviceButton} onClick={handleDisconnect}>
             <img src={BluetoothIcon} className={styles.BluetoothIconWrapper} alt="bluetoothIcon"/>

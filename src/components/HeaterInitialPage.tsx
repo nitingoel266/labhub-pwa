@@ -8,11 +8,12 @@ const HeaterInitialPage = () => {
     const [status] = useDeviceStatus();
     const navigate = useNavigate();
     const handleSubmit = () => {
+        if(status?.sensorConnected)
         navigate("/method-selection")
     }
     return <div className={styles.TopWrapper} style={{height:window.innerHeight-150}}>
             <div className={styles.PimaryText}>Plug in the Heater and connect Power to proceed</div>
-            <RightArrow isSelected={!status?.sensorConnected ? true : false} handleSubmit = {handleSubmit}/>
+            <RightArrow isSelected={status?.sensorConnected ? true : false} handleSubmit = {handleSubmit}/>
     </div>
 }
 

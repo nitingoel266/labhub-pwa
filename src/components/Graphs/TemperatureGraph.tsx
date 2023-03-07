@@ -26,10 +26,10 @@ type Props = {
 
 const TemperatureGraph = ({data}:Props) => {
     const chatData = {
-    labels:data.map((el:any) => el.x),
+    labels:data.map((el:any) => el.time),
     datasets: [{
       label: 'Temperature',
-      data: data.map((el:any) => el.y),
+      data: data.map((el:any) => el.temp),
       tension: 0.4,
       showLine: true,
       borderWidth: 2, 

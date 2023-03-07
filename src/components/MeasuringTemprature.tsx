@@ -1,7 +1,8 @@
 import styles from '../styles/measuringTemprature.module.css';
 import RightArrow from './RightArrow';
 import { useEffect, useState } from 'react';
-import {useDeviceStatus} from "../labhub/status";
+import {useDeviceStatus, useDeviceDataStream} from "../labhub/status";
+import {startSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
 import TemperatureGraph from './Graphs/TemperatureGraph';
@@ -9,41 +10,65 @@ import TemperatureGraph from './Graphs/TemperatureGraph';
 const MeasuringTemprature = () => {
     const clientId = localStorage.getItem('labhub_client_id');
     const [status] = useDeviceStatus();
+    const [dataStream] = useDeviceDataStream();
     const navigate = useNavigate();
     const [isOpen,setModal] = useState<string>("");
     const [temprature,setTemprature] = useState<any>(0)
     const [isMobile,setIsMobile] = useState<boolean>(false)
     const [tempratureUnit,setTempratureUnit] = useState<string>('c');
-    const graphData = [
-        {id:1,x:1,y:9},
-        {id:2,x:2,y:9.2},
-        {id:3,x:3,y:4.5},
-        {id:4,x:4,y:6},
-        {id:4,x:5,y:10},
-        {id:4,x:6,y:1.5},
-        {id:4,x:7,y:3},
-        {id:4,x:8,y:8.9},
-        {id:4,x:9,y:9},
-        {id:4,x:10,y:7},
+    const [graphData,setGraphData] = useState<any>([]) // {time:in sec,temp}
 
-    ]
+    const handleTemperatureUnit = (title:string) => {
+        if(title === 'f' && tempratureUnit !== title){
+            let updatedTemp = [];
+            for(let one of graphData){
+                if(one && one.temp){
+                    let fahrenheit = ((9/5 * one.temp) + 32).toFixed(0);
+                    updatedTemp.push({...one,temp:fahrenheit})
+                }
+            }
+            setGraphData(updatedTemp)
+            setTempratureUnit(title)
+        }else if(title === 'c' && tempratureUnit !== title){
+            let updatedTemp = [];
+            for(let one of graphData){
+                if(one && one.temp){
+                    let celcius = (((one.temp-32)*5)/9).toFixed(0);
+                    updatedTemp.push({...one,temp:celcius})
+                }
+            }
+            setGraphData(updatedTemp)
+            setTempratureUnit(title)
+        }
+    }
     const handleSubmit = () => {
 
     }
     const handleRestart = () => {
-        setTemprature(0)
+        setGraphData([])
+        startSensorExperiment()
         setModal("")
     }
     const handleStop = () => {
         setModal("")
         navigate(-1)
     }
-    const handleCapture = () => {
-
+    const handleCapture = (value:any) => {
+        setTemprature(value)
     }
     const handleSave = () => {
-
+        let resultTemperature = temprature;
+        if(resultTemperature && tempratureUnit === 'f'){
+            resultTemperature = (((resultTemperature-32)*5)/9).toFixed(0);
+        }
+        //save the temperature in labhub device in celcis mode
     }
+    useEffect(() => {
+        if(dataStream && dataStream.temperature)
+        setGraphData((prevData:any) => {
+            return [...prevData,{time:prevData.length * Number(status?.setupData?.dataRate),temp:dataStream.temperature}]
+        })
+    },[dataStream, dataStream?.temperature,status?.setupData?.dataRate])
     useEffect(() => {
         window.addEventListener('resize', () =>{
             if(window.innerWidth <= 580)
@@ -60,11 +85,11 @@ const MeasuringTemprature = () => {
         <div className={styles.HeaderWrapper}>
             <div style={{fontWeight:500}}>Measuring Temperature</div>
             <div className={styles.HeaderRightWrapper}>
-                <div onClick={() => setTempratureUnit('f')} className={styles.TempratureDegree} style={{backgroundColor: tempratureUnit === 'f' ? "#424C58" : "#9CD5CD",color:tempratureUnit === 'f' ? '#FFFFFF' : "#000000"}}>
+                <div onClick={() => handleTemperatureUnit('f')} className={styles.TempratureDegree} style={{backgroundColor: tempratureUnit === 'f' ? "#424C58" : "#9CD5CD",color:tempratureUnit === 'f' ? '#FFFFFF' : "#000000"}}>
                     <div>F</div>
                     <div className={styles.TempratureDegreeIcon} style={{border:`1px solid ${tempratureUnit === 'f' ? '#FFFFFF' : "#000000"}`}}>{" "}</div>
                 </div>
-                <div onClick={() => setTempratureUnit('c')} className={styles.TempratureDegree} style={{backgroundColor: tempratureUnit === 'c' ? "#424C58" : "#9CD5CD",color:tempratureUnit === 'c' ? '#FFFFFF' : "#000000"}}>
+                <div onClick={() => handleTemperatureUnit('c')} className={styles.TempratureDegree} style={{backgroundColor: tempratureUnit === 'c' ? "#424C58" : "#9CD5CD",color:tempratureUnit === 'c' ? '#FFFFFF' : "#000000"}}>
                     <div>C</div>
                     <div className={styles.TempratureDegreeIcon} style={{border:`1px solid ${tempratureUnit === 'c' ? '#FFFFFF' : "#000000"}`}}>{" "}</div>
                 </div>

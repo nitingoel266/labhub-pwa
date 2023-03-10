@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import {WhiteWarningIcon} from "../../images/index";
 import { joinAsLeader} from '../../labhub/actions';
 import styles from "../../styles/leaderSelectionModal.module.css";
+// import { useNavigate } from "react-router-dom";
 
 
 type Props= {
@@ -10,7 +10,7 @@ type Props= {
 }
 
 const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
     // useEffect(() => {
     //         if(connected && status && status?.leaderSelected){
     //             joinAsMember()

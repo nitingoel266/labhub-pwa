@@ -2,7 +2,7 @@ import { useState } from "react";
 import {DataSetupIcon,IButtonIcon,RGBSpectIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
-import {setSelectedMode} from "../../labhub/actions-client"
+// import {setSelectedMode} from "../../labhub/actions-client"
 import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import IButtonContent from "../../components/IButtonContent";

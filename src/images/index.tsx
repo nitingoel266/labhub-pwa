@@ -19,7 +19,6 @@ import CloseIcon from "../assets/Close-Icon.png";
 import BlackIButtonIcon from "../assets/Black-I-Button-Icon.png";
 import ExpandIcon from "../assets/Expand-Icon.png";
 import CollapsedIcon from "../assets/Collapsed-Icon.png";
-import TempratureGraph from "../assets/Temprature-Graph.png";
 import TemperatureProbeIcon from "../assets/Temperature-Probe-Icon.png";
 import FileIcon from "../assets/File-Icon.png";
 import TimeIcon from "../assets/Time-Icon.png";
@@ -58,7 +57,6 @@ export {
     BlackIButtonIcon,
     ExpandIcon,
     CollapsedIcon,
-    TempratureGraph,
     TemperatureProbeIcon,
     FileIcon,
     TimeIcon,

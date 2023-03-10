@@ -22,16 +22,17 @@ import {
 );
 type Props = {
     data:{id:number,x:number,y:number}[];
+    showPoint:boolean;
 }
 
-const TemperatureGraph = ({data}:Props) => {
+const TemperatureGraph = ({data,showPoint}:Props) => {
     const chatData = {
     labels:data.map((el:any) => el.time),
     datasets: [{
       label: 'Temperature',
       data: data.map((el:any) => el.temp),
       tension: 0.4,
-      showLine: true,
+      showLine: showPoint ? true : false,
       borderWidth: 2, 
       borderColor: '#A8D8D1', 
       fill: true,
@@ -42,7 +43,7 @@ const TemperatureGraph = ({data}:Props) => {
         gradient.addColorStop(1, 'rgba(204, 225, 222,0.1)');
         return gradient;
       },
-      pointRadius: 2, 
+      pointRadius: showPoint ? 2 : 0, 
       pointStyle: 'circle', 
       pointBorderColor: '#424C58', 
       pointBackgroundColor: '#424C58', 

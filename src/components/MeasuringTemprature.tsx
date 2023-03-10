@@ -102,7 +102,7 @@ const MeasuringTemprature = () => {
         </div>
         <div className={styles.TextBody}>
             <div className={styles.GraphStyle}>
-                <TemperatureGraph data={graphData}/>
+                <TemperatureGraph data={graphData} showPoint={false}/>
             </div>
             {!isMobile ? <div className={styles.ButtonWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartButton} style={extraStyle}>Restart</div>

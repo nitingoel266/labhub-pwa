@@ -16,8 +16,8 @@ const DataSetup = () => {
     const [isOpen,setModal] = useState("");
     const [dataRateIndex,setDataRateIndex] = useState<number>(0)
     const [dataSampleIndex,setDataSampleIndex] = useState<number>(0)
-    const [dataRateOption] = useState<any>([1,5,10,30,60,600,1800]/* ['0s','1s','5s','10s','30s','1m','10m','30m','1h'] */);
-    const [dataSampleOption]= useState<any>(['cont',5,10,25,50,100,200]);
+    const [dataRateOption] = useState<any>([1,5,10,30,60,600,1800,'user']/* ['0s','1s','5s','10s','30s','1m','10m','30m','1h'] */);
+    const [dataSampleOption]= useState<any>([5,10,25,50,100,200,'cont']);
     const isLeader = clientId === status?.leaderSelected ? true : false;
 
     useEffect(() => {

@@ -8,25 +8,15 @@ import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import IButtonContent from "../../components/IButtonContent";
 
-let temperatureTimmer:any;
-
 const MethodSelection = () => {
     const navigate = useNavigate();
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
-    const [temperature,setTemperature] =useState<number>(0);
-    const [temperatureShouldBe,setTemperatureShouldBe] =useState<number>(0);
 
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
         setSelectedItem("")
         else setSelectedItem(item)
-    }
-    const handleTemperature = (title:string) => {
-        if(title === 'sub' && temperature > 0)
-        setTemperature((temp) => temp > 0 ? temp - 1 : temp)
-        if(title === 'add' && temperature < 100)
-        setTemperature((temp) => temp <100 ? temp + 1 : temp)
     }
     const handleSubmit = () => {
         if(selectedItem){
@@ -42,44 +32,11 @@ const MethodSelection = () => {
         //     setSelectedItem(result)
         // }
     },[navigate])
-    const handleMouseDownEvent = (event:string,title:string) => {
-        if(title === 'add'){
-            if(event === 'enter'){
-                temperatureTimmer = setInterval(() =>handleTemperature(title),100)
-                setTemperatureShouldBe(temperature +1)
-            }
-             if(event === 'leave'){
-                 clearInterval(temperatureTimmer)
-                if(temperatureShouldBe > temperature) handleTemperature(title)
-                setTemperatureShouldBe(0)
-             }
-        }
-        if(title === 'sub'){
-            if(event === 'enter'){
-                temperatureTimmer = setInterval(() => handleTemperature(title),100)
-                setTemperatureShouldBe(temperature - 1)
-            }
-             if(event === 'leave'){
-                 clearInterval(temperatureTimmer)
-                 if(temperatureShouldBe < temperature) handleTemperature(title)
-                setTemperatureShouldBe(0)
-             }
-        }
-    }
     const extraStyle = {backgroundColor:"#9CD5CD"} 
     return <div style={{position:"relative"}}>
          <div className={styles.HeaderTextWrapper}>
-            <div>Setpoint Temperature</div>
-            <div className={styles.RateMeasureRightSide}>
-                <div className={styles.DataMeasureButtom}>
-                    <img /* onClick={() => handleTemperature('sub')} */ onMouseDown={() => handleMouseDownEvent('enter','sub')} onMouseUp={() => handleMouseDownEvent('leave','sub')} src={ExpandIcon} style={{cursor:"pointer"}} alt="subtract"/>
-                    <div className={styles.TextStyle}>{temperature}</div>
-                    <img /* onClick={() => handleTemperature('add')} */ onMouseDown={() => handleMouseDownEvent('enter','add')} onMouseUp={() => handleMouseDownEvent('leave','add')} src={CollapsedIcon} style={{cursor:"pointer"}} alt="add"/>
-                </div>
-                <img onClick={() => setModal("Setpoint Temperature")} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
-            </div>
+            <div style={{marginBottom:25}}>Control Method</div>
         </div>
-        <div className={styles.HeaderSubText}>CONTROL METHOD</div>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:"Heater Element"},{icon:TemperatureProbeIcon,title:"Temperature Probe"}].map(el => (
               <div key={el.title} className={styles.Button} style={el.title === selectedItem ? extraStyle : {}}>

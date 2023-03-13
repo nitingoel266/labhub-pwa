@@ -65,7 +65,7 @@ function TestPage(props: TestPageProps) {
 
       <button onClick={() => setupData({ dataRate: 5, dataSample: 10 })} disabled={!isLeader || status?.setupData.dataRate !== 1 || status?.setupData.dataSample !== 'cont'}>Set data rate</button>
       <br />
-      <button onClick={() => setupData({ dataRate: 'manual', dataSample: 'cont' })} disabled={!isLeader || cond1}>Set user data rate</button>
+      <button onClick={() => setupData({ dataRate: 'user', dataSample: 'cont' })} disabled={!isLeader || cond1}>Set user data rate</button>
       <br />
       <button onClick={() => setupData()} disabled={!isLeader || !status || (status.setupData.dataRate === 1 && status.setupData.dataSample === 'cont')}>Reset data rate</button>
       <br /><br />

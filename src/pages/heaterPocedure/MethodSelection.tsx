@@ -1,7 +1,7 @@
 
 
 import { useEffect, useRef, useState } from "react";
-import {DataSetupIcon,IButtonIcon,TemperatureProbeIcon,CollapsedIcon,ExpandIcon,BlackIButtonIcon} from "../../images/index";
+import {DataSetupIcon,IButtonIcon,TemperatureProbeIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
 import { useNavigate } from "react-router-dom";

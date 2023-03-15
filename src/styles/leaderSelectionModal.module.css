@@ -96,7 +96,7 @@
     right: 0;
     position: fixed;
     background-color: #000000;
-    opacity: 0%;
+    opacity: 0.3;
 }
 .IButtonTextContainer {
     background-color: #424C58;

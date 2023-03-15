@@ -2,7 +2,7 @@ import styles from '../styles/measuringTemprature.module.css';
 import RightArrow from './RightArrow';
 import { useEffect, useState } from 'react';
 import {useDeviceStatus, useDeviceDataStream} from "../labhub/status";
-import {startSensorExperiment} from "../labhub/actions";
+// import {startSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
 import TemperatureGraph from './Graphs/TemperatureGraph';

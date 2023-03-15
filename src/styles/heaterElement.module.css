@@ -6,6 +6,11 @@
     margin: 20px 25px 5px 25px;
     font-weight: 500;
 }
+.HeaderTextSubWrapper {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+}
 .RateMeasureRightSide {
     display: flex;
     flex-direction: row;
@@ -38,8 +43,21 @@
     justify-content: center;
     margin-top: 20px;
 }
+.TemperatureWrapper {
+    display: flex;
+    flex-direction: row;
+    font-weight: 600;
+    font-size: 20px;
+}
+.TemperatureDegree {
+    border: 2px solid #000000;
+    border-radius: 100px;
+    width:2px;
+    height: 2px;
+    margin-right: 4px;
+}
 .HeaterEelementImage {
-    height: 180px;
+    height: 120px;
 }
 .HeaterElementText {
     /* margin-left: 20px; */
@@ -51,7 +69,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
-    margin-right: 60px;
+    margin-right: 20px;
 }
 .Button {
     background-color: #424C58;
@@ -64,13 +82,10 @@
     cursor: pointer;
 }
 
-@media (max-width:300px) {
-    .ButtonWrapper{
-        margin-right: 20px;
-    }
-}
-
 @media (min-width:600px) {
+    .HeaterEelementImage {
+        height: 180px;
+    }
     .HeaderTextWrapper{
         margin: 20px 100px 0px 100px;
     }

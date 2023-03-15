@@ -12,7 +12,7 @@ const HeaterInitialPage = () => {
         navigate("/method-selection")
     }
     return <div className={styles.TopWrapper} style={{height:window.innerHeight-150}}>
-            <div className={styles.PimaryText}>Plug in the Heater and connect Power to proceed</div>
+            <div className={styles.PimaryText}>{status?.sensorConnected ? 'Heater is Connected.' : 'Plug in the Heater and connect Power to proceed'}</div>
             <RightArrow isSelected={status?.sensorConnected ? true : false} handleSubmit = {handleSubmit}/>
     </div>
 }

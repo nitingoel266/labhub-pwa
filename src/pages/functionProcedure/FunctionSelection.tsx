@@ -1,7 +1,7 @@
 
 
-import { useState } from "react";
-import {DataSetupIcon,IButtonIcon,SensorIcon,RGBSpectIcon,HeaterIcon} from "../../images/index";
+import { useRef, useState } from "react";
+import {DataIcon,IButtonIcon,SensorIcon,RGBSpectIcon,HeaterIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
 import IButtonModal from "../../components/Modal/IButtonModal";
@@ -12,8 +12,13 @@ import {setSelectedFunction} from "../../labhub/actions-client";
 import { useNavigate } from "react-router-dom";
 
 const FunctionSelection = () => {
+    const dataSetUpRef = useRef()
+    const sensorRef = useRef()
+    const heaterRef = useRef()
+    const rgbSpectRef = useRef()
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
+    const [iModalPostion,setIModalPosition] = useState<any>({})
     const navigate = useNavigate();
     // const [status] = useDeviceStatus();
     // set the initial value from function selection
@@ -37,24 +42,34 @@ const FunctionSelection = () => {
             navigate(`/${selectedItem.replace(" ","-").toLowerCase()}`)
         }
     }
+    const handleIModal = (title:string) => {
+        const getRef:any = {
+            'Data Setup':dataSetUpRef,
+            'Sensor':sensorRef,
+            "Heater":heaterRef,
+            "RGB Spect":rgbSpectRef
+        }
+        setModal(title)
+        setIModalPosition({top:getRef[title] && getRef[title].current?.offsetTop})
+    }
     const extraStyle = {backgroundColor:"#9CD5CD"} 
     return <div style={{position:"relative"}}>
         <div className={styles.HeaderText}>Select Function</div>
-        {[[{icon:DataSetupIcon,title:"Data Setup"},{icon:SensorIcon,title:"Sensor"}],[{icon:HeaterIcon,title:"Heater"},{icon:RGBSpectIcon,title:"RGB Spect"}]].map(e => (<div key={e[0]['title']} className={styles.ButtonWrapper}>
-            {e.map(el => (
-              <div key={el.title} className={styles.Button} style={el.title === selectedItem ? extraStyle : {}} >
+        {[[{icon:DataIcon,title:"Data Setup",ref:dataSetUpRef},{icon:SensorIcon,title:"Sensor",ref:sensorRef}],[{icon:HeaterIcon,title:"Heater",ref:heaterRef},{icon:RGBSpectIcon,title:"RGB Spect",ref:rgbSpectRef}]].map((e:any) => (<div key={e[0]['title']} className={styles.ButtonWrapper}>
+            {e.map((el:any) => (
+              <div key={el.title} ref={el.ref} className={styles.Button} style={el.title === selectedItem ? extraStyle : {}} >
                  <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
                      <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
                      <div style={{marginLeft:10}}>{el.title}</div>
                  </div>
-                 <div onClick={() => setModal(el.title)} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt="i button"/>
                  </div>
              </div>
             ))}
             </div>))}
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit = {handleSubmit}/>
-        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={IButtonContent[isOpen.replace(" ","_")]} setModal={(value) => setModal(value)}/>
+        <IButtonModal isOpen={isOpen ? true : false} pos={iModalPostion} title={isOpen} description={IButtonContent[isOpen.replace(" ","_")]} setModal={(value) => setModal(value)}/>
     </div>
 }
 

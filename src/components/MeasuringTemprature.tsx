@@ -16,7 +16,19 @@ const MeasuringTemprature = () => {
     const [temprature,setTemprature] = useState<any>(0)
     const [isMobile,setIsMobile] = useState<boolean>(false)
     const [tempratureUnit,setTempratureUnit] = useState<string>('c');
-    const [graphData,setGraphData] = useState<any>([]) // {time:in sec,temp}
+    const [graphData,setGraphData] = useState<any>([
+        {time:0,temp:10},
+        {time:1,temp:20},
+        {time:2,temp:25},
+        {time:3,temp:35},
+        {time:4,temp:40},
+        {time:5,temp:45},
+        {time:6,temp:50},
+        {time:7,temp:21},
+        {time:8,temp:11},
+        {time:9,temp:31},
+
+    ]) // {time:in sec,temp}
 
     const handleTemperatureUnit = (title:string) => {
         if(title === 'f' && tempratureUnit !== title){
@@ -46,7 +58,7 @@ const MeasuringTemprature = () => {
     }
     const handleRestart = () => {
         setGraphData([])
-        startSensorExperiment()
+        // startSensorExperiment()
         setModal("")
     }
     const handleStop = () => {

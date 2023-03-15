@@ -8,8 +8,9 @@ const LeaderDisconnect = () => {
     const navigate = useNavigate();
     const location = useLocation()
     const [isOpen,setModal] = useState(false)
-  const [status] = useDeviceStatus();
-  const [connected] = useSocketConnected();
+    const [joinedAsLeader,setJoinedAsLeader] = useState<boolean>(false)
+    const [status] = useDeviceStatus();
+    const [connected] = useSocketConnected();
 
     useEffect(() => { //if device is connected and leader is not there so leader selection modal
         if(connected && status && !status.leaderSelected){
@@ -27,18 +28,22 @@ const LeaderDisconnect = () => {
             clearTimeout(timer)
         }
     },[isOpen,connected,status])
-
+    useEffect(() => {
+        if(location?.pathname){
+            setJoinedAsLeader(false)
+        }
+    },[location?.pathname])
     useEffect(() => { // if leader selected and connection established the all members should be on mode selection screen
-            if(connected && status && status?.leaderSelected){
+            if(connected && status && status?.leaderSelected && joinedAsLeader){
                 // joinAsMember()
                 // setModal(false)
                 if(location.pathname === '/scan-devices')
                 navigate("/mode-selection")
             }
-    },[status?.leaderSelected,connected,navigate,status,location?.pathname])
+    },[status?.leaderSelected,connected,navigate,status,location?.pathname,joinedAsLeader])
     // console.log("in the leader selection :- connected",connected,"status :- ",status)
     return <>
-        {connected && !status?.leaderSelected && isOpen && <LeadeSelectionModal isOpen={isOpen} setModal={(value) => setModal(value)}/>}
+        {connected && !status?.leaderSelected && isOpen && <LeadeSelectionModal isOpen={isOpen} setModal={(value) => setModal(value)} setJoinedAsLeader={(value:any) => setJoinedAsLeader(value)}/>}
     </>
 }
 

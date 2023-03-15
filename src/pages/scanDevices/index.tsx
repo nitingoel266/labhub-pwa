@@ -3,15 +3,21 @@ import {LabHubSticker,BluetoothIcon,BlackBluetoothIcon} from "../../images/index
 import { useSocketConnected,useDeviceStatus} from '../../labhub/status';
 import {resetLeader} from "../../labhub/actions"
 import {initSetup,uninitSetup} from "../../labhub/setup";
+import RightArrow from '../../components/RightArrow';
+import { useNavigate } from 'react-router-dom';
 // import { useState } from 'react';
 
 
 const ScanDevices = () => {
     // const [isOpen,setModal] = useState(false)
+    const navigate = useNavigate();
     const [connected] = useSocketConnected();
     const clientId = localStorage.getItem('labhub_client_id')
     const [status] = useDeviceStatus();
 
+    const handleRightArrow = () => {
+        navigate("/mode-selection")
+    }
     const handleSubmit = () => {
         // if(status?.leaderSelected){
         //     navigate("/mode-selection")
@@ -43,6 +49,7 @@ const ScanDevices = () => {
             <div className={styles.ScanDeviceText}>Disconnect</div>
         </div> : null}
         {/* <LeadeSelectionModal isOpen={isOpen} setModal={(value) => setModal(value)}/> */}
+        {connected && status?.leaderSelected && <RightArrow isSelected={status?.leaderSelected ? true : false} handleSubmit={handleRightArrow}/>}
     </div>
 }
 

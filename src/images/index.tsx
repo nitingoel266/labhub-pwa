@@ -19,7 +19,6 @@ import CloseIcon from "../assets/Close-Icon.png";
 import BlackIButtonIcon from "../assets/Black-I-Button-Icon.png";
 import ExpandIcon from "../assets/Expand-Icon.png";
 import CollapsedIcon from "../assets/Collapsed-Icon.png";
-import TempratureGraph from "../assets/Temprature-Graph.png";
 import TemperatureProbeIcon from "../assets/Temperature-Probe-Icon.png";
 import FileIcon from "../assets/File-Icon.png";
 import TimeIcon from "../assets/Time-Icon.png";
@@ -35,6 +34,7 @@ import SyncIcon from "../assets/Syn-Icon.png";
 import WhiteTickIcon from "../assets/White-Tick-Icon.png";
 import BlackBluetoothIcon from "../assets/Black-Bluetooth-Icon.png";
 import WhiteWarningIcon from "../assets/White-Warning-Icon.png";
+import DataIcon from "../assets/Data-Icon.png";
 
 export {
     LabIcon,
@@ -58,7 +58,6 @@ export {
     BlackIButtonIcon,
     ExpandIcon,
     CollapsedIcon,
-    TempratureGraph,
     TemperatureProbeIcon,
     FileIcon,
     TimeIcon,
@@ -73,5 +72,6 @@ export {
     SyncIcon,
     WhiteTickIcon,
     BlackBluetoothIcon,
-    WhiteWarningIcon
+    WhiteWarningIcon,
+    DataIcon
 };

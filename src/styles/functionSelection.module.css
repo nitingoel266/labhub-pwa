@@ -8,7 +8,7 @@
 }
 .HeaderText {
     font-weight: 500;
-    margin-top: 25px;
+    margin-top: 40px;
     margin-left: 25px;
     margin-bottom: 20px;
 }
@@ -88,9 +88,6 @@
     .HeaderText {
         margin-left: 20%;
     }
-    /* .Button {
-         margin-left: 30%; 
-    } */
     .ButtonWrapper {
         justify-content: center;
     }

@@ -6,9 +6,14 @@ type Props= {
     setModal:(value:any) => void;
     title:string;
     description:string;
+    pos?:{top:string,left:string};
 }
 
-const IButtonModal = ({setModal,isOpen,title,description} : Props)=> {
+const IButtonModal = ({setModal,isOpen,title,description,pos} : Props)=> {
+    let topPosition = pos?.top ? (Number(pos?.top) + 195) : 220;
+    if(topPosition + 100 > window.innerHeight){
+        topPosition = topPosition - 154;
+    }
     return (
         <div>
         {isOpen &&
@@ -19,14 +24,14 @@ const IButtonModal = ({setModal,isOpen,title,description} : Props)=> {
         <div
         className={styles.TopSecondWrapper}
         style={{
-            top: 220,
+            top: topPosition,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
+            alignItems: pos?.left ? 'flex-start' : 'center',
             width: '100%',
             position: 'fixed',
             transition: 'all 0.3s ease-out',
-            left:0,
+            left: pos?.left ? Number(pos?.left) -100 : 0,
             opacity: isOpen ? 1 : 0,
             transform: isOpen ? "translateY(0)" : "translateY(100vh)"
         }}

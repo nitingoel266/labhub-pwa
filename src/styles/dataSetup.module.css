@@ -7,10 +7,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: center;
+    margin-top: 10px;
 }
 .RateMeasureRightSide {
+    margin-top: 20px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -44,7 +45,8 @@
     text-align: center;
 }
 .IButton {
-    width: 22px;
+    width: 18px;
+    margin-left: 10px;
     cursor: pointer;
 }
 @media (min-width:580px) {

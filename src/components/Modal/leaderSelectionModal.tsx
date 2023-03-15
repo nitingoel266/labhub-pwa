@@ -1,16 +1,17 @@
-import { useNavigate } from "react-router-dom";
 import {WhiteWarningIcon} from "../../images/index";
 import { joinAsLeader} from '../../labhub/actions';
 import styles from "../../styles/leaderSelectionModal.module.css";
+// import { useNavigate } from "react-router-dom";
 
 
 type Props= {
     isOpen:boolean;
     setModal:(value:boolean) => void;
+    setJoinedAsLeader?:(value:boolean) => void;
 }
 
-const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
-  const navigate = useNavigate();
+const LeadeSelectionModal = ({setModal,isOpen,setJoinedAsLeader} : Props)=> {
+//   const navigate = useNavigate();
     // useEffect(() => {
     //         if(connected && status && status?.leaderSelected){
     //             joinAsMember()
@@ -20,6 +21,9 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
     // },[status?.leaderSelected])
     const submitHandler = () => {
         joinAsLeader()
+        if(setJoinedAsLeader){
+            setJoinedAsLeader(true)
+        }
         setModal(false)
         // navigate("/mode-selection")
     }

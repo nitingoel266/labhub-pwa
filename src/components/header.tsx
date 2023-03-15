@@ -57,10 +57,10 @@ function Header(props: HeaderProps) {
 
   }
   useEffect(() => { // if connection is refused then scan devices screen
-    if(!connected){
+    if(!connected && location.pathname !== "/"){
        navigate("/scan-devices")
     }
-  },[connected,navigate])
+  },[connected,navigate,location?.pathname])
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (<div>
     <FirstHeader handleClick={handleClick} status={status} connected={connected} clientId={clientId}/>
@@ -101,7 +101,7 @@ const SecondHeader = ({handleBack,handleMyRecord,handleClick,connected,status,cl
     {!["/temperature-records","/voltage-records","/rgb-records"].includes(location?.pathname) ? <div className={styles.FistHeaderSubWrapper}>
       <img onClick={() => connected ? handleMyRecord() : {}} src={TextIcon} style={{cursor:"pointer",width:37,marginRight:5}} alt="Text Icon"/>
       <img onClick={() => connected ? handleClick("device") : {}} src={ShareIcon} style={{cursor:"pointer",width:25}} alt="Share Icon"/>
-      {clientId !== status?.leaderSelected && <img src={SyncIcon} style={{cursor:"pointer",marginLeft:10,width:20}} alt="syn button"/>}
+      {connected && clientId !== status?.leaderSelected && <img src={SyncIcon} style={{cursor:"pointer",marginLeft:10,width:20}} alt="syn button"/>}
     </div> :
     <div className={styles.FistHeaderSubWrapper}>
       <img src={WhiteShareIcon} style={{cursor:"pointer",width:20,marginRight:15}} alt="Share Icon"/>

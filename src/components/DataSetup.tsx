@@ -19,18 +19,25 @@ const DataSetup = () => {
     const [iModalPostion,setIModalPosition] = useState<any>({})
     const [dataRateIndex,setDataRateIndex] = useState<number>(0)
     const [dataSampleIndex,setDataSampleIndex] = useState<number>(0)
-    const [dataRateOption] = useState<any>([1,5,10,30,60,600,1800,'user']/* ['0s','1s','5s','10s','30s','1m','10m','30m','1h'] */);
+    const [dataRateOption] = useState<any>(['1s','5s','10s','30s','1m','10m','30m','1h','user']/* ['0s','1s','5s','10s','30s','1m','10m','30m','1h'] */);
     const [dataSampleOption]= useState<any>([5,10,25,50,100,200,'cont']);
     const isLeader = clientId === status?.leaderSelected ? true : false;
-
+    const [getDataRate] = useState<any>({"1s":1, '5s':5, "10s":10,'30s':30,"60s":60, "10m":600 ,'30m': 1800 ,'1h': 3600,'user':'user'});
+    
     useEffect(() => {
         if(status?.setupData){
-            setDataRateIndex(dataRateOption.indexOf(status?.setupData?.dataRate || 0))
+            let rate;
+            for(let one in getDataRate){
+                if(getDataRate[one] === status?.setupData?.dataRate){
+                    rate = one;
+                }
+            }
+            setDataRateIndex(dataRateOption.indexOf(rate || 0))
             setDataSampleIndex(dataSampleOption.indexOf(status?.setupData?.dataSample || 0))
         }
-    },[navigate,status?.setupData,dataRateOption,dataSampleOption])
+    },[navigate,status?.setupData,dataRateOption,dataSampleOption,getDataRate])
     const handleSubmit = () => {
-        setupData({ dataRate:dataRateOption[dataRateIndex], dataSample:dataSampleOption[dataSampleIndex] })
+        setupData({ dataRate:getDataRate[dataRateOption[dataRateIndex]], dataSample:dataSampleOption[dataSampleIndex] })
         setSelectedFunction(null)
         navigate(-1)
     }

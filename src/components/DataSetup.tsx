@@ -35,16 +35,16 @@ const DataSetup = () => {
         navigate(-1)
     }
     const handleDataRate = (title:string) => {
-        if(title === 'sub' && dataRateIndex > 0)
-        setDataRateIndex(dataRateIndex - 1)
-        if(title === 'add' && dataRateIndex < dataRateOption.length-1)
-        setDataRateIndex(dataRateIndex + 1)
+        if(title === 'sub' )
+        setDataRateIndex((dataRateOption.length + dataRateIndex - 1)%dataRateOption.length)
+        if(title === 'add')
+        setDataRateIndex((dataRateIndex + 1)%dataRateOption.length)
     }
     const handleDataSample = (title:string) => {
-        if(title === 'sub' && dataSampleIndex > 0)
-        setDataSampleIndex(dataSampleIndex - 1)
-        if(title === 'add' && dataSampleIndex < dataSampleOption.length-1)
-        setDataSampleIndex(dataSampleIndex + 1)
+        if(title === 'sub')
+        setDataSampleIndex((dataSampleOption.length + dataSampleIndex - 1)%dataSampleOption.length)
+        if(title === 'add')
+        setDataSampleIndex((dataSampleIndex + 1)%dataSampleOption.length)
     }
     const handleIModal = (title:string) => {
         const getRef:any = {
@@ -62,13 +62,13 @@ const DataSetup = () => {
         </div>
         <div className={styles.DataRateWapper}>
             <div className={styles.RateMeasureRightSideSubWrapper}>
-                    <div onClick={() => isLeader ? handleDataRate('add') : {}} className={styles.OuterText}>{dataRateOption[dataRateIndex + 1] || " "}</div>
+                    {isLeader && <div onClick={() => isLeader ? handleDataRate('add') : {}} className={styles.OuterText}>{dataRateOption[(dataRateIndex + 1)%dataRateOption.length] || " "}</div>}
                     <div className={styles.DataMeasureButtom}>
-                        <img onClick={() => isLeader ? handleDataRate('sub') : {}} src={ExpandIcon} style={{cursor:isLeader ?"pointer" : "not-allowed"}} alt="subtract"/>
+                        {isLeader && <img onClick={() => isLeader ? handleDataRate('sub') : {}} src={ExpandIcon} style={{cursor:isLeader ?"pointer" : "not-allowed"}} alt="subtract"/>}
                         <div className={styles.TextStyle}>{dataRateOption[dataRateIndex]}</div>
-                        <img onClick={() => isLeader ? handleDataRate('add') : {}} src={CollapsedIcon} style={{cursor:isLeader ?"pointer" : "not-allowed"}} alt="add"/>
+                        {isLeader && <img onClick={() => isLeader ? handleDataRate('add') : {}} src={CollapsedIcon} style={{cursor:isLeader ?"pointer" : "not-allowed"}} alt="add"/>}
                     </div>
-                    <div onClick={() => isLeader ? handleDataRate('sub') : {}} className={styles.OuterText}>{dataRateOption[dataRateIndex -1]}</div>
+                    {isLeader && <div onClick={() => isLeader ? handleDataRate('sub') : {}} className={styles.OuterText}>{dataRateOption[(dataRateOption.length + dataRateIndex -1)%dataRateOption.length]}</div>}
                 </div>
         </div>
         <div className={styles.RateMeasureRightSide}>
@@ -77,13 +77,13 @@ const DataSetup = () => {
         </div>
         <div className={styles.DataRateWapper}>
             <div className={styles.RateMeasureRightSideSubWrapper}>
-                    <div onClick={() => isLeader ? handleDataSample('add') : {}} className={styles.OuterText}>{dataSampleOption[dataSampleIndex + 1] || " "}</div>
+                    {isLeader && <div onClick={() => isLeader ? handleDataSample('add') : {}} className={styles.OuterText}>{dataSampleOption[(dataSampleIndex + 1)%dataSampleOption.length] || " "}</div>}
                     <div className={styles.DataMeasureButtom}>
-                        <img onClick={() => isLeader ? handleDataSample('sub') : {}} src={ExpandIcon} style={{cursor:isLeader ?"pointer" : "not-allowed"}} alt="subtract"/>
+                        {isLeader && <img onClick={() => isLeader ? handleDataSample('sub') : {}} src={ExpandIcon} style={{cursor:isLeader ?"pointer" : "not-allowed"}} alt="subtract"/>}
                         <div className={styles.TextStyle}>{dataSampleOption[dataSampleIndex]}</div>
-                        <img onClick={() =>isLeader ? handleDataSample('add') : {}} src={CollapsedIcon} style={{cursor:isLeader ?"pointer" : "not-allowed"}} alt="add"/>
+                        {isLeader && <img onClick={() =>isLeader ? handleDataSample('add') : {}} src={CollapsedIcon} style={{cursor:isLeader ?"pointer" : "not-allowed"}} alt="add"/>}
                     </div>
-                    <div onClick={() =>isLeader ? handleDataSample('sub') : {}} className={styles.OuterText}>{dataSampleOption[dataSampleIndex -1]}</div>
+                    {isLeader && <div onClick={() =>isLeader ? handleDataSample('sub') : {}} className={styles.OuterText}>{dataSampleOption[(dataSampleOption.length + dataSampleIndex -1)%dataSampleOption.length]}</div>}
             </div>
         </div>
         <RightArrow isSelected={dataRateIndex >=0 && dataSampleIndex >= 0 && isLeader ? true : false} handleSubmit = {handleSubmit}/>

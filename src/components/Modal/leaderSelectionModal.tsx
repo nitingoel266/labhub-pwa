@@ -7,10 +7,9 @@ import styles from "../../styles/leaderSelectionModal.module.css";
 type Props= {
     isOpen:boolean;
     setModal:(value:boolean) => void;
-    setJoinedAsLeader?:(value:boolean) => void;
 }
 
-const LeadeSelectionModal = ({setModal,isOpen,setJoinedAsLeader} : Props)=> {
+const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
 //   const navigate = useNavigate();
     // useEffect(() => {
     //         if(connected && status && status?.leaderSelected){
@@ -21,9 +20,6 @@ const LeadeSelectionModal = ({setModal,isOpen,setJoinedAsLeader} : Props)=> {
     // },[status?.leaderSelected])
     const submitHandler = () => {
         joinAsLeader()
-        if(setJoinedAsLeader){
-            setJoinedAsLeader(true)
-        }
         setModal(false)
         // navigate("/mode-selection")
     }

@@ -64,7 +64,7 @@ const TemperatureProbe = () => {
             'Setpoint Temperature':setpointTemperatureRef,
         }
         setModal(title)
-        setIModalPosition({left:getRef[title] && getRef[title].current?.offsetLeft , top:getRef[title] && getRef[title].current?.offsetTop -65})
+        setIModalPosition({left:getRef[title] && getRef[title].current?.offsetLeft -100 , top:getRef[title] && getRef[title].current?.offsetTop -65})
     }
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>

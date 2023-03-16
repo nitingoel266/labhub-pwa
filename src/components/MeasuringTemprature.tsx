@@ -102,18 +102,18 @@ const MeasuringTemprature = () => {
         <div className={styles.HeaderWrapper}>
             <div style={{fontWeight:500}}>Measuring Temperature</div>
             <div className={styles.HeaderRightWrapper}>
-                <div onClick={() => handleTemperatureUnit('f')} className={styles.TempratureDegree} style={{backgroundColor: tempratureUnit === 'f' ? "#424C58" : "#9CD5CD",color:tempratureUnit === 'f' ? '#FFFFFF' : "#000000"}}>
-                    <div>F</div>
-                    <div className={styles.TempratureDegreeIcon} style={{border:`1px solid ${tempratureUnit === 'f' ? '#FFFFFF' : "#000000"}`}}>{" "}</div>
-                </div>
                 <div onClick={() => handleTemperatureUnit('c')} className={styles.TempratureDegree} style={{backgroundColor: tempratureUnit === 'c' ? "#424C58" : "#9CD5CD",color:tempratureUnit === 'c' ? '#FFFFFF' : "#000000"}}>
                     <div>C</div>
                     <div className={styles.TempratureDegreeIcon} style={{border:`1px solid ${tempratureUnit === 'c' ? '#FFFFFF' : "#000000"}`}}>{" "}</div>
                 </div>
+                <div onClick={() => handleTemperatureUnit('f')} className={styles.TempratureDegree} style={{backgroundColor: tempratureUnit === 'f' ? "#424C58" : "#9CD5CD",color:tempratureUnit === 'f' ? '#FFFFFF' : "#000000"}}>
+                    <div>F</div>
+                    <div className={styles.TempratureDegreeIcon} style={{border:`1px solid ${tempratureUnit === 'f' ? '#FFFFFF' : "#000000"}`}}>{" "}</div>
+                </div>
             </div>
         </div>
         <div className={styles.SecondaryHeaderWrapper}>
-            <div>Temperature Value in </div>
+            <div>Temperature Value : {graphData[graphData.length -1]?.temp}</div>
             <div className={styles.DegreeStyle}>{" "}</div>
             <div>{tempratureUnit.toUpperCase()}</div>
         </div>

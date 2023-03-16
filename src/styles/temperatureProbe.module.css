@@ -59,7 +59,7 @@
     font-size: 12px;
 }
 .HeaterEelementImage {
-    height: 180px;
+    height: 120px;
 }
 .HeaterElementText {
     /* margin-left: 20px; */
@@ -71,7 +71,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
-    margin-right: 40px;
+    margin-right: 23px;
 }
 .Button {
     background-color: #424C58;
@@ -84,14 +84,14 @@
     cursor: pointer;
 }
 
-@media (max-width:300px) {
+@media (min-width:600px) {
     .ButtonWrapper{
         margin-right: 20px;
     }
-}
-
-@media (min-width:600px) {
     .HeaderTextWrapper{
         margin: 20px 100px 0px 100px;
+    }
+    .HeaterEelementImage {
+        height: 180px;
     }
 }

@@ -98,6 +98,9 @@ const TemperatureGraph = ({ data, showPoint ,capturePoint}: Props) => {
           // speed: 100,
         },
       },
+      legend:{
+        display:false
+      }
     },
   };
   const ResetZoom = () => {

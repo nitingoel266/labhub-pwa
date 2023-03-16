@@ -1,5 +1,5 @@
 const Manual_Mode="This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.";
-const Project_Mode = "This mode can only be used with certain investigations. When utilized it automatically chooses the sensor and data collection parameters required for the selected investigation.";
+const Preset_Mode = "This mode can only be used with certain investigations. When utilized it automatically chooses the sensor and data collection parameters required for the selected investigation.";
 const Data_Setup ="This allows you to change the sampling rate and other data acquisition parameters.";
 const Sensor = "This begins the process of taking and graphically displaying measurements with the connected sensor (temperature or voltage).";
 const Heater = "This allows you to set the desired temperature set point and whether to utilize the temperature probe or heater to reach the set point.";
@@ -17,7 +17,7 @@ const Measure = "Measure Measure"
 
 const IButtonContent:any = {
     Manual_Mode,
-    Project_Mode,
+    Preset_Mode,
     Data_Setup,
     Sensor,
     Heater,

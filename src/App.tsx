@@ -50,7 +50,7 @@ function App() {
       <main>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/project-mode' element={<ProjectMode />} />
+          <Route path='/preset-mode' element={<ProjectMode />} />
           <Route path='/scan-devices' element={<ScanDevice />} />
           <Route path ="mode-selection" element={<ModeSelection />}/>
           <Route path='/function-selection' element={<FunctionSelection />} />

@@ -17,7 +17,7 @@ function TestPage(props: TestPageProps) {
   const leaderSelected = !!(status?.leaderSelected);
 
   // @ts-ignore
-  const cond1 = status?.setupData.dataRate !== 5 || status?.setupData.dataSample !== 10 || (status?.setupData.dataRate === 'manual' && status?.setupData.dataSample === 'cont');
+  const cond1 = status?.setupData.dataRate !== 5 || status?.setupData.dataSample !== 10 || (status?.setupData.dataRate === 'user' && status?.setupData.dataSample === 'cont');
 
   if (!connected) {
     return (

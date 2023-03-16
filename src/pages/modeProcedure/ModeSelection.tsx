@@ -1,6 +1,6 @@
 
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {DataSetupIcon,IButtonIcon,SensorIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
@@ -12,9 +12,12 @@ import IButtonContent from "../../components/IButtonContent";
 
 const ModeSelection = () => {
     const navigate = useNavigate();
+    const manualModeRef = useRef()
+    const projectModeRef = useRef()
     // const [status] = useDeviceStatus();
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
+    const [iModalPostion,setIModalPosition] = useState<any>({})
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
         setSelectedItem("")
@@ -28,6 +31,14 @@ const ModeSelection = () => {
         }
 
     }
+    const handleIModal = (title:string) => {
+        const getRef:any = {
+            'Manual Mode':manualModeRef,
+            'Project Mode':projectModeRef
+        }
+        setModal(title)
+        setIModalPosition({top:getRef[title] && getRef[title].current.offsetTop})
+    }
     // set the initial value from modes
     // useEffect(() => {
     //     if(status?.modeSelected){
@@ -40,20 +51,20 @@ const ModeSelection = () => {
     return <div style={{position:"relative"}}>
         <div className={styles.HeaderText}>Select Mode</div>
         <div className={styles.ButtonWrapper}>
-            {[{icon:DataSetupIcon,title:"Manual Mode"},{icon:SensorIcon,title:"Project Mode"}].map(el => (
-              <div key={el.title} className={styles.Button} style={el.title === selectedItem ? extraStyle : {}}>
+            {[{icon:DataSetupIcon,title:"Manual Mode",ref:manualModeRef},{icon:SensorIcon,title:"Project Mode",ref:projectModeRef}].map((el:any) => (
+              <div key={el.title} ref={el.ref} className={styles.Button} style={el.title === selectedItem ? extraStyle : {}}>
                  <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
                      <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
                      <div style={{marginLeft:10}}>{el.title}</div>
                  </div>
-                 <div onClick={() => setModal(el.title)} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt="i button"/>
                  </div>
              </div>
             ))}
             </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={IButtonContent[isOpen.replace(" ","_")]} setModal={(value) => setModal(value)}/>
+        <IButtonModal isOpen={isOpen ? true : false} pos={iModalPostion} title={isOpen} description={IButtonContent[isOpen.replace(" ","_")]} setModal={(value) => setModal(value)}/>
     </div>
 }
 

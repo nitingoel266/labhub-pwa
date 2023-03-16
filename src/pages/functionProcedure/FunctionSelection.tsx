@@ -50,7 +50,7 @@ const FunctionSelection = () => {
             "RGB Spect":rgbSpectRef
         }
         setModal(title)
-        setIModalPosition({top:getRef[title] && getRef[title].current?.offsetTop})
+        setIModalPosition({top:getRef[title] && getRef[title].current?.offsetTop,left:getRef[title] && getRef[title].current?.offsetLeft})
     }
     const extraStyle = {backgroundColor:"#9CD5CD"} 
     return <div style={{position:"relative"}}>

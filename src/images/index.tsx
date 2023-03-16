@@ -35,6 +35,7 @@ import WhiteTickIcon from "../assets/White-Tick-Icon.png";
 import BlackBluetoothIcon from "../assets/Black-Bluetooth-Icon.png";
 import WhiteWarningIcon from "../assets/White-Warning-Icon.png";
 import DataIcon from "../assets/Data-Icon.png";
+import MyRecordsIcon from "../assets/My-Records.png";
 
 export {
     LabIcon,
@@ -73,5 +74,6 @@ export {
     WhiteTickIcon,
     BlackBluetoothIcon,
     WhiteWarningIcon,
-    DataIcon
+    DataIcon,
+    MyRecordsIcon
 };

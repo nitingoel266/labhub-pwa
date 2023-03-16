@@ -63,7 +63,7 @@ const HeaterElement = () => {
             'Setpoint Temperature':setpointTemperatureRef,
         }
         setModal(title)
-        setIModalPosition({left:getRef[title] && getRef[title].current?.offsetLeft , top:getRef[title] && getRef[title].current?.offsetTop -65})
+        setIModalPosition({left:getRef[title] && getRef[title].current?.offsetLeft -150 , top:getRef[title] && getRef[title].current?.offsetTop -65})
     }
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
@@ -82,13 +82,7 @@ const HeaterElement = () => {
             <div>Control Method</div>
             <div>HEATER ELEMENT</div>
         </div>
-        <div className={styles.HeaderTextSubWrapper}>Please make sure the probe is always in contact with the solution.</div>
         <div className={styles.HeaterElementWraper}>
-            <div className={styles.TemperatureWrapper}>
-                <div>50</div>
-                <div className={styles.TemperatureDegree}>{" "}</div>
-                <div>C</div>
-            </div>
             <img src={HeaterIcon} className={styles.HeaterEelementImage} alt="heater element"/>
             <div className={styles.HeaterElementText}>Power: <span style={{color:"#DC2828"}}>0 W</span></div>
         </div>

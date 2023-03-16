@@ -15,8 +15,14 @@
     align-items: center;
     width: 100%;
     position: fixed;
-    transition: all 0.3s ease-out;
+    /* transition: all 0.3s ease-out; */
 
+}
+.IButtonComponentWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 .TextContainer {
     width: 320px;
@@ -96,7 +102,7 @@
     right: 0;
     position: fixed;
     background-color: #000000;
-    opacity: 0.3;
+    opacity: 0;
 }
 .IButtonTextContainer {
     background-color: #424C58;

@@ -1,0 +1,10 @@
+.ZoomButton {
+    cursor: pointer;
+    font-size: 11px;
+    background-color: #9CD5CD;
+    width: 80px;
+    text-align: center;
+    padding: 5px 0px;
+    border-radius: 4px;
+    margin-top: 10px;
+}

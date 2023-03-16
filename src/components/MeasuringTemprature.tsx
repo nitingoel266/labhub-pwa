@@ -2,7 +2,7 @@ import styles from '../styles/measuringTemprature.module.css';
 import RightArrow from './RightArrow';
 import { useEffect, useState } from 'react';
 import {useDeviceStatus, useDeviceDataStream} from "../labhub/status";
-// import {startSensorExperiment} from "../labhub/actions";
+import {startSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
 import TemperatureGraph from './Graphs/TemperatureGraph';
@@ -13,22 +13,12 @@ const MeasuringTemprature = () => {
     const [dataStream] = useDeviceDataStream();
     const navigate = useNavigate();
     const [isOpen,setModal] = useState<string>("");
-    const [temprature,setTemprature] = useState<any>(0)
+    const [isSaved,setIsSaved] = useState<boolean>(false);
+    const [capturePoint, setCapturePoint] = useState<any>([]);
+
     const [isMobile,setIsMobile] = useState<boolean>(false)
     const [tempratureUnit,setTempratureUnit] = useState<string>('c');
-    const [graphData,setGraphData] = useState<any>([
-        {time:0,temp:10},
-        {time:1,temp:20},
-        {time:2,temp:25},
-        {time:3,temp:35},
-        {time:4,temp:40},
-        {time:5,temp:45},
-        {time:6,temp:50},
-        {time:7,temp:21},
-        {time:8,temp:11},
-        {time:9,temp:31},
-
-    ]) // {time:in sec,temp}
+    const [graphData,setGraphData] = useState<any>([]) // {time:in sec,temp}
 
     const handleTemperatureUnit = (title:string) => {
         if(title === 'f' && tempratureUnit !== title){
@@ -58,28 +48,43 @@ const MeasuringTemprature = () => {
     }
     const handleRestart = () => {
         setGraphData([])
-        // startSensorExperiment()
+        setCapturePoint([])
+        startSensorExperiment()
         setModal("")
     }
     const handleStop = () => {
         setModal("")
         navigate(-1)
     }
-    const handleCapture = (value:any) => {
-        setTemprature(value)
+    const handleCapture = () => {
+        if(graphData){
+            setIsSaved(false)
+            let items = [...capturePoint];
+            items[graphData.length-1] = 2;
+            setCapturePoint(items)
+        }
     }
     const handleSave = () => {
-        let resultTemperature = temprature;
-        if(resultTemperature && tempratureUnit === 'f'){
-            resultTemperature = (((resultTemperature-32)*5)/9).toFixed(0);
+        setIsSaved(true)
+        let resultTemperature = [];
+        for(let one in capturePoint){
+            if(capturePoint[one] > 0){
+                let item = graphData[one];
+                if(tempratureUnit === 'f')
+                item = {...item,temp:((item?.temp-32)*5/9).toFixed(0)}
+                resultTemperature.push(item)
+            }
         }
+        // console.log("save the data in record section ",resultTemperature)
         //save the temperature in labhub device in celcis mode
     }
     useEffect(() => {
-        if(dataStream && dataStream.temperature)
-        setGraphData((prevData:any) => {
-            return [...prevData,{time:prevData.length * Number(status?.setupData?.dataRate),temp:dataStream.temperature}]
-        })
+        if(dataStream && dataStream.temperature){
+            setGraphData((prevData:any) => {
+                return [...prevData,{time:prevData.length * Number(status?.setupData?.dataRate === 'user' ? 1 : status?.setupData?.dataRate),temp:dataStream.temperature}]
+            })
+            setCapturePoint((prevData:any) => [...prevData,status?.setupData?.dataRate === 'user' ? 0 : 2])
+        }
     },[dataStream, dataStream?.temperature,status?.setupData?.dataRate])
     useEffect(() => {
         window.addEventListener('resize', () =>{
@@ -114,12 +119,12 @@ const MeasuringTemprature = () => {
         </div>
         <div className={styles.TextBody}>
             <div className={styles.GraphStyle}>
-                <TemperatureGraph data={graphData} showPoint={false}/>
+                <TemperatureGraph data={graphData} showPoint={status?.setupData?.dataRate === 'user' ? false : true} capturePoint={capturePoint} />
             </div>
             {!isMobile ? <div className={styles.ButtonWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartButton} style={extraStyle}>Restart</div>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.StopButton} style={extraStyle}>Stop</div>
-                <div className={styles.CaptureButton}>Capture</div>
+                {status?.setupData?.dataRate === 'user'  && <div className={styles.CaptureButton} onClick={handleCapture}>Capture</div>}
 
             </div> : null}
         </div>
@@ -127,8 +132,8 @@ const MeasuringTemprature = () => {
             <div className={styles.FooterInnerTextWrapper}>
             <div>TITLE</div>
             <div className={styles.FooterText}>
-                <div>T0918564122-1123-7T09185...</div>
-                <div className={styles.SaveButton}>Save</div>
+                <div>T101722-1334-M4</div>
+                <div className={styles.SaveButton} style={capturePoint?.some((el:number) => el > 0) <= 0  ? {backgroundColor:"#A0A5AB"} : {}} onClick={() => capturePoint?.length > 0 ? handleSave() : {}}>Save</div>
             </div>
             </div>
         </div>
@@ -136,11 +141,11 @@ const MeasuringTemprature = () => {
             <div className={styles.ButtonHorizontalInnerWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartHorizontalButton} style={extraStyle}>Restart</div>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.StopHorizontalButton} style={extraStyle}>Stop</div>
-                <div className={styles.CaptureHorizontalButton}>Capture</div>
+                <div className={styles.CaptureHorizontalButton} onClick={handleCapture}>Capture</div>
             </div>
         </div> : null}
         <MemberDisconnect isOpen={isOpen ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'restart' ? handleRestart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>
-        <RightArrow isSelected={temprature ? true : false} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={capturePoint?.some((el:number) => el > 0) ? true : false} handleSubmit={handleSubmit}/>
     </div>
 }
 

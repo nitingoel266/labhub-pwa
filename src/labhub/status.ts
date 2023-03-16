@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { DeviceStatus, DeviceStatusUpdate, DeviceDataStream, DeviceDataStatusUpdate } from '../types/common';
+import { DeviceStatus, DeviceStatusUpdate, DeviceDataStream, DeviceDataStatusUpdate, DeviceDataFeed } from '../types/common';
 
 export const socketConnected = new BehaviorSubject<boolean | null>(null);
 export const deviceStatus = new BehaviorSubject<DeviceStatus | null>(null);
 export const deviceStatusUpdate = new BehaviorSubject<DeviceStatusUpdate | null>(null);
 export const deviceDataStream = new BehaviorSubject<DeviceDataStream | null>(null);
 export const deviceDataStatusUpdate = new BehaviorSubject<DeviceDataStatusUpdate | null>(null);
+
+export const deviceDataFeed = new BehaviorSubject<DeviceDataFeed>({
+  sensor: null,
+});
 
 export const useSocketConnected = () => {
   const [connected, setConnected] = useState(socketConnected.value);
@@ -35,6 +39,17 @@ export const useDeviceDataStream = () => {
 
   useEffect(() => {
     const subs = deviceDataStream.subscribe(value => setData(value));
+    return () => subs.unsubscribe();
+  }, []);
+
+  return [data];
+};
+
+export const useDeviceDataFeed = () => {
+  const [data, setData] = useState(deviceDataFeed.value);
+
+  useEffect(() => {
+    const subs = deviceDataFeed.subscribe(value => setData(value));
     return () => subs.unsubscribe();
   }, []);
 

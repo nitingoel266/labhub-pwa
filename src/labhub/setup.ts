@@ -1,9 +1,8 @@
 import { Subscription } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { socketConnected } from './status';
-import { deviceStatus, deviceStatusUpdate, deviceDataStream, deviceDataStatusUpdate } from './status';
-import { DeviceDataStream, DeviceStatus } from '../types/common';
-import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_STREAM, TOPIC_DEVICE_DATA_STATUS_UPDATE } from '../utils/const';
+import { socketConnected, deviceStatus, deviceStatusUpdate, deviceDataStream, deviceDataStatusUpdate, deviceDataFeed } from './status';
+import { DeviceDataStream, DeviceStatus, DeviceDataFeed } from '../types/common';
+import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_STREAM, TOPIC_DEVICE_DATA_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED } from '../utils/const';
 import { getClientId } from './utils';
 import { navStatus, navStatusUpdate } from './status-client';
 
@@ -34,6 +33,10 @@ export const initSetup = () => {
 
   socket.on(TOPIC_DEVICE_DATA_STREAM, (value: DeviceDataStream | null) => {
     deviceDataStream.next(value);
+  });
+
+  socket.on(TOPIC_DEVICE_DATA_FEED, (value: DeviceDataFeed) => {
+    deviceDataFeed.next(value);
   });
 
   subs1 = deviceStatusUpdate.subscribe((value) => {

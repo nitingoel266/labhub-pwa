@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useSocketConnected, useDeviceStatus, useDeviceDataStream } from '../labhub/status';
+import { useSocketConnected, useDeviceStatus, useDeviceDataFeed } from '../labhub/status';
 import { joinAsLeader, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment } from '../labhub/actions';
 // import { setSelectedMode, setSelectedFunction } from '../labhub/actions-client';
 import { initSetup, uninitSetup } from '../labhub/setup';
@@ -8,7 +8,7 @@ import { getClientType } from '../labhub/utils';
 function TestPage(props: TestPageProps) {
   const [connected] = useSocketConnected();
   const [status] = useDeviceStatus();
-  const [dataStream] = useDeviceDataStream();
+  const [dataFeed] = useDeviceDataFeed();
 
   const clientType = getClientType();
   // const unknownClientType = clientType === null;
@@ -40,7 +40,7 @@ function TestPage(props: TestPageProps) {
           <code>{JSON.stringify(status, null, 2)}</code>
         </pre>
         <pre>
-          <code>{JSON.stringify(dataStream, null, 2)}</code>
+          <code>{JSON.stringify(dataFeed, null, 2)}</code>
         </pre>
       </>
       <br />
@@ -79,7 +79,7 @@ function TestPage(props: TestPageProps) {
       <br />
       <button onClick={() => simulateSensor(null)} disabled={!isLeader || !status || status.sensorConnected === null}>Disconnect sensor</button>
       <br /><br />
-      <button onClick={() => startSensorExperiment()} disabled={!isLeader || !status || status.sensorConnected === null || dataStream !== null}>Start sensor experiment</button>
+      <button onClick={() => startSensorExperiment()} disabled={!isLeader || !status || status.sensorConnected === null || dataFeed.sensor !== null}>Start sensor experiment</button>
       <br /><br />
 
       <br />

@@ -28,16 +28,17 @@ type Props = {
   data: { id: number; x: number; y: number }[];
   showPoint: boolean;
   capturePoint:any;
+  title?:string;
 };
 
-const TemperatureGraph = ({ data, showPoint ,capturePoint}: Props) => {
+const TemperatureGraph = ({ data, showPoint ,capturePoint,title}: Props) => {
   const [enableZoom, setEnableZoom] = useState<boolean>(true);
 
   const chatData = {
     labels: data.map((el: any) => el.time),
     datasets: [
       {
-        label: "Temperature",
+        label: title,
         data: data.map((el: any) => el.temp),
         tension: 0.4,
         showLine: showPoint ? true : false,

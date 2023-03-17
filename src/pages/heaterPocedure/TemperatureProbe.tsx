@@ -16,6 +16,7 @@ const TemperatureProbe = () => {
     const navigate = useNavigate();
     const setpointTemperatureRef = useRef<any>()
     const [isOpen,setModal] = useState("");
+    const [isStart,setIsStart] = useState<boolean>(false)
     const [iModalPostion,setIModalPosition] = useState<any>({})
     const [temperature,setTemperature] =useState<number>(25);
     const [temperatureShouldBe,setTemperatureShouldBe] =useState<number>(0);
@@ -27,9 +28,11 @@ const TemperatureProbe = () => {
         setTemperature((temp) => temp <150 ? temp + 1 : temp)
     }
     const handleStart = () => {
-
+        setIsStart(true)
+        setModal("")
     }
     const handleStop = () => {
+        setIsStart(false)
         navigate(-1)
     }
     const handleSubmit = () => {
@@ -95,7 +98,7 @@ const TemperatureProbe = () => {
         </div>
         <div className={styles.ButtonWrapper}>
             <div onClick={() => clientId === status?.leaderSelected ? setModal('start') : {}} className={styles.Button} style={extraStyle}>Start</div>
-            <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.Button} style={extraStyle}>Stop</div>
+            <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.Button} style={!isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Stop</div>
         </div>
         <MemberDisconnect isOpen={isOpen && isOpen !== "Setpoint Temperature" ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'start' ? handleStart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>
         <RightArrow isSelected={clientId === status?.leaderSelected && temperature ? true : false} handleSubmit={handleSubmit}/>

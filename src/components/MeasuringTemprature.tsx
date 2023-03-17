@@ -25,7 +25,7 @@ const MeasuringTemprature = () => {
             let updatedTemp = [];
             for(let one of graphData){
                 if(one && one.temp){
-                    let fahrenheit = ((9/5 * one.temp) + 32).toFixed(0);
+                    let fahrenheit = ((9/5 * one.temp) + 32).toFixed(1);
                     updatedTemp.push({...one,temp:fahrenheit})
                 }
             }
@@ -35,7 +35,7 @@ const MeasuringTemprature = () => {
             let updatedTemp = [];
             for(let one of graphData){
                 if(one && one.temp){
-                    let celcius = (((one.temp-32)*5)/9).toFixed(0);
+                    let celcius = (((one.temp-32)*5)/9).toFixed(1);
                     updatedTemp.push({...one,temp:celcius})
                 }
             }
@@ -71,7 +71,7 @@ const MeasuringTemprature = () => {
             if(capturePoint[one] > 0){
                 let item = graphData[one];
                 if(tempratureUnit === 'f')
-                item = {...item,temp:((item?.temp-32)*5/9).toFixed(0)}
+                item = {...item,temp:Number(((item?.temp-32)*5/9).toFixed(1))}
                 resultTemperature.push(item)
             }
         }
@@ -119,7 +119,7 @@ const MeasuringTemprature = () => {
         </div>
         <div className={styles.TextBody}>
             <div className={styles.GraphStyle}>
-                <TemperatureGraph data={graphData} showPoint={status?.setupData?.dataRate === 'user' ? false : true} capturePoint={capturePoint} />
+                <TemperatureGraph data={graphData} showPoint={status?.setupData?.dataRate === 'user' ? false : true} capturePoint={capturePoint} title={"Temperature"}/>
             </div>
             {!isMobile ? <div className={styles.ButtonWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartButton} style={extraStyle}>Restart</div>

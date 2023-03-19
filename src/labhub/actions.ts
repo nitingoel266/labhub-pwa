@@ -1,6 +1,6 @@
 import { deviceStatus, deviceStatusUpdate, deviceDataStatusUpdate } from './status';
 import { getClientId, getClientType } from './utils';
-import { SensorSelect, SetupData } from '../types/common';
+import { SensorSelect, SetupData, HeaterSelect, RgbFuncSelect } from '../types/common';
 
 export const joinAsLeader = () => {
   const clientId = getClientId();
@@ -43,7 +43,37 @@ export const simulateSensor = (sensor: SensorSelect) => {
   deviceStatusUpdate.next({ sensorConnected: sensor });
 };
 
+export const changeSetpointTemp = (temp: number) => {
+  if (getClientType() !== 'leader') return;
+  deviceStatusUpdate.next({ setpointTemp: temp });
+};
+
+export const simulateHeater = (device: HeaterSelect) => {
+  if (getClientType() !== 'leader') return;
+  deviceStatusUpdate.next({ heaterConnected: device });
+};
+
+export const calibrateRgb = () => {
+  if (getClientType() !== 'leader') return;
+  deviceStatusUpdate.next({ rgbCalibrated: true });
+};
+
+export const simulateRgb = (select: RgbFuncSelect) => {
+  if (getClientType() !== 'leader') return;
+  deviceStatusUpdate.next({ rgbConnected: select });
+};
+
 export const startSensorExperiment = () => {
   if (getClientType() !== 'leader') return;
   deviceDataStatusUpdate.next({ sensorExperiment: true });
+};
+
+export const startHeaterExperiment = () => {
+  if (getClientType() !== 'leader') return;
+  deviceDataStatusUpdate.next({ heaterExperiment: true });
+};
+
+export const startRgbExperiment = () => {
+  if (getClientType() !== 'leader') return;
+  deviceDataStatusUpdate.next({ rgbExperiment: true });
 };

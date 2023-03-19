@@ -10,6 +10,8 @@ export const deviceDataStatusUpdate = new BehaviorSubject<DeviceDataStatusUpdate
 
 export const deviceDataFeed = new BehaviorSubject<DeviceDataFeed>({
   sensor: null,
+  heater: null,
+  rgb: null,
 });
 
 export const useSocketConnected = () => {

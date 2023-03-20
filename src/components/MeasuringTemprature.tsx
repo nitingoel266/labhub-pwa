@@ -1,7 +1,7 @@
 import styles from '../styles/measuringTemprature.module.css';
 import RightArrow from './RightArrow';
 import { useEffect, useState } from 'react';
-import {useDeviceStatus, useDeviceDataStream} from "../labhub/status";
+import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
 import {startSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import TemperatureGraph from './Graphs/TemperatureGraph';
 const MeasuringTemprature = () => {
     const clientId = localStorage.getItem('labhub_client_id');
     const [status] = useDeviceStatus();
-    const [dataStream] = useDeviceDataStream();
+    const [dataStream] = useDeviceDataFeed();
     const navigate = useNavigate();
     const [isOpen,setModal] = useState<string>("");
     const [isSaved,setIsSaved] = useState<boolean>(false);
@@ -79,13 +79,13 @@ const MeasuringTemprature = () => {
         //save the temperature in labhub device in celcis mode
     }
     useEffect(() => {
-        if(dataStream && dataStream.temperature){
+        if(dataStream && dataStream.sensor && dataStream.sensor.temperature){
             setGraphData((prevData:any) => {
-                return [...prevData,{time:prevData.length * Number(status?.setupData?.dataRate === 'user' ? 1 : status?.setupData?.dataRate),temp:dataStream.temperature}]
+                return [...prevData,{time:prevData.length * Number(status?.setupData?.dataRate === 'user' ? 1 : status?.setupData?.dataRate),temp:dataStream.sensor?.temperature}]
             })
             setCapturePoint((prevData:any) => [...prevData,status?.setupData?.dataRate === 'user' ? 0 : 2])
         }
-    },[dataStream, dataStream?.temperature,status?.setupData?.dataRate])
+    },[dataStream, dataStream?.sensor?.temperature,status?.setupData?.dataRate])
     useEffect(() => {
         window.addEventListener('resize', () =>{
             if(window.innerWidth <= 580)

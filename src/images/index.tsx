@@ -36,6 +36,7 @@ import BlackBluetoothIcon from "../assets/Black-Bluetooth-Icon.png";
 import WhiteWarningIcon from "../assets/White-Warning-Icon.png";
 import DataIcon from "../assets/Data-Icon.png";
 import MyRecordsIcon from "../assets/My-Records.png";
+import HeaterAnimation from "../assets/Heater-Animation.gif";
 
 export {
     LabIcon,
@@ -75,5 +76,6 @@ export {
     BlackBluetoothIcon,
     WhiteWarningIcon,
     DataIcon,
-    MyRecordsIcon
+    MyRecordsIcon,
+    HeaterAnimation
 };

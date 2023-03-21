@@ -1,4 +1,4 @@
-import {ExpandIcon,CollapsedIcon,BlackIButtonIcon,HeaterIcon} from "../../images/index"
+import {ExpandIcon,CollapsedIcon,BlackIButtonIcon,HeaterIcon,HeaterAnimation} from "../../images/index"
 import { useEffect, useRef, useState } from 'react';
 import styles from '../../styles/heaterElement.module.css';
 import IButtonModal from "../../components/Modal/IButtonModal";
@@ -36,7 +36,8 @@ const HeaterElement = () => {
     }
     const handleStop = () => {
         setIsStart(false)
-        navigate(-1)
+        setModal("")
+        // navigate(-1)
     }
     const handleSubmit = () => {
         changeSetpointTemp(temperature)
@@ -97,7 +98,7 @@ const HeaterElement = () => {
         </div>
         <div className={styles.HeaterElementWraper}>
             <div className={styles.HeaterElementSubWraper}>
-                <img src={HeaterIcon} className={styles.HeaterEelementImage} alt="heater element"/>
+                <img src={isStart ? HeaterAnimation : HeaterIcon} className={styles.HeaterEelementImage} alt="heater element"/>
                 <div className={styles.ButtonWrapper}>
                     <div onClick={() => clientId === status?.leaderSelected ? setModal('start') : {}} className={styles.Button} style={extraStyle}>Start</div>
                     <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.Button} style={!isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Stop</div>

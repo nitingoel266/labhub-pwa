@@ -1,0 +1,25 @@
+.PickerBackGroundWrapper {
+    height: 132px;
+    width: 160px;
+    position: absolute;
+    background-color: #EFEFEF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.PickerBackGroundCenter {
+    border-top: 2px solid #A5A5A5;
+    border-bottom: 2px solid #A5A5A5;
+    height: 43px;
+}
+.PickerWrapper {
+    position: relative;
+}
+
+#WheelPicker {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+#WheelPicker::-webkit-scrollbar {
+    display: none;
+}

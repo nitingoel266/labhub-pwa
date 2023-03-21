@@ -96,12 +96,14 @@ const HeaterElement = () => {
             <div>HEATER ELEMENT</div>
         </div>
         <div className={styles.HeaterElementWraper}>
-            <img src={HeaterIcon} className={styles.HeaterEelementImage} alt="heater element"/>
+            <div className={styles.HeaterElementSubWraper}>
+                <img src={HeaterIcon} className={styles.HeaterEelementImage} alt="heater element"/>
+                <div className={styles.ButtonWrapper}>
+                    <div onClick={() => clientId === status?.leaderSelected ? setModal('start') : {}} className={styles.Button} style={extraStyle}>Start</div>
+                    <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.Button} style={!isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Stop</div>
+                </div>
+            </div>
             <div className={styles.HeaterElementText}>Power: <span style={{color:"#DC2828"}}>{power} W</span></div>
-        </div>
-        <div className={styles.ButtonWrapper}>
-            <div onClick={() => clientId === status?.leaderSelected ? setModal('start') : {}} className={styles.Button} style={extraStyle}>Start</div>
-            <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.Button} style={!isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Stop</div>
         </div>
         <MemberDisconnect isOpen={isOpen && isOpen !== "Setpoint Temperature" ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'start' ? handleStart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>
         <RightArrow isSelected={clientId === status?.leaderSelected && temperature !== status?.setpointTemp ? true : false} handleSubmit={handleSubmit}/>

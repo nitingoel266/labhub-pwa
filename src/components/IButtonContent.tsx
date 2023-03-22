@@ -1,7 +1,7 @@
 const Manual_Mode="This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.";
 const Preset_Mode = "This mode can only be used with certain investigations. When utilized it automatically chooses the sensor and data collection parameters required for the selected investigation.";
 const Data_Setup ="This allows you to change the sampling rate and other data acquisition parameters.";
-const Sensor = "This begins the process of taking and graphically displaying measurements with the connected sensor (temperature or voltage).";
+const Sensors = "This begins the process of taking and graphically displaying measurements with the connected sensor (temperature or voltage).";
 const Heater = "This allows you to set the desired temperature set point and whether to utilize the temperature probe or heater to reach the set point.";
 const RGB_Spect = "This connects you to the RGB calibration procedure.";
 const Data_Rate = "Choose your desired data sampling rate: 1 s, 5 s, 10 s, 30 s, 	1 min, 10 min, 30 min, 1 hr, USER (manually select when each measurement is recorded).";
@@ -19,7 +19,7 @@ const IButtonContent:any = {
     Manual_Mode,
     Preset_Mode,
     Data_Setup,
-    Sensor,
+    Sensors,
     Heater,
     RGB_Spect,
     Data_Rate,

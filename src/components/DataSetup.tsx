@@ -6,21 +6,19 @@ import { useEffect, useState } from 'react';
 import RightArrow from './RightArrow';
 import {BlackIButtonIcon} from "../images/index"
 import { useNavigate } from 'react-router-dom';
-import IButtonContent from './IButtonContent';
 import IButtonComponent from './IButtonComponent';
 import WheelPicker from './WheelPicker';
+import {mobileWidth,getDataRate,getDataSample,getDescription,DATA_RATE,NO_OF_SAMPLES,dataRateOption,dataSampleOption} from "../components/Constants";
+import IButtonModal from './Modal/IButtonModal';
 
 const DataSetup = () => {
     const [status] = useDeviceStatus();
     const clientId = localStorage.getItem('labhub_client_id');
     const navigate = useNavigate();
+    const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [isOpen,setModal] = useState<string>("");
-    const [dataSetup,setDataSetup] = useState<any>({dataRate:'1 SEC',dataSample:5});
-    const [dataRateOption] = useState<any>(['1 SEC','5 SEC','10 SEC','30 SEC','1 MIN','10 MIN','30 MIN','1 HOUR','USER'])
-    const [dataSampleOption]= useState<any>([5,10,25,50,100,200,'CONT']);
+    const [dataSetup,setDataSetup] = useState<any>({dataRate:dataRateOption[0],dataSample:dataSampleOption[0]});
     const isLeader = clientId === status?.leaderSelected ? true : false;
-    const [getDataRate] = useState<any>({"1 SEC":1, '5 SEC':5, "10 SEC":10,'30 SEC':30,"60 SEC":60, "10 MIN":600 ,'30 MIN': 1800 ,'1 HOUR': 3600,'USER':'user'});
-    const [getDataSample] = useState<any>({5:5,10:10,25:25,50:50,100:100,200:200,"CONT":'cont'})
     
     useEffect(() => {
         if(status?.setupData){
@@ -32,9 +30,9 @@ const DataSetup = () => {
             }
             setDataSetup({dataRate:rate,dataSample:status?.setupData?.dataSample === 'cont' ? 'CONT' : status?.setupData?.dataSample})
         }
-    },[status?.setupData,getDataRate])
+    },[status?.setupData])
     const handleSubmit = () => {
-        setupData({ dataRate:getDataRate[dataSetup.dataRate], dataSample:dataSetup.dataSample === 'CONT' ? 'cont' : dataSetup.dataSample })
+        setupData({ dataRate:getDataRate[dataSetup.dataRate], dataSample: getDataSample[dataSetup.dataSample]})
         // setSelectedFunction(null)
         navigate(-1)
     }
@@ -55,22 +53,23 @@ const DataSetup = () => {
     return <div className={styles.DataSetupWrapper}>
         <div style={{fontWeight:500}}>Setup</div>
         <div className={styles.RateMeasureRightSide}>
-            <div>Data Rate</div>
-            <img onClick={() => handleIModal("Data Rate")} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
+            <div>{DATA_RATE}</div>
+            <img onClick={() => handleIModal(DATA_RATE)} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
         </div>
-        {isOpen === 'Data Rate' && <IButtonComponent title={"Data Rate"} description={IButtonContent['Data_Rate']}/>}
+        {isOpen === DATA_RATE && isMobile && <IButtonComponent title={DATA_RATE} description={getDescription(DATA_RATE)} marginTop = {5}/>}
         <div className={styles.DataRateWapper}>
             <WheelPicker data={dataRateOption.map((el:string,index:number) => ({id:`${index}`,value:el}))} selectedId={`${dataRateOption.indexOf(dataSetup?.dataRate)}`} handleData={(value:string) => handleDataSetup({dataRate:value})}/>
         </div>
         <div className={styles.RateMeasureRightSide}>
-            <div>Number of samples</div>
-            <img onClick={() => handleIModal("Number of samples")} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
+            <div>{NO_OF_SAMPLES}</div>
+            <img onClick={() => handleIModal(NO_OF_SAMPLES)} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
         </div>
-        {isOpen === 'Number of samples' && <IButtonComponent title={"Number of samples"} description={IButtonContent["Number_of_samples"]}/>}
+        {isOpen === NO_OF_SAMPLES && isMobile && <IButtonComponent title={NO_OF_SAMPLES} description={getDescription(NO_OF_SAMPLES)} marginTop = {5}/>}
         <div className={styles.DataRateWapper}>
             <WheelPicker data={dataSampleOption.map((el:any,index:number) => ({id:`${index}`,value:el}))} selectedId={`${dataSampleOption.indexOf(dataSetup?.dataSample)}`} handleData={(value:any) => handleDataSetup({dataSample:value === 'CONT' ? value : Number(value)})}/>
         </div>
         <RightArrow isSelected={(getDataRate[dataSetup.dataRate] !== status?.setupData?.dataRate || getDataSample[dataSetup.dataSample] !== status?.setupData?.dataSample) && isLeader ? true : false} handleSubmit = {handleSubmit}/>
+        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

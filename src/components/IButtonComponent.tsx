@@ -3,21 +3,20 @@ import styles from "../styles/leaderSelectionModal.module.css";
 type Props= {
     title:string;
     description:string;
-    pos?:string;
+    marginTop?:number;
 }
 
-const IButtonComponent = ({title,description,pos='flex-start'} : Props)=> {
+const IButtonComponent = ({title,description,marginTop=-10} : Props)=> {
     return (
         <div
         // className={styles.IButtonComponentWrapper}
         style={{
-            marginTop:10,
+            marginTop:marginTop,
             marginBottom:10,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: pos,
+            alignItems: "center",
             width: '100%',
-            maxWidth:'70%',
         }}
         >
             <div className={styles.IButtonTextContainer}>

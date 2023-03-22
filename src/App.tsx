@@ -55,7 +55,7 @@ function App() {
           <Route path ="mode-selection" element={<ModeSelection />}/>
           <Route path='/function-selection' element={<FunctionSelection />} />
           <Route path='/data-setup' element={<DataSetup />} />
-          <Route path='/sensor' element={<Sensor />} />
+          <Route path='/sensors' element={<Sensor />} />
           <Route path='/temperature-sensor' element={<MeasuringTemprature />} />
           <Route path='/voltage-sensor' element={<MeasuringVoltage />} />
           <Route path='/heater' element={<HeaterInitialPage />} />

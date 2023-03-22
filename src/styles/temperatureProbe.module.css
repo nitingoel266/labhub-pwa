@@ -37,7 +37,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
-    margin-left: 100px;
+    margin-left: 10px;
 }
 .TemperatureWrapper {
     display: flex;
@@ -63,9 +63,14 @@
     height: 120px;
 }
 .HeaterElementText {
-    /* margin-left: 20px; */
     font-weight: 500;
     width: 120px;
+}
+.HeaterElementSubWraper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 .ButtonWrapper {
     display: flex;
@@ -73,7 +78,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
-    margin-left: 40px;
+    margin-left: 12px;
 }
 .Button {
     background-color: #424C58;
@@ -86,18 +91,9 @@
     cursor: pointer;
 }
 
-@media (max-width:430px) {
-    .HeaterElementWraper {
-        margin-left: 10px;
-    }
-    .ButtonWrapper {
-        margin-left: 0px;
-    }
-}
-
 @media (min-width:600px) {
-    .ButtonWrapper{
-        margin-left: 43px;
+    .HeaterElementWraper {
+        margin-left: 50px;
     }
     .HeaderTextWrapper{
         margin: 20px 100px 0px 100px;

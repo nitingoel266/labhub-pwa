@@ -2,13 +2,14 @@ import { useState } from "react";
 import {DataSetupIcon,IButtonIcon,RGBSpectIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
-// import {setSelectedMode} from "../../labhub/actions-client"
 import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
-import IButtonContent from "../../components/IButtonContent";
+import {mobileWidth,CALIBRATE_SPECTROPHOTOMETER,getDescription,MEASURE_ABSORBANCE,HIGHLIGHT_BACKGROUND} from "../../components/Constants";
+import IButtonComponent from "../../components/IButtonComponent";
 
 const SelectFunction = () => {
     const navigate = useNavigate();
+    const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
     const clickHandler = (item:string) => {
@@ -18,36 +19,40 @@ const SelectFunction = () => {
     }
     const handleSubmit = () => {
         if(selectedItem){
-            // let mode = selectedItem.slice(0,selectedItem.indexOf(" ")).toLowerCase()
-            // setSelectedMode(mode)
-            navigate(selectedItem === "Calibrate Spectrophotometer" ? "/calibrate-spectrophotometer" : "/cuvette-insertion")
+            navigate(selectedItem === CALIBRATE_SPECTROPHOTOMETER ? "/calibrate-spectrophotometer" : "/cuvette-insertion")
         }
 
     }
+    const handleIModal = (title:string) => {
+        if(isOpen === title) setModal("")
+        else setModal(title)
+    }   
     // useEffect(() => {
     //     if(status?.modeSelected){
     //         let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
     //         setSelectedItem(result)
     //     }
     // },[navigate])
-    const extraStyle = {backgroundColor:"#9CD5CD",maxWidth:220} 
     return <div style={{position:"relative"}}>
         <div className={styles.HeaderText}>Select Function</div>
         <div className={styles.ButtonWrapper}>
-            {[{icon:DataSetupIcon,title:"Calibrate Spectrophotometer"},{icon:RGBSpectIcon,title:"Measure Absorbance"}].map(el => (
-              <div key={el.title} className={styles.Button} style={el.title === selectedItem ? extraStyle : {maxWidth:220}}>
+            {[{icon:DataSetupIcon,title:CALIBRATE_SPECTROPHOTOMETER},{icon:RGBSpectIcon,title:MEASURE_ABSORBANCE}].map(el => (
+                <>
+              <div key={el.title} className={styles.Button} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:220} : {maxWidth:220}}>
                  <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
                      <img src={el.icon} style={{height:35,marginLeft:10}} alt={el.title + "icon"}/>
-                     <div style={{marginLeft:10}}>{el.title}</div>
+                     <div style={{marginLeft:10,marginRight:2}}>{el.title}</div>
                  </div>
-                 <div onClick={() => setModal(el.title)} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt="i button"/>
                  </div>
              </div>
+             {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
+             </>
             ))}
             </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={IButtonContent[isOpen.replaceAll(" ","_")]} setModal={(value) => setModal(value)}/>
+        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

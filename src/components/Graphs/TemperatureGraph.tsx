@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   Chart as ChartJS,
   LineElement,
@@ -31,7 +32,7 @@ type Props = {
   title?:string;
 };
 
-const TemperatureGraph = ({ data, showPoint ,capturePoint,title}: Props) => {
+const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title}: Props) => {
   const [enableZoom, setEnableZoom] = useState<boolean>(true);
 
   const chatData = {
@@ -116,6 +117,6 @@ const TemperatureGraph = ({ data, showPoint ,capturePoint,title}: Props) => {
       <div className={styles.ZoomButton} onClick={ResetZoom}>{enableZoom ? "Reset " : "Enable "} Zoom</div>
     </>
   );
-};
+});
 
 export default TemperatureGraph;

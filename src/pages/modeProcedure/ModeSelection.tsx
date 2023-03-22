@@ -6,19 +6,17 @@ import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
 import {setSelectedMode} from "../../labhub/actions-client"
 import { useNavigate } from "react-router-dom";
-// import IButtonModal from "../../components/Modal/IButtonModal";
-import IButtonContent from "../../components/IButtonContent";
+import IButtonModal from "../../components/Modal/IButtonModal";
 import IButtonComponent from "../../components/IButtonComponent";
+import {mobileWidth,MANUAL_MODE,PRESET_MODE,getDescription,HIGHLIGHT_BACKGROUND} from "../../components/Constants";
 // import {useDeviceStatus} from "../../labhub/status";
 
 const ModeSelection = () => {
     const navigate = useNavigate();
-    // const manualModeRef = useRef()
-    // const projectModeRef = useRef()
+    const isMobile = window.innerWidth <= mobileWidth ? true : false;
     // const [status] = useDeviceStatus();
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState<string>("");
-    // const [iModalPostion,setIModalPosition] = useState<any>({})
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
         setSelectedItem("")
@@ -28,7 +26,7 @@ const ModeSelection = () => {
         if(selectedItem){
             let mode = selectedItem.slice(0,selectedItem.indexOf(" ")).toLowerCase()
             setSelectedMode(mode)
-            navigate(selectedItem === "Manual Mode" ? "/function-selection" : "/preset-mode")
+            navigate(selectedItem === MANUAL_MODE ? "/function-selection" : "/preset-mode")
         }
 
     }
@@ -44,13 +42,12 @@ const ModeSelection = () => {
     //     }
     // },[navigate,status?.modeSelected])
 
-    const extraStyle = {backgroundColor:"#9CD5CD"} 
     return <div style={{position:"relative"}}>
         <div className={styles.HeaderText}>Select Mode</div>
         <div className={styles.ButtonWrapper}>
-            {[{icon:DataSetupIcon,title:"Manual Mode"},{icon:SensorIcon,title:"Preset Mode"}].map((el:any) => (
+            {[{icon:DataSetupIcon,title:MANUAL_MODE},{icon:SensorIcon,title:PRESET_MODE}].map((el:any) => (
                 <>
-                <div key={el.title} className={styles.Button} style={el.title === selectedItem ? extraStyle : {}}>
+                <div key={el.title} className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                     <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
                         <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
                         <div style={{marginLeft:10}}>{el.title}</div>
@@ -59,12 +56,12 @@ const ModeSelection = () => {
                         <img src={IButtonIcon} style={{width:20}} alt="i button"/>
                     </div>
                 </div>
-                {isOpen === el.title && <IButtonComponent title={el.title} pos="center" description={IButtonContent[el.title.replace(" ","_")]}/>}
+                {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
                 </>
             ))}
             </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        {/* <IButtonModal isOpen={isOpen ? true : false} pos={iModalPostion} title={isOpen} description={IButtonContent[isOpen.replace(" ","_")]} setModal={(value) => setModal(value)}/> */}
+        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

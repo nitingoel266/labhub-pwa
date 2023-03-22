@@ -4,10 +4,12 @@ import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
 import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
-import IButtonContent from '../IButtonContent';
+import {mobileWidth,getDescription,MEASURE,HIGHLIGHT_BACKGROUND} from "../Constants";
+import IButtonComponent from '../IButtonComponent';
 
 const CuvetteInsertion = () => {
     const navigate = useNavigate();
+    const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
 
@@ -23,20 +25,23 @@ const CuvetteInsertion = () => {
         }
 
     }
-
-    const extraStyle = {backgroundColor:"#9CD5CD"} 
+    const handleIModal = (title:string) => {
+        if(isOpen === title) setModal("")
+        else setModal(title)
+    }
     return <div>
         <div className={styles.HeaderText}>Please insert cuvette to measure absorbance of RGB light.</div>
         <div className={styles.ButtonWrapper}>
-              <div className={styles.Button} style={"Measure" === selectedItem ? extraStyle : {}}>
-                 <div onClick={() => clickHandler("Measure")} className={styles.SubButton}>
-                     <div style={{marginLeft:10}}>{"Measure"}</div>
+              <div className={styles.Button} style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <div onClick={() => clickHandler(MEASURE)} className={styles.SubButton}>
+                     <div style={{marginLeft:10}}>{MEASURE}</div>
                  </div>
-                 <div onClick={() => setModal("Measure")} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(MEASURE)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt="i button"/>
                  </div>
              </div>
         </div>
+        {isOpen === MEASURE && isMobile && <IButtonComponent title={MEASURE} description={getDescription(MEASURE)}/>}
         <div className={styles.SecondaryText}>Values are in Absorbance units (AU)</div>
         <div className={styles.BodyWrapper}>
             <div className={styles.BodyBollWrapper}>
@@ -62,7 +67,7 @@ const CuvetteInsertion = () => {
             </div>
         </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={IButtonContent[isOpen.replaceAll(" ","_")]} setModal={(value) => setModal(value)}/>
+        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

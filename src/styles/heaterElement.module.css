@@ -58,12 +58,17 @@
 }
 .HeaterEelementImage {
     height: 120px;
-    margin-left: 100px;
 }
 .HeaterElementText {
-    /* margin-left: 20px; */
     font-weight: 500;
     width: 120px;
+}
+.HeaterElementSubWraper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 50px;
 }
 .ButtonWrapper {
     display: flex;
@@ -71,7 +76,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
-    margin-right: 5px;
+    margin-left: 13px;
 }
 .Button {
     background-color: #424C58;
@@ -82,11 +87,6 @@
     padding:20px 13px;
     border-radius: 100px;
     cursor: pointer;
-}
-@media (max-width:360px) {
-    .HeaterEelementImage {
-        margin-left: 50px;
-    }
 }
 @media (min-width:600px) {
     .HeaterEelementImage {

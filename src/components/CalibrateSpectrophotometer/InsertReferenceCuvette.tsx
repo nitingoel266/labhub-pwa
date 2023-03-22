@@ -4,10 +4,12 @@ import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
 import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
-import IButtonContent from '../IButtonContent';
+import {mobileWidth,getDescription,CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
+import IButtonComponent from '../IButtonComponent';
 
 const InsertReferenceCuvette = () => {
     const navigate = useNavigate();
+    const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
 
@@ -23,20 +25,23 @@ const InsertReferenceCuvette = () => {
         }
 
     }
-
-    const extraStyle = {backgroundColor:"#9CD5CD"} 
+    const handleIModal = (title:string) => {
+        if(isOpen === title) setModal("")
+        else setModal(title)
+    }
     return <div>
         <div className={styles.HeaderText}>Please Insert Reference Cuvette and press calibrate</div>
         <div className={styles.ButtonWrapper}>
-              <div className={styles.Button} style={"Calibrate" === selectedItem ? extraStyle : {}}>
-                 <div onClick={() => clickHandler("Calibrate")} className={styles.SubButton}>
-                     <div style={{marginLeft:10}}>{"Calibrate"}</div>
+              <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <div onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton}>
+                     <div style={{marginLeft:10}}>{CALIBRATE}</div>
                  </div>
-                 <div onClick={() => setModal("Calibrate")} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt="i button"/>
                  </div>
              </div>
         </div>
+        {isOpen === CALIBRATE && isMobile && <IButtonComponent title={CALIBRATE} description={getDescription(CALIBRATE)}/>}
         <div className={styles.BodyWrapper}>
             <div className={styles.BodyBollWrapper}>
                 <div className={styles.BodyRedBoll}></div>
@@ -52,7 +57,7 @@ const InsertReferenceCuvette = () => {
             </div>
         </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={IButtonContent[isOpen.replaceAll(" ","_")]} setModal={(value) => setModal(value)}/>
+        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

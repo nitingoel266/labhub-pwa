@@ -1,26 +1,34 @@
 import {CalenderIcon,EditIcon,DeleteIcon,TimeIcon,FileIcon,BlackShareIcon,DownloadIcon} from "../images/index"
 import styles from '../styles/MyRecordsCard.module.css';
+import DownloadData from "./DownloadData";
 
 type Props = {
     data:any;
     setModal:(value:string)=>void;
     setSelectedData:(item:any) => void;
     selectedData:any;
+    selectedButton:string;
 }
 
-const MyRecordsCard = ({data,setModal,setSelectedData,selectedData}:Props) => {
+const MyRecordsCard = ({data,setModal,setSelectedData,selectedData,selectedButton}:Props) => {
     return <div key={data?.date} style={{marginBottom:10}}>
         <div className={styles.HeaderWrapper}>
             <img src={CalenderIcon} style={{marginRight:5}} alt="date"/>
             <div>{data?.date}</div>
         </div>
         <div className={styles.CadWrapper}>
-            {data?.data?.map((el:any) => <OneCard key={el?.name} data={el} selectedData={selectedData} setModal={setModal} setSelectedData={setSelectedData} />)}
+            {data?.data?.map((el:any) => <OneCard key={el?.name} data={el} selectedData={selectedData} setModal={setModal} setSelectedData={setSelectedData} selectedButton={selectedButton}/>)}
         </div>
     </div>
 }
 
-const OneCard = ({data,setModal,setSelectedData,selectedData}:OneCardProps) => {
+const OneCard = ({data,setModal,setSelectedData,selectedData,selectedButton}:OneCardProps) => {
+    const handleDownload = (item:any)=> {
+        let header = ["Time ( Sec )","Temperature ( C )"]
+        if(selectedButton === 'voltage') header = ["Time ( Sec )","Voltage (V)"];
+        else if(selectedButton === "rgb") header = ["Measurement No.","RED","GREEN","BLUE"];
+        DownloadData({data:item,header})
+    }
     return <div onClick={() => setSelectedData(data)} key={data?.name} className={styles.oneCardWrapper} style={selectedData?.name === data?.name ? {backgroundColor :"#9CD5CD"} : {}}>
         <div className={styles.CardTitleWrapper}>
             <div className={styles.CardTitleWrapperLeft}>
@@ -35,7 +43,7 @@ const OneCard = ({data,setModal,setSelectedData,selectedData}:OneCardProps) => {
         </div>
         <div className={styles.FooterWrapper}>
             <img src={BlackShareIcon} className={styles.FooterIcons} alt="share"/>
-            <img src={DownloadIcon} className={styles.FooterIcons} alt="download"/>
+            <img src={DownloadIcon} onClick = {() => handleDownload(data)} className={styles.FooterIcons} alt="download"/>
             <img src={DeleteIcon} onClick={() => setModal("delete")} className={styles.FooterIcons} alt="delete"/>
 
         </div>
@@ -47,6 +55,7 @@ type OneCardProps = {
     setModal:(value:string)=>void;
     setSelectedData:(item:any) =>void;
     selectedData:any;
+    selectedButton:string;
 }
 
 export default MyRecordsCard

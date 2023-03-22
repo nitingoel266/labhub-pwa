@@ -1,5 +1,5 @@
 import {ExpandIcon,CollapsedIcon,BlackIButtonIcon,HeaterIcon,HeaterAnimation} from "../../images/index"
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../../styles/heaterElement.module.css';
 import IButtonModal from "../../components/Modal/IButtonModal";
 import RightArrow from "../../components/RightArrow";
@@ -17,7 +17,6 @@ const HeaterElement = () => {
     const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [dataStream] = useDeviceDataFeed();
-    const setpointTemperatureRef = useRef<any>()
     const [isOpen,setModal] = useState("");
     const [isStart,setIsStart] = useState<boolean>(false)
     const [temperature,setTemperature] =useState<number>(status?.setpointTemp || 25); //25-150
@@ -72,6 +71,22 @@ const HeaterElement = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
+    // useEffect(() => {
+    //     const handleTabClose = (event:any) => {
+    //       event.preventDefault();
+    
+    //       console.log('beforeunload event triggered');
+    
+    //       return (event.returnValue =
+    //         'Are you sure you want to exit..................?');
+    //     };
+    
+    //     window.addEventListener('beforeunload', handleTabClose);
+    
+    //     return () => {
+    //       window.removeEventListener('beforeunload', handleTabClose);
+    //     };
+    //   }, []);
     useEffect(() => {
         if(dataStream?.heater?.element){
             setPower(dataStream.heater.element[0])
@@ -87,7 +102,7 @@ const HeaterElement = () => {
                     <div className={styles.TextStyle}>{temperature}</div>
                     <img onMouseDown={() => clientId === status?.leaderSelected ? handleMouseDownEvent('enter','add') : {}} onMouseUp={() => clientId === status?.leaderSelected ? handleMouseDownEvent('leave','add') : {}} src={CollapsedIcon} style={{cursor:"pointer"}} alt="add"/>
                 </div>
-                <img onClick={() => handleIModal(SETPOINT_TEMPERATURE)} ref={setpointTemperatureRef} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
+                <img onClick={() => handleIModal(SETPOINT_TEMPERATURE)} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
             </div>
         </div>
         {isOpen === SETPOINT_TEMPERATURE && isMobile && <IButtonComponent title={SETPOINT_TEMPERATURE} description={getDescription(SETPOINT_TEMPERATURE)} marginTop = {10}/>}
@@ -100,7 +115,7 @@ const HeaterElement = () => {
             <div className={styles.HeaterElementSubWraper}>
                 <img src={isStart ? HeaterAnimation : HeaterIcon} className={styles.HeaterEelementImage} alt="heater element"/>
                 <div className={styles.ButtonWrapper}>
-                    <div onClick={() => clientId === status?.leaderSelected ? setModal('start') : {}} className={styles.Button} style={extraStyle}>Start</div>
+                    <div onClick={() => clientId === status?.leaderSelected && !isStart ? setModal('start') : {}} className={styles.Button} style={isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Start</div>
                     <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.Button} style={!isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Stop</div>
                 </div>
             </div>

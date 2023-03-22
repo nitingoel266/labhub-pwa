@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import {useDeviceStatus,useSocketConnected} from "../../labhub/status";
 // import {joinAsMember} from "../../labhub/actions";
 import LeadeSelectionModal from "./leaderSelectionModal";
+import {LEADER_SELECTIONMODAL_INITIATE} from "../../components/Constants";
 
 const LeaderDisconnect = () => {
     // const navigate = useNavigate();
@@ -20,7 +21,7 @@ const LeaderDisconnect = () => {
             if(connected && status && !status.leaderSelected){
                 setModal(true)
             }
-        },5000)
+        },LEADER_SELECTIONMODAL_INITIATE)
         return () => {
             clearTimeout(timer)
         }

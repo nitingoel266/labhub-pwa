@@ -103,7 +103,7 @@ const TemperatureProbe = () => {
             <div className={styles.HeaterElementSubWraper}>
                 <img src={isStart ? HeaterAnimation : HeaterIcon} className={styles.HeaterEelementImage} alt="heater element"/>
                 <div className={styles.ButtonWrapper}>
-                    <div onClick={() => clientId === status?.leaderSelected ? setModal('start') : {}} className={styles.Button} style={extraStyle}>Start</div>
+                    <div onClick={() => clientId === status?.leaderSelected && !isStart ? setModal('start') : {}} className={styles.Button} style={isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Start</div>
                     <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.Button} style={!isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Stop</div>
                 </div>
             </div>

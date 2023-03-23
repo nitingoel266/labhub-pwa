@@ -42,7 +42,7 @@ const getFormat = (item:any) => {
 }
 
 const getFileName = () => {
-    let fileName = "T"+getFormat(new Date().getMonth()+1)
+    let fileName = getFormat(new Date().getMonth()+1)
     fileName += getFormat(new Date().getDate());
     fileName += String(new Date().getFullYear()).slice(2);
     fileName += "-";

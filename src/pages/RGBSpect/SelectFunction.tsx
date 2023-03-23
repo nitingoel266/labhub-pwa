@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import {mobileWidth,CALIBRATE_SPECTROPHOTOMETER,getDescription,MEASURE_ABSORBANCE,HIGHLIGHT_BACKGROUND} from "../../components/Constants";
 import IButtonComponent from "../../components/IButtonComponent";
+import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 
 const SelectFunction = () => {
     const navigate = useNavigate();
@@ -23,6 +24,10 @@ const SelectFunction = () => {
         }
 
     }
+    const handleFunctions = () => {
+        if(selectedItem === MEASURE_ABSORBANCE) setModal("measure before Calibrating")
+        else handleSubmit()
+    }
     const handleIModal = (title:string) => {
         if(isOpen === title) setModal("")
         else setModal(title)
@@ -37,8 +42,8 @@ const SelectFunction = () => {
         <div className={styles.HeaderText}>Select Function</div>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:CALIBRATE_SPECTROPHOTOMETER},{icon:RGBSpectIcon,title:MEASURE_ABSORBANCE}].map(el => (
-                <>
-              <div key={el.title} className={styles.Button} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:220} : {maxWidth:220}}>
+                <div className={styles.ButtonSubWrapper} key={el.title}>
+              <div className={styles.Button} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:235} : {maxWidth:235}}>
                  <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
                      <img src={el.icon} style={{height:35,marginLeft:10}} alt={el.title + "icon"}/>
                      <div style={{marginLeft:10,marginRight:2}}>{el.title}</div>
@@ -48,11 +53,12 @@ const SelectFunction = () => {
                  </div>
              </div>
              {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
-             </>
+             </div>
             ))}
             </div>
-        <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
+        <MemberDisconnect isOpen={isOpen === "measure before Calibrating" ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'measure before Calibrating' ? handleSubmit : handleSubmit} message={isOpen === "measure before Calibrating" ? "Are you sure you want to measure before Calibrating?" : `Do you want to ${isOpen} the experiment.`}/>
+        <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleFunctions}/>
+        {!isMobile && <IButtonModal isOpen={isOpen && isOpen !== 'measure before Calibrating' ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

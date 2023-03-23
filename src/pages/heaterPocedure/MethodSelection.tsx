@@ -46,8 +46,8 @@ const MethodSelection = () => {
         </div>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:HEATER_ELEMENT,ref:heaterElementRef},{icon:TemperatureProbeIcon,title:TEMPERATURE_PROBE,ref:temperatureProbeRef}].map((el:any) => (
-              <>
-              <div key={el.title} ref={el.ref} className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                <div className={styles.ButtonSubWrapper} key={el.title}>
+              <div ref={el.ref} className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                  <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
                      <img src={el.icon} style={{height:35,marginLeft:10}} alt={el.title + "icon"}/>
                      <div style={{marginLeft:10,marginRight:10}}>{el.title}</div>
@@ -57,7 +57,7 @@ const MethodSelection = () => {
                  </div>
              </div>
              {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
-                </>
+                </div>
             ))}
             </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>

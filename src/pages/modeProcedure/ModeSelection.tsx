@@ -46,8 +46,8 @@ const ModeSelection = () => {
         <div className={styles.HeaderText}>Select Mode</div>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:MANUAL_MODE},{icon:SensorIcon,title:PRESET_MODE}].map((el:any) => (
-                <>
-                <div key={el.title} className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                <div className={styles.ButtonSubWrapper} key={el.title}>
+                <div className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                     <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
                         <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
                         <div style={{marginLeft:10}}>{el.title}</div>
@@ -57,7 +57,7 @@ const ModeSelection = () => {
                     </div>
                 </div>
                 {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
-                </>
+                </div>
             ))}
             </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>

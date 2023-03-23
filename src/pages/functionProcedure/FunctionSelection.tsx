@@ -40,8 +40,8 @@ const FunctionSelection = () => {
         <div className={styles.HeaderText}>Select Function</div>
         {[[{icon:DataIcon,title:DATA_SETUP,ref:dataSetUpRef},{icon:SensorIcon,title:SENSORS,ref:sensorRef}],[{icon:HeaterIcon,title:HEATER,ref:heaterRef},{icon:RGBSpectIcon,title:RGB_SPECT,ref:rgbSpectRef}]].map((e:any) => (<div key={e[0]['title']} className={styles.ButtonWrapper}>
             {e.map((el:any) => (
-                <>
-              <div key={el.title} ref={el.ref} className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}} >
+                <div className={styles.ButtonSubWrapper} key={el.title}>
+              <div ref={el.ref} className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}} >
                  <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
                      <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
                      <div style={{marginLeft:10}}>{el.title}</div>
@@ -51,7 +51,7 @@ const FunctionSelection = () => {
                  </div>
              </div>
              {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
-                </>
+             </div>
             ))}
             </div>))}
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit = {handleSubmit}/>

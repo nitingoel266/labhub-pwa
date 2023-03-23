@@ -6,10 +6,11 @@ import {startSensorExperiment,simulateSensor} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
 import TemperatureGraph from './Graphs/TemperatureGraph';
-import {getFileName} from "./Constants";
+import {getFileName,getDate,getTime} from "./Constants";
+import {LABHUB_CLIENT_ID,VOLTAGE_DATA} from "../utils/const";
 
 const MeasuringVoltage = () => {
-    const clientId = localStorage.getItem('labhub_client_id');
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
     const navigate = useNavigate();
@@ -59,6 +60,11 @@ const MeasuringVoltage = () => {
         }else if(clientId){
             fileName += "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
         }
+        let resultData = {name:fileName,date:getDate(),time:getTime(), data:resultVoltage}
+        let voltageStorageData = localStorage.getItem(VOLTAGE_DATA);
+        let voltageData = voltageStorageData ? JSON.parse(voltageStorageData) : []; 
+        let storageVoltageData = JSON.stringify([...voltageData,resultData])
+        localStorage.setItem(VOLTAGE_DATA, storageVoltageData);
         // console.log("save the data in record section ",resultVoltage)
         //save the voltage in labhub device in celcis mode
     }

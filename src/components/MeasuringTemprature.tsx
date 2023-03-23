@@ -6,10 +6,11 @@ import {startSensorExperiment,simulateSensor} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
 import TemperatureGraph from './Graphs/TemperatureGraph';
-import {getFileName} from "./Constants";
+import {getFileName,getDate,getTime} from "./Constants";
+import {LABHUB_CLIENT_ID,TEMPERATURE_DATA} from "../utils/const";
 
 const MeasuringTemprature = () => {
-    const clientId = localStorage.getItem('labhub_client_id');
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
     const navigate = useNavigate();
@@ -86,6 +87,11 @@ const MeasuringTemprature = () => {
         }else if(clientId){
             fileName += "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
         }
+        let resultData = {name:fileName,date:getDate(),time:getTime(), data:resultTemperature}
+        let tempStorageData = localStorage.getItem(TEMPERATURE_DATA);
+        let tempData = tempStorageData ? JSON.parse(tempStorageData) : []; 
+        let storageTempData = JSON.stringify([...tempData,resultData])
+        localStorage.setItem(TEMPERATURE_DATA, storageTempData);
         // console.log("save the data in record section ",resultTemperature,fileName)
         //save the temperature in labhub device in celcis mode
     }

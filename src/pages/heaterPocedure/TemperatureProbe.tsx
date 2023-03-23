@@ -10,10 +10,11 @@ import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
 import IButtonComponent from '../../components/IButtonComponent';
 import { useNavigate } from 'react-router-dom';
+import {LABHUB_CLIENT_ID} from "../../utils/const";
 
 let temperatureTimmer:any;
 const TemperatureProbe = () => {
-    const clientId = localStorage.getItem('labhub_client_id');
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;

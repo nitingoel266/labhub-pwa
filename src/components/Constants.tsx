@@ -53,6 +53,15 @@ const getFileName = () => {
 
 }
 
+const getDate = () => {
+    let date = `${getFormat(new Date().getMonth()+1)}-${getFormat(new Date().getDate())}-${new Date().getFullYear()}`;
+    return date;
+}
+const getTime = () => {
+    let time = ( Number(new Date().getHours()) > 12 ? getFormat(Number(new Date().getHours())-12) : getFormat(new Date().getHours()) ) + "." + getFormat(new Date().getMinutes()) + (Number(new Date().getHours()) > 12 ? 'PM' : 'AM');
+    return time;
+}
+
 export {
     mobileWidth,
     LEADER_SELECTIONMODAL_INITIATE,
@@ -81,5 +90,7 @@ export {
     dataRateOption,
     dataSampleOption,
     getDescription,
-    getFileName
+    getFileName,
+    getDate,
+    getTime
 }

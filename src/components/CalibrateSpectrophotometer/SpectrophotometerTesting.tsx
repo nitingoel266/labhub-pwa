@@ -6,6 +6,7 @@ import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
+import MemberDisconnect from '../Modal/MemberDisconnectModal';
 
 const SpectrophotometerTesting = () => {
     const navigate = useNavigate();
@@ -21,13 +22,18 @@ const SpectrophotometerTesting = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
-            navigate("/rgb-spect")
-        }
+            // navigate("/spectrophotometer-testing")
+            setSelectedItem("")
+        }else setModal("measure now")
 
     }
     const handleIModal = (title:string) => {
         if(isOpen === title) setModal("")
         else setModal(title)
+    }
+    const handleMeasure = () => {
+        setModal("")
+        navigate("/cuvette-insertion")
     }
     return <div>
         <div className={styles.ButtonWrapper}>
@@ -57,8 +63,9 @@ const SpectrophotometerTesting = () => {
         </div>
         <div className={styles.FooterText}>Spectrophotometer tested for calibration successfully.</div>
         <div className={styles.FooterText}>These values should be within the range of -0.2 to 0.2. If these values are outside of the range, please check with your teacher.</div>
-        <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
+        <MemberDisconnect isOpen={isOpen === 'measure now' ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={handleMeasure} message={`Do you want to ${isOpen}?`}/>
+        <RightArrow isSelected={true} handleSubmit={handleSubmit}/>
+        {!isMobile && <IButtonModal isOpen={isOpen === TEST_CALIBRATE ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

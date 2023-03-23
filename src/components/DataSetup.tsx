@@ -10,10 +10,11 @@ import IButtonComponent from './IButtonComponent';
 import WheelPicker from './WheelPicker';
 import {mobileWidth,getDataRate,getDataSample,getDescription,DATA_RATE,NO_OF_SAMPLES,dataRateOption,dataSampleOption} from "../components/Constants";
 import IButtonModal from './Modal/IButtonModal';
+import {LABHUB_CLIENT_ID} from "../utils/const";
 
 const DataSetup = () => {
     const [status] = useDeviceStatus();
-    const clientId = localStorage.getItem('labhub_client_id');
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [isOpen,setModal] = useState<string>("");

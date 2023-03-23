@@ -9,10 +9,11 @@ import {changeSetpointTemp, startHeaterExperiment,simulateHeater} from "../../la
 import { useNavigate } from "react-router-dom";
 import IButtonComponent from "../../components/IButtonComponent";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
+import {LABHUB_CLIENT_ID} from "../../utils/const";
 
 let temperatureTimmer:any;
 const HeaterElement = () => {
-    const clientId = localStorage.getItem('labhub_client_id');
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;

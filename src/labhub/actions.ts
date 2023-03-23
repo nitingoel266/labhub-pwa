@@ -68,9 +68,19 @@ export const startSensorExperiment = () => {
   deviceDataStatusUpdate.next({ sensorExperiment: true });
 };
 
+export const stopSensorExperiment = () => {
+  if (getClientType() !== 'leader') return;
+  deviceDataStatusUpdate.next({ sensorExperiment: false });
+};
+
 export const startHeaterExperiment = () => {
   if (getClientType() !== 'leader') return;
   deviceDataStatusUpdate.next({ heaterExperiment: true });
+};
+
+export const stopHeaterExperiment = () => {
+  if (getClientType() !== 'leader') return;
+  deviceDataStatusUpdate.next({ heaterExperiment: false });
 };
 
 export const startRgbExperiment = () => {

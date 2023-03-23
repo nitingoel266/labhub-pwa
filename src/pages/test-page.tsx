@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useSocketConnected, useDeviceStatus, useDeviceDataFeed } from '../labhub/status';
-import { joinAsLeader, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment, changeSetpointTemp, simulateHeater, startHeaterExperiment, calibrateRgb, simulateRgb, startRgbExperiment } from '../labhub/actions';
+import { joinAsLeader, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment, stopSensorExperiment, changeSetpointTemp, simulateHeater, startHeaterExperiment, stopHeaterExperiment, calibrateRgb, simulateRgb, startRgbExperiment } from '../labhub/actions';
 // import { setSelectedMode, setSelectedFunction } from '../labhub/actions-client';
 import { initSetup, uninitSetup } from '../labhub/setup';
 import { getClientType } from '../labhub/utils';
@@ -78,7 +78,11 @@ function TestPage(props: TestPageProps) {
       <br />
       <button onClick={() => simulateSensor(null)} disabled={!isLeader || !status || status.sensorConnected === null}>Disconnect sensor</button>
       <br />
-      <button onClick={() => startSensorExperiment()} disabled={!isLeader || !status || status.sensorConnected === null || dataFeed.sensor !== null}>Start sensor experiment</button>
+      {dataFeed.sensor === null ? (
+        <button onClick={() => startSensorExperiment()} disabled={!isLeader || !status || status.sensorConnected === null}>Start sensor experiment</button>
+      ) : (
+        <button onClick={() => stopSensorExperiment()} disabled={!isLeader || !status || status.sensorConnected === null}>Stop sensor experiment</button>
+      )}
 
       <br /><br />
       <button onClick={() => changeSetpointTemp(status?.setpointTemp !== 50 ? 50 : 30)} disabled={!isLeader}>{status?.setpointTemp !== 50 ? 'Change' : 'Reset'} setpoint temperature</button>
@@ -89,7 +93,11 @@ function TestPage(props: TestPageProps) {
       <br />
       <button onClick={() => simulateHeater(null)} disabled={!isLeader || !status || status.heaterConnected === null}>Disconnect heater</button>
       <br />
-      <button onClick={() => startHeaterExperiment()} disabled={!isLeader || !status || status.heaterConnected === null || dataFeed.heater !== null}>Start heater experiment</button>
+      {dataFeed.heater === null ? (
+        <button onClick={() => startHeaterExperiment()} disabled={!isLeader || !status || status.heaterConnected === null}>Start heater experiment</button>
+      ) : (
+        <button onClick={() => stopHeaterExperiment()} disabled={!isLeader || !status || status.heaterConnected === null}>Stop heater experiment</button>
+      )}
 
       <br /><br />
       <button onClick={() => calibrateRgb()} disabled={!isLeader || status?.rgbConnected !== null || status.rgbCalibrated}>Calibrate spectrophotometer</button>

@@ -5,6 +5,7 @@ import { DeviceStatus, DeviceDataFeed } from '../types/common';
 import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED } from '../utils/const';
 import { getClientId } from './utils';
 import { navStatus, navStatusUpdate } from './status-client';
+import { delay } from '../utils/utils';
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 let subs1: Subscription;
@@ -12,10 +13,13 @@ let subs2: Subscription;
 
 let clientSubs1: Subscription;
 
-export const initSetup = () => {
+export const initSetup = async (): Promise<boolean> => {
   const clientId = getClientId();
-  if (!clientId) return;
+  if (!clientId) return false;
 
+  // simulate delay
+  await delay(500);
+ 
   socket = io('http://localhost:4000', { query: { clientId } });
 
   socket.on('connect', () => {
@@ -52,9 +56,11 @@ export const initSetup = () => {
       navStatus.next({ ...navStatus.value, ...value });
     }
   });
+
+  return true;
 };
 
-export const uninitSetup = () => {
+export const uninitSetup = async () => {
   if (subs1) subs1.unsubscribe();
   if (subs2) subs2.unsubscribe();
   if (socket) socket.disconnect();

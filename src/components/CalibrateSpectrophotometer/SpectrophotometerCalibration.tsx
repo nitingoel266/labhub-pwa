@@ -22,8 +22,9 @@ const SpectrophotometerCalibration = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
-            navigate("/calibration-testing")
-        }
+            // navigate("/spectrophotometer-calibration")
+            setSelectedItem("")
+        }else navigate("/calibration-testing") 
 
     }
     const handleIModal = (title:string) => {
@@ -63,7 +64,7 @@ const SpectrophotometerCalibration = () => {
             </div>
         </div>
         <div className={styles.FooterText}>Spectrophotometer calibrated successfully. You can test calibration now.</div>
-        <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={true} handleSubmit={handleSubmit}/>
         {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }

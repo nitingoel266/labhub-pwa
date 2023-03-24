@@ -9,10 +9,10 @@ const Number_of_samples = "Choose the number of samples to take: 5, 10, 	25, 50,
 const Heater_Element = "This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.";
 const Temperature_Probe = "This mode is currently contains no any parameters.";
 const Setpoint_Temperature = "....";
-const Measure_Absorbance = "";
-const Calibrate_Spectrophotometer = "This mode is currently contains no any parameters.";
+const Measure_Absorbance = "This step measures the RGB absorption levels for a sample.";
+const Calibrate_Spectrophotometer = "This important initial step calibrates the spectrophotometer to whatever is in the reference cuvette.";
 const Calibrate = "......";
-const Test_Calibrate = "Test Calibrate.....";
+const Test_Calibrate = "This step retests the reference cuvette to check that the RGB calibration was successful.";
 const Measure = "Measure Measure"
 
 const IButtonContent:any = {

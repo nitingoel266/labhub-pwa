@@ -42,7 +42,7 @@ const getFormat = (item:any) => {
 }
 
 const getFileName = () => {
-    let fileName = "T"+getFormat(new Date().getMonth()+1)
+    let fileName = getFormat(new Date().getMonth()+1)
     fileName += getFormat(new Date().getDate());
     fileName += String(new Date().getFullYear()).slice(2);
     fileName += "-";
@@ -51,6 +51,15 @@ const getFileName = () => {
     fileName += "-";
     return fileName;
 
+}
+
+const getDate = () => {
+    let date = `${getFormat(new Date().getMonth()+1)}-${getFormat(new Date().getDate())}-${new Date().getFullYear()}`;
+    return date;
+}
+const getTime = () => {
+    let time = ( Number(new Date().getHours()) > 12 ? getFormat(Number(new Date().getHours())-12) : getFormat(new Date().getHours()) ) + "." + getFormat(new Date().getMinutes()) + (Number(new Date().getHours()) > 12 ? 'PM' : 'AM');
+    return time;
 }
 
 export {
@@ -81,5 +90,7 @@ export {
     dataRateOption,
     dataSampleOption,
     getDescription,
-    getFileName
+    getFileName,
+    getDate,
+    getTime
 }

@@ -2,18 +2,21 @@ import styles from '../styles/measuringTemprature.module.css';
 import RightArrow from './RightArrow';
 import { useEffect, useState } from 'react';
 import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
-import {startSensorExperiment} from "../labhub/actions";
+import {startSensorExperiment,simulateSensor} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import { useNavigate } from 'react-router-dom';
 import TemperatureGraph from './Graphs/TemperatureGraph';
+import {getFileName,getDate,getTime} from "./Constants";
+import {LABHUB_CLIENT_ID,VOLTAGE_DATA} from "../utils/const";
 
 const MeasuringVoltage = () => {
-    const clientId = localStorage.getItem('labhub_client_id');
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
     const navigate = useNavigate();
     const [isOpen,setModal] = useState<string>("");
     const [isSaved,setIsSaved] = useState<boolean>(false);
+    const [isStart,setIsStart] = useState<boolean>(false);
     const [capturePoint, setCapturePoint] = useState<any>([]);
 
     const [isMobile,setIsMobile] = useState<boolean>(false)
@@ -27,10 +30,13 @@ const MeasuringVoltage = () => {
         setCapturePoint([])
         startSensorExperiment()
         setModal("")
+        setIsStart(true)
     }
     const handleStop = () => {
         setModal("")
+        simulateSensor(null)
         navigate(-1)
+        setIsStart(false)
     }
     const handleCapture = () => {
         if(graphData){
@@ -48,6 +54,17 @@ const MeasuringVoltage = () => {
                 resultVoltage.push({time:graphData[one]?.time,voltage:graphData[one]?.temp})
             }
         }
+        let fileName = "V" + getFileName();
+        if(clientId === status?.leaderSelected){ // for leader
+            fileName += "L";
+        }else if(clientId){
+            fileName += "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+        }
+        let resultData = {name:fileName,date:getDate(),time:getTime(), data:resultVoltage}
+        let voltageStorageData = localStorage.getItem(VOLTAGE_DATA);
+        let voltageData = voltageStorageData ? JSON.parse(voltageStorageData) : []; 
+        let storageVoltageData = JSON.stringify([...voltageData,resultData])
+        localStorage.setItem(VOLTAGE_DATA, storageVoltageData);
         // console.log("save the data in record section ",resultVoltage)
         //save the voltage in labhub device in celcis mode
     }
@@ -70,7 +87,7 @@ const MeasuringVoltage = () => {
             window.removeEventListener('resize', () => {setIsMobile(false)})
         }
     },[])
-    const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
+    const extraStyle = {backgroundColor: "#989DA3",cursor:"not-allowed"};
     return <div className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper} >
             <div style={{fontWeight:500}}>Measuring Voltage</div>
@@ -84,8 +101,8 @@ const MeasuringVoltage = () => {
                 <TemperatureGraph data={graphData} showPoint={status?.setupData?.dataRate === 'user' ? false : true} capturePoint={capturePoint} title={"Voltage"}/>
             </div>
             {!isMobile ? <div className={styles.ButtonWrapper}>
-                <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartButton} style={extraStyle}>Restart</div>
-                <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.StopButton} style={extraStyle}>Stop</div>
+                <div onClick={() => clientId === status?.leaderSelected ? setModal(graphData?.length ? 'restart' : "start") : {}} className={styles.RestartButton} style={(isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>{(isStart || graphData?.length) ? "Restart" : "Start"}</div>
+                <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.StopButton} style={(!isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>Stop</div>
                 {status?.setupData?.dataRate === 'user'  && <div className={styles.CaptureButton} onClick={handleCapture}>Capture</div>}
 
             </div> : null}
@@ -101,12 +118,12 @@ const MeasuringVoltage = () => {
         </div>
         {isMobile ? <div className={styles.ButtonHorizontalWrapper}>
             <div className={styles.ButtonHorizontalInnerWrapper}>
-                <div onClick={() => clientId === status?.leaderSelected ? setModal('restart') : {}} className={styles.RestartHorizontalButton} style={extraStyle}>Restart</div>
-                <div onClick={() => clientId === status?.leaderSelected ? setModal('stop') : {}} className={styles.StopHorizontalButton} style={extraStyle}>Stop</div>
+                <div onClick={() => clientId === status?.leaderSelected ? setModal(graphData?.length ? 'restart' : "start") : {}} className={styles.RestartHorizontalButton} style={(isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>{(isStart || graphData?.length) ? "Restart" : "Start"}</div>
+                <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.StopHorizontalButton} style={(!isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>Stop</div>
                 <div className={styles.CaptureHorizontalButton} onClick={handleCapture}>Capture</div>
             </div>
         </div> : null}
-        <MemberDisconnect isOpen={isOpen ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'restart' ? handleRestart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>
+        <MemberDisconnect isOpen={isOpen ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={(isOpen === 'restart' || isOpen === 'start') ? handleRestart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>
         <RightArrow isSelected={capturePoint?.some((el:number) => el > 0) ? true : false} handleSubmit={handleSubmit}/>
     </div>
 }

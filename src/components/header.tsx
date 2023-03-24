@@ -7,12 +7,12 @@ import {BluetoothIcon,BatteryIcon,BackIcon,ShareIcon,MyRecordsIcon,WhiteShareIco
 import { useNavigate ,useLocation} from 'react-router-dom';
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
-
+import {LABHUB_CLIENT_ID} from "../utils/const";
 
 function Header(props: HeaderProps) {  
   const [status] = useDeviceStatus();
   const [connected] = useSocketConnected();
-  const clientId = localStorage.getItem('labhub_client_id')
+  const clientId = localStorage.getItem(LABHUB_CLIENT_ID)
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen,setModal] = useState("")

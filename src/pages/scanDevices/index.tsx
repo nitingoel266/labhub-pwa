@@ -7,12 +7,12 @@ import RightArrow from '../../components/RightArrow';
 import { useNavigate } from 'react-router-dom';
 import MemberDisconnect from '../../components/Modal/MemberDisconnectModal';
 import { useState } from 'react';
-
+import {LABHUB_CLIENT_ID} from "../../utils/const";
 
 const ScanDevices = () => {
     const navigate = useNavigate();
     const [connected] = useSocketConnected();
-    const clientId = localStorage.getItem('labhub_client_id')
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID)
     const [status] = useDeviceStatus();
     const [isOpen,setModal] = useState("")
 

@@ -5,14 +5,15 @@ import IButtonModal from "../../components/Modal/IButtonModal";
 import RightArrow from "../../components/RightArrow";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import {useDeviceStatus ,useDeviceDataFeed} from "../../labhub/status";
-import {changeSetpointTemp, startHeaterExperiment} from "../../labhub/actions";
+import {changeSetpointTemp, startHeaterExperiment,simulateHeater} from "../../labhub/actions";
 import { useNavigate } from "react-router-dom";
 import IButtonComponent from "../../components/IButtonComponent";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
+import {LABHUB_CLIENT_ID} from "../../utils/const";
 
 let temperatureTimmer:any;
 const HeaterElement = () => {
-    const clientId = localStorage.getItem('labhub_client_id');
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
@@ -37,7 +38,8 @@ const HeaterElement = () => {
     const handleStop = () => {
         setIsStart(false)
         setModal("")
-        // navigate(-1)
+        simulateHeater(null)
+        navigate(-1)
     }
     const handleSubmit = () => {
         changeSetpointTemp(temperature)
@@ -113,9 +115,11 @@ const HeaterElement = () => {
         </div>
         <div className={styles.HeaterElementWraper}>
             <div className={styles.HeaterElementSubWraper}>
-                <img src={isStart ? HeaterAnimation : HeaterIcon} className={styles.HeaterEelementImage} alt="heater element"/>
+                <div style={{height:180}}>
+                    <img src={isStart ? HeaterAnimation : HeaterIcon} className={styles.HeaterEelementImage} style={isStart ? {height:200,width:220} :{height:180}} alt="heater element"/>
+                </div>
                 <div className={styles.ButtonWrapper}>
-                    <div onClick={() => clientId === status?.leaderSelected && !isStart ? setModal('start') : {}} className={styles.Button} style={isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Start</div>
+                    <div onClick={() => clientId === status?.leaderSelected && !isStart ? handleStart() : {}} className={styles.Button} style={isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Start</div>
                     <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.Button} style={!isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Stop</div>
                 </div>
             </div>

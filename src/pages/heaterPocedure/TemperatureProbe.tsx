@@ -5,18 +5,16 @@ import { useEffect, useRef, useState } from 'react';
 import IButtonModal from "../../components/Modal/IButtonModal";
 import RightArrow from "../../components/RightArrow";
 import {useDeviceStatus, useDeviceDataFeed} from "../../labhub/status";
-import {changeSetpointTemp, startHeaterExperiment,simulateHeater} from "../../labhub/actions";
+import {changeSetpointTemp, startHeaterExperiment,stopHeaterExperiment} from "../../labhub/actions";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
 import IButtonComponent from '../../components/IButtonComponent';
-import { useNavigate } from 'react-router-dom';
 import {LABHUB_CLIENT_ID} from "../../utils/const";
 
 let temperatureTimmer:any;
 const TemperatureProbe = () => {
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
-    const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [dataStream] = useDeviceDataFeed();
     const setpointTemperatureRef = useRef<any>()
@@ -40,8 +38,7 @@ const TemperatureProbe = () => {
     const handleStop = () => {
         setIsStart(false)
         setModal("")
-        simulateHeater(null)
-        navigate(-1)
+        stopHeaterExperiment()
     }
     const handleSubmit = () => {
         changeSetpointTemp(temperature)

@@ -2,9 +2,8 @@ import styles from '../styles/measuringTemprature.module.css';
 import RightArrow from './RightArrow';
 import { useEffect, useState } from 'react';
 import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
-import {startSensorExperiment,simulateSensor} from "../labhub/actions";
+import {startSensorExperiment,stopSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
-import { useNavigate } from 'react-router-dom';
 import TemperatureGraph from './Graphs/TemperatureGraph';
 import {getFileName,getDate,getTime} from "./Constants";
 import {LABHUB_CLIENT_ID,TEMPERATURE_DATA} from "../utils/const";
@@ -13,7 +12,6 @@ const MeasuringTemprature = () => {
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
-    const navigate = useNavigate();
     const [isOpen,setModal] = useState<string>("");
     const [isSaved,setIsSaved] = useState<boolean>(false);
     const [isStart,setIsStart] = useState<boolean>(false);
@@ -58,8 +56,7 @@ const MeasuringTemprature = () => {
     }
     const handleStop = () => {
         setModal("")
-        simulateSensor(null)
-        navigate(-1)
+        stopSensorExperiment()
         setIsStart(false)
     }
     const handleCapture = () => {
@@ -87,15 +84,21 @@ const MeasuringTemprature = () => {
         }else if(clientId){
             fileName += "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
         }
-        let resultData = {name:fileName,date:getDate(),time:getTime(), data:resultTemperature}
         let tempStorageData = localStorage.getItem(TEMPERATURE_DATA);
         let tempData = tempStorageData ? JSON.parse(tempStorageData) : []; 
+        let fileNameExistCount = 0;
+        for(let one of tempData){
+            if(one && one.name && one.name.includes(`${fileName}`)){
+                fileNameExistCount += 1;
+            }
+        }
+        let resultData = {name:fileNameExistCount > 0 ? `${fileName}(${fileNameExistCount})` : fileName,date:getDate(),time:getTime(), data:resultTemperature}
         let storageTempData = JSON.stringify([...tempData,resultData])
         localStorage.setItem(TEMPERATURE_DATA, storageTempData);
         // console.log("save the data in record section ",resultTemperature,fileName)
         //save the temperature in labhub device in celcis mode
     }
-    useEffect(() => {
+    useEffect(() => { // dataStream.sensor.temperatureLog can be use for member to get prev data
         if(dataStream && dataStream.sensor && dataStream.sensor.temperature){
             setGraphData((prevData:any) => {
                 return [...prevData,{time:prevData.length * Number(status?.setupData?.dataRate === 'user' ? 1 : status?.setupData?.dataRate),temp:dataStream.sensor?.temperature}]

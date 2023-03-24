@@ -2,9 +2,8 @@ import styles from '../styles/measuringTemprature.module.css';
 import RightArrow from './RightArrow';
 import { useEffect, useState } from 'react';
 import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
-import {startSensorExperiment,simulateSensor} from "../labhub/actions";
+import {startSensorExperiment,stopSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
-import { useNavigate } from 'react-router-dom';
 import TemperatureGraph from './Graphs/TemperatureGraph';
 import {getFileName,getDate,getTime} from "./Constants";
 import {LABHUB_CLIENT_ID,VOLTAGE_DATA} from "../utils/const";
@@ -13,7 +12,6 @@ const MeasuringVoltage = () => {
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
-    const navigate = useNavigate();
     const [isOpen,setModal] = useState<string>("");
     const [isSaved,setIsSaved] = useState<boolean>(false);
     const [isStart,setIsStart] = useState<boolean>(false);
@@ -34,8 +32,7 @@ const MeasuringVoltage = () => {
     }
     const handleStop = () => {
         setModal("")
-        simulateSensor(null)
-        navigate(-1)
+        stopSensorExperiment()
         setIsStart(false)
     }
     const handleCapture = () => {
@@ -60,9 +57,15 @@ const MeasuringVoltage = () => {
         }else if(clientId){
             fileName += "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
         }
-        let resultData = {name:fileName,date:getDate(),time:getTime(), data:resultVoltage}
         let voltageStorageData = localStorage.getItem(VOLTAGE_DATA);
         let voltageData = voltageStorageData ? JSON.parse(voltageStorageData) : []; 
+        let fileNameExistCount = 0;
+        for(let one of voltageData){
+            if(one && one.name && one.name.includes(`${fileName}`)){
+                fileNameExistCount += 1;
+            }
+        }
+        let resultData = {name:fileNameExistCount > 0 ? `${fileName}(${fileNameExistCount})` : fileName,date:getDate(),time:getTime(), data:resultVoltage}
         let storageVoltageData = JSON.stringify([...voltageData,resultData])
         localStorage.setItem(VOLTAGE_DATA, storageVoltageData);
         // console.log("save the data in record section ",resultVoltage)

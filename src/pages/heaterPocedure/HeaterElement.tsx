@@ -5,7 +5,7 @@ import IButtonModal from "../../components/Modal/IButtonModal";
 import RightArrow from "../../components/RightArrow";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import {useDeviceStatus ,useDeviceDataFeed} from "../../labhub/status";
-import {changeSetpointTemp, startHeaterExperiment,simulateHeater} from "../../labhub/actions";
+import {changeSetpointTemp, startHeaterExperiment,stopHeaterExperiment} from "../../labhub/actions";
 import { useNavigate } from "react-router-dom";
 import IButtonComponent from "../../components/IButtonComponent";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
@@ -38,8 +38,7 @@ const HeaterElement = () => {
     const handleStop = () => {
         setIsStart(false)
         setModal("")
-        simulateHeater(null)
-        navigate(-1)
+        stopHeaterExperiment()
     }
     const handleSubmit = () => {
         changeSetpointTemp(temperature)

@@ -62,4 +62,4 @@ export const uninitSetup = () => {
   if (clientSubs1) clientSubs1.unsubscribe();
 };
 
-export type DefaultEventsMap = any;
+type DefaultEventsMap = any;

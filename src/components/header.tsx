@@ -1,5 +1,4 @@
 import {useDeviceStatus,useSocketConnected} from "../labhub/status";
-// import {uninitSetup} from "../labhub/setup";
 import {resetLeader/* ,unjoinMember */}from "../labhub/actions";
 // import {setSelectedFunction,setSelectedMode} from "../labhub/actions-client";
 import styles from '../styles/header.module.css';

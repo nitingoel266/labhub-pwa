@@ -6,7 +6,6 @@ import ScanDevice from "./pages/scanDevices/index"
 import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
 import { useDeviceStatus,useSocketConnected} from './labhub/status';
-import { assertClientId } from './labhub/utils';
 import styles from './styles/App.module.css';
 import { GrTest } from '@react-icons/all-files/gr/GrTest';
 import FunctionSelection from './pages/functionProcedure/FunctionSelection';
@@ -37,12 +36,6 @@ import InsertionAbsorbanceMeasuring from './components/MeasureAbsorbance/Inserti
 function App() {
   const [status] = useDeviceStatus();
   const [connected] = useSocketConnected();
-  useEffect(() => {
-    const clientId = assertClientId();
-    if (!clientId) {
-      console.error('Could not set clientId in localStorage');
-    }
-  }, []);
 
   return (
     <div className={styles.app}>

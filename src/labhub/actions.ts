@@ -5,8 +5,11 @@ import { SensorSelect, SetupData, HeaterSelect, RgbFuncSelect } from '../types/c
 export const joinAsLeader = () => {
   const clientId = getClientId();
   const leaderSelected = deviceStatus.value?.leaderSelected;
-  if (!clientId || leaderSelected || getClientType() !== 'member') return;
-  deviceStatusUpdate.next({ leaderSelected: clientId });
+  if (!clientId || leaderSelected || getClientType() !== 'member') {
+    console.warn("Can't join as leader. clientType:", getClientType());
+  } else {
+    deviceStatusUpdate.next({ leaderSelected: clientId });
+  }
 };
 
 export const resetLeader = () => {

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "org.bluetooth.service.device_information",
+    "name": "Device Information",
+    "code": "0x180A",
+    "specification": "GSS"
+  },
+  {
+    "id": "com.usafirmware.service.labhub_experiment",
+    "name": "LabHub Experiment",
+    "code": "eb714300-2f6b-11ed-a261-0242ac120002",
+    "specification": "custom"
+  }
+]

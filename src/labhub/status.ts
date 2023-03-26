@@ -20,6 +20,27 @@ export const deviceDataFeed = new BehaviorSubject<DeviceDataFeed>({
   rgb: null,
 });
 
+export const resetStatus = () => {
+  // Already reset in onDisconnected(), still repeating..
+  deviceConnected.next(false);
+
+  // [Kind of Necessary] Also reset by resetTopics(), but still do it to avoid race with topicX.unsubscribe()
+  deviceStatus.next(null);
+  deviceDataFeed.next({
+    sensor: null,
+    heater: null,
+    rgb: null,
+  });
+
+  // [Necessary] To avoid dirty initialization if connecting from a non-refreshed page
+  deviceStatusUpdate.next(null);
+  deviceDataFeedUpdate.next(null);
+  clientChannelRequest.next(null);
+
+  // Not necessary, since requestId must be matched before it's value is used
+  clientChannelResponse.next(null);
+};
+
 const getValueHook = <T>(behaviorSubject: BehaviorSubject<any>) => () => {
   const [value, setValue] = useState(behaviorSubject.value);
 

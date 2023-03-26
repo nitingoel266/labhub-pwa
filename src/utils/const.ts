@@ -1,4 +1,6 @@
 export const DEBUG_MODE = false;
+export const MOCK_TEST = false;
+export const MOCK_DATA = false;
 
 export const TOPIC_DEVICE_STATUS = 'topic_device_status';
 export const TOPIC_DEVICE_STATUS_UPDATE = 'topic_device_status_update';

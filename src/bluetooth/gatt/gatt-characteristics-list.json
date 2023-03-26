@@ -1,0 +1,74 @@
+[
+  {
+    "id": "org.bluetooth.characteristic.model_number_string",
+    "name": "Model Number String",
+    "code": "0x2A24",
+    "specification": "GSS"
+  },
+  {
+    "id": "org.bluetooth.characteristic.serial_number_string",
+    "name": "Serial Number String",
+    "code": "0x2A25",
+    "specification": "GSS"
+  },
+  {
+    "id": "org.bluetooth.characteristic.firmware_revision_string",
+    "name": "Firmware Revision String",
+    "code": "0x2A26",
+    "specification": "GSS"
+  },
+  {
+    "id": "org.bluetooth.characteristic.manufacturer_name_string",
+    "name": "Manufacturer Name String",
+    "code": "0x2A29",
+    "specification": "GSS"
+  },
+  {
+    "id": "com.usafirmware.characteristic.labhub_experiment_status",
+    "name": "LabHub Experiment Status",
+    "code": "0x4301",
+    "specification": "custom"
+  },
+  {
+    "id": "com.usafirmware.characteristic.labhub_experiment_data_series",
+    "name": "LabHub Experiment Data Series",
+    "code": "0x4302",
+    "specification": "custom"
+  },
+  {
+    "id": "com.usafirmware.characteristic.labhub_experiment_control",
+    "name": "LabHub Experiment Control",
+    "code": "0x4303",
+    "specification": "custom"
+  },
+  {
+    "id": "com.usafirmware.characteristic.labhub_student_id",
+    "name": "LabHub Student ID",
+    "code": "0x4304",
+    "specification": "custom"
+  },
+  {
+    "id": "com.usafirmware.characteristic.labhub_leader_id",
+    "name": "LabHub Leader ID",
+    "code": "0x4305",
+    "specification": "custom"
+  },
+  {
+    "id": "com.usafirmware.characteristic.labhub_admin_control",
+    "name": "LabHub Admin Control",
+    "code": "0x4306",
+    "specification": "custom"
+  },
+  {
+    "id": "com.usafirmware.characteristic.labhub_device_setup",
+    "name": "LabHub Device Setup",
+    "code": "0x4307",
+    "specification": "custom"
+  },
+  {
+    "id": "com.usafirmware.characteristic.labhub_leader_status",
+    "name": "LabHub Leader Status",
+    "code": "0x4308",
+    "specification": "custom"
+  }
+]

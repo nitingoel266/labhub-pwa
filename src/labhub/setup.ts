@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { socketConnected, deviceStatus, deviceStatusUpdate, deviceDataFeed, deviceDataFeedUpdate } from './status';
+import { deviceConnected, deviceStatus, deviceStatusUpdate, deviceDataFeed, deviceDataFeedUpdate } from './status';
 import { DeviceStatus, DeviceDataFeed } from '../types/common';
 import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED, TOPIC_DEVICE_DATA_FEED_UPDATE } from '../utils/const';
 import { getClientId } from './utils';
@@ -24,11 +24,11 @@ export const initSetup = async (): Promise<boolean> => {
 
   socket.on('connect', () => {
     // console.log(socket.connected, socket.id);
-    socketConnected.next(true);
+    deviceConnected.next(true);
   });
   socket.on('disconnect', (reason) => {
     // console.log('disconnected:', reason);
-    socketConnected.next(false);
+    deviceConnected.next(false);
   });
 
   socket.on(TOPIC_DEVICE_STATUS, (value: DeviceStatus) => {

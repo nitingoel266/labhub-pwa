@@ -1,8 +1,8 @@
 import { Subscription } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { socketConnected, deviceStatus, deviceStatusUpdate, deviceDataStatusUpdate, deviceDataFeed } from './status';
+import { socketConnected, deviceStatus, deviceStatusUpdate, deviceDataFeed, deviceDataFeedUpdate } from './status';
 import { DeviceStatus, DeviceDataFeed } from '../types/common';
-import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED } from '../utils/const';
+import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED, TOPIC_DEVICE_DATA_FEED_UPDATE } from '../utils/const';
 import { getClientId } from './utils';
 import { navStatus, navStatusUpdate } from './status-client';
 import { delay } from '../utils/utils';
@@ -45,9 +45,9 @@ export const initSetup = async (): Promise<boolean> => {
     }
   });
 
-  subs2 = deviceDataStatusUpdate.subscribe((value) => {
+  subs2 = deviceDataFeedUpdate.subscribe((value) => {
     if (value) {
-      socket.emit(TOPIC_DEVICE_DATA_STATUS_UPDATE, value);
+      socket.emit(TOPIC_DEVICE_DATA_FEED_UPDATE, value);
     }
   });
 

@@ -5,7 +5,7 @@ import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
 import {startSensorExperiment,stopSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import TemperatureGraph from './Graphs/TemperatureGraph';
-import {getFileName,getDate,getTime} from "./Constants";
+import {getFileName,getDate,getTime,validateFileName} from "./Constants";
 import {LABHUB_CLIENT_ID,TEMPERATURE_DATA} from "../utils/const";
 
 const MeasuringTemprature = () => {
@@ -86,13 +86,8 @@ const MeasuringTemprature = () => {
         }
         let tempStorageData = localStorage.getItem(TEMPERATURE_DATA);
         let tempData = tempStorageData ? JSON.parse(tempStorageData) : []; 
-        let fileNameExistCount = 0;
-        for(let one of tempData){
-            if(one && one.name && one.name.includes(`${fileName}`)){
-                fileNameExistCount += 1;
-            }
-        }
-        let resultData = {name:fileNameExistCount > 0 ? `${fileName}(${fileNameExistCount})` : fileName,date:getDate(),time:getTime(), data:resultTemperature}
+       
+        let resultData = {name: validateFileName(tempData,fileName) ,date:getDate(),time:getTime(), data:resultTemperature}
         let storageTempData = JSON.stringify([...tempData,resultData])
         localStorage.setItem(TEMPERATURE_DATA, storageTempData);
         // console.log("save the data in record section ",resultTemperature,fileName)
@@ -117,6 +112,11 @@ const MeasuringTemprature = () => {
             window.removeEventListener('resize', () => {setIsMobile(false)})
         }
     },[])
+    useEffect(() => {
+        if(dataStream.sensor === null){
+            setIsStart(false)
+        }
+    },[dataStream?.sensor])
     const extraStyle = {backgroundColor: "#989DA3",cursor:"not-allowed"};
     return <div className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>

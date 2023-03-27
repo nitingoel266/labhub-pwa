@@ -1,5 +1,5 @@
-import {useDeviceStatus,useSocketConnected} from "../labhub/status";
-import {resetLeader/* ,unjoinMember */}from "../labhub/actions";
+import {useDeviceStatus,useSocketConnected,useDeviceDataFeed} from "../labhub/status";
+import {resetLeader , stopHeaterExperiment, stopSensorExperiment/* ,unjoinMember */}from "../labhub/actions";
 // import {setSelectedFunction,setSelectedMode} from "../labhub/actions-client";
 import styles from '../styles/header.module.css';
 import {BluetoothIcon,BatteryIcon,BackIcon,ShareIcon,MyRecordsIcon,WhiteShareIcon,SyncIcon,WhiteDownloadIcon,WhiteDeleteIcon} from "../images/index"
@@ -10,6 +10,7 @@ import {LABHUB_CLIENT_ID} from "../utils/const";
 
 function Header(props: HeaderProps) {  
   const [status] = useDeviceStatus();
+  const [dataFeed] = useDeviceDataFeed();
   const [connected] = useSocketConnected();
   const clientId = localStorage.getItem(LABHUB_CLIENT_ID)
   const navigate = useNavigate();
@@ -29,8 +30,10 @@ function Header(props: HeaderProps) {
     // }
     // if(getPathFunc[location.pathname])
     // getPathFunc[location.pathname]()
-    if(location?.pathname === '/heater-element' || location?.pathname === '/temperature-probe'){
+    if((location?.pathname === '/heater-element' || location?.pathname === '/temperature-probe') && dataFeed.heater !== null ){
       setModal(location?.pathname === "/temperature-probe" ? "Stop Temperature Probe" : "Stop Heater")
+    }else  if((location?.pathname === '/temperature-sensor' || location?.pathname === '/voltage-sensor') && dataFeed.sensor !== null ){
+      setModal(location?.pathname === "/temperature-sensor" ? "Stop Temperature" : "Stop Voltage")
     }
     else
     navigate(-1)
@@ -55,8 +58,14 @@ function Header(props: HeaderProps) {
     setModal("")
   }
   const handleStopProcess = () => {
+    if((location?.pathname === '/heater-element' || location?.pathname === '/temperature-probe') && dataFeed.heater !== null){
+      stopHeaterExperiment()
+    }else  if((location?.pathname === '/temperature-sensor' || location?.pathname === '/voltage-sensor') && dataFeed.sensor !== null){
+      stopSensorExperiment()
+    }else navigate(-1) 
+
     setModal("")
-    navigate(-1)
+    
   }
   const handleDelete = () => {
     setModal("")
@@ -81,7 +90,7 @@ function Header(props: HeaderProps) {
   return (<div>
     <FirstHeader handleClick={handleClick} status={status} connected={connected} clientId={clientId}/>
     <SecondHeader handleBack={handleBack} status={status} connected={connected} clientId={clientId} handleMyRecord={handleMyRecord} setModal={(value) => setModal(value)} handleConnectionManager={handleConnectionManager}/>
-    <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === 'delete' ? handleDelete : ((isOpen === 'Stop Heater' || isOpen === "Stop Temperature Probe") ? handleStopProcess : handleDisconnectLeaderMember)} message={isOpen === 'delete' ? "Aye you sure you want to Delete?" : ((isOpen === 'Stop Heater' || isOpen === "Stop Temperature Probe") ? `Are you sure to ${isOpen}!` : "Are you sure to Disconnect!")}/>
+    <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === 'delete' ? handleDelete : ((isOpen === 'Stop Heater' || isOpen === "Stop Temperature Probe" || isOpen === "Stop Temperature" || isOpen === "Stop Voltage") ? handleStopProcess : handleDisconnectLeaderMember)} message={isOpen === 'delete' ? "Aye you sure you want to Delete?" : ((isOpen === 'Stop Heater' || isOpen === "Stop Temperature Probe" || isOpen === "Stop Temperature" || isOpen === "Stop Voltage") ? `Are you sure to ${isOpen}!` : "Are you sure to Disconnect!")}/>
   </div>);
 }
 

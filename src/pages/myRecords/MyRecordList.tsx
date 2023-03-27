@@ -28,11 +28,24 @@ const MyRecordList = () => {
       setMyRecords({...myRecords,[selectedButton]:getMyRecordData(updatedData)});
     }
   };
+  const handleDeleteMobile = (item:any) => {
+    if(selectedButton && item && item.name){
+      let storageData = localStorage.getItem(`${selectedButton}_data`)
+      storageData = storageData ? JSON.parse(storageData) : [];
+      let resultData = storageData && Array.isArray(storageData) ? [...storageData].filter((el:any) => el?.name !== item.name) : [];
+      localStorage.setItem(`${selectedButton}_data`,JSON.stringify(resultData))
+      let updatedData = localStorage.getItem(`${selectedButton}_data`);
+      setMyRecords({...myRecords,[selectedButton]:getMyRecordData(updatedData)});
+    }
+  };
   const handleActionItem = (item:any,action:any) => {
     setActionItem(item)
     setModal(action)
   }
   const handleEdit = () => {};
+  const handleShare = (item:any,title:string) => {
+
+  };
   const handleSelection = (value: any) => {
     if (JSON.stringify(selectedData) === JSON.stringify(value)) {
       setSelectedData("");
@@ -41,7 +54,6 @@ const MyRecordList = () => {
   const getMyRecordData = (data:any) => {
     if(data){
       let result:any = {};
-      console.log("JSON.parse(data) ",JSON.parse(data))
       for(let one of JSON.parse(data)){
         result[one?.date] = result[one?.date] ? {...result[one?.date],data:[...result[one?.date]['data'],one]} : {date:one?.date,data:[one]};
       }
@@ -104,6 +116,8 @@ const MyRecordList = () => {
               selectedData={selectedData}
               selectedButton={selectedButton}
               handleActionItem = {handleActionItem}
+              handleDeleteMobile = {handleDeleteMobile}
+              handleShare={handleShare}
             />
           ))}
       </div>

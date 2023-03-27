@@ -53,6 +53,21 @@ const getFileName = () => {
 
 }
 
+const validateFileName:any = (data:any,fileName:string,count=0) => {
+    let alreadyExists = false;
+     for(let one of data){
+            if(one && one.name && one.name.includes(`${fileName}`)){
+                alreadyExists = true;
+                break;
+            }
+    }
+    if(alreadyExists){
+        fileName.indexOf("(")
+       return validateFileName(data,fileName.includes("(") ? `${fileName.slice(0,fileName.indexOf("("))}(${count + 1 })` :`${fileName}(${count + 1})`,count + 1)
+    }
+    else return fileName
+}
+
 const getDate = () => {
     let date = `${getFormat(new Date().getMonth()+1)}-${getFormat(new Date().getDate())}-${new Date().getFullYear()}`;
     return date;
@@ -92,5 +107,6 @@ export {
     getDescription,
     getFileName,
     getDate,
-    getTime
+    getTime,
+    validateFileName
 }

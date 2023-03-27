@@ -37,6 +37,12 @@ import WhiteWarningIcon from "../assets/White-Warning-Icon.png";
 import DataIcon from "../assets/Data-Icon.png";
 import MyRecordsIcon from "../assets/My-Records.png";
 import HeaterAnimation from "../assets/Heater-Animation.gif";
+import MoreIcon from "../assets/more-Icon.png";
+import EmailIcon from "../assets/Email-Icon.png";
+import WhatsappIcon from "../assets/Whatsapp-Icon.png";
+import FacebookIcon from "../assets/Facebook-Icon.png";
+import LinkedInIcon from "../assets/LinkedIn-Icon.png";
+import TwitterIcon from "../assets/Twitter-Icon.png";
 
 export {
     LabIcon,
@@ -77,5 +83,11 @@ export {
     WhiteWarningIcon,
     DataIcon,
     MyRecordsIcon,
-    HeaterAnimation
+    HeaterAnimation,
+    MoreIcon,
+    EmailIcon,
+    WhatsappIcon,
+    FacebookIcon,
+    LinkedInIcon,
+    TwitterIcon
 };

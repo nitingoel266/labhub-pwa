@@ -55,6 +55,10 @@ export const assertClientId = (): string | null => {
   return clientId;
 };
 
+export const clearClientId = () => {
+  localStorage.removeItem(LABHUB_CLIENT_ID);
+};
+
 export const getClientType =  (): ClientType => {
   const clientId = getClientId();
   if (!clientId) return null;

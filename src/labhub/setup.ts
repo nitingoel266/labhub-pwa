@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { deviceConnected, deviceStatus, deviceStatusUpdate, deviceDataFeed, deviceDataFeedUpdate } from './status';
 import { DeviceStatus, DeviceDataFeed } from '../types/common';
 import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED, TOPIC_DEVICE_DATA_FEED_UPDATE } from '../utils/const';
-import { assertClientId } from './utils';
+import { assertClientId, clearClientId } from './utils';
 import { navStatus, navStatusUpdate } from './status-client';
 import { delay } from '../utils/utils';
 
@@ -61,6 +61,8 @@ export const initSetup = async (): Promise<boolean> => {
 };
 
 export const uninitSetup = async () => {
+  clearClientId();
+
   if (subs1) subs1.unsubscribe();
   if (subs2) subs2.unsubscribe();
   if (socket) socket.disconnect();

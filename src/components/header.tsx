@@ -7,6 +7,7 @@ import {
   resetLeader,
   stopHeaterExperiment,
   stopSensorExperiment /* ,unjoinMember */,
+  changeSetpointTemp
 } from "../labhub/actions";
 // import {setSelectedFunction,setSelectedMode} from "../labhub/actions-client";
 import styles from "../styles/header.module.css";
@@ -27,7 +28,7 @@ import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { LABHUB_CLIENT_ID } from "../utils/const";
 
-function Header(props: HeaderProps) {
+function Header({setPointTemp}: HeaderProps) {
   const [status] = useDeviceStatus();
   const [dataFeed] = useDeviceDataFeed();
   const [connected] = useSocketConnected();
@@ -51,13 +52,15 @@ function Header(props: HeaderProps) {
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
-      dataFeed.heater !== null
+        (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp)
     ) {
+      if(dataFeed.heater !== null)
       setModal(
         location?.pathname === "/temperature-probe"
-          ? "Stop Temperature Probe"
-          : "Stop Heater"
+          ? "Stop Temperature Probe Experiment"
+          : "Stop Heater Experiment"
       );
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Data?")
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
@@ -98,9 +101,14 @@ function Header(props: HeaderProps) {
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
-      dataFeed.heater !== null
+        (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp)
     ) {
+      if(dataFeed.heater !== null)
       stopHeaterExperiment();
+      else if(setPointTemp && setPointTemp !== status?.setpointTemp) {
+        changeSetpointTemp(setPointTemp)
+        navigate(-1)
+      }
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
@@ -205,8 +213,9 @@ function Header(props: HeaderProps) {
         handleDisconnect={
           isOpen === "delete"
             ? handleDelete
-            : isOpen === "Stop Heater" ||
-              isOpen === "Stop Temperature Probe" ||
+            : isOpen === "Stop Heater Experiment" ||
+              isOpen === "Stop Temperature Probe Experiment" ||
+              isOpen === "Do you want to save Data?" ||
               isOpen === "Stop Temperature" ||
               isOpen === "Stop Voltage"
             ? handleStopProcess
@@ -215,13 +224,14 @@ function Header(props: HeaderProps) {
         message={
           isOpen === "delete"
             ? "Aye you sure you want to Delete?"
-            : isOpen === "Stop Heater" ||
-              isOpen === "Stop Temperature Probe" ||
+            : isOpen === "Stop Heater Experiment" ||
+              isOpen === "Stop Temperature Probe Experiment" ||
               isOpen === "Stop Temperature" ||
               isOpen === "Stop Voltage"
             ? `Are you sure to ${isOpen}!`
-            : "Are you sure to Disconnect!"
+            : (isOpen === "Do you want to save Data?" ? isOpen :  "Are you sure to Disconnect!")
         }
+        handleCancel = {() => navigate(-1)}
       />
     </div>
   );
@@ -381,4 +391,6 @@ type SecondHeaderprops = {
   handleDownload: () => void;
 };
 
-export interface HeaderProps {}
+export interface HeaderProps {
+  setPointTemp ?:number;
+}

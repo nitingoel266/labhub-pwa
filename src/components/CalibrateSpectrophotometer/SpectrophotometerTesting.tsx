@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../../styles/SpectrophotometerCalibration.module.css';
 import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
@@ -7,11 +7,15 @@ import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
 import MemberDisconnect from '../Modal/MemberDisconnectModal';
+import {startRgbExperiment,simulateRgb} from "../../labhub/actions";
+import { useDeviceDataFeed } from '../../labhub/status';
 
 const SpectrophotometerTesting = () => {
     const navigate = useNavigate();
+    const [dataStream] = useDeviceDataFeed();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
+    const [testCalibrate, setTestCalibrate]= useState<any>([])
     const [isOpen,setModal] = useState("");
 
     const clickHandler = (item:string) => {
@@ -24,6 +28,8 @@ const SpectrophotometerTesting = () => {
         if(selectedItem){
             // navigate("/spectrophotometer-testing")
             setSelectedItem("")
+            startRgbExperiment()
+            setTestCalibrate([])
         }else setModal("measure now")
 
     }
@@ -33,8 +39,17 @@ const SpectrophotometerTesting = () => {
     }
     const handleMeasure = () => {
         setModal("")
+        simulateRgb('measure')
         navigate("/cuvette-insertion")
     }
+    useEffect(() => {
+        startRgbExperiment()
+    },[])
+    useEffect(() => {
+        if(dataStream?.rgb){
+            setTestCalibrate(dataStream?.rgb?.calibrateTest)
+        }
+    },[dataStream?.rgb])
     return <div>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
@@ -49,15 +64,15 @@ const SpectrophotometerTesting = () => {
         {isOpen === TEST_CALIBRATE && isMobile && <IButtonComponent title={TEST_CALIBRATE} description={getDescription(TEST_CALIBRATE)}/>}
         <div className={styles.BodyWrapper}>
             <div className={styles.BodyBollWrapper}>
-                <div className={styles.BodyRedBoll}>0.1</div>
+                <div className={styles.BodyRedBoll}>{testCalibrate[0]}</div>
                 <div className={styles.BodyText}>Red</div>
             </div>
             <div className={styles.BodyBollWrapper}>
-                <div className={styles.BodyGreenBoll}>0.0</div>
+                <div className={styles.BodyGreenBoll}>{testCalibrate[1]}</div>
                 <div className={styles.BodyText}>Green</div>
             </div>
             <div className={styles.BodyBollWrapper}>
-                <div className={styles.BodyBlueBoll}>0.1</div>
+                <div className={styles.BodyBlueBoll}>{testCalibrate[2]}</div>
                 <div className={styles.BodyText}>Blue</div>
             </div>
         </div>

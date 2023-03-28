@@ -6,6 +6,7 @@ import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
+import {simulateRgb} from "../../labhub/actions";
 
 const CalibrationTesting = () => {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ const CalibrationTesting = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
+            simulateRgb('calibrate_test')
             navigate("/spectrophotometer-testing")
         }
 

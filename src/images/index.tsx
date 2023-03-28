@@ -43,6 +43,7 @@ import WhatsappIcon from "../assets/Whatsapp-Icon.png";
 import FacebookIcon from "../assets/Facebook-Icon.png";
 import LinkedInIcon from "../assets/LinkedIn-Icon.png";
 import TwitterIcon from "../assets/Twitter-Icon.png";
+import WhiteCrossIcon from "../assets/White-Cross-Icon.png";
 
 export {
     LabIcon,
@@ -89,5 +90,6 @@ export {
     WhatsappIcon,
     FacebookIcon,
     LinkedInIcon,
-    TwitterIcon
+    TwitterIcon,
+    WhiteCrossIcon
 };

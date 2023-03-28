@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import MyRecordsCard from "../../components/MyRecordsCard";
 import RightArrow from "../../components/RightArrow";
-import {TEMPERATURE_DATA,VOLTAGE_DATA,RGB_DATA} from "../../utils/const";
+import { TEMPERATURE_DATA, VOLTAGE_DATA, RGB_DATA } from "../../utils/const";
 import styles from "../../styles/myRecordList.module.css";
 
 const MyRecordList = () => {
@@ -11,63 +11,92 @@ const MyRecordList = () => {
   const [isOpen, setModal] = useState("");
   const [selectedData, setSelectedData] = useState<any>();
   const [selectedButton, setSelectedButton] = useState<string>("temperature");
-  const [actionItem,setActionItem] = useState<any>() // contain one data that will change by the action
-  const [myRecords,setMyRecords] = useState<any>()
+  const [actionItem, setActionItem] = useState<any>(); // contain one data that will change by the action
+  const [myRecords, setMyRecords] = useState<any>();
 
   const handleSubmit = () => {
-    navigate(`/${selectedButton}-records`);
+    navigate(`/${selectedButton}-records`, {
+      state: { data: { selectedData, selectedButton } },
+    });
   };
   const handleDelete = () => {
-    if(isOpen === "delete" && selectedButton && actionItem && actionItem.name){
-      setModal("")
-      let storageData = localStorage.getItem(`${selectedButton}_data`)
+    if (
+      isOpen === "delete" &&
+      selectedButton &&
+      actionItem &&
+      actionItem.name
+    ) {
+      setModal("");
+      let storageData = localStorage.getItem(`${selectedButton}_data`);
       storageData = storageData ? JSON.parse(storageData) : [];
-      let resultData = storageData && Array.isArray(storageData) ? [...storageData].filter((el:any) => el?.name !== actionItem.name) : [];
-      localStorage.setItem(`${selectedButton}_data`,JSON.stringify(resultData))
+      let resultData =
+        storageData && Array.isArray(storageData)
+          ? [...storageData].filter((el: any) => el?.name !== actionItem.name)
+          : [];
+      localStorage.setItem(
+        `${selectedButton}_data`,
+        JSON.stringify(resultData)
+      );
       let updatedData = localStorage.getItem(`${selectedButton}_data`);
-      setMyRecords({...myRecords,[selectedButton]:getMyRecordData(updatedData)});
+      setMyRecords({
+        ...myRecords,
+        [selectedButton]: getMyRecordData(updatedData),
+      });
     }
   };
-  const handleDeleteMobile = (item:any) => {
-    if(selectedButton && item && item.name){
-      let storageData = localStorage.getItem(`${selectedButton}_data`)
+  const handleDeleteMobile = (item: any) => {
+    if (selectedButton && item && item.name) {
+      let storageData = localStorage.getItem(`${selectedButton}_data`);
       storageData = storageData ? JSON.parse(storageData) : [];
-      let resultData = storageData && Array.isArray(storageData) ? [...storageData].filter((el:any) => el?.name !== item.name) : [];
-      localStorage.setItem(`${selectedButton}_data`,JSON.stringify(resultData))
+      let resultData =
+        storageData && Array.isArray(storageData)
+          ? [...storageData].filter((el: any) => el?.name !== item.name)
+          : [];
+      localStorage.setItem(
+        `${selectedButton}_data`,
+        JSON.stringify(resultData)
+      );
       let updatedData = localStorage.getItem(`${selectedButton}_data`);
-      setMyRecords({...myRecords,[selectedButton]:getMyRecordData(updatedData)});
+      setMyRecords({
+        ...myRecords,
+        [selectedButton]: getMyRecordData(updatedData),
+      });
     }
   };
-  const handleActionItem = (item:any,action:any) => {
-    setActionItem(item)
-    setModal(action)
-  }
+  const handleActionItem = (item: any, action: any) => {
+    setActionItem(item);
+    setModal(action);
+  };
   const handleEdit = () => {};
-  const handleShare = (item:any,title:string) => {
-
-  };
+  const handleShare = (item: any, title: string) => {};
   const handleSelection = (value: any) => {
     if (JSON.stringify(selectedData) === JSON.stringify(value)) {
       setSelectedData("");
     } else setSelectedData(value);
   };
-  const getMyRecordData = (data:any) => {
-    if(data){
-      let result:any = {};
-      for(let one of JSON.parse(data)){
-        result[one?.date] = result[one?.date] ? {...result[one?.date],data:[...result[one?.date]['data'],one]} : {date:one?.date,data:[one]};
+  const getMyRecordData = (data: any) => {
+    if (data) {
+      let result: any = {};
+      for (let one of JSON.parse(data)) {
+        result[one?.date] = result[one?.date]
+          ? { ...result[one?.date], data: [...result[one?.date]["data"], one] }
+          : { date: one?.date, data: [one] };
       }
-      return Object.values(result)
+      return Object.values(result);
     }
-  }
+  };
 
   useEffect(() => {
     let tempData = localStorage.getItem(TEMPERATURE_DATA);
     let voltageData = localStorage.getItem(VOLTAGE_DATA);
     let rgbData = localStorage.getItem(RGB_DATA);
-    let resultData = {temperature:getMyRecordData(tempData),voltage:getMyRecordData(voltageData),rgb:getMyRecordData(rgbData)};
+    let resultData = {
+      temperature: getMyRecordData(tempData),
+      voltage: getMyRecordData(voltageData),
+      rgb: getMyRecordData(rgbData),
+    };
     setMyRecords(resultData);
-    },[])
+  }, []);
   return (
     <div className={styles.myRecordWrapper}>
       <div className={styles.myRecordButtonWrapper}>
@@ -106,7 +135,8 @@ const MyRecordList = () => {
         </div>
       </div>
       <div style={{ overflowY: "auto", height: window.innerHeight - 171 }}>
-        {myRecords && myRecords[selectedButton] &&
+        {myRecords &&
+          myRecords[selectedButton] &&
           myRecords[selectedButton].map((el: any) => (
             <MyRecordsCard
               key={el?.date}
@@ -115,8 +145,8 @@ const MyRecordList = () => {
               setSelectedData={(value) => handleSelection(value)}
               selectedData={selectedData}
               selectedButton={selectedButton}
-              handleActionItem = {handleActionItem}
-              handleDeleteMobile = {handleDeleteMobile}
+              handleActionItem={handleActionItem}
+              handleDeleteMobile={handleDeleteMobile}
               handleShare={handleShare}
             />
           ))}

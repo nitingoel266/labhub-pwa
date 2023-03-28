@@ -5,7 +5,7 @@ import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
 import {startSensorExperiment,stopSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import TemperatureGraph from './Graphs/TemperatureGraph';
-import {getFileName,getDate,getTime} from "./Constants";
+import {getFileName,getDate,getTime,validateFileName} from "./Constants";
 import {LABHUB_CLIENT_ID,VOLTAGE_DATA} from "../utils/const";
 
 const MeasuringVoltage = () => {
@@ -59,13 +59,8 @@ const MeasuringVoltage = () => {
         }
         let voltageStorageData = localStorage.getItem(VOLTAGE_DATA);
         let voltageData = voltageStorageData ? JSON.parse(voltageStorageData) : []; 
-        let fileNameExistCount = 0;
-        for(let one of voltageData){
-            if(one && one.name && one.name.includes(`${fileName}`)){
-                fileNameExistCount += 1;
-            }
-        }
-        let resultData = {name:fileNameExistCount > 0 ? `${fileName}(${fileNameExistCount})` : fileName,date:getDate(),time:getTime(), data:resultVoltage}
+       
+        let resultData = {name:validateFileName(voltageData,fileName),date:getDate(),time:getTime(), data:resultVoltage}
         let storageVoltageData = JSON.stringify([...voltageData,resultData])
         localStorage.setItem(VOLTAGE_DATA, storageVoltageData);
         // console.log("save the data in record section ",resultVoltage)
@@ -90,6 +85,11 @@ const MeasuringVoltage = () => {
             window.removeEventListener('resize', () => {setIsMobile(false)})
         }
     },[])
+    useEffect(() => {
+        if(dataStream.sensor === null){
+            setIsStart(false)
+        }
+    },[dataStream?.sensor])
     const extraStyle = {backgroundColor: "#989DA3",cursor:"not-allowed"};
     return <div className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper} >

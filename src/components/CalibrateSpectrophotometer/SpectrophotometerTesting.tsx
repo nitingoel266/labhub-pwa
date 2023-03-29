@@ -8,10 +8,13 @@ import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND} from "..
 import IButtonComponent from '../IButtonComponent';
 import MemberDisconnect from '../Modal/MemberDisconnectModal';
 import {startRgbExperiment,simulateRgb} from "../../labhub/actions";
-import { useDeviceDataFeed } from '../../labhub/status';
+import { useDeviceDataFeed, useDeviceStatus } from '../../labhub/status';
+import { LABHUB_CLIENT_ID } from "../../utils/const";
 
 const SpectrophotometerTesting = () => {
     const navigate = useNavigate();
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
@@ -28,8 +31,11 @@ const SpectrophotometerTesting = () => {
         if(selectedItem){
             // navigate("/spectrophotometer-testing")
             setSelectedItem("")
-            startRgbExperiment()
-            setTestCalibrate([])
+            if(clientId === status?.leaderSelected){
+                startRgbExperiment()
+                setTestCalibrate([])
+            }
+
         }else setModal("measure now")
 
     }
@@ -39,15 +45,18 @@ const SpectrophotometerTesting = () => {
     }
     const handleMeasure = () => {
         setModal("")
+        if(clientId === status?.leaderSelected)
         simulateRgb('measure')
+
         navigate("/cuvette-insertion")
     }
     useEffect(() => {
+        if(clientId === status?.leaderSelected)
         startRgbExperiment()
-    },[])
+    },[clientId,status?.leaderSelected])
     useEffect(() => {
         if(dataStream?.rgb){
-            setTestCalibrate(dataStream?.rgb?.calibrateTest)
+            setTestCalibrate(dataStream?.rgb?.calibrateTest || [])
         }
     },[dataStream?.rgb])
     return <div>

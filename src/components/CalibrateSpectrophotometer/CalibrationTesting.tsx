@@ -7,9 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
 import {simulateRgb} from "../../labhub/actions";
+import { useDeviceStatus } from '../../labhub/status';
+import { LABHUB_CLIENT_ID } from "../../utils/const";
 
 const CalibrationTesting = () => {
     const navigate = useNavigate();
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const [status] = useDeviceStatus();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
@@ -22,6 +26,7 @@ const CalibrationTesting = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
+            if(clientId === status?.leaderSelected)
             simulateRgb('calibrate_test')
             navigate("/spectrophotometer-testing")
         }

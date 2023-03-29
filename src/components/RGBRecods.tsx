@@ -6,7 +6,7 @@ const RGBRecord = () => {
   return (
     <div className={styles.Wrapper}>
       {[
-        { key: 1, value: "Measuement No." },
+        { key: 1, value: "Measuement No" },
         { key: 2, value: "RED" },
         { key: 3, value: "GREEN" },
         { key: 4, value: "BLUE" },
@@ -19,7 +19,7 @@ const RGBRecord = () => {
               state.data.selectedData &&
               state.data.selectedData.data.map((item: any) => (
                 <div key={item.time} className={styles.ColumnBody}>
-                  {el.key && item[el.key]}
+                  {el.value && item[el.value]}
                 </div>
               ))}
           </div>

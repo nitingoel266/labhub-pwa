@@ -9,9 +9,11 @@ import {WhiteTickIcon,WhiteCrossIcon} from "../../images/index";
 import IButtonComponent from '../IButtonComponent';
 import { useDeviceStatus } from '../../labhub/status';
 import { calibrateRgb } from '../../labhub/actions';
+import { LABHUB_CLIENT_ID } from "../../utils/const";
 
 const SpectrophotometerCalibration = () => {
     const navigate = useNavigate();
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
@@ -28,6 +30,7 @@ const SpectrophotometerCalibration = () => {
         if(selectedItem){
             // navigate("/spectrophotometer-calibration")
             setSelectedItem("")
+            if(clientId === status?.leaderSelected)
             calibrateRgb()
         }else navigate("/calibration-testing") 
 
@@ -37,8 +40,9 @@ const SpectrophotometerCalibration = () => {
         else setModal(title)
     }
     useEffect(() => {
+        if(clientId === status?.leaderSelected)
         calibrateRgb()
-    },[])
+    },[clientId, status?.leaderSelected])
     useEffect(() => {
         if(status){
             setCalibrate(status?.rgbCalibrated)

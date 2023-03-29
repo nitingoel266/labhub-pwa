@@ -71,6 +71,8 @@ function Header({setPointTemp}: HeaderProps) {
           ? "Stop Temperature"
           : "Stop Voltage"
       );
+    }else if(location?.pathname === "/rgb-spect") {
+      navigate("/function-selection")
     } else navigate(-1);
   };
   const handleClick = (value: any) => {
@@ -157,7 +159,7 @@ function Header({setPointTemp}: HeaderProps) {
       if (location.state.data.selectedButton === "voltage")
         header = ["Time ( Sec )", "Voltage (V)"];
       else if (location.state.data.selectedButton === "rgb")
-        header = ["Measurement No.", "RED", "GREEN", "BLUE"];
+        header = ["Measurement No", "RED", "GREEN", "BLUE"];
       DownloadData({ data: location.state.data.selectedData, header });
     }
   };

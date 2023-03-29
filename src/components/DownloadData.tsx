@@ -14,8 +14,19 @@ const DownloadData = ({ data, header }: Props) => {
   // csv += data.name + '\n';
   if (data && data.data && data.data.length > 0) {
     for(let one of data.data){
-      csv += one.time;
-      csv += "," + one.temp;
+      if(header && header[1] === "Temperature ( C )"){
+        csv += one.time;
+        csv += "," + one.temp;
+      }else if(header && header[1] === "voltage"){
+        csv += one.time;
+        csv += "," + one.voltage;
+      }else if(header && header[2] === "GREEN"){
+        csv += one["Measuement No"];
+        csv += "," + one['RED'];
+        csv += "," + one['GREEN'];
+        csv += "," + one['BLUE'];
+
+      }
       csv += "\n";
     }
   }

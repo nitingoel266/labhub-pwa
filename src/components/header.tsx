@@ -73,6 +73,8 @@ function Header({setPointTemp}: HeaderProps) {
       );
     }else if(location?.pathname === "/rgb-spect") {
       navigate("/function-selection")
+    }else if(location?.pathname === "/function-selection") {
+      navigate("/mode-selection")
     } else navigate(-1);
   };
   const handleClick = (value: any) => {

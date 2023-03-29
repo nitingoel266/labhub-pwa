@@ -17,7 +17,7 @@ const DownloadData = ({ data, header }: Props) => {
       if(header && header[1] === "Temperature ( C )"){
         csv += one.time;
         csv += "," + one.temp;
-      }else if(header && header[1] === "voltage"){
+      }else if(header && header[1] === "Voltage (V)"){
         csv += one.time;
         csv += "," + one.voltage;
       }else if(header && header[2] === "GREEN"){

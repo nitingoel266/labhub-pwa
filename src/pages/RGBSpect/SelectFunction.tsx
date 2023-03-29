@@ -8,9 +8,13 @@ import {mobileWidth,CALIBRATE_SPECTROPHOTOMETER,getDescription,MEASURE_ABSORBANC
 import IButtonComponent from "../../components/IButtonComponent";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import {calibrateRgb,simulateRgb} from "../../labhub/actions";
+import { useDeviceStatus } from "../../labhub/status";
+import { LABHUB_CLIENT_ID } from "../../utils/const";
 
 const SelectFunction = () => {
     const navigate = useNavigate();
+    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const [status] = useDeviceStatus();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
@@ -22,8 +26,10 @@ const SelectFunction = () => {
     const handleSubmit = () => {
         if(selectedItem){
             if(selectedItem === MEASURE_ABSORBANCE){
-                calibrateRgb()
-                simulateRgb('measure')
+                if(clientId === status?.leaderSelected){
+                    calibrateRgb()
+                    simulateRgb('measure')
+                }
             }
             navigate(selectedItem === CALIBRATE_SPECTROPHOTOMETER ? "/calibrate-spectrophotometer" : "/cuvette-insertion")
         }

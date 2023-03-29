@@ -62,7 +62,7 @@ const CuvetteInsertion = () => {
             <div>TITLE</div>
             <div className={styles.FooterText}>
                 <div>T0918564122-1123-7T09185...</div>
-                <div className={styles.SaveButton}>Save</div>
+                <div className={styles.SaveButton} style={{backgroundColor: "#989DA3",cursor:"not-allowed"}}>Save</div>
             </div>
             </div>
         </div>

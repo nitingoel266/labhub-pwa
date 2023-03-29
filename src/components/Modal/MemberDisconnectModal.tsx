@@ -7,9 +7,10 @@ type Props= {
     setModal:(value:any) => void;
     handleDisconnect:() => void;
     message?:string;
+    handleCancel?:() => void;
 }
 
-const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen,handleDisconnect} : Props)=> {
+const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen,handleDisconnect,handleCancel} : Props)=> {
     return (
         <div style={{position:"absolute",zIndex:1}}>
         {isOpen &&
@@ -34,7 +35,7 @@ const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen
                         <div>{message}</div>
                     </div>
                     <div className={styles.ButtonWrapper}>
-                        <div onClick={() => setModal("")} className={styles.CancelButton}>Cancel</div>
+                        <div onClick={() => handleCancel ? handleCancel() : setModal("")} className={styles.CancelButton}>Cancel</div>
                         <div onClick={handleDisconnect} className={styles.YesButton}>Yes</div>
                     </div>
                 </div>

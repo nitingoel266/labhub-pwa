@@ -1,17 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../../styles/SpectrophotometerCalibration.module.css';
 import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
 import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
-import {WhiteTickIcon} from "../../images/index";
+import {WhiteTickIcon,WhiteCrossIcon} from "../../images/index";
 import IButtonComponent from '../IButtonComponent';
+import { useDeviceStatus } from '../../labhub/status';
+import { calibrateRgb } from '../../labhub/actions';
 
 const SpectrophotometerCalibration = () => {
     const navigate = useNavigate();
+    const [status] = useDeviceStatus();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
+    const [calibrate,setCalibrate] = useState<any>(null)
     const [isOpen,setModal] = useState("");
 
     const clickHandler = (item:string) => {
@@ -24,6 +28,7 @@ const SpectrophotometerCalibration = () => {
         if(selectedItem){
             // navigate("/spectrophotometer-calibration")
             setSelectedItem("")
+            calibrateRgb()
         }else navigate("/calibration-testing") 
 
     }
@@ -31,6 +36,14 @@ const SpectrophotometerCalibration = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
+    useEffect(() => {
+        calibrateRgb()
+    },[])
+    useEffect(() => {
+        if(status){
+            setCalibrate(status?.rgbCalibrated)
+        }
+    },[status, status?.rgbCalibrated])
     return <div>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
@@ -46,19 +59,19 @@ const SpectrophotometerCalibration = () => {
         <div className={styles.BodyWrapper}>
             <div className={styles.BodyBollWrapper}>
                 <div className={styles.BodyRedBoll}>
-                    <img src={WhiteTickIcon} style={{width:25}} alt="tick icon"/>
+                    {calibrate !== null && <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Red</div>
             </div>
             <div className={styles.BodyBollWrapper}>
                 <div className={styles.BodyGreenBoll}>
-                    <img src={WhiteTickIcon} style={{width:25}} alt="tick icon"/>
+                    {calibrate !== null &&  <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Green</div>
             </div>
             <div className={styles.BodyBollWrapper}>
                 <div className={styles.BodyBlueBoll}>
-                    <img src={WhiteTickIcon} style={{width:25}} alt="tick icon"/>
+                    {calibrate !== null && <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Blue</div>
             </div>

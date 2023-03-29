@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link, useLocation } from 'react-router-dom';
 import Header from './components/header';
 import Home from './components/home';
 import ScanDevice from "./pages/scanDevices/index"
@@ -36,10 +36,12 @@ import InsertionAbsorbanceMeasuring from './components/MeasureAbsorbance/Inserti
 function App() {
   const [status] = useDeviceStatus();
   const [connected] = useSocketConnected();
+  const location = useLocation();
+  const showHeader = location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe" || location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" ? false : true
 
   return (
     <div className={styles.app}>
-      <Header />
+      {showHeader && <Header />}
       <main>
         <Routes>
           <Route path='/' element={<Home />} />

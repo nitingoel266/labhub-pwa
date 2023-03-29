@@ -10,6 +10,7 @@ import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
 import IButtonComponent from '../../components/IButtonComponent';
 import {LABHUB_CLIENT_ID} from "../../utils/const";
+import Header from '../../components/header';
 
 let temperatureTimmer:any;
 const TemperatureProbe = () => {
@@ -73,11 +74,16 @@ const TemperatureProbe = () => {
     }
     useEffect(() => {
         if(dataStream?.heater?.probe){
+            if(!isStart) setIsStart(true)
             setPower(dataStream.heater.probe[0])
         }
-    },[dataStream?.heater?.probe])
+        if(dataStream?.heater === null){
+            setIsStart(false)
+        }
+    },[isStart, dataStream?.heater, dataStream?.heater?.probe])
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
+            <Header setPointTemp = {temperature}/>
              <div className={styles.HeaderTextWrapper}>
             <div>{SETPOINT_TEMPERATURE}</div>
             <div className={styles.RateMeasureRightSide}>

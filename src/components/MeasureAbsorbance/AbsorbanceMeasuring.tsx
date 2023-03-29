@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../../styles/AbsorbanceMeasuring.module.css';
 import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
@@ -6,11 +6,16 @@ import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,MEASURE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
+import {startRgbExperiment,simulateRgb} from "../../labhub/actions";
+import { useDeviceDataFeed } from '../../labhub/status';
 
 const AbsorbanceMeasuring = () => {
     const navigate = useNavigate();
+    const [dataStream] = useDeviceDataFeed();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
+    const [measure , setMeasure] = useState<any>([]);
+    // const [measuredValue,setMeasuredValue] = useState<any>([]) //{Measuement No,RED,GREEN,BLUE}
     const [isOpen,setModal] = useState("");
 
     const clickHandler = (item:string) => {
@@ -21,6 +26,11 @@ const AbsorbanceMeasuring = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
+            navigate("/measure-absorbance")
+            startRgbExperiment()
+            setSelectedItem("")
+        }else {
+            simulateRgb(null)
             navigate("/rgb-spect")
         }
 
@@ -29,7 +39,14 @@ const AbsorbanceMeasuring = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
-
+    useEffect(() => {
+        if(dataStream?.rgb){
+            setMeasure(dataStream?.rgb?.measure || [])
+        }
+    },[dataStream?.rgb])
+    useEffect(() => {
+        startRgbExperiment()
+    },[])
     return <div>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
@@ -44,15 +61,15 @@ const AbsorbanceMeasuring = () => {
         {isOpen === MEASURE && isMobile && <IButtonComponent title={MEASURE} description={getDescription(MEASURE)}/>}
         <div className={styles.BodyWrapper}>
             <div className={styles.BodyBollWrapper}>
-                <div className={styles.BodyRedBoll}>4.9</div>
+                <div className={styles.BodyRedBoll}>{measure[0]}</div>
                 <div className={styles.BodyText}>Red</div>
             </div>
             <div className={styles.BodyBollWrapper}>
-                <div className={styles.BodyGreenBoll}>0.0</div>
+                <div className={styles.BodyGreenBoll}>{measure[1]}</div>
                 <div className={styles.BodyText}>Green</div>
             </div>
             <div className={styles.BodyBollWrapper}>
-                <div className={styles.BodyBlueBoll}>3.9</div>
+                <div className={styles.BodyBlueBoll}>{measure[2]}</div>
                 <div className={styles.BodyText}>Blue</div>
             </div>
         </div>
@@ -66,7 +83,7 @@ const AbsorbanceMeasuring = () => {
             </div>
             </div>
         </div>
-        <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={true} handleSubmit={handleSubmit}/>
         {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={ getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }

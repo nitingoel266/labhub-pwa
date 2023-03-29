@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import IButtonComponent from "../../components/IButtonComponent";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
 import {LABHUB_CLIENT_ID} from "../../utils/const";
+import Header from "../../components/header";
 
 let temperatureTimmer:any;
 const HeaterElement = () => {
@@ -90,11 +91,16 @@ const HeaterElement = () => {
     //   }, []);
     useEffect(() => {
         if(dataStream?.heater?.element){
+             if(!isStart) setIsStart(true)
             setPower(dataStream.heater.element[0])
         }
-    },[dataStream?.heater?.element])
+        if(dataStream?.heater === null){
+            setIsStart(false)
+        }
+    },[isStart, dataStream?.heater, dataStream?.heater?.element])
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
+            <Header setPointTemp = {temperature}/>
              <div className={styles.HeaderTextWrapper}>
             <div>{SETPOINT_TEMPERATURE}</div>
             <div className={styles.RateMeasureRightSide}>
@@ -118,7 +124,7 @@ const HeaterElement = () => {
                     <img src={isStart ? HeaterAnimation : HeaterIcon} className={styles.HeaterEelementImage} style={isStart ? {height:200,width:220} :{height:180}} alt="heater element"/>
                 </div>
                 <div className={styles.ButtonWrapper}>
-                    <div onClick={() => clientId === status?.leaderSelected && !isStart ? handleStart() : {}} className={styles.Button} style={isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Start</div>
+                    <div onClick={() => clientId === status?.leaderSelected && !isStart ? setModal("start") : {}} className={styles.Button} style={isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Start</div>
                     <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.Button} style={!isStart ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : extraStyle}>Stop</div>
                 </div>
             </div>

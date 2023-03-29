@@ -7,6 +7,7 @@ import IButtonModal from "../../components/Modal/IButtonModal";
 import {mobileWidth,CALIBRATE_SPECTROPHOTOMETER,getDescription,MEASURE_ABSORBANCE,HIGHLIGHT_BACKGROUND} from "../../components/Constants";
 import IButtonComponent from "../../components/IButtonComponent";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
+import {calibrateRgb,simulateRgb} from "../../labhub/actions";
 
 const SelectFunction = () => {
     const navigate = useNavigate();
@@ -20,6 +21,10 @@ const SelectFunction = () => {
     }
     const handleSubmit = () => {
         if(selectedItem){
+            if(selectedItem === MEASURE_ABSORBANCE){
+                calibrateRgb()
+                simulateRgb('measure')
+            }
             navigate(selectedItem === CALIBRATE_SPECTROPHOTOMETER ? "/calibrate-spectrophotometer" : "/cuvette-insertion")
         }
 

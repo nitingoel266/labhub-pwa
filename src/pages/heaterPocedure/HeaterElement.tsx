@@ -91,12 +91,13 @@ const HeaterElement = () => {
     //   }, []);
     useEffect(() => {
         if(dataStream?.heater?.element){
+             if(!isStart) setIsStart(true)
             setPower(dataStream.heater.element[0])
         }
         if(dataStream?.heater === null){
             setIsStart(false)
         }
-    },[dataStream?.heater, dataStream?.heater?.element])
+    },[isStart, dataStream?.heater, dataStream?.heater?.element])
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
             <Header setPointTemp = {temperature}/>

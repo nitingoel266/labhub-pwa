@@ -74,12 +74,13 @@ const TemperatureProbe = () => {
     }
     useEffect(() => {
         if(dataStream?.heater?.probe){
+            if(!isStart) setIsStart(true)
             setPower(dataStream.heater.probe[0])
         }
         if(dataStream?.heater === null){
             setIsStart(false)
         }
-    },[dataStream?.heater, dataStream?.heater?.probe])
+    },[isStart, dataStream?.heater, dataStream?.heater?.probe])
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
             <Header setPointTemp = {temperature}/>

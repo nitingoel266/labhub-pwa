@@ -7,6 +7,7 @@ import MemberDisconnect from './Modal/MemberDisconnectModal';
 import TemperatureGraph from './Graphs/TemperatureGraph';
 import {getFileName,getDate,getTime,validateFileName} from "./Constants";
 import {LABHUB_CLIENT_ID,VOLTAGE_DATA} from "../utils/const";
+import Header from './header';
 
 const MeasuringVoltage = () => {
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
@@ -67,13 +68,25 @@ const MeasuringVoltage = () => {
         //save the voltage in labhub device in celcis mode
     }
     useEffect(() => {
-        if(dataStream && dataStream.sensor && dataStream.sensor.voltage){
+        if(dataStream && dataStream.sensor && dataStream.sensor.voltage && clientId === status?.leaderSelected){
             setGraphData((prevData:any) => {
                 return [...prevData,{time:prevData.length * Number(status?.setupData?.dataRate === 'user' ? 1 : status?.setupData?.dataRate),temp:dataStream?.sensor?.voltage}]
             })
             setCapturePoint((prevData:any) => [...prevData,status?.setupData?.dataRate === 'user' ? 0 : 2])
+        }else if(clientId !== status?.leaderSelected && dataStream){
+            let logData = [],capturePoint=[];
+            if(dataStream?.sensor?.voltageLog){
+                for(let one in dataStream.sensor.voltageLog){
+                    if(Number(one) > 0){
+                        logData.push({time: Number(one) * Number(status?.setupData?.dataRate === 'user' ? 1 : status?.setupData?.dataRate),temp:dataStream.sensor.voltageLog[one]});
+                        capturePoint.push(status?.setupData?.dataRate === 'user' ? 0 : 2)
+                    }
+                }
+                setGraphData(logData)
+                setCapturePoint(capturePoint)
+            }
         }
-    },[dataStream, dataStream?.sensor?.voltage,status?.setupData?.dataRate])
+    },[dataStream, dataStream?.sensor?.voltage,status?.setupData?.dataRate, clientId, status?.leaderSelected])
     useEffect(() => {
         window.addEventListener('resize', () =>{
             if(window.innerWidth <= 580)
@@ -88,10 +101,14 @@ const MeasuringVoltage = () => {
     useEffect(() => {
         if(dataStream.sensor === null){
             setIsStart(false)
+        }else if(dataStream?.sensor?.voltage && !isStart){ // for test-screen
+            setIsStart(true)
         }
-    },[dataStream?.sensor])
+    },[dataStream?.sensor, isStart])
     const extraStyle = {backgroundColor: "#989DA3",cursor:"not-allowed"};
-    return <div className={styles.TopWrapper}>
+    return <>
+    <Header />
+    <div className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper} >
             <div style={{fontWeight:500}}>Measuring Voltage</div>
             <div>{" "}</div>
@@ -129,6 +146,7 @@ const MeasuringVoltage = () => {
         <MemberDisconnect isOpen={isOpen ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={(isOpen === 'restart' || isOpen === 'start') ? handleRestart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>
         <RightArrow isSelected={capturePoint?.some((el:number) => el > 0) ? true : false} handleSubmit={handleSubmit}/>
     </div>
+    </>
 }
 
 export default MeasuringVoltage

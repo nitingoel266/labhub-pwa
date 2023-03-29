@@ -44,7 +44,7 @@ function App() {
       console.error('Could not set clientId in localStorage');
     }
   }, []);
-  const showHeader = location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe" ? false : true
+  const showHeader = location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe" || location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" ? false : true
   return (
     <div className={styles.app}>
       {showHeader && <Header />}

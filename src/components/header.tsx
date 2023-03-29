@@ -52,7 +52,7 @@ function Header({setPointTemp}: HeaderProps) {
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
-        (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp)
+        (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) && clientId === status?.leaderSelected
     ) {
       if(dataFeed.heater !== null)
       setModal(
@@ -64,7 +64,7 @@ function Header({setPointTemp}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      dataFeed.sensor !== null
+      dataFeed.sensor !== null && clientId === status?.leaderSelected
     ) {
       setModal(
         location?.pathname === "/temperature-sensor"

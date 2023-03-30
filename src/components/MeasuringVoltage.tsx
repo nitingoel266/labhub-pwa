@@ -29,6 +29,7 @@ const MeasuringVoltage = () => {
         setCapturePoint([])
         startSensorExperiment()
         setModal("")
+        setIsSaved(false)
         setIsStart(true)
     }
     const handleStop = () => {
@@ -73,6 +74,8 @@ const MeasuringVoltage = () => {
                 return [...prevData,{time:prevData.length * Number(status?.setupData?.dataRate === 'user' ? 1 : status?.setupData?.dataRate),temp:dataStream?.sensor?.voltage}]
             })
             setCapturePoint((prevData:any) => [...prevData,status?.setupData?.dataRate === 'user' ? 0 : 2])
+            setIsSaved(false)
+
         }else if(clientId !== status?.leaderSelected && dataStream){
             let logData = [],capturePoint=[];
             if(dataStream?.sensor?.voltageLog){
@@ -84,6 +87,7 @@ const MeasuringVoltage = () => {
                 }
                 setGraphData(logData)
                 setCapturePoint(capturePoint)
+                setIsSaved(false)
             }
         }
     },[dataStream, dataStream?.sensor?.voltage,status?.setupData?.dataRate, clientId, status?.leaderSelected])
@@ -107,7 +111,7 @@ const MeasuringVoltage = () => {
     },[dataStream?.sensor, isStart])
     const extraStyle = {backgroundColor: "#989DA3",cursor:"not-allowed"};
     return <>
-    <Header />
+    <Header checkForSave={graphData.length > 0 && !isSaved ? true : false} handleSave={handleSave}/>
     <div className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper} >
             <div style={{fontWeight:500}}>Measuring Voltage</div>

@@ -28,7 +28,7 @@ import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { LABHUB_CLIENT_ID } from "../utils/const";
 
-function Header({setPointTemp}: HeaderProps) {
+function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
   const [status] = useDeviceStatus();
   const [dataFeed] = useDeviceDataFeed();
   const [connected] = useSocketConnected();
@@ -64,19 +64,23 @@ function Header({setPointTemp}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      dataFeed.sensor !== null && clientId === status?.leaderSelected
+      (dataFeed.sensor !== null || checkForSave)
     ) {
-      setModal(
-        location?.pathname === "/temperature-sensor"
-          ? "Stop Temperature"
-          : "Stop Voltage"
-      );
+      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+        setModal(
+          location?.pathname === "/temperature-sensor"
+            ? "Stop Temperature"
+            : "Stop Voltage"
+        );
+      }else if(checkForSave) setModal("Do you want to save Data?")
+     
     }else if(location?.pathname === "/rgb-spect") {
       navigate("/function-selection")
     }else if(location?.pathname === "/function-selection") {
       navigate("/mode-selection")
     } else navigate(-1);
   };
+
   const handleClick = (value: any) => {
     setModal(value);
   };
@@ -101,6 +105,7 @@ function Header({setPointTemp}: HeaderProps) {
     }
     setModal("");
   };
+
   const handleStopProcess = () => {
     if (
       (location?.pathname === "/heater-element" ||
@@ -116,9 +121,14 @@ function Header({setPointTemp}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      dataFeed.sensor !== null
+      (dataFeed.sensor !== null || checkForSave)
     ) {
-      stopSensorExperiment();
+      if(dataFeed.sensor !== null && clientId === status?.leaderSelected)
+        stopSensorExperiment();
+      else if(checkForSave && handleSave) {
+        handleSave()
+        navigate(-1)
+      }
     } else navigate(-1);
 
     setModal("");
@@ -397,4 +407,6 @@ type SecondHeaderprops = {
 
 export interface HeaderProps {
   setPointTemp ?:number;
+  checkForSave?:boolean;
+  handleSave ? :() => void;
 }

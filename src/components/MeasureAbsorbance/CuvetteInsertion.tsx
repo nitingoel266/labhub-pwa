@@ -21,7 +21,7 @@ const CuvetteInsertion = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
-            navigate("/absorbance-insertion")
+            navigate("/measure-absorbance")
         }
 
     }

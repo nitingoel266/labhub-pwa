@@ -31,7 +31,6 @@ import CalibrationTesting from './components/CalibrateSpectrophotometer/Calibrat
 import SpectrophotometerCalibration from './components/CalibrateSpectrophotometer/SpectrophotometerCalibration';
 import SpectrophotometerTesting from './components/CalibrateSpectrophotometer/SpectrophotometerTesting';
 import AbsorbanceMeasuring from './components/MeasureAbsorbance/AbsorbanceMeasuring';
-import InsertionAbsorbanceMeasuring from './components/MeasureAbsorbance/InsertionAbsorbanceMeasuring';
 
 function App() {
   const [status] = useDeviceStatus();
@@ -64,7 +63,6 @@ function App() {
           <Route path='/spectrophotometer-testing' element={<SpectrophotometerTesting />} />
 
           <Route path='/cuvette-insertion' element={<CuvetteInsertion />} />
-          <Route path='/absorbance-insertion' element={<InsertionAbsorbanceMeasuring />} />
           <Route path='/measure-absorbance' element={<AbsorbanceMeasuring />} />
 
           <Route path="/my-records" element={<MyRecordList />} />

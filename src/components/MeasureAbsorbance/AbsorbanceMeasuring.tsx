@@ -4,7 +4,7 @@ import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
 import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
-import {mobileWidth,getDescription,MEASURE,HIGHLIGHT_BACKGROUND,getFileName,validateFileName,getDate,getTime} from "../Constants";
+import {mobileWidth,getDescription,MEASURE,HIGHLIGHT_BACKGROUND,getFileName,validateFileName,getDate,getTime,getStorageKeys} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
 import {startRgbExperiment,simulateRgb} from "../../labhub/actions";
 import { useDeviceDataFeed, useDeviceStatus } from '../../labhub/status';
@@ -17,6 +17,7 @@ const AbsorbanceMeasuring = () => {
     const [dataStream] = useDeviceDataFeed();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
+    const [isSaved,setIsSaved] = useState<boolean>(false);
     const [measure , setMeasure] = useState<any>([]);
     const [measuredValue,setMeasuredValue] = useState<any>([]) //{Measuement No,RED,GREEN,BLUE}
     const [isOpen,setModal] = useState("");
@@ -39,6 +40,7 @@ const AbsorbanceMeasuring = () => {
           
             setMeasure([])
             setSelectedItem("")
+            setIsSaved(false)
         }else {
             if(clientId === status?.leaderSelected)
             simulateRgb(null)
@@ -59,12 +61,13 @@ const AbsorbanceMeasuring = () => {
         }else if(clientId){
             fileName += "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
         }
-        let rgbStorageData = localStorage.getItem(RGB_DATA);
-        let rgbData = rgbStorageData ? JSON.parse(rgbStorageData) : []; 
        
-        let resultData = {name:validateFileName(rgbData,fileName),date:getDate(),time:getTime(), data:resultRGB}
-        let storageRGBData = JSON.stringify([...rgbData,resultData])
-        localStorage.setItem(RGB_DATA, storageRGBData);
+        let verifiedFileName = validateFileName(getStorageKeys(RGB_DATA),fileName);
+
+        let resultData = {name:verifiedFileName,date:getDate(),time:getTime(), data:resultRGB}
+        let storageRGBData = JSON.stringify(resultData)
+        localStorage.setItem(`${RGB_DATA}_${verifiedFileName}`, storageRGBData);
+        setIsSaved(true)
         // console.log("???????????? resultData",resultData)
     }
     const handleIModal = (title:string) => {
@@ -119,7 +122,7 @@ const AbsorbanceMeasuring = () => {
             <div>TITLE</div>
             <div className={styles.FooterText}>
                 <div>T0918564122-1123-7T09185...</div>
-                <div className={styles.SaveButton} onClick={() => measure.length> 0 ? handleSave() : {}} style = {measure.length > 0 ? {} : {backgroundColor: "#989DA3",cursor:"not-allowed"}}>Save</div>
+                <div className={styles.SaveButton} onClick={() => measure.length> 0 ? handleSave() : {}} style = {measure.length > 0 && !isSaved ? {} : {backgroundColor: "#989DA3",cursor:"not-allowed"}}>Save</div>
             </div>
             </div>
         </div>

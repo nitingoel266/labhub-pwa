@@ -4,11 +4,14 @@ import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import MyRecordsCard from "../../components/MyRecordsCard";
 import RightArrow from "../../components/RightArrow";
 import { TEMPERATURE_DATA, VOLTAGE_DATA, RGB_DATA } from "../../utils/const";
+import {getStorageData} from "../../components/Constants";
 import styles from "../../styles/myRecordList.module.css";
+import EditFileModal from "../../components/Modal/EditFileModal";
 
 const MyRecordList = () => {
   const navigate = useNavigate();
   const [isOpen, setModal] = useState("");
+  const [isEditOpen, setEditModal] = useState("");
   const [selectedData, setSelectedData] = useState<any>();
   const [selectedButton, setSelectedButton] = useState<string>("temperature");
   const [actionItem, setActionItem] = useState<any>(); // contain one data that will change by the action
@@ -27,39 +30,20 @@ const MyRecordList = () => {
       actionItem.name
     ) {
       setModal("");
-      let storageData = localStorage.getItem(`${selectedButton}_data`);
-      storageData = storageData ? JSON.parse(storageData) : [];
-      let resultData =
-        storageData && Array.isArray(storageData)
-          ? [...storageData].filter((el: any) => el?.name !== actionItem.name)
-          : [];
-      localStorage.setItem(
-        `${selectedButton}_data`,
-        JSON.stringify(resultData)
-      );
-      let updatedData = localStorage.getItem(`${selectedButton}_data`);
+      localStorage.removeItem(`${selectedButton}_data_${actionItem.name}`)
       setMyRecords({
         ...myRecords,
-        [selectedButton]: getMyRecordData(updatedData),
+        [selectedButton]: getMyRecordData(getStorageData(`${selectedButton}_data`))
       });
     }
   };
   const handleDeleteMobile = (item: any) => {
     if (selectedButton && item && item.name) {
-      let storageData = localStorage.getItem(`${selectedButton}_data`);
-      storageData = storageData ? JSON.parse(storageData) : [];
-      let resultData =
-        storageData && Array.isArray(storageData)
-          ? [...storageData].filter((el: any) => el?.name !== item.name)
-          : [];
-      localStorage.setItem(
-        `${selectedButton}_data`,
-        JSON.stringify(resultData)
-      );
-      let updatedData = localStorage.getItem(`${selectedButton}_data`);
+      localStorage.removeItem(`${selectedButton}_data_${item.name}`)
+
       setMyRecords({
         ...myRecords,
-        [selectedButton]: getMyRecordData(updatedData),
+        [selectedButton]: getMyRecordData(getStorageData(`${selectedButton}_data`))
       });
     }
   };
@@ -67,7 +51,17 @@ const MyRecordList = () => {
     setActionItem(item);
     setModal(action);
   };
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    if (
+      isOpen === "edit" &&
+      selectedButton &&
+      actionItem &&
+      actionItem.name
+    ){
+      setModal("")
+      setEditModal(actionItem)
+    }
+  };
   const handleShare = (item: any, title: string) => {};
   const handleSelection = (value: any) => {
     if (JSON.stringify(selectedData) === JSON.stringify(value)) {
@@ -77,7 +71,7 @@ const MyRecordList = () => {
   const getMyRecordData = (data: any) => {
     if (data) {
       let result: any = {};
-      for (let one of JSON.parse(data)) {
+      for (let one of data) {
         result[one?.date] = result[one?.date]
           ? { ...result[one?.date], data: [...result[one?.date]["data"], one] }
           : { date: one?.date, data: [one] };
@@ -87,13 +81,10 @@ const MyRecordList = () => {
   };
 
   useEffect(() => {
-    let tempData = localStorage.getItem(TEMPERATURE_DATA);
-    let voltageData = localStorage.getItem(VOLTAGE_DATA);
-    let rgbData = localStorage.getItem(RGB_DATA);
     let resultData = {
-      temperature: getMyRecordData(tempData),
-      voltage: getMyRecordData(voltageData),
-      rgb: getMyRecordData(rgbData),
+      temperature: getMyRecordData(getStorageData(TEMPERATURE_DATA)),
+      voltage: getMyRecordData(getStorageData(VOLTAGE_DATA)),
+      rgb: getMyRecordData(getStorageData(RGB_DATA)),
     };
     setMyRecords(resultData);
   }, []);
@@ -151,6 +142,7 @@ const MyRecordList = () => {
             />
           ))}
       </div>
+      {isEditOpen && <EditFileModal isOpen = {isEditOpen ? true : false} setEditModal ={(value:any) => setEditModal(value)}/>}
       <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}

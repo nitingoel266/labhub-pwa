@@ -5,13 +5,15 @@ import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
 import {startSensorExperiment,stopSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import TemperatureGraph from './Graphs/TemperatureGraph';
-import {getFileName,getDate,getTime,validateFileName} from "./Constants";
+import {getFileName,getDate,getTime,validateFileName,getStorageKeys} from "./Constants";
 import {LABHUB_CLIENT_ID,VOLTAGE_DATA} from "../utils/const";
 import Header from './header';
+import { useNavigate } from 'react-router-dom';
 
 const MeasuringVoltage = () => {
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
+    const navigate = useNavigate();
     const [dataStream] = useDeviceDataFeed();
     const [isOpen,setModal] = useState<string>("");
     const [isSaved,setIsSaved] = useState<boolean>(false);
@@ -22,7 +24,7 @@ const MeasuringVoltage = () => {
     const [graphData,setGraphData] = useState<any>([]) // {time:in sec,voltage}
 
     const handleSubmit = () => {
-
+        navigate("/function-selection")
     }
     const handleRestart = () => {
         setGraphData([])
@@ -59,12 +61,10 @@ const MeasuringVoltage = () => {
         }else if(clientId){
             fileName += "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
         }
-        let voltageStorageData = localStorage.getItem(VOLTAGE_DATA);
-        let voltageData = voltageStorageData ? JSON.parse(voltageStorageData) : []; 
-       
-        let resultData = {name:validateFileName(voltageData,fileName),date:getDate(),time:getTime(), data:resultVoltage}
-        let storageVoltageData = JSON.stringify([...voltageData,resultData])
-        localStorage.setItem(VOLTAGE_DATA, storageVoltageData);
+        let verifiedFileName = validateFileName(getStorageKeys(VOLTAGE_DATA),fileName);
+        let resultData = {name:verifiedFileName,date:getDate(),time:getTime(), data:resultVoltage}
+        let storageVoltageData = JSON.stringify(resultData)
+        localStorage.setItem(`${VOLTAGE_DATA}_${verifiedFileName}`, storageVoltageData);
         // console.log("save the data in record section ",resultVoltage)
         //save the voltage in labhub device in celcis mode
     }
@@ -136,7 +136,7 @@ const MeasuringVoltage = () => {
             <div>TITLE</div>
             <div className={styles.FooterText}>
                 <div>T101722-1334-M4</div>
-                <div className={styles.SaveButton} style={capturePoint?.some((el:number) => el > 0) <= 0  ? {backgroundColor:"#A0A5AB"} : {}} onClick={() => capturePoint?.length > 0 ? handleSave() : {}}>Save</div>
+                <div className={styles.SaveButton} style={capturePoint?.some((el:number) => el > 0)&& !isSaved ? {} : {backgroundColor:"#A0A5AB",cursor:"not-allowed"}} onClick={() => capturePoint?.length > 0 ? handleSave() : {}}>Save</div>
             </div>
             </div>
         </div>

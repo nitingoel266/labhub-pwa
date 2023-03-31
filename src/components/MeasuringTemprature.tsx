@@ -5,13 +5,15 @@ import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
 import {startSensorExperiment,stopSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import TemperatureGraph from './Graphs/TemperatureGraph';
-import {getFileName,getDate,getTime,validateFileName} from "./Constants";
+import {getFileName,getDate,getTime,validateFileName,getStorageKeys} from "./Constants";
 import {LABHUB_CLIENT_ID,TEMPERATURE_DATA} from "../utils/const";
 import Header from './header';
+import { useNavigate } from 'react-router-dom';
 
 const MeasuringTemprature = () => {
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
+    const navigate = useNavigate();
     const [dataStream] = useDeviceDataFeed();
     const [isOpen,setModal] = useState<string>("");
     const [isSaved,setIsSaved] = useState<boolean>(false);
@@ -46,7 +48,7 @@ const MeasuringTemprature = () => {
         }
     }
     const handleSubmit = () => {
-
+        navigate("/function-selection")
     }
     const handleRestart = () => {
         setGraphData([])
@@ -86,12 +88,10 @@ const MeasuringTemprature = () => {
         }else if(clientId){
             fileName += "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
         }
-        let tempStorageData = localStorage.getItem(TEMPERATURE_DATA);
-        let tempData = tempStorageData ? JSON.parse(tempStorageData) : []; 
-       
-        let resultData = {name: validateFileName(tempData,fileName) ,date:getDate(),time:getTime(), data:resultTemperature}
-        let storageTempData = JSON.stringify([...tempData,resultData])
-        localStorage.setItem(TEMPERATURE_DATA, storageTempData);
+        let verifiedFileName = validateFileName(getStorageKeys(TEMPERATURE_DATA),fileName);
+        let resultData = {name: verifiedFileName ,date:getDate(),time:getTime(), data:resultTemperature}
+        let storageTempData = JSON.stringify(resultData)
+        localStorage.setItem(`${TEMPERATURE_DATA}_${verifiedFileName}`, storageTempData);
         // console.log("save the data in record section ",resultTemperature,fileName)
         //save the temperature in labhub device in celcis mode
     }
@@ -173,7 +173,7 @@ const MeasuringTemprature = () => {
             <div>TITLE</div>
             <div className={styles.FooterText}>
                 <div>T101722-1334-M4</div>
-                <div className={styles.SaveButton} style={capturePoint?.some((el:number) => el > 0) <= 0  ? {backgroundColor:"#A0A5AB"} : {}} onClick={() => capturePoint?.length > 0 ? handleSave() : {}}>Save</div>
+                <div className={styles.SaveButton} style={capturePoint?.some((el:number) => el > 0) && !isSaved  ? {} : {backgroundColor:"#A0A5AB",cursor:"not-allowed"}} onClick={() => capturePoint?.length > 0 ? handleSave() : {}}>Save</div>
             </div>
             </div>
         </div>

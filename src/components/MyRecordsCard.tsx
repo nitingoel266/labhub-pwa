@@ -168,7 +168,7 @@ const TabCard = ({
           </div>
           <img
             src={EditIcon}
-            onClick={() => setModal("edit")}
+            onClick={() => handleActionItem(data, "edit")}
             style={{ cursor: "pointer", width: 20 }}
             alt="edit"
           />

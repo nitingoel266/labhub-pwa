@@ -53,6 +53,26 @@ const getFileName = () => {
 
 }
 
+const getStorageData = (title:string)=> {
+    let result = [];
+    for (var key in localStorage){
+        if(key.includes(`${title}_`)){
+            result.push(JSON.parse(localStorage[key]))
+        }
+     }
+     return result;
+}
+
+const getStorageKeys = (title:string) => {
+    let result = [];
+    for (var key in localStorage){
+        if(key.includes(`${title}_`)){
+            result.push({name:key})
+        }
+     }
+     return result;
+}
+
 const validateFileName:any = (data:any,fileName:string,count=0) => {
     let alreadyExists = false;
      for(let one of data){
@@ -108,5 +128,7 @@ export {
     getFileName,
     getDate,
     getTime,
-    validateFileName
+    validateFileName,
+    getStorageData,
+    getStorageKeys
 }

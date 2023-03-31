@@ -245,7 +245,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
             ? `Are you sure to ${isOpen}!`
             : (isOpen === "Do you want to save Data?" ? isOpen :  "Are you sure to Disconnect!")
         }
-        handleCancel = {() => navigate(-1)}
+        // handleCancel = {() => navigate(-1)}
       />
     </div>
   );

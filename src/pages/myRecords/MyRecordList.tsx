@@ -62,6 +62,19 @@ const MyRecordList = () => {
       setEditModal(actionItem)
     }
   };
+  const EditFileName = (data:any,fileName:string) => {
+    if(data && fileName && data.name && selectedButton){
+      let updatedData = {...data,name:fileName}
+      let storageData = JSON.stringify(updatedData)
+      localStorage.removeItem(`${selectedButton}_data_${data.name}`);
+      localStorage.setItem(`${selectedButton}_data_${fileName}`,storageData)
+      setEditModal("")
+      setMyRecords({
+        ...myRecords,
+        [selectedButton]: getMyRecordData(getStorageData(`${selectedButton}_data`))
+      });
+    }
+  }
   const handleShare = (item: any, title: string) => {};
   const handleSelection = (value: any) => {
     if (JSON.stringify(selectedData) === JSON.stringify(value)) {
@@ -142,7 +155,7 @@ const MyRecordList = () => {
             />
           ))}
       </div>
-      {isEditOpen && <EditFileModal isOpen = {isEditOpen ? true : false} setEditModal ={(value:any) => setEditModal(value)}/>}
+      {isEditOpen && <EditFileModal isOpen = {isEditOpen} setEditModal ={(value:any) => setEditModal(value)} EditFileName={EditFileName} />}
       <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}

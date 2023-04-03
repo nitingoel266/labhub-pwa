@@ -36,9 +36,12 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setModal] = useState("");
+  const [onClick, setOnClick] = useState("");
+
   const [screenName, setScreenName] = useState("");
 
   const handleBack = () => {
+    setOnClick("back")
     if (location?.pathname === "/mode-selection")
       setScreenName("/scan-devices");
     else setScreenName("");
@@ -84,12 +87,73 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
   const handleClick = (value: any) => {
     setModal(value);
   };
-  const handleMyRecord = () => {
-    navigate("/my-records");
+  const handleMyRecord = () => { // record section
+    setOnClick("myRecord")
+    if (
+      (location?.pathname === "/heater-element" ||
+        location?.pathname === "/temperature-probe") &&
+        (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) && clientId === status?.leaderSelected
+    ) {
+      if(dataFeed.heater !== null)
+      setModal(
+        location?.pathname === "/temperature-probe"
+          ? "Stop Temperature Probe Experiment"
+          : "Stop Heater Experiment"
+      );
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Data?")
+    } else if (
+      (location?.pathname === "/temperature-sensor" ||
+        location?.pathname === "/voltage-sensor") &&
+      (dataFeed.sensor !== null || checkForSave)
+    ) {
+      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+        setModal(
+          location?.pathname === "/temperature-sensor"
+            ? "Stop Temperature"
+            : "Stop Voltage"
+        );
+      }else if(checkForSave) setModal("Do you want to save Data?")
+     
+    }else {
+      navigate("/my-records");
+    }
   };
-  const handleConnectionManager = () => {
-    navigate("/scan-devices");
-    setScreenName("/scan-devices");
+  const handleConnectionManager = () => { // go to scan page
+    setOnClick("connectionManager")
+    if (
+      (location?.pathname === "/heater-element" ||
+        location?.pathname === "/temperature-probe") &&
+        (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) && clientId === status?.leaderSelected
+    ) {
+      if(dataFeed.heater !== null)
+      setModal(
+        location?.pathname === "/temperature-probe"
+          ? "Stop Temperature Probe Experiment"
+          : "Stop Heater Experiment"
+      );
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Data?")
+    } else if (
+      (location?.pathname === "/temperature-sensor" ||
+        location?.pathname === "/voltage-sensor") &&
+      (dataFeed.sensor !== null || checkForSave)
+    ) {
+      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+        setModal(
+          location?.pathname === "/temperature-sensor"
+            ? "Stop Temperature"
+            : "Stop Voltage"
+        );
+      }else if(checkForSave) setModal("Do you want to save Data?")
+     
+    }else {
+      if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
+      navigate("/scan-devices",{
+        state: { screenName : "/scan-devices" },
+      });
+      else navigate("/scan-devices")
+      setScreenName("/scan-devices");
+    }
+
   };
   const handleDisconnectLeaderMember = () => {
     if (clientId === status?.leaderSelected) {
@@ -112,11 +176,25 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
         location?.pathname === "/temperature-probe") &&
         (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp)
     ) {
-      if(dataFeed.heater !== null)
-      stopHeaterExperiment();
+      if(dataFeed.heater !== null){
+        stopHeaterExperiment();
+        if(setPointTemp === status?.setpointTemp){
+          let value:any = onClick === "myRecord" ? "/my-records" : -1;
+          if(onClick === "connectionManager")
+            navigate("/scan-devices",{
+              state: { screenName : "/scan-devices" },
+            });
+          else navigate(value)
+        }
+      }
       else if(setPointTemp && setPointTemp !== status?.setpointTemp) {
         changeSetpointTemp(setPointTemp)
-        navigate(-1)
+        let value:any = onClick === "myRecord" ? "/my-records" : -1;
+        if(onClick === "connectionManager")
+            navigate("/scan-devices",{
+              state: { screenName : "/scan-devices" },
+            });
+          else navigate(value)
       }
     } else if (
       (location?.pathname === "/temperature-sensor" ||
@@ -127,12 +205,43 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
         stopSensorExperiment();
       else if(checkForSave && handleSave) {
         handleSave()
-        navigate(-1)
+        let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? "/sync" : -1;
+        if(onClick === "connectionManager")
+            navigate("/scan-devices",{
+              state: { screenName : "/scan-devices" },
+            });
+          else navigate(value)
       }
     } else navigate(-1);
 
     setModal("");
   };
+
+  const handleSync  = () => {
+    setOnClick("sync")
+    if (
+      (location?.pathname === "/temperature-sensor" ||
+        location?.pathname === "/voltage-sensor") && checkForSave
+    ) {
+      if(checkForSave) setModal("Do you want to save Data?")
+    }
+  }
+
+  const handleCancelModal = () => {
+    setModal("")
+    if(isOpen === "Do you want to save Data?"){
+      let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? "/sync" : -1;
+      if(onClick === "connectionManager"){
+        if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
+          navigate("/scan-devices",{
+            state: { screenName : "/scan-devices" },
+          });
+        else navigate("/scan-devices")
+        setScreenName("/scan-devices");
+      }else navigate(value)
+    }
+  }
+
   const handleDelete = () => {
     setModal("");
     if (
@@ -188,7 +297,8 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       connected &&
       status &&
       status?.leaderSelected &&
-      screenName !== "/scan-devices"
+      screenName !== "/scan-devices" && 
+      location.state?.screenName !== "/scan-devices"
     ) {
       // joinAsMember()
       // setModal(false)
@@ -201,7 +311,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     status,
     location?.pathname,
     screenName,
+    location.state?.screenName
   ]);
+
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (
     <div>
@@ -220,6 +332,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
         setModal={(value) => setModal(value)}
         handleConnectionManager={handleConnectionManager}
         handleDownload={handleDownload}
+        handleSync={handleSync}
       />
       <MemberDisconnect
         isOpen={isOpen ? true : false}
@@ -245,7 +358,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
             ? `Are you sure to ${isOpen}!`
             : (isOpen === "Do you want to save Data?" ? isOpen :  "Are you sure to Disconnect!")
         }
-        // handleCancel = {() => navigate(-1)}
+        handleCancel = {() => handleCancelModal()}
       />
     </div>
   );
@@ -324,6 +437,7 @@ const SecondHeader = ({
   setModal,
   handleConnectionManager,
   handleDownload,
+  handleSync
 }: SecondHeaderprops) => {
   const location = useLocation();
   return (
@@ -356,6 +470,7 @@ const SecondHeader = ({
           />
           {connected && clientId !== status?.leaderSelected && (
             <img
+              onClick={() => handleSync()}
               src={SyncIcon}
               style={{ cursor: "pointer", marginLeft: 10, width: 20 }}
               alt="syn button"
@@ -403,6 +518,7 @@ type SecondHeaderprops = {
   handleConnectionManager: () => void;
   connected?: any;
   handleDownload: () => void;
+  handleSync:() => void;
 };
 
 export interface HeaderProps {

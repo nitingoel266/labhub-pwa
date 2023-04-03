@@ -8,8 +8,8 @@
     opacity: 50%;
 }
 .TopSecondWrapper {
-    top: 150px;
-    /* left: 40%; */
+    top: 160px;
+    left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,4 +17,66 @@
     position: fixed;
     /* transition: all 0.3s ease-out; */
 
+}
+.TextContainer {
+    width: 220px; /* 320px; */
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    flex:1;
+    padding:10px 0px;
+}
+.HeaderWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0px 10px 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+.FileText {
+    margin-top: 15px;
+    margin-left: 10px;
+}
+.InputElement {
+    padding:7px;
+    width: 85%;
+    border:2px solid #BEBEBE;
+    border-radius: 4px;
+    outline: none;
+}
+
+.FooterWrapper {
+    border-top: 1px solid #E0E0E0;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 10px;
+    font-size: 14px;
+    font-weight: 400;
+}
+.CancelButton {
+    background-color: #424C58;
+    color: #FFFFFF;
+    margin-right: 13px;
+    cursor: pointer;
+    padding:6px 10px;
+    border-radius: 4px;
+}
+
+.UpdateButton {
+    background-color: #9CD5CD;
+    cursor: pointer;
+    margin-right: 20px;
+    padding:6px 10px;
+    border-radius: 4px;
+}
+@media(min-width:360px) {
+    .TextContainer {
+        width: 320px;
+    }
 }

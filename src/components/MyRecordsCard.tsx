@@ -228,7 +228,7 @@ const MobileCard = ({
   const handleSubmit = (value: string) => {
     setIsOpen(!isOpen);
     let getFunction: any = {
-      "Rename File": {},
+      "Rename File": () => handleActionItem(data, "edit"),
       Download: () => handleDownload(data),
       Share: {},
       Delete: handleDeleteMobile ? () => handleDeleteMobile(data) : {},

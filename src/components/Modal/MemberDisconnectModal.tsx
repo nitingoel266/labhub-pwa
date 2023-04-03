@@ -35,7 +35,7 @@ const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen
                         <div>{message}</div>
                     </div>
                     <div className={styles.ButtonWrapper}>
-                        <div onClick={() => handleCancel ? handleCancel() : setModal("")} className={styles.CancelButton}>Cancel</div>
+                        <div onClick={() => handleCancel ? handleCancel() : setModal("")} className={styles.CancelButton}>No</div>
                         <div onClick={handleDisconnect} className={styles.YesButton}>Yes</div>
                     </div>
                 </div>

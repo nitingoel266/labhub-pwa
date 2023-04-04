@@ -90,3 +90,8 @@ export const startRgbExperiment = () => {
   if (getClientType() !== 'leader') return;
   deviceDataFeedUpdate.next({ rgbExperiment: true });
 };
+
+export const setScreenNumber = (screenNumber: number) => {
+  if (getClientType() !== 'leader') return;
+  deviceStatusUpdate.next({ screenNumber });
+};

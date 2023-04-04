@@ -5,7 +5,7 @@ import {useDeviceStatus, useDeviceDataFeed} from "../labhub/status";
 import {startSensorExperiment,stopSensorExperiment} from "../labhub/actions";
 import MemberDisconnect from './Modal/MemberDisconnectModal';
 import TemperatureGraph from './Graphs/TemperatureGraph';
-import {getFileName,getDate,getTime,validateFileName,getStorageKeys} from "./Constants";
+import {getFileName,getDate,getTime,validateFileName,getStorageKeys,mobileWidth} from "./Constants";
 import {LABHUB_CLIENT_ID,TEMPERATURE_DATA} from "../utils/const";
 import Header from './header';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,6 @@ const MeasuringTemprature = () => {
     const [isStart,setIsStart] = useState<boolean>(false);
     const [capturePoint, setCapturePoint] = useState<any>([]);
 
-    const [isMobile,setIsMobile] = useState<boolean>(false)
     const [tempratureUnit,setTempratureUnit] = useState<string>('c');
     const [graphData,setGraphData] = useState<any>([]) // {time:in sec,temp}
 
@@ -117,17 +116,7 @@ const MeasuringTemprature = () => {
             }
         }
     },[dataStream, dataStream?.sensor?.temperature,status?.setupData?.dataRate,clientId, status?.leaderSelected])
-    useEffect(() => {
-        window.addEventListener('resize', () =>{
-            if(window.innerWidth <= 580)
-            setIsMobile(true)
-            else 
-            setIsMobile(false)
-        });
-        return () => {
-            window.removeEventListener('resize', () => {setIsMobile(false)})
-        }
-    },[])
+    
     useEffect(() => {
         if(dataStream.sensor === null){
             setIsStart(false)
@@ -161,7 +150,7 @@ const MeasuringTemprature = () => {
             <div className={styles.GraphStyle}>
                 <TemperatureGraph data={graphData} showPoint={status?.setupData?.dataRate === 'user' ? false : true} capturePoint={capturePoint} title={"Temperature"}/>
             </div>
-            {!isMobile ? <div className={styles.ButtonWrapper}>
+            {window.innerWidth > mobileWidth ? <div className={styles.ButtonWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal(graphData?.length ? 'restart' : "start") : {}} className={styles.RestartButton} style={(isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>{(isStart || graphData?.length) ? "Restart" : "Start"}</div>
                 <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.StopButton} style={(!isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>Stop</div>
                 {status?.setupData?.dataRate === 'user'  && <div className={styles.CaptureButton} onClick={handleCapture}>Capture</div>}
@@ -177,7 +166,7 @@ const MeasuringTemprature = () => {
             </div>
             </div>
         </div>
-        {isMobile ? <div className={styles.ButtonHorizontalWrapper}>
+        {window.innerWidth <= mobileWidth ? <div className={styles.ButtonHorizontalWrapper}>
             <div className={styles.ButtonHorizontalInnerWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal(graphData?.length ? 'restart' : "start") : {}} className={styles.RestartHorizontalButton} style={(isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>{graphData?.length ? "Restart" : "Start"}</div>
                 <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.StopHorizontalButton} style={(!isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>Stop</div>

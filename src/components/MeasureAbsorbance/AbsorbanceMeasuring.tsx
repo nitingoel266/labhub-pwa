@@ -64,7 +64,7 @@ const AbsorbanceMeasuring = () => {
        
         let verifiedFileName = validateFileName(getStorageKeys(RGB_DATA),fileName);
 
-        let resultData = {name:verifiedFileName,date:getDate(),time:getTime(), data:resultRGB}
+        let resultData = {name:verifiedFileName,date:getDate(),time:getTime(),isCalibratedAndTested:true , data:resultRGB}
         let storageRGBData = JSON.stringify(resultData)
         localStorage.setItem(`${RGB_DATA}_${verifiedFileName}`, storageRGBData);
         setIsSaved(true)

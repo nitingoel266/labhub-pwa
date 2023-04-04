@@ -7,7 +7,8 @@ import {
   resetLeader,
   stopHeaterExperiment,
   stopSensorExperiment /* ,unjoinMember */,
-  changeSetpointTemp
+  changeSetpointTemp,
+  setScreenNumber,
 } from "../labhub/actions";
 // import {setSelectedFunction,setSelectedMode} from "../labhub/actions-client";
 import styles from "../styles/header.module.css";
@@ -26,7 +27,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
-import { LABHUB_CLIENT_ID } from "../utils/const";
+import { LABHUB_CLIENT_ID ,GetScreenName} from "../utils/const";
 
 function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
   const [status] = useDeviceStatus();
@@ -205,7 +206,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
         stopSensorExperiment();
       else if(checkForSave && handleSave) {
         handleSave()
-        let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? "/sync" : -1;
+        let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? GetScreenName[status?.screenNumber || 0] : -1;
         if(onClick === "connectionManager")
             navigate("/scan-devices",{
               state: { screenName : "/scan-devices" },
@@ -224,13 +225,13 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
         location?.pathname === "/voltage-sensor") && checkForSave
     ) {
       if(checkForSave) setModal("Do you want to save Data?")
-    }
+    }else if(status?.screenNumber) navigate(GetScreenName[status?.screenNumber])
   }
 
   const handleCancelModal = () => {
     setModal("")
     if(isOpen === "Do you want to save Data?"){
-      let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? "/sync" : -1;
+      let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? GetScreenName[status?.screenNumber || 0] : -1;
       if(onClick === "connectionManager"){
         if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
           navigate("/scan-devices",{
@@ -313,7 +314,18 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     screenName,
     location.state?.screenName
   ]);
-
+  useEffect(() => { // setScreen name as a leader for sync for member
+    if(clientId === status?.leaderSelected){
+      if(location?.pathname){
+        for(let one in GetScreenName){
+          if(GetScreenName[one] === location?.pathname){
+            setScreenNumber(Number(one))
+            break;
+          }
+        }
+      }
+    }
+  },[clientId,status?.leaderSelected,location?.pathname])
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (
     <div>

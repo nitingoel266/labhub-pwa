@@ -8,3 +8,31 @@ export const TOPIC_DEVICE_DATA_FEED_UPDATE = 'topic_device_data_feed_update';
 export const TEMPERATURE_DATA = "temperature_data";
 export const VOLTAGE_DATA = "voltage_data";
 export const RGB_DATA = "rgb_data";
+
+
+export const GetScreenName:any = {
+    0:"/scan-devices",
+    1:"/mode-selection",
+    2:"/function-selection",
+    3:"/data-setup",
+    4:"/sensors",
+    5:"/temperature-sensor",
+    6:"/voltage-sensor",
+    7:"/heater",
+    8:"/method-selection",
+    9:"/heater-element",
+    10:"/temperature-probe",
+    11:"/rgb-spect",
+    12:"/calibrate-spectrophotometer",
+    13:"/spectrophotometer-calibration",
+    14:"/calibration-testing",
+    15:"/spectrophotometer-testing",
+    16:"/cuvette-insertion",
+    17:"/measure-absorbance",
+    18:"/preset-mode",
+    19:"/my-records",
+    20:"/temperature-records",
+    21:"/voltage-records",
+    22:"/rgb-records",
+    23:"*",
+}

@@ -46,7 +46,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/preset-mode' element={<ProjectMode />} />
           <Route path='/scan-devices' element={<ScanDevice />} />
-          <Route path ="mode-selection" element={<ModeSelection />}/>
+          <Route path ="/mode-selection" element={<ModeSelection />}/>
           <Route path='/function-selection' element={<FunctionSelection />} />
           <Route path='/data-setup' element={<DataSetup />} />
           <Route path='/sensors' element={<Sensor />} />

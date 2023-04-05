@@ -4,7 +4,7 @@ import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import MyRecordsCard from "../../components/MyRecordsCard";
 import RightArrow from "../../components/RightArrow";
 import { TEMPERATURE_DATA, VOLTAGE_DATA, RGB_DATA } from "../../utils/const";
-import {getStorageData} from "../../components/Constants";
+import {getStorageData,validateFileName,getStorageKeys} from "../../components/Constants";
 import styles from "../../styles/myRecordList.module.css";
 import EditFileModal from "../../components/Modal/EditFileModal";
 
@@ -64,10 +64,11 @@ const MyRecordList = () => {
   };
   const EditFileName = (data:any,fileName:string) => {
     if(data && fileName && data.name && selectedButton){
-      let updatedData = {...data,name:fileName}
+      let verifiedFileName = validateFileName(getStorageKeys(`${selectedButton}_data`),fileName);
+      let updatedData = {...data,name:verifiedFileName}
       let storageData = JSON.stringify(updatedData)
       localStorage.removeItem(`${selectedButton}_data_${data.name}`);
-      localStorage.setItem(`${selectedButton}_data_${fileName}`,storageData)
+      localStorage.setItem(`${selectedButton}_data_${verifiedFileName}`,storageData)
       setEditModal("")
       setMyRecords({
         ...myRecords,

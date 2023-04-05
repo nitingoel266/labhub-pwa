@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styles from '../../styles/SpectrophotometerCalibration.module.css';
+import sound from "../../assets/sound/beep-sound.mp3";
 import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
 import {IButtonIcon} from "../../images/index";
@@ -14,6 +15,7 @@ import { LABHUB_CLIENT_ID } from "../../utils/const";
 const SpectrophotometerTesting = () => {
     const navigate = useNavigate();
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const [audio] = useState(new Audio(sound));
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
@@ -56,9 +58,12 @@ const SpectrophotometerTesting = () => {
     },[clientId,status?.leaderSelected])
     useEffect(() => {
         if(dataStream?.rgb){
-            setTestCalibrate(dataStream?.rgb?.calibrateTest || [])
+            if(JSON.stringify(dataStream?.rgb?.calibrateTest) !== JSON.stringify(testCalibrate)){
+                audio.play()
+                setTestCalibrate(dataStream?.rgb?.calibrateTest || [])
+            }
         }
-    },[dataStream?.rgb])
+    },[dataStream?.rgb,audio,testCalibrate])
     return <div>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>

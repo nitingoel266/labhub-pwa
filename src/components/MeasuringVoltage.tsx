@@ -76,16 +76,21 @@ const MeasuringVoltage = () => {
             setIsSaved(false)
 
         }else if(clientId !== status?.leaderSelected && dataStream){
-            let logData = [],capturePoint=[];
+            let logData = [],capturePoints:any=[];
             if(dataStream?.sensor?.voltageLog){
                 for(let one in dataStream.sensor.voltageLog){
                     if(Number(one) > 0){
                         logData.push({time: Number(one) * Number(status?.setupData?.dataRate === 'user' ? 1 : status?.setupData?.dataRate),temp:dataStream.sensor.voltageLog[one]});
-                        capturePoint.push(status?.setupData?.dataRate === 'user' ? 0 : 2)
+                        capturePoints.push(status?.setupData?.dataRate === 'user' ? 0 : 2)
                     }
                 }
                 setGraphData(logData)
-                setCapturePoint(capturePoint)
+                setCapturePoint((prevCapPoints:any) => {
+                    for(let one in prevCapPoints){
+                        if(prevCapPoints[one] > 0) capturePoints[one] = prevCapPoints[one];
+                    }
+                    return capturePoints
+                })
                 setIsSaved(false)
             }
         }
@@ -116,7 +121,7 @@ const MeasuringVoltage = () => {
             {window.innerWidth > mobileWidth ? <div className={styles.ButtonWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal(graphData?.length ? 'restart' : "start") : {}} className={styles.RestartButton} style={(isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>{(isStart || graphData?.length) ? "Restart" : "Start"}</div>
                 <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.StopButton} style={(!isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>Stop</div>
-                {status?.setupData?.dataRate === 'user'  && <div className={styles.CaptureButton} onClick={handleCapture}>Capture</div>}
+                {status?.setupData?.dataRate === 'user'  && <div className={styles.CaptureButton} style={graphData?.length > 0 ? {} : extraStyle} onClick={() =>graphData?.length > 0 ? handleCapture() : {}}>Capture</div>}
 
             </div> : null}
         </div>
@@ -125,7 +130,7 @@ const MeasuringVoltage = () => {
             <div>TITLE</div>
             <div className={styles.FooterText}>
                 <div>T101722-1334-M4</div>
-                <div className={styles.SaveButton} style={capturePoint?.some((el:number) => el > 0)&& !isSaved ? {} : {backgroundColor:"#A0A5AB",cursor:"not-allowed"}} onClick={() => capturePoint?.length > 0 ? handleSave() : {}}>Save</div>
+                <div className={styles.SaveButton} style={capturePoint?.some((el:number) => el > 0)&& !isSaved ? {} : {backgroundColor:"#A0A5AB",cursor:"not-allowed"}} onClick={() => capturePoint?.some((el:number) => el > 0) && !isSaved ? handleSave() : {}}>Save</div>
             </div>
             </div>
         </div>
@@ -133,7 +138,7 @@ const MeasuringVoltage = () => {
             <div className={styles.ButtonHorizontalInnerWrapper}>
                 <div onClick={() => clientId === status?.leaderSelected ? setModal(graphData?.length ? 'restart' : "start") : {}} className={styles.RestartHorizontalButton} style={(isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>{(isStart || graphData?.length) ? "Restart" : "Start"}</div>
                 <div onClick={() => clientId === status?.leaderSelected && isStart ? setModal('stop') : {}} className={styles.StopHorizontalButton} style={(!isStart || clientId !== status?.leaderSelected) ? extraStyle : {}}>Stop</div>
-                <div className={styles.CaptureHorizontalButton} onClick={handleCapture}>Capture</div>
+                <div className={styles.CaptureHorizontalButton} style={graphData?.length > 0 ? {} : extraStyle} onClick={() =>graphData?.length > 0 ? handleCapture() : {}}>Capture</div>
             </div>
         </div> : null}
         <MemberDisconnect isOpen={isOpen ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={(isOpen === 'restart' || isOpen === 'start') ? handleRestart : handleStop} message={`Do you want to ${isOpen} the experiment.`}/>

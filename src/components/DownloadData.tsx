@@ -5,6 +5,10 @@ type Props = {
 
 const DownloadData = ({ data, header }: Props) => {
   var csv: any = "";
+  if(header && header[2] === "GREEN" && data?.isCalibratedAndTested){
+    csv += "Calibrated and Tested";
+    csv += "\n";
+  }
   if (header) {
     for (let one of header) {
       csv += one + ",";

@@ -21,9 +21,11 @@ const TemperatureProbe = () => {
     const setpointTemperatureRef = useRef<any>()
     const [isOpen,setModal] = useState("");
     const [isStart,setIsStart] = useState<boolean>(false)
-    const [temperature,setTemperature] =useState<number>(status?.setpointTemp || 25);
+    const [temperature,setTemperature] =useState<number>(25);
     const [temperatureShouldBe,setTemperatureShouldBe] =useState<number>(0);
     const [power,setPower] = useState<number>(0);
+    const [istemperature,setisTemperature] = useState<number>(0);
+
 
     const handleTemperature = (title:string) => {
         if(title === 'sub' && temperature > 25)
@@ -76,11 +78,19 @@ const TemperatureProbe = () => {
         if(dataStream?.heater?.probe){
             if(!isStart) setIsStart(true)
             setPower(dataStream.heater.probe[0])
+            setisTemperature(dataStream.heater.probe[1])
         }
         if(dataStream?.heater === null){
             setIsStart(false)
         }
     },[isStart, dataStream?.heater, dataStream?.heater?.probe])
+
+    useEffect(() => {
+        if(status?.setpointTemp){
+            setTemperature(status?.setpointTemp)
+        }
+    },[status?.setpointTemp])
+
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
             <Header setPointTemp = {temperature}/>
@@ -103,7 +113,7 @@ const TemperatureProbe = () => {
         <div className={styles.HeaderSubTextWrapper}>Please make sure the probe is always in contact with the soution.</div>
         <div className={styles.HeaterElementWraper}>
             <div className={styles.TemperatureWrapper}>
-                <div>50</div>
+                <div>{istemperature}</div>
                 <div className={styles.TemperatureDegree}>{" "}</div>
                 <div>C</div>
             </div>

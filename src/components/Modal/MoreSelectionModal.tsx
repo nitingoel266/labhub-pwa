@@ -1,7 +1,7 @@
 import styles from '../../styles/MyRecordsCard.module.css';
 
 type Props = {
-    setModal:(value:boolean) =>void;
+    setModal:(value:any) =>void;
     isOpen:boolean;
     handleSubmit:(value:string) =>void;
 }
@@ -11,7 +11,7 @@ const MoreSelectionModal = ({setModal,isOpen,handleSubmit}:Props) => {
     {isOpen &&
     <div
     className={styles.MoreModalTopWrapper}
-    onClick={() => setModal(false)}
+    onClick={() => setModal("")}
     />}
      <div
         className={styles.MoreModalSecondWrapper}

@@ -9,7 +9,7 @@
 }
 .ModalSecondWrapper {
     top: 30%;
-    /* left: 5%; */
+    left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,4 +44,10 @@
 
 .OneRow:hover {
     background-color: #E4E4E4;
+}
+
+@media (max-width:414px) {
+    .ModalWrapper {
+        width: 200px;
+    }
 }

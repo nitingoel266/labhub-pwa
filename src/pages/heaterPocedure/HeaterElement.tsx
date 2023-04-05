@@ -21,7 +21,7 @@ const HeaterElement = () => {
     const [dataStream] = useDeviceDataFeed();
     const [isOpen,setModal] = useState("");
     const [isStart,setIsStart] = useState<boolean>(false)
-    const [temperature,setTemperature] =useState<number>(status?.setpointTemp || 25); //25-150
+    const [temperature,setTemperature] =useState<number>(25); //25-150
     const [temperatureShouldBe,setTemperatureShouldBe] = useState<number>(0);
     const [power,setPower] = useState<number>(0);
 
@@ -98,6 +98,13 @@ const HeaterElement = () => {
             setIsStart(false)
         }
     },[isStart, dataStream?.heater, dataStream?.heater?.element])
+
+    useEffect(() => {
+        if(status?.setpointTemp){
+            setTemperature(status?.setpointTemp)
+        }
+    },[status?.setpointTemp])
+
     const extraStyle = clientId !== status?.leaderSelected ? {backgroundColor: "#989DA3",cursor:"not-allowed"} : {}
     return <div style={{position:"relative"}}>
             <Header setPointTemp = {temperature}/>

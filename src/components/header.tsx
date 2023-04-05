@@ -64,7 +64,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
           ? "Stop Temperature Probe Experiment"
           : "Stop Heater Experiment"
       );
-      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Data?")
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Setpoint Temperature?")
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
@@ -73,8 +73,8 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
-            ? "Stop Temperature"
-            : "Stop Voltage"
+            ? "Stop Temperature Experiment"
+            : "Stop Voltage Experiment"
         );
       }else if(checkForSave) setModal("Do you want to save Data?")
      
@@ -101,7 +101,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
           ? "Stop Temperature Probe Experiment"
           : "Stop Heater Experiment"
       );
-      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Data?")
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Setpoint Temperature?")
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
@@ -110,8 +110,8 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
-            ? "Stop Temperature"
-            : "Stop Voltage"
+            ? "Stop Temperature Experiment"
+            : "Stop Voltage Experiment"
         );
       }else if(checkForSave) setModal("Do you want to save Data?")
      
@@ -132,7 +132,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
           ? "Stop Temperature Probe Experiment"
           : "Stop Heater Experiment"
       );
-      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Data?")
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Setpoint Temperature?")
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
@@ -141,8 +141,8 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
-            ? "Stop Temperature"
-            : "Stop Voltage"
+            ? "Stop Temperature Experiment"
+            : "Stop Voltage Experiment"
         );
       }else if(checkForSave) setModal("Do you want to save Data?")
      
@@ -230,7 +230,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
 
   const handleCancelModal = () => {
     setModal("")
-    if(isOpen === "Do you want to save Data?"){
+    if(isOpen === "Do you want to save Data?" || isOpen === "Do you want to save Setpoint Temperature?"){
       let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? GetScreenName[status?.screenNumber || 0] : -1;
       if(onClick === "connectionManager"){
         if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
@@ -355,8 +355,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
             : isOpen === "Stop Heater Experiment" ||
               isOpen === "Stop Temperature Probe Experiment" ||
               isOpen === "Do you want to save Data?" ||
-              isOpen === "Stop Temperature" ||
-              isOpen === "Stop Voltage"
+              isOpen === "Do you want to save Setpoint Temperature?" ||
+              isOpen === "Stop Temperature Experiment" ||
+              isOpen === "Stop Voltage Experiment"
             ? handleStopProcess
             : handleDisconnectLeaderMember
         }
@@ -365,10 +366,10 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
             ? "Aye you sure you want to Delete?"
             : isOpen === "Stop Heater Experiment" ||
               isOpen === "Stop Temperature Probe Experiment" ||
-              isOpen === "Stop Temperature" ||
-              isOpen === "Stop Voltage"
+              isOpen === "Stop Temperature Experiment" ||
+              isOpen === "Stop Voltage Experiment"
             ? `Are you sure to ${isOpen}!`
-            : (isOpen === "Do you want to save Data?" ? isOpen :  "Are you sure to Disconnect!")
+            : (isOpen === "Do you want to save Data?" || isOpen === "Do you want to save Setpoint Temperature?" ? isOpen :  "Are you sure to Disconnect!")
         }
         handleCancel = {() => handleCancelModal()}
       />

@@ -75,7 +75,25 @@ const MyRecordList = () => {
       });
     }
   }
-  const handleShare = (item: any, title: string) => {};
+  const handleShare = async (item: any, title?: string) => {
+    if(item){
+      if (!navigator.canShare) {
+        console.log("Your browser doesn't support the Web Share API.")
+        return;
+      }
+      try {
+        await navigator.share({
+          url:item,
+          title: `${selectedButton}`,
+          text: `${selectedButton} Experiment Data`,
+        });
+        console.log("data has been shared Successfully!")
+      } catch (error) {
+        console.error(error)
+      }
+      // console.log("share data",item)
+    }
+  };
   const handleSelection = (value: any) => {
     if (JSON.stringify(selectedData) === JSON.stringify(value)) {
       setSelectedData("");

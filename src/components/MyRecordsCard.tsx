@@ -13,7 +13,7 @@ import DownloadData from "./DownloadData";
 import { mobileWidth } from "../components/Constants";
 import MoreSelectionModal from "./Modal/MoreSelectionModal";
 import { useState } from "react";
-import ShareModal from "./Modal/ShareModal";
+// import ShareModal from "./Modal/ShareModal";
 
 type Props = {
   data: any;
@@ -23,7 +23,7 @@ type Props = {
   selectedButton: string;
   handleActionItem: (item: any, action: any) => void;
   handleDeleteMobile: (item: any) => void;
-  handleShare: (item: any, title: string) => void;
+  handleShare: (item: any, title?: string) => void;
 };
 type OneCardProps = {
   data: any;
@@ -33,7 +33,7 @@ type OneCardProps = {
   selectedButton: string;
   handleActionItem: (item: any, action: any) => void;
   handleDeleteMobile: (item: any) => void;
-  handleShare: (item: any, title: string) => void;
+  handleShare: (item: any, title?: string) => void;
 };
 
 type TabCardProps = {
@@ -45,7 +45,7 @@ type TabCardProps = {
   handleActionItem: (item: any, action: any) => void;
   handleDownload: (item: any) => void;
   handleDeleteMobile?: (item: any) => void;
-  handleShare: (item: any, title: string) => void;
+  handleShare: (item: any, title?: string) => void;
 };
 
 const MyRecordsCard = ({
@@ -138,13 +138,13 @@ const TabCard = ({
   handleDownload,
   handleShare,
 }: TabCardProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const handleSubmit = (title: string) => {
-    if (title) {
-      handleShare(data, title);
-      setIsOpen(!isOpen);
-    }
-  };
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const handleSubmit = (title: string) => { // not in use
+  //   if (title) {
+  //     handleShare(data, title);
+  //     setIsOpen(!isOpen);
+  //   }
+  // };
   return (
     <>
       <div
@@ -184,7 +184,8 @@ const TabCard = ({
         <div className={styles.FooterWrapper}>
           <img
             src={BlackShareIcon}
-            onClick={() => setIsOpen(!isOpen)}
+            // onClick={() => setIsOpen(!isOpen)}
+            onClick = {() => handleShare(data)}
             className={styles.FooterIcons}
             alt="share"
           />
@@ -202,13 +203,13 @@ const TabCard = ({
           />
         </div>
       </div>
-      {isOpen && (
+      {/* {isOpen && (
         <ShareModal
           isOpen={isOpen}
           setModal={(value: boolean) => setIsOpen(value)}
           handleSubmit={handleSubmit}
         />
-      )}
+      )} */}
     </>
   );
 };
@@ -222,21 +223,30 @@ const MobileCard = ({
   handleActionItem,
   handleDownload,
   handleDeleteMobile,
+  handleShare
 }: TabCardProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<any>("");
   //setModal("edit")
   const handleSubmit = (value: string) => {
-    setIsOpen(!isOpen);
+    setIsOpen("");
     let getFunction: any = {
       "Rename File": () => handleActionItem(data, "edit"),
       Download: () => handleDownload(data),
-      Share: {},
-      Delete: handleDeleteMobile ? () => handleDeleteMobile(data) : {},
+      // Share: () => setIsOpen("share"),
+      Share : () => handleShare(data),
+      // Delete: handleDeleteMobile ? () => handleDeleteMobile(data) : {},
+      Delete :() => handleActionItem(data, "delete")
     };
     if (value) {
       getFunction[value]();
     }
   };
+  // const handleShareSubmit = (title: string) => {
+  //   if (title) {
+  //     handleShare(data, title);
+  //     setIsOpen("");
+  //   }
+  // };
   return (
     <>
       <div
@@ -260,7 +270,7 @@ const MobileCard = ({
           </div>
           <img
             src={MoreIcon}
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen("more")}
             style={{ cursor: "pointer", width: 40, marginTop: 10 }}
             alt="edit"
           />
@@ -280,13 +290,20 @@ const MobileCard = ({
         
     </div> */}
       </div>
-      {isOpen && (
+      {isOpen === "more" && (
         <MoreSelectionModal
           isOpen={isOpen}
-          setModal={(value: boolean) => setIsOpen(value)}
+          setModal={(value: any) => setIsOpen(value)}
           handleSubmit={handleSubmit}
         />
       )}
+       {/* {isOpen === "share" && (
+        <ShareModal
+          isOpen={isOpen}
+          setModal={(value: any) => setIsOpen(value)}
+          handleSubmit={handleShareSubmit}
+        />
+      )} */}
     </>
   );
 };

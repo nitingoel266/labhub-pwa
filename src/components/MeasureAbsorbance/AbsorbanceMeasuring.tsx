@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styles from '../../styles/AbsorbanceMeasuring.module.css';
+import sound from "../../assets/sound/beep-sound.mp3";
 import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
 import {IButtonIcon} from "../../images/index";
@@ -13,6 +14,7 @@ import { LABHUB_CLIENT_ID ,RGB_DATA} from "../../utils/const";
 const AbsorbanceMeasuring = () => {
     const navigate = useNavigate();
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const [audio] = useState(new Audio(sound));
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
@@ -51,7 +53,6 @@ const AbsorbanceMeasuring = () => {
     }
     const handleSave = () => {
         let resultRGB = [...measuredValue];
-        console.log("resultData",[...resultRGB])
         if(measure.length > 0){
             resultRGB.push({"Measuement No":measuredValue.length,"RED":measure[0],"GREEN":measure[1],"BLUE":measure[2]})
         }
@@ -76,7 +77,10 @@ const AbsorbanceMeasuring = () => {
     }
     useEffect(() => {
         if(dataStream?.rgb){
-            setMeasure(dataStream?.rgb?.measure || [])
+            if(JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure)){
+                audio.play()
+                setMeasure(dataStream?.rgb?.measure || [])
+            }
             // if(dataStream?.rgb?.measure && dataStream?.rgb?.measure[2]){
             //     setMeasuredValue((prevState:any) => {
             //         return [...prevState,{"Measuement No":prevState.length,"RED":dataStream?.rgb?.measure && dataStream?.rgb?.measure[0],"GREEN":dataStream?.rgb?.measure && dataStream?.rgb?.measure[1],"BLUE":dataStream?.rgb?.measure && dataStream?.rgb?.measure[2]}]
@@ -84,7 +88,7 @@ const AbsorbanceMeasuring = () => {
             // }
             
         }
-    },[dataStream?.rgb,measure])
+    },[dataStream?.rgb,measure,audio])
     useEffect(() => {
         if(clientId === status?.leaderSelected)
         startRgbExperiment()

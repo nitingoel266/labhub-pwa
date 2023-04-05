@@ -6,7 +6,6 @@ import RightArrow from "../../components/RightArrow";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import {useDeviceStatus ,useDeviceDataFeed} from "../../labhub/status";
 import {changeSetpointTemp, startHeaterExperiment,stopHeaterExperiment} from "../../labhub/actions";
-import { useNavigate } from "react-router-dom";
 import IButtonComponent from "../../components/IButtonComponent";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
 import {LABHUB_CLIENT_ID} from "../../utils/const";
@@ -16,7 +15,6 @@ let temperatureTimmer:any;
 const HeaterElement = () => {
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const [status] = useDeviceStatus();
-    const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [dataStream] = useDeviceDataFeed();
     const [isOpen,setModal] = useState("");
@@ -43,7 +41,6 @@ const HeaterElement = () => {
     }
     const handleSubmit = () => {
         changeSetpointTemp(temperature)
-        navigate(-1)
     }
     const handleMouseDownEvent = (event:string,title:string) => {
         if(title === 'add'){

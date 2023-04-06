@@ -113,7 +113,7 @@ const TemperatureProbe = () => {
         <div className={styles.HeaderSubTextWrapper}>Please make sure the probe is always in contact with the soution.</div>
         <div className={styles.HeaterElementWraper}>
             <div className={styles.TemperatureWrapper}>
-                <div>{istemperature}</div>
+                <div>{istemperature && Number(istemperature).toFixed(1)}</div>
                 <div className={styles.TemperatureDegree}>{" "}</div>
                 <div>C</div>
             </div>

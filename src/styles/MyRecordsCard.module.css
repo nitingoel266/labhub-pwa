@@ -13,9 +13,10 @@
 }
 .CadWrapper {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
-    overflow-x: auto;
+    /* overflow-x: auto; */
 }
 .CadMobileWrapper {
     display: flex;

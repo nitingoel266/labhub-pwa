@@ -28,6 +28,7 @@ import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { LABHUB_CLIENT_ID ,GetScreenName} from "../utils/const";
+import {simulateRgb} from "../labhub/actions";
 
 function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
   const [status] = useDeviceStatus();
@@ -82,6 +83,10 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       navigate("/function-selection")
     }else if(location?.pathname === "/function-selection") {
       navigate("/mode-selection")
+    }else if(location?.pathname === "/measure-absorbance"){
+      if(clientId === status?.leaderSelected)
+      simulateRgb(null)
+      navigate("/rgb-spect")
     } else navigate(-1);
   };
 

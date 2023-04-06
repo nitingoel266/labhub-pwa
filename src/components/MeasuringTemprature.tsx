@@ -210,6 +210,7 @@ const MeasuringTemprature = () => {
       setIsStart(true);
     }
   }, [dataStream?.sensor, isStart]);
+
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>

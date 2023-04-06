@@ -1,4 +1,4 @@
-import {WhiteWarningIcon} from "../../images/index";
+// import {WhiteWarningIcon} from "../../images/index";
 import { joinAsLeader} from '../../labhub/actions';
 import styles from "../../styles/leaderSelectionModal.module.css";
 // import { useNavigate } from "react-router-dom";
@@ -40,13 +40,13 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
         >
             <div className={styles.TextContainer}>
                 <div className={styles.Headertext}>
-                    <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
+                    {/* <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/> */}
                     <div>Warning</div>
                 </div>
                 <div className={styles.BodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <div className={styles.BodyPrimaryText}>Selected Device does not have a leader.</div>
-                        <div className={styles.BodySecondaryText}>Press <span style={{fontWeight:500}}>Yes</span> to become a Leader</div>
+                        <div className={styles.BodyPrimaryText}>Selected Device does not have a leader. Press Yes to become a Leader</div>
+                        {/* <div className={styles.BodySecondaryText}>Press <span style={{fontWeight:500}}>Yes</span> to become a Leader</div> */}
                     </div>
                     <div className={styles.ButtonWrapper}>
                         <div onClick={() => setModal(false)} className={styles.CancelButton}>Cancel</div>

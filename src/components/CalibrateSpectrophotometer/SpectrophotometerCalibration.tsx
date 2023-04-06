@@ -81,7 +81,7 @@ const SpectrophotometerCalibration = () => {
             </div>
         </div>
         <div className={styles.FooterText}>Spectrophotometer calibrated successfully. You can test calibration now.</div>
-        <RightArrow isSelected={true} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={calibrate || selectedItem ? true : false} handleSubmit={handleSubmit}/>
         {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }

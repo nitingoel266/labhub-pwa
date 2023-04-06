@@ -77,7 +77,7 @@ const AbsorbanceMeasuring = () => {
     }
     useEffect(() => {
         if(dataStream?.rgb){
-            if(JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure)){
+            if(dataStream?.rgb?.measure && dataStream?.rgb?.measure.some((e:any) => e > 0) && JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure)){
                 audio.play()
                 setMeasure(dataStream?.rgb?.measure || [])
             }
@@ -130,7 +130,7 @@ const AbsorbanceMeasuring = () => {
             </div>
             </div>
         </div>
-        <RightArrow isSelected={true} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
         {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={ getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }

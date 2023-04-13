@@ -1,6 +1,7 @@
 import short from 'short-uuid';
 import { clientChannelRequest, clientChannelResponse } from './status';
 import { navStatusUpdate } from './status-client';
+import { ClientChannelRequest, ClientChannelResponse } from '../types/common';
 
 export const setSelectedMode = (mode: 'manual' | 'project' | null) => {
   navStatusUpdate.next({ modeSelected: mode });
@@ -10,51 +11,57 @@ export const setSelectedFunction = (func: 'data_setup' | 'sensor' | 'heater' | '
   navStatusUpdate.next({ funcSelected: func });
 };
 
-const getSensorLog = async ({temperatureIndex, voltageIndex}: {temperatureIndex?: number, voltageIndex?: number}) => {
-  let sensorLog: number[] | null = null;
+const doClientAction = async (reqValue: ClientChannelRequest) => {
+  let channelResp: ClientChannelResponse | null = null;
+
+  const { requestId, temperatureIndex, voltageIndex, getScreenNumber } = reqValue;
 
   try {
-    const requestId = short.generate();
-
     if (temperatureIndex !== undefined) {
       clientChannelRequest.next({ requestId, temperatureIndex });
     } else if (voltageIndex !== undefined) {
       clientChannelRequest.next({ requestId, voltageIndex });
+    } else if (getScreenNumber === true) {
+      clientChannelRequest.next({ requestId, getScreenNumber });
     } else {
-      return Promise.reject('temperatureIndex/voltageIndex missing!');
+      return Promise.reject(`Client action type missing! ${JSON.stringify(reqValue)}`);
     }
   
-    sensorLog = await new Promise((resolve, reject) => {
+    channelResp = await new Promise((resolve, reject) => {
       let timeout: NodeJS.Timeout;
       const subs = clientChannelResponse.subscribe((value) => {  
         if (value && value.requestId === requestId) {
           if (timeout !== undefined) clearTimeout(timeout);
           subs.unsubscribe();
-          if (temperatureIndex !== undefined) {
-            resolve(value.temperatureLog);
-          } else if (voltageIndex !== undefined) {
-            resolve(value.voltageLog);
-          }
+          resolve(value);
         }
       });
       timeout = setTimeout(() => {
         subs.unsubscribe();
         reject('clientChannelRequest timeout!');
-      }, 5000);
+      }, 10000);
     });
   } catch (e) {
     console.error(e);
   }
 
-  return sensorLog;
+  return channelResp;
 };
 
 export const getTemperatureLog = async (temperatureIndex: number) => {
-  const temperatureLog = await getSensorLog({ temperatureIndex });
-  return temperatureLog;
+  const requestId = short.generate();
+  const channelResp = await doClientAction({ requestId, temperatureIndex });
+  return channelResp?.temperatureLog ?? null;
 };
 
 export const getVoltageLog = async (voltageIndex: number) => {
-  const voltageLog = await getSensorLog({ voltageIndex });
-  return voltageLog;
+  const requestId = short.generate();
+  const channelResp = await doClientAction({ requestId, voltageIndex });
+  return channelResp?.voltageLog ?? null;
+};
+
+export const getScreenNumber = async () => {
+  const requestId = short.generate();
+  const channelResp = await doClientAction({ requestId, getScreenNumber: true });
+  return channelResp?.screenNumber ?? null;
 };

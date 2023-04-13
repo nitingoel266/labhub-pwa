@@ -5,7 +5,7 @@ import { joinAsLeader, resetLeader, resetAll, setupData, simulateSensor, startSe
 // import { setSelectedMode, setSelectedFunction } from '../labhub/actions-client';
 import { initSetup, uninitSetup } from '../labhub/setup';
 import { getClientType } from '../labhub/utils';
-import { getTemperatureLog, getVoltageLog } from '../labhub/actions-client';
+import { getTemperatureLog, getVoltageLog, getScreenNumber } from '../labhub/actions-client';
 
 function TestPage(props: TestPageProps) {
   const [connected] = useDeviceConnected();
@@ -14,6 +14,7 @@ function TestPage(props: TestPageProps) {
 
   const [temperatureLog, setTemperatureLog] = useState<number[] | null>(null);
   const [voltageLog, setVoltageLog] = useState<number[] | null>(null);
+  const [screenNumber, setScreenNumber] = useState<number | null>(null);
 
   async function fetchTemperatureLog(temperatureIndex: number | null | undefined) {
     if (typeof temperatureIndex === 'number') {
@@ -28,7 +29,12 @@ function TestPage(props: TestPageProps) {
       setVoltageLog(voltLog);
     }
   }
-  
+
+  async function fetchScreenNumber() {
+    const screenNumber = await getScreenNumber();
+    setScreenNumber(screenNumber);
+  }
+
   const clientType = getClientType();
   // const unknownClientType = clientType === null;
   const isLeader = clientType === 'leader';
@@ -80,10 +86,19 @@ function TestPage(props: TestPageProps) {
         </>
       )}
 
+      {screenNumber && (
+        <>
+          <strong style={{ fontSize: '120%' }}>Screen Number:</strong>&nbsp;&nbsp;<code>{screenNumber}</code>
+          <br />
+        </>
+      )}
+
       <br />
       <button onClick={() => fetchTemperatureLog(dataFeed.sensor?.temperatureIndex)}>Temperature Log</button>
       <br />
       <button onClick={() => fetchVoltageLog(dataFeed.sensor?.voltageIndex)}>Voltage Log</button>
+      <br />
+      <button onClick={() => fetchScreenNumber()}>Screen Number</button>
       <br /><br />
 
       <button onClick={() => joinAsLeader()} disabled={leaderSelected}>Set Leader</button>

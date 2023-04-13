@@ -20,7 +20,7 @@ const SpectrophotometerTesting = () => {
     const [dataStream] = useDeviceDataFeed();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
-    const [testCalibrate, setTestCalibrate]= useState<any>([])
+    const [testCalibrate, setTestCalibrate]= useState<any>(dataStream?.rgb?.calibrateTest || [])
     const [isOpen,setModal] = useState("");
 
     const clickHandler = (item:string) => {
@@ -52,10 +52,11 @@ const SpectrophotometerTesting = () => {
 
         navigate("/cuvette-insertion")
     }
-    useEffect(() => {
-        if(clientId === status?.leaderSelected)
-        startRgbExperiment()
-    },[clientId,status?.leaderSelected])
+    // useEffect(() => {
+    //     if(clientId === status?.leaderSelected)
+    //     startRgbExperiment()
+    // },[clientId,status?.leaderSelected])
+
     useEffect(() => {
         if(dataStream?.rgb){
             if(JSON.stringify(dataStream?.rgb?.calibrateTest) !== JSON.stringify(testCalibrate)){

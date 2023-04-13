@@ -4,7 +4,7 @@ import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import MyRecordsCard from "../../components/MyRecordsCard";
 import RightArrow from "../../components/RightArrow";
 import { TEMPERATURE_DATA, VOLTAGE_DATA, RGB_DATA } from "../../utils/const";
-import {getStorageData,validateFileName,getStorageKeys} from "../../components/Constants";
+import {getStorageData,validateFileName,getStorageKeys,getShortedData} from "../../components/Constants";
 import styles from "../../styles/myRecordList.module.css";
 import EditFileModal from "../../components/Modal/EditFileModal";
 
@@ -108,7 +108,12 @@ const MyRecordList = () => {
           ? { ...result[one?.date], data: [...result[one?.date]["data"], one] }
           : { date: one?.date, data: [one] };
       }
-      return Object.values(result);
+      let resultData = result && Object.values(result).sort((a:any,b:any) => (b.date && new Date(b.date)) - (a.date && new Date(a.date)));
+      let sortedResult:any = [];
+      for(let one of resultData){
+        sortedResult.push({...one,data:getShortedData(one?.data)})
+      }
+      return Object.values(sortedResult);
     }
   };
 

@@ -110,9 +110,9 @@ const MeasuringVoltage = () => {
   };
   useEffect(() => {
     if (
+      status?.sensorConnected === "voltage" &&
       dataStream &&
       dataStream.sensor &&
-      dataStream.sensor.voltage &&
       clientId === status?.leaderSelected
     ) {
       setGraphData((prevData: any) => {
@@ -140,7 +140,7 @@ const MeasuringVoltage = () => {
         capturePoints: any = [];
       if (dataStream?.sensor?.voltageLog) {
         for (let one in dataStream.sensor.voltageLog) {
-          if (Number(one) > 0) {
+          if (Number(one) >= 0) {
             logData.push({
               time:
                 Number(one) *
@@ -168,6 +168,7 @@ const MeasuringVoltage = () => {
     dataStream,
     dataStream?.sensor?.voltage,
     status?.setupData?.dataRate,
+    status?.sensorConnected,
     clientId,
     status?.leaderSelected,
   ]);
@@ -210,7 +211,7 @@ const MeasuringVoltage = () => {
             <div className={styles.ButtonWrapper}>
               <div
                 onClick={() =>
-                  clientId === status?.leaderSelected
+                  clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
                     ? setModal(graphData?.length ? "restart" : "start")
                     : {}
                 }
@@ -278,7 +279,7 @@ const MeasuringVoltage = () => {
             <div className={styles.ButtonHorizontalInnerWrapper}>
               <div
                 onClick={() =>
-                  clientId === status?.leaderSelected
+                  clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
                     ? setModal(graphData?.length ? "restart" : "start")
                     : {}
                 }

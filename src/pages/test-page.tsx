@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useSocketConnected, useDeviceStatus, useDeviceDataFeed } from '../labhub/status';
+import { useDeviceConnected, useDeviceStatus, useDeviceDataFeed } from '../labhub/status';
 import { joinAsLeader, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment, stopSensorExperiment, changeSetpointTemp, simulateHeater, startHeaterExperiment, stopHeaterExperiment, calibrateRgb, simulateRgb, startRgbExperiment } from '../labhub/actions';
 // import { setSelectedMode, setSelectedFunction } from '../labhub/actions-client';
 import { initSetup, uninitSetup } from '../labhub/setup';
 import { getClientType } from '../labhub/utils';
 
 function TestPage(props: TestPageProps) {
-  const [connected] = useSocketConnected();
+  const [connected] = useDeviceConnected();
   const [status] = useDeviceStatus();
   const [dataFeed] = useDeviceDataFeed();
 

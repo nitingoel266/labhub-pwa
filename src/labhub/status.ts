@@ -24,8 +24,6 @@ export const useDeviceConnected = () => {
   return [connected];
 };
 
-export const useSocketConnected = useDeviceConnected;
-
 export const useDeviceStatus = () => {
   const [status, setStatus] = useState(deviceStatus.value);
 

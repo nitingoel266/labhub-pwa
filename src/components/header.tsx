@@ -1,6 +1,6 @@
 import {
   useDeviceStatus,
-  useSocketConnected,
+  useDeviceConnected,
   useDeviceDataFeed,
 } from "../labhub/status";
 import {
@@ -33,7 +33,7 @@ import {simulateRgb} from "../labhub/actions";
 function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
   const [status] = useDeviceStatus();
   const [dataFeed] = useDeviceDataFeed();
-  const [connected] = useSocketConnected();
+  const [connected] = useDeviceConnected();
   const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
   const navigate = useNavigate();
   const location = useLocation();
@@ -83,6 +83,8 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       navigate("/function-selection")
     }else if(location?.pathname === "/function-selection") {
       navigate("/mode-selection")
+    }else if(location?.pathname === "/mode-selection") {
+      navigate("/scan-devices")
     }else if(location?.pathname === "/measure-absorbance"){
       if(clientId === status?.leaderSelected)
       simulateRgb(null)

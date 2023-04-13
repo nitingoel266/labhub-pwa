@@ -73,6 +73,16 @@ const getStorageKeys = (title:string) => {
      return result;
 }
 
+const getShortedData = (data:any) => {
+    if(data && Array.isArray(data)){
+        return data.sort((a:any,b:any) => {
+            let aTime = Number(`${a?.time.includes("PM") ? Number(a?.time.slice(0,2))+12 : a?.time.slice(0,2)}${a?.time.slice(3,5)}`);
+            let BTime = Number(`${b?.time.includes("PM") ? Number(b?.time.slice(0,2))+12 : b?.time.slice(0,2)}${b?.time.slice(3,5)}`);
+            return BTime - aTime
+        });
+    }
+}
+
 const validateFileName:any = (data:any,fileName:string,count=0) => {
     let alreadyExists = false;
      for(let one of data){
@@ -130,5 +140,6 @@ export {
     getTime,
     validateFileName,
     getStorageData,
-    getStorageKeys
+    getStorageKeys,
+    getShortedData
 }

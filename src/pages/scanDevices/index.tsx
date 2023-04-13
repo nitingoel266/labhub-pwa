@@ -1,6 +1,6 @@
 import styles from '../../styles/scanDevice.module.css';
 import {LabHubSticker,BluetoothIcon,BlackBluetoothIcon} from "../../images/index";
-import { useSocketConnected,useDeviceStatus} from '../../labhub/status';
+import { useDeviceConnected,useDeviceStatus} from '../../labhub/status';
 import {resetLeader} from "../../labhub/actions"
 import {initSetup,uninitSetup} from "../../labhub/setup";
 import RightArrow from '../../components/RightArrow';
@@ -11,7 +11,7 @@ import {LABHUB_CLIENT_ID} from "../../utils/const";
 
 const ScanDevices = () => {
     const navigate = useNavigate();
-    const [connected] = useSocketConnected();
+    const [connected] = useDeviceConnected();
     const clientId = localStorage.getItem(LABHUB_CLIENT_ID)
     const [status] = useDeviceStatus();
     const [isOpen,setModal] = useState("")

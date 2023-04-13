@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { DeviceStatus, DeviceStatusUpdate, DeviceDataFeed, DeviceDataFeedUpdate } from '../types/common';
+import { DeviceStatus, DeviceStatusUpdate, DeviceDataFeed, DeviceDataFeedUpdate, ClientChannelRequest, ClientChannelResponse } from '../types/common';
 
 export const deviceConnected = new BehaviorSubject<boolean>(false);
 export const deviceStatus = new BehaviorSubject<DeviceStatus | null>(null);
 export const deviceStatusUpdate = new BehaviorSubject<DeviceStatusUpdate | null>(null);
 export const deviceDataFeedUpdate = new BehaviorSubject<DeviceDataFeedUpdate | null>(null);
+export const clientChannelResponse = new BehaviorSubject<ClientChannelResponse | null>(null);
+export const clientChannelRequest = new BehaviorSubject<ClientChannelRequest | null>(null);
 
 export const deviceDataFeed = new BehaviorSubject<DeviceDataFeed>({
   sensor: null,

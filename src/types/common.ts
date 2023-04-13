@@ -32,6 +32,8 @@ export interface DeviceStatus {
   rgbConnected: RgbFuncSelect;
   screenNumber: number | null;
   operation: LeaderOperation;
+  // temperatureLog: number[];
+  // voltageLog: number[];
 }
 
 export interface DeviceStatusUpdate {
@@ -48,11 +50,14 @@ export interface DeviceStatusUpdate {
   screenNumber?: number;
 }
 
+// TODO: 376987
 export interface SensorDataStream {
   temperature: number | null;
-  temperatureLog: number[];
+  temperatureIndex: number | null;
+  temperatureLog: number[];  // temp!
   voltage: number | null;
-  voltageLog: number[];
+  voltageIndex: number | null;
+  voltageLog: number[];  // temp!
 }
 
 export interface HeaterDataStream {
@@ -75,4 +80,16 @@ export interface DeviceDataFeed {
   sensor: SensorDataStream | null;
   heater: HeaterDataStream | null;
   rgb: RgbDataStream | null;
+}
+
+export interface ClientChannelResponse {
+  requestId: string;
+  temperatureLog: number[] | null;
+  voltageLog: number[] | null;
+}
+
+export interface ClientChannelRequest {
+  requestId: string;
+  temperatureIndex?: number;
+  voltageIndex?: number;
 }

@@ -1,15 +1,34 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDeviceConnected, useDeviceStatus, useDeviceDataFeed } from '../labhub/status';
 import { joinAsLeader, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment, stopSensorExperiment, changeSetpointTemp, simulateHeater, startHeaterExperiment, stopHeaterExperiment, calibrateRgb, simulateRgb, startRgbExperiment } from '../labhub/actions';
 // import { setSelectedMode, setSelectedFunction } from '../labhub/actions-client';
 import { initSetup, uninitSetup } from '../labhub/setup';
 import { getClientType } from '../labhub/utils';
+import { getTemperatureLog, getVoltageLog } from '../labhub/actions-client';
 
 function TestPage(props: TestPageProps) {
   const [connected] = useDeviceConnected();
   const [status] = useDeviceStatus();
   const [dataFeed] = useDeviceDataFeed();
 
+  const [temperatureLog, setTemperatureLog] = useState<number[] | null>(null);
+  const [voltageLog, setVoltageLog] = useState<number[] | null>(null);
+
+  async function fetchTemperatureLog(temperatureIndex: number | null | undefined) {
+    if (typeof temperatureIndex === 'number') {
+      const tempLog = await getTemperatureLog(temperatureIndex);
+      setTemperatureLog(tempLog);
+    }
+  }
+  
+  async function fetchVoltageLog(voltageIndex: number | null | undefined) {
+    if (typeof voltageIndex === 'number') {
+      const voltLog = await getVoltageLog(voltageIndex);
+      setVoltageLog(voltLog);
+    }
+  }
+  
   const clientType = getClientType();
   // const unknownClientType = clientType === null;
   const isLeader = clientType === 'leader';
@@ -35,15 +54,38 @@ function TestPage(props: TestPageProps) {
       <h2>Test Page {isLeader ? '(Leader)' : (isMember ? '(Member)' : '')}</h2>
       <button onClick={() => uninitSetup()}>Disconnect Device</button>
 
-      <>
-        <pre>
-          <code>{JSON.stringify(status, null, 2)}</code>
-        </pre>
-        <pre>
-          <code>{JSON.stringify(dataFeed, null, 2)}</code>
-        </pre>
-      </>
+      <pre>
+        <code>{JSON.stringify(status, null, 2)}</code>
+      </pre>
+  
+      <pre>
+        <code>{JSON.stringify(dataFeed, null, 2)}</code>
+      </pre>
+
+      {temperatureLog && (
+        <>
+          <strong style={{ fontSize: '120%' }}>Temperature Log:</strong>
+          <pre>
+            <code>{JSON.stringify(temperatureLog)}</code>
+          </pre>
+        </>
+      )}
+
+      {voltageLog && (
+        <>
+          <strong style={{ fontSize: '120%' }}>Voltage Log:</strong>
+          <pre>
+            <code>{JSON.stringify(voltageLog)}</code>
+          </pre>
+        </>
+      )}
+
       <br />
+      <button onClick={() => fetchTemperatureLog(dataFeed.sensor?.temperatureIndex)}>Temperature Log</button>
+      <br />
+      <button onClick={() => fetchVoltageLog(dataFeed.sensor?.voltageIndex)}>Voltage Log</button>
+      <br /><br />
+
       <button onClick={() => joinAsLeader()} disabled={leaderSelected}>Set Leader</button>
       <br />
       <button onClick={() => resetLeader()} disabled={!isLeader || !status || status.leaderSelected === null}>Unset Leader</button>

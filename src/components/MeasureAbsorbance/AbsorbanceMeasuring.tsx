@@ -20,7 +20,7 @@ const AbsorbanceMeasuring = () => {
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isSaved,setIsSaved] = useState<boolean>(false);
-    const [measure , setMeasure] = useState<any>([]);
+    const [measure , setMeasure] = useState<any>(dataStream?.rgb?.measure || []);
     const [measuredValue,setMeasuredValue] = useState<any>([]) //{Measuement No,RED,GREEN,BLUE}
     const [isOpen,setModal] = useState("");
 
@@ -40,7 +40,7 @@ const AbsorbanceMeasuring = () => {
                 })
             }
           
-            setMeasure([])
+            // setMeasure([])
             setSelectedItem("")
             setIsSaved(false)
         }else {
@@ -89,10 +89,10 @@ const AbsorbanceMeasuring = () => {
             
         }
     },[dataStream?.rgb,measure,audio])
-    useEffect(() => {
-        if(clientId === status?.leaderSelected)
-        startRgbExperiment()
-    },[clientId, status?.leaderSelected])
+    // useEffect(() => {
+    //     if(clientId === status?.leaderSelected)
+    //     startRgbExperiment()
+    // },[clientId, status?.leaderSelected])
     // console.log("???????????? measuredValue",measuredValue)
     return <div>
         <div className={styles.ButtonWrapper}>

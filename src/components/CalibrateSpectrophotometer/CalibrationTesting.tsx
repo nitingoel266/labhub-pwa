@@ -6,7 +6,7 @@ import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
-import {simulateRgb} from "../../labhub/actions";
+import {simulateRgb, startRgbExperiment} from "../../labhub/actions";
 import { useDeviceStatus } from '../../labhub/status';
 import { LABHUB_CLIENT_ID } from "../../utils/const";
 
@@ -26,8 +26,10 @@ const CalibrationTesting = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
-            if(clientId === status?.leaderSelected)
-            simulateRgb('calibrate_test')
+            if(clientId === status?.leaderSelected){
+                simulateRgb('calibrate_test')
+                startRgbExperiment()
+            }
             navigate("/spectrophotometer-testing")
         }
 

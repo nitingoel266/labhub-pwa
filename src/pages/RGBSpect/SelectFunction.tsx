@@ -36,7 +36,7 @@ const SelectFunction = () => {
 
     }
     const handleFunctions = () => {
-        if(selectedItem === MEASURE_ABSORBANCE) setModal("measure before Calibrating")
+        if(selectedItem === MEASURE_ABSORBANCE && status?.operation !== "rgb_calibrate" && status?.operation !== "rgb_measure") setModal("measure before Calibrating")
         else handleSubmit()
     }
     const handleIModal = (title:string) => {

@@ -140,9 +140,9 @@ const MeasuringTemprature = () => {
   useEffect(() => {
     // dataStream.sensor.temperatureLog can be use for member to get prev data
     if (
+      status?.sensorConnected === "temperature" &&
       dataStream &&
       dataStream.sensor &&
-      dataStream.sensor.temperature &&
       clientId === status?.leaderSelected
     ) {
       setGraphData((prevData: any) => {
@@ -170,7 +170,7 @@ const MeasuringTemprature = () => {
         capturePoints: any = [];
       if (dataStream?.sensor?.temperatureLog) {
         for (let one in dataStream.sensor.temperatureLog) {
-          if (Number(one) > 0) {
+          if (Number(one) >= 0) {
             logData.push({
               time:
                 Number(one) *
@@ -198,6 +198,7 @@ const MeasuringTemprature = () => {
     dataStream,
     dataStream?.sensor?.temperature,
     status?.setupData?.dataRate,
+    status?.sensorConnected,
     clientId,
     status?.leaderSelected,
   ]);
@@ -282,7 +283,7 @@ const MeasuringTemprature = () => {
             <div className={styles.ButtonWrapper}>
               <div
                 onClick={() =>
-                  clientId === status?.leaderSelected
+                  clientId === status?.leaderSelected && status?.sensorConnected === "temperature"
                     ? setModal(graphData?.length ? "restart" : "start")
                     : {}
                 }
@@ -350,7 +351,7 @@ const MeasuringTemprature = () => {
             <div className={styles.ButtonHorizontalInnerWrapper}>
               <div
                 onClick={() =>
-                  clientId === status?.leaderSelected
+                  clientId === status?.leaderSelected && status?.sensorConnected === "temperature"
                     ? setModal(graphData?.length ? "restart" : "start")
                     : {}
                 }

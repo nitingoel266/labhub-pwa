@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import {useDeviceStatus,useSocketConnected} from "../../labhub/status";
+import {useDeviceStatus,useDeviceConnected} from "../../labhub/status";
 // import {joinAsMember} from "../../labhub/actions";
 import LeadeSelectionModal from "./leaderSelectionModal";
 import {LEADER_SELECTIONMODAL_INITIATE} from "../../components/Constants";
@@ -8,7 +8,7 @@ const LeaderDisconnect = () => {
     // const navigate = useNavigate();
     const [isOpen,setModal] = useState(false)
     const [status] = useDeviceStatus();
-    const [connected] = useSocketConnected();
+    const [connected] = useDeviceConnected();
 
     useEffect(() => { //if device is connected and leader is not there so leader selection modal
         if(connected && status && !status.leaderSelected){

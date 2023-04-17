@@ -43,12 +43,6 @@ const SelectFunction = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }   
-    // useEffect(() => {
-    //     if(status?.modeSelected){
-    //         let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
-    //         setSelectedItem(result)
-    //     }
-    // },[navigate])
     return <div style={{position:"relative"}}>
         <div className={styles.HeaderText}>Select Function</div>
         <div className={styles.ButtonWrapper}>

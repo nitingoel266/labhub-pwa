@@ -30,7 +30,7 @@ export const useDeviceStatus = () => {
   const [status, setStatus] = useState(deviceStatus.value);
 
   useEffect(() => {
-    const subs = deviceStatus.subscribe(value => setStatus(value));
+    const subs = deviceStatus.subscribe(value => setStatus(value === null ? null : {...value}));
     return () => subs.unsubscribe();
   }, []);
 
@@ -41,7 +41,7 @@ export const useDeviceDataFeed = () => {
   const [data, setData] = useState(deviceDataFeed.value);
 
   useEffect(() => {
-    const subs = deviceDataFeed.subscribe(value => setData(value));
+    const subs = deviceDataFeed.subscribe(value => setData({...value}));
     return () => subs.unsubscribe();
   }, []);
 

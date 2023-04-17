@@ -3,6 +3,7 @@ import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed } from "../labhub/status";
 import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
+import {getTemperatureLog} from "../labhub/actions-client";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
 import {
@@ -29,6 +30,7 @@ const MeasuringTemprature = () => {
 
   const [tempratureUnit, setTempratureUnit] = useState<string>("c");
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,temp}
+  const [checkForLog,setCheckForLog] = useState<any>(0)
 
   const handleTemperatureUnit = (title: string) => {
     if (title === "f" && tempratureUnit !== title) {
@@ -138,13 +140,39 @@ const MeasuringTemprature = () => {
   }
 
   useEffect(() => {
-    // dataStream.sensor.temperatureLog can be use for member to get prev data
+    const getTemperatureData = async () =>{
     if (
       status?.sensorConnected === "temperature" &&
-      dataStream &&
-      dataStream.sensor &&
-      clientId === status?.leaderSelected
+      dataStream?.sensor /* &&
+      clientId === status?.leaderSelected */
     ) {
+      if(clientId !== status?.leaderSelected && dataStream?.sensor?.temperatureIndex === 0){
+        setGraphData([]);
+        setCapturePoint([]);
+      }
+      if(clientId !== status?.leaderSelected && dataStream?.sensor?.temperatureIndex && dataStream?.sensor?.temperatureIndex > 0 && dataStream?.sensor?.temperatureIndex > checkForLog && checkForLog <= 0){
+         setCheckForLog(1)
+        let tempLogData:any = await getTemperatureLog(dataStream?.sensor?.temperatureIndex || 0);
+          let logData:any = [];
+          let capturePoints:any = [];
+          for (let one in tempLogData) {
+            if (Number(one) >= 0) {
+              logData.push({
+                time:
+                  Number(one) *
+                  Number(
+                    status?.setupData?.dataRate === "user"
+                      ? 1
+                      : status?.setupData?.dataRate
+                  ),
+                temp: tempLogData[one]
+              });
+              capturePoints.push(status?.setupData?.dataRate === "user" ? 0 : 2);
+            }
+          }
+          setGraphData(logData);
+          setCapturePoint(capturePoints)
+      }
       setGraphData((prevData: any) => {
         return [
           ...prevData,
@@ -156,7 +184,7 @@ const MeasuringTemprature = () => {
                   ? 1
                   : status?.setupData?.dataRate
               ),
-            temp: dataStream.sensor?.temperature,
+            temp: dataStream?.sensor?.temperature,
           },
         ];
       });
@@ -165,7 +193,8 @@ const MeasuringTemprature = () => {
         status?.setupData?.dataRate === "user" ? 0 : 2,
       ]);
       setIsSaved(false);
-    } else if (clientId !== status?.leaderSelected && dataStream) {
+    } /* else if (clientId !== status?.leaderSelected && dataStream) {
+      // console.log("??>>>>>>>>>>>>>> ",getTemperatureLog(dataStream?.sensor?.temperatureIndex || 0) , "ind ",dataStream?.sensor?.temperatureIndex)
       let logData = [],
         capturePoints: any = [];
       if (dataStream?.sensor?.temperatureLog) {
@@ -193,14 +222,18 @@ const MeasuringTemprature = () => {
         });
         setIsSaved(false);
       }
-    }
+    } */
+  }
+  getTemperatureData()
   }, [
-    dataStream,
+    dataStream?.sensor,
     dataStream?.sensor?.temperature,
+    dataStream?.sensor?.temperatureIndex,
     status?.setupData?.dataRate,
     status?.sensorConnected,
     clientId,
     status?.leaderSelected,
+    checkForLog
   ]);
 
   useEffect(() => {

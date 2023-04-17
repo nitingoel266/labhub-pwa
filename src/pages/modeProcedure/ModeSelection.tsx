@@ -9,12 +9,10 @@ import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import IButtonComponent from "../../components/IButtonComponent";
 import {mobileWidth,MANUAL_MODE,PRESET_MODE,getDescription,HIGHLIGHT_BACKGROUND} from "../../components/Constants";
-// import {useDeviceStatus} from "../../labhub/status";
 
 const ModeSelection = () => {
     const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
-    // const [status] = useDeviceStatus();
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState<string>("");
     const clickHandler = (item:string) => {
@@ -34,13 +32,6 @@ const ModeSelection = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
-    // set the initial value from modes
-    // useEffect(() => {
-    //     if(status?.modeSelected){
-    //         let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
-    //         setSelectedItem(result)
-    //     }
-    // },[navigate,status?.modeSelected])
 
     return <div style={{position:"relative"}}>
         <div className={styles.HeaderText}>Select Mode</div>

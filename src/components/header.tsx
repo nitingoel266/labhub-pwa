@@ -9,8 +9,9 @@ import {
   stopSensorExperiment /* ,unjoinMember */,
   changeSetpointTemp,
   setScreenNumber,
+  simulateRgb
 } from "../labhub/actions";
-// import {setSelectedFunction,setSelectedMode} from "../labhub/actions-client";
+import {getScreenNumber} from "../labhub/actions-client";
 import styles from "../styles/header.module.css";
 import {
   BluetoothIcon,
@@ -28,7 +29,6 @@ import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { LABHUB_CLIENT_ID ,GetScreenName} from "../utils/const";
-import {simulateRgb} from "../labhub/actions";
 
 function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
   const [status] = useDeviceStatus();
@@ -213,17 +213,23 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
         stopSensorExperiment();
       else if(checkForSave && handleSave) {
         handleSave()
-        let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? GetScreenName[status?.screenNumber || 0] : -1;
+        let value:any = onClick === "myRecord" ? "/my-records" : -1;
         if(onClick === "connectionManager")
             navigate("/scan-devices",{
               state: { screenName : "/scan-devices" },
             });
-          else navigate(value)
+        else if(onClick === "sync") handleSyncNavigate()
+        else navigate(value)
       }
     } else navigate(-1);
 
     setModal("");
   };
+
+  const handleSyncNavigate = async () => {
+    let index = await getScreenNumber();
+    navigate(GetScreenName[index || 0])
+  }
 
   const handleSync  = () => {
     setOnClick("sync")
@@ -232,13 +238,13 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
         location?.pathname === "/voltage-sensor") && checkForSave
     ) {
       if(checkForSave) setModal("Do you want to save Data?")
-    }else if(status?.screenNumber) navigate(GetScreenName[status?.screenNumber])
+    }else handleSyncNavigate()
   }
 
   const handleCancelModal = () => {
     setModal("")
     if(isOpen === "Do you want to save Data?" || isOpen === "Do you want to save Setpoint Temperature?"){
-      let value:any = onClick === "myRecord" ? "/my-records" : onClick === "sync" ? GetScreenName[status?.screenNumber || 0] : -1;
+      let value:any = onClick === "myRecord" ? "/my-records" :  -1;
       if(onClick === "connectionManager"){
         if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
           navigate("/scan-devices",{
@@ -246,7 +252,8 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
           });
         else navigate("/scan-devices")
         setScreenName("/scan-devices");
-      }else navigate(value)
+      }else if(onClick === "sync") handleSyncNavigate()
+      else navigate(value)
     }
   }
 
@@ -311,6 +318,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       // joinAsMember()
       // setModal(false)
       if (location.pathname === "/scan-devices") navigate("/mode-selection");
+    }
+    if(!connected && screenName === "/scan-devices"){
+      setScreenName("")
     }
   }, [
     status?.leaderSelected,

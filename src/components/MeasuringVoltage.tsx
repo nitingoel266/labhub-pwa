@@ -5,6 +5,7 @@ import { useDeviceStatus, useDeviceDataFeed } from "../labhub/status";
 import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
+import {getVoltageLog} from "../labhub/actions-client";
 import {
   getFileName,
   getDate,
@@ -26,6 +27,7 @@ const MeasuringVoltage = () => {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
   const [capturePoint, setCapturePoint] = useState<any>([]);
+  const [checkForLog,setCheckForLog] = useState<any>(0)
 
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,voltage}
 
@@ -108,13 +110,46 @@ const MeasuringVoltage = () => {
       navigate("/function-selection");
     }
   };
+  useEffect(() =>{
+    if(graphData.length > 0 && graphData.length <= 1 && clientId !== status?.leaderSelected){
+      setCheckForLog(graphData.length)
+    }
+  },[graphData,clientId,status?.leaderSelected])
+
   useEffect(() => {
+    const getTemperatureData = async () =>{
     if (
       status?.sensorConnected === "voltage" &&
-      dataStream &&
-      dataStream.sensor &&
-      clientId === status?.leaderSelected
+      dataStream?.sensor //&&
+      // clientId === status?.leaderSelected
     ) {
+      if(clientId !== status?.leaderSelected && dataStream?.sensor?.voltageIndex === 0){
+        setGraphData([]);
+        setCapturePoint([]);
+      }
+      if(clientId !== status?.leaderSelected && dataStream?.sensor?.voltageIndex && dataStream?.sensor?.voltageIndex > 0 && dataStream?.sensor?.voltageIndex > checkForLog && checkForLog <= 0){
+        setCheckForLog(1)
+        let volLogData:any = await getVoltageLog(dataStream?.sensor?.voltageIndex || 0);
+          let logData:any = [];
+          let capturePoints:any = [];
+          for (let one in volLogData) {
+            if (Number(one) >= 0) {
+              logData.push({
+                time:
+                  Number(one) *
+                  Number(
+                    status?.setupData?.dataRate === "user"
+                      ? 1
+                      : status?.setupData?.dataRate
+                  ),
+                temp: volLogData[one]
+              });
+              capturePoints.push(status?.setupData?.dataRate === "user" ? 0 : 2);
+            }
+          }
+          setGraphData(logData);
+          setCapturePoint(capturePoints)
+      }
       setGraphData((prevData: any) => {
         return [
           ...prevData,
@@ -135,7 +170,7 @@ const MeasuringVoltage = () => {
         status?.setupData?.dataRate === "user" ? 0 : 2,
       ]);
       setIsSaved(false);
-    } else if (clientId !== status?.leaderSelected && dataStream) {
+    } /* else if (clientId !== status?.leaderSelected && dataStream) {
       let logData = [],
         capturePoints: any = [];
       if (dataStream?.sensor?.voltageLog) {
@@ -163,7 +198,9 @@ const MeasuringVoltage = () => {
         });
         setIsSaved(false);
       }
+    } */
     }
+    getTemperatureData()
   }, [
     dataStream,
     dataStream?.sensor?.voltage,
@@ -171,6 +208,7 @@ const MeasuringVoltage = () => {
     status?.sensorConnected,
     clientId,
     status?.leaderSelected,
+    checkForLog
   ]);
 
   useEffect(() => {

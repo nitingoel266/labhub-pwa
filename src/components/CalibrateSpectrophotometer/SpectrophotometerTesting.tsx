@@ -58,13 +58,13 @@ const SpectrophotometerTesting = () => {
     // },[clientId,status?.leaderSelected])
 
     useEffect(() => {
-        if(dataStream?.rgb){
+        if(dataStream?.rgb?.calibrateTest){
             if(JSON.stringify(dataStream?.rgb?.calibrateTest) !== JSON.stringify(testCalibrate)){
                 audio.play()
                 setTestCalibrate(dataStream?.rgb?.calibrateTest || [])
             }
         }
-    },[dataStream?.rgb,audio,testCalibrate])
+    },[dataStream?.rgb?.calibrateTest,audio,testCalibrate])
     return <div>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>

@@ -1,7 +1,7 @@
 import styles from '../../styles/scanDevice.module.css';
 import {LabHubSticker,BluetoothIcon,BlackBluetoothIcon} from "../../images/index";
 import { useDeviceConnected,useDeviceStatus} from '../../labhub/status';
-import {initSetup,uninitSetup} from "../../labhub/setup";
+import {initSetup,uninitSetup} from "../../labhub/init-setup";
 import RightArrow from '../../components/RightArrow';
 import { useNavigate } from 'react-router-dom';
 import MemberDisconnect from '../../components/Modal/MemberDisconnectModal';

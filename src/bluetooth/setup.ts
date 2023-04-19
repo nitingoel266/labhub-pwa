@@ -230,7 +230,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
     const pr1 = handleDeviceInfoService(server, DEVICE_INFO_SERVICE);
     await timeoutPromise(pr1, 8000);
 
-    const connectionReuse = !!server && !!serverPrev && serverPrev.device.id === server.device.id;
+    const connectionReuse = !!server && !!serverPrev && serverPrev.device.id === server.device.id && server.connected;
     const clientId = await requestClientId(server, connectionReuse);
     if (!clientId) throw new Error('Unable to request client Id');
 
@@ -244,6 +244,8 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
     // ------------------------
 
     Log.debug('initSetup() complete!');
+    Log.debug('[NODE_ENV]:', process.env.NODE_ENV);
+    Log.debug('[REACT_APP_ENV]:', process.env.REACT_APP_ENV);
 
     if (deviceConnected.value !== server.connected) {
       deviceConnected.next(server.connected);

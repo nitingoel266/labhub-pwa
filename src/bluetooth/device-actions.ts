@@ -54,6 +54,8 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
       Log.warn('Unexpected! clientId should already exist in case of connection reuse.');
     }
 
+    // TODO: readCharacteristicValue first to see that clientId is 0??
+    // TODO: what happens when 0 clientId is written to existing acive connection??
     const ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 0, 2);
     if (ret1) {
       const clientIdn = await readCharacteristicValue<number>(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 'int16');
@@ -67,13 +69,6 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
       Log.error('[ERROR:requestClientId] Unable to get new Student ID from LabHub device [1]');
     }
   } else {
-    // TODO: Now, view from connectionReuse lens
-    // TODO: [DONE] never reuse previous clientId for auto/manual disconnect
-    // TODO: [1] Try using previous clientId for 'Scan Devices' `while` the previous connection is active
-    // TODO: [2] Is onDisconnected called automatically in the above case?
-    // TODO: [3] what happens when 0 clientId is written to existing acive connection
-    // TODO: [4] device.id match does NOT mean same bluetooth connection!?
-    // TODO: [5] what if client_id if left in localStorage by mistake, e.g. crash. Force recreate during init?
     Log.log('Reusing existing/stored clientId!');
   }
 
@@ -88,6 +83,8 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
     addMember(deviceStatusValue.membersJoined, clientId);
 
     topicDeviceStatus.next(deviceStatusValue);
+  } else {
+    clearClientId();
   }
 
   return clientId;

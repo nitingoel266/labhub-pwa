@@ -47,9 +47,13 @@ function addMember(membersList: string[], clientId: string) {
   }
 }
   
-export const requestClientId = async (server: BluetoothRemoteGATTServer) => {
-  let clientId = getClientId();
+export const requestClientId = async (server: BluetoothRemoteGATTServer, connectionReuse = false) => {
+  let clientId = connectionReuse ? getClientId() : null;
   if (!clientId) {
+    if (connectionReuse) {
+      Log.warn('Unexpected! clientId should already exist in case of connection reuse.');
+    }
+
     const ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 0, 2);
     if (ret1) {
       const clientIdn = await readCharacteristicValue<number>(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 'int16');
@@ -63,6 +67,7 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer) => {
       Log.error('[ERROR:requestClientId] Unable to get new Student ID from LabHub device [1]');
     }
   } else {
+    // TODO: Now, view from connectionReuse lens
     // TODO: [DONE] never reuse previous clientId for auto/manual disconnect
     // TODO: [1] Try using previous clientId for 'Scan Devices' `while` the previous connection is active
     // TODO: [2] Is onDisconnected called automatically in the above case?
@@ -103,13 +108,16 @@ export const disconnectClient = async (server: BluetoothRemoteGATTServer) => {
   }
 };
 
-export const resetClient = () => {
+export const resetClient = (softReset = false) => {
   resetTopics();
   resetStatus();
 
-  clearClientId();
-
-  Log.debug('Client reset complete!');
+  if (softReset) {
+    Log.debug('Client (soft) reset complete!');
+  } else {
+    clearClientId();
+    Log.debug('Client reset complete!');
+  }
 };
 
 export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer | null, updValue: DeviceStatusUpdate | null) => {

@@ -5,7 +5,7 @@ import { topicDeviceDataFeed, topicDeviceStatus } from "./topics";
 import { requestClientId, disconnectClient, handleDeviceStatusUpdate, handleDeviceDataFeedUpdate, handleClientChannelRequest, resetClient } from "./device-actions";
 import { setupLeaderIdNotify, cleanupLeaderIdNotify, setupExperimentStatusNotify, cleanupExperimentStatusNotify, requestLeaderId } from "./device-notify";
 import { DEVICE_INFO_SERVICE, LABHUB_SERVICE } from "./const";
-import { Log } from "../utils/utils";
+import { Log, timeoutPromise } from "../utils/utils";
 import {
   deviceConnected,
   deviceStatus,
@@ -15,15 +15,15 @@ import {
   clientChannelRequest,
 } from "../labhub/status";
 
-let server: BluetoothRemoteGATTServer | null;
-let gattserverdisconnectedCallback: any;
-let connectionAttemptOngoing: boolean;
-let gattserverdisconnectedCallbackOld: any;
+let connectionAttemptOngoing = false;
+let statusPrev = false;
 
-let leaderIdCharacteristic: BluetoothRemoteGATTCharacteristic | null;
-let leaderIdCharacteristicOld: BluetoothRemoteGATTCharacteristic | null;
-let experimentStatusCharacteristic: BluetoothRemoteGATTCharacteristic | null;
-let experimentStatusCharacteristicOld: BluetoothRemoteGATTCharacteristic | null;
+let server: BluetoothRemoteGATTServer | null = null;
+let serverPrev: BluetoothRemoteGATTServer | null = null;
+let leaderIdCharacteristic: BluetoothRemoteGATTCharacteristic | null = null;
+let leaderIdCharacteristicPrev: BluetoothRemoteGATTCharacteristic | null = null;
+let experimentStatusCharacteristic: BluetoothRemoteGATTCharacteristic | null = null;
+let experimentStatusCharacteristicPrev: BluetoothRemoteGATTCharacteristic | null = null;
 
 let topic1: Subscription;
 let topic2: Subscription;
@@ -35,21 +35,45 @@ let subs3: Subscription;
 // let clientSubs1: Subscription;
 
 initGattMap();
-resetValues();
 
 function resetValues() {
   server = null;
-  gattserverdisconnectedCallback = () => {};
-  connectionAttemptOngoing = false;
-  gattserverdisconnectedCallbackOld = () => {};
-  
   leaderIdCharacteristic = null;
-  leaderIdCharacteristicOld = null;
   experimentStatusCharacteristic = null;
-  experimentStatusCharacteristicOld = null;  
 }
 
-export const initSetup = async (): Promise<boolean> => {
+export const initSetup = async () => {
+  serverPrev = server;
+  leaderIdCharacteristicPrev = leaderIdCharacteristic;
+  experimentStatusCharacteristicPrev = experimentStatusCharacteristic;
+
+  resetValues();
+
+  if (serverPrev) {
+    Log.debug("Cleaning up previous bluetooth connection..");
+    await onDisconnected();
+  }
+
+  let status = await initSetupBase();
+
+  if (status && serverPrev) {
+    if (server && serverPrev.device.id === server.device.id) {
+      Log.debug("Reusing the previous bluetooth connection!");
+    } else {
+      Log.debug("Disconnecting previous bluetooth connection..");
+      serverPrev.disconnect();  
+    }
+  } else if (!status && serverPrev) {
+    status = await initSetupBase(serverPrev.device);
+    if (!status) {
+      location.reload(); // eslint-disable-line
+    }
+  }
+
+  return status;
+};
+
+async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean> {
   if (connectionAttemptOngoing) {
     Log.error("[ERROR:initSetup] Another connection attempt ongoing! Please wait..");
     return false;
@@ -65,20 +89,30 @@ export const initSetup = async (): Promise<boolean> => {
       );
     }
 
-    const status = await new Promise((resolve, reject) => {
+    let isTimedOut = false;
+    let status = await new Promise<boolean>((resolve, reject) => {
       const timeout = setTimeout(() => {
-        reject('bluetooth.getAvailability() timeout!');
+        isTimedOut = true;
+        Log.error('[ERROR:initSetup] bluetooth.getAvailability() timeout!');
+        resolve(false);
       }, 1000);
       navigator.bluetooth.getAvailability().then(status => {
         clearTimeout(timeout);
         resolve(status);
       }).catch(e => {
         clearTimeout(timeout);
-        reject(e);
+        Log.error('[ERROR:initSetup]', e);
+        resolve(false);
       });
     });
     if (!status) {
-      throw new Error("This device does not have a Bluetooth adapter!");
+      if (isTimedOut) {
+        status = statusPrev;
+      } else {
+        throw new Error("Bluetooth turned off or No Bluetooth adapter!");
+      }
+    } else {
+      statusPrev = status;
     }
 
     const serviceId = DEVICE_INFO_SERVICE;
@@ -87,24 +121,29 @@ export const initSetup = async (): Promise<boolean> => {
     // const serviceId = 'device_information';  // name
     // const serviceId = 'battery_service';  // name
 
-    const devicePr = navigator.bluetooth.requestDevice({
-      // acceptAllDevices: true,
-      filters: [
-        {
-          // namePrefix: "MacBook",
-          manufacturerData: [
-            {
-              companyIdentifier: 0x004c, // Apple
-              // companyIdentifier: 0x0059,  // Nordic Semiconductor ASA
-              // dataPrefix: new Uint8Array([0x01, 0x02])
-            },
-          ],
-          // services: ['0000180a-0000-1000-8000-00805f9b34fb'],
-        },
-      ],
-      optionalServices: [serviceId, serviceId2],
-    });
-    const device = await devicePr;
+    let device: BluetoothDevice;
+    if (bluetoothDevice) {
+      device = bluetoothDevice;
+    } else {
+      const devicePr = navigator.bluetooth.requestDevice({
+        // acceptAllDevices: true,
+        filters: [
+          {
+            // namePrefix: "MacBook",
+            manufacturerData: [
+              {
+                companyIdentifier: 0x004c, // Apple
+                // companyIdentifier: 0x0059,  // Nordic Semiconductor ASA
+                // dataPrefix: new Uint8Array([0x01, 0x02])
+              },
+            ],
+            // services: ['0000180a-0000-1000-8000-00805f9b34fb'],
+          },
+        ],
+        optionalServices: [serviceId, serviceId2],
+      });
+      device = await devicePr;
+    }
 
     Log.debug("device", device);
 
@@ -112,13 +151,6 @@ export const initSetup = async (): Promise<boolean> => {
       throw new Error("Bluetooth GATT Server not found! [1]");
     }
     Log.debug("device.connected[1]", device.gatt.connected);
-
-    const serverOld: BluetoothRemoteGATTServer | null = server;
-    const serverOldValid = !!serverOld;
-    gattserverdisconnectedCallbackOld = gattserverdisconnectedCallback;
-
-    leaderIdCharacteristicOld = leaderIdCharacteristic;
-    experimentStatusCharacteristicOld = experimentStatusCharacteristic;
 
     if (!device.gatt.connected) {
       server = await new Promise((resolve, reject) => {
@@ -141,27 +173,19 @@ export const initSetup = async (): Promise<boolean> => {
             reject(e);
           });
       });
-
-      if (!server) {
-        throw new Error("Bluetooth GATT Server not found! [3]");
-      }
-      gattserverdisconnectedCallback = onDisconnected.bind(null);
-      device.addEventListener(
-        "gattserverdisconnected",
-        gattserverdisconnectedCallback
-      );
-
-      Log.debug("device.connected[2]", server.connected);
     } else {
-      server = device.gatt;
+      server = device.gatt;  
     }
 
-    if (serverOldValid && serverOld) {
-      if ((serverOld as BluetoothRemoteGATTServer).device.id !== device.id) {
-        Log.log("Cleaning up previous bluetooth connection..");
-        await onDisconnected(null, serverOld);
-      }
+    if (!server) {
+      throw new Error("Bluetooth GATT Server not found! [3]");
     }
+    device.addEventListener(
+      "gattserverdisconnected",
+      onDisconnected
+    );
+
+    Log.debug("device.connected[2]", server.connected);
 
     if (!server.connected) {
       throw new Error("Unable to connect to Bluetooth GATT Server!");
@@ -203,9 +227,11 @@ export const initSetup = async (): Promise<boolean> => {
     // ------------------------
 
     // Read device info
-    await handleDeviceInfoService(server, DEVICE_INFO_SERVICE);
+    const pr1 = handleDeviceInfoService(server, DEVICE_INFO_SERVICE);
+    await timeoutPromise(pr1, 8000);
 
-    const clientId = await requestClientId(server);
+    const connectionReuse = !!server && !!serverPrev && serverPrev.device.id === server.device.id;
+    const clientId = await requestClientId(server, connectionReuse);
     if (!clientId) throw new Error('Unable to request client Id');
 
     // Setup for leader_notify and experiment_status_notify events
@@ -239,30 +265,30 @@ export const initSetup = async (): Promise<boolean> => {
   return retValue;
 };
 
-async function onDisconnected(
-  event?: any,
-  serverOther?: BluetoothRemoteGATTServer
-) {
-  const serverPassed = !!serverOther;
-
-  if (!serverPassed && deviceConnected.value !== server?.connected) {
-    deviceConnected.next(server?.connected || false);
+async function onDisconnected(event?: any) {
+  let server: BluetoothRemoteGATTServer | null = null;
+  if (event?.target) {
+    server = event.target.gatt;
   }
 
-  if (serverPassed) {
-    if (leaderIdCharacteristicOld) await cleanupLeaderIdNotify(leaderIdCharacteristicOld);
-    if (experimentStatusCharacteristicOld) await cleanupExperimentStatusNotify(experimentStatusCharacteristicOld);
+  // NOTE: for previous server, resetClient(true) resets deviceConnected value to false
+  if (server && deviceConnected.value !== server.connected) {
+    deviceConnected.next(server.connected);
+  }
 
-    serverOther.device.removeEventListener(
+  if (!event && serverPrev) {
+    resetClient(/*softReset=*/true);
+
+    if (leaderIdCharacteristicPrev) await cleanupLeaderIdNotify(leaderIdCharacteristicPrev);
+    if (experimentStatusCharacteristicPrev) await cleanupExperimentStatusNotify(experimentStatusCharacteristicPrev);
+
+    serverPrev.device.removeEventListener(
       "gattserverdisconnected",
-      gattserverdisconnectedCallbackOld
+      onDisconnected
     );
 
-    Log.debug('onDisconnected: serverOther (old server)');
+    Log.debug('onDisconnected(): serverPrev (previous server)');
   } else if (server) {
-    // const device = event?.target;  // NOTE: event might be `null` when onDisconnected is called explicitly
-    // console.log('device:', device);
-
     resetClient();
 
     if (leaderIdCharacteristic) await cleanupLeaderIdNotify(leaderIdCharacteristic);
@@ -270,12 +296,14 @@ async function onDisconnected(
 
     server.device.removeEventListener(
       "gattserverdisconnected",
-      gattserverdisconnectedCallback
+      onDisconnected
     );
 
     resetValues();
 
-    Log.debug('onDisconnected: auto or manual disconnect');
+    Log.debug('onDisconnected(): auto or manual disconnect');
+  } else {
+    Log.warn('onDisconnected() No server found!');
   }
 
   if (topic1) topic1.unsubscribe();
@@ -298,6 +326,7 @@ export const uninitSetup = async () => {
   if (server?.connected) {
     // TODO: what is the point of disconnecting from labhub device!
     // TODO(2): Is terminating bluetooth connection not enough?
+    // TODO(3): Anyways, this is not called when disconnecting during trying second connection on-the-fly!
     await disconnectClient(server);
 
     server.disconnect();

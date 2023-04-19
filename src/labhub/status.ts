@@ -21,7 +21,7 @@ export const deviceDataFeed = new BehaviorSubject<DeviceDataFeed>({
 });
 
 export const resetStatus = () => {
-  // Already reset in onDisconnected(), still repeating..
+  // Already reset in onDisconnected(), still repeating in case onDisconnected() was called for previous server
   deviceConnected.next(false);
 
   // [Kind of Necessary] Also reset by resetTopics(), but still do it to avoid race with topicX.unsubscribe()

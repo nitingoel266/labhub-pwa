@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DeviceStatus, DeviceStatusUpdate, DeviceDataFeed, DeviceDataFeedUpdate, ClientChannelRequest, ClientChannelResponse } from '../types/common';
 
 export const connectionAttemptOngoing = new BehaviorSubject<boolean>(false);
+export const applicationErrorMessage = new BehaviorSubject<string | null>(null);
 export const deviceConnected = new BehaviorSubject<boolean>(false);
 export const deviceStatus = new BehaviorSubject<DeviceStatus | null>(null);
 export const deviceStatusUpdate = new BehaviorSubject<DeviceStatusUpdate | null>(null);

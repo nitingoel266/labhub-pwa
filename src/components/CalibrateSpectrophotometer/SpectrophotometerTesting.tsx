@@ -31,7 +31,6 @@ const SpectrophotometerTesting = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
-            // navigate("/spectrophotometer-testing")
             setSelectedItem("")
             if(clientId === status?.leaderSelected){
                 startRgbExperiment()
@@ -52,10 +51,6 @@ const SpectrophotometerTesting = () => {
 
         navigate("/cuvette-insertion")
     }
-    // useEffect(() => {
-    //     if(clientId === status?.leaderSelected)
-    //     startRgbExperiment()
-    // },[clientId,status?.leaderSelected])
 
     useEffect(() => {
         if(dataStream?.rgb?.calibrateTest){

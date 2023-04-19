@@ -28,7 +28,6 @@ const SpectrophotometerCalibration = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
-            // navigate("/spectrophotometer-calibration")
             setSelectedItem("")
             if(clientId === status?.leaderSelected)
             calibrateRgb()

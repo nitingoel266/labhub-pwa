@@ -1,3 +1,5 @@
+export const DEBUG_MODE = false;
+
 export const LABHUB_CLIENT_ID = 'labhub_client_id';
 
 export const TOPIC_DEVICE_STATUS = 'topic_device_status';

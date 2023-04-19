@@ -48,7 +48,7 @@ export interface DeviceStatusUpdate {
   setpointTemp?: number;
   heaterConnected?: HeaterSelect;
   rgbCalibrated?: boolean;
-  rgbCalibratedAndTested?: boolean;
+  // rgbCalibratedAndTested?: boolean;
   rgbConnected?: RgbFuncSelect;
   screenNumber?: number;
 }

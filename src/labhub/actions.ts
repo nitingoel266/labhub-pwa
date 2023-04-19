@@ -1,12 +1,13 @@
 import { deviceStatus, deviceStatusUpdate, deviceDataFeedUpdate } from './status';
 import { getClientId, getClientType } from './utils';
 import { SensorSelect, SetupData, HeaterSelect, RgbFuncSelect } from '../types/common';
+import { Log } from '../utils/utils';
 
 export const joinAsLeader = () => {
   const clientId = getClientId();
   const leaderSelected = deviceStatus.value?.leaderSelected;
   if (!clientId || leaderSelected || getClientType() !== 'member') {
-    console.warn("Can't join as leader. clientType:", getClientType());
+    Log.warn("Can't join as leader. clientType:", getClientType());
   } else {
     deviceStatusUpdate.next({ leaderSelected: clientId });
   }

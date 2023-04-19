@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { deviceConnected, deviceStatus, deviceStatusUpdate, deviceDataFeed, deviceDataFeedUpdate, clientChannelRequest, clientChannelResponse } from './status';
+import { deviceConnected, deviceStatus, deviceStatusUpdate, deviceDataFeed, deviceDataFeedUpdate, clientChannelRequest, clientChannelResponse, connectionAttemptOngoing } from './status';
 import { DeviceStatus, DeviceDataFeed, ClientChannelResponse } from '../types/common';
 import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED, TOPIC_DEVICE_DATA_FEED_UPDATE, TOPIC_CLIENT_CHANNEL } from '../utils/const';
 import { assertClientId, clearClientId } from './utils';
@@ -17,6 +17,8 @@ let clientSubs1: Subscription;
 export const initSetup = async (): Promise<boolean> => {
   const clientId = assertClientId();
   if (!clientId) return false;
+
+  connectionAttemptOngoing.next(true);
 
   // simulate delay
   await delay(500);
@@ -67,6 +69,7 @@ export const initSetup = async (): Promise<boolean> => {
     }
   });
 
+  connectionAttemptOngoing.next(false);
   return true;
 };
 

@@ -17,6 +17,7 @@ import {
 
 let connectionAttemptOngoing = false;
 let statusPrev = false;
+let manualDisconnect = false;
 
 let server: BluetoothRemoteGATTServer | null = null;
 let serverPrev: BluetoothRemoteGATTServer | null = null;
@@ -49,7 +50,7 @@ export const initSetup = async () => {
 
   if (serverPrev) {
     Log.debug("Cleaning up previous bluetooth connection..");
-    await onDisconnected();
+    await onDisconnected(); // softReset (cleanup withot disconnect)
   }
 
   let status = await initSetupBase();
@@ -59,7 +60,7 @@ export const initSetup = async () => {
       Log.debug("Reusing the previous bluetooth connection!");
     } else {
       Log.debug("Disconnecting previous bluetooth connection..");
-      serverPrev.disconnect();  
+      serverPrev.disconnect(); // noCleanup (just disconnect, cleanup aleady done)
     }
   } else if (!status && serverPrev) {
     status = await initSetupBase(serverPrev.device);
@@ -77,6 +78,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
     return false;
   }
 
+  manualDisconnect = false;
   connectionAttemptOngoing = true;
   let retValue = true;
 
@@ -260,17 +262,15 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
 };
 
 async function onDisconnected(event?: any) {
-  let server: BluetoothRemoteGATTServer | null = null;
+  let reconnectServer: BluetoothRemoteGATTServer | null = null;
+  let gattServer: BluetoothRemoteGATTServer | null = null;
   if (event?.target) {
-    server = event.target.gatt;
-  }
-
-  // NOTE: for previous server, resetClient(true) resets deviceConnected value to false
-  if (server && deviceConnected.value !== server.connected) {
-    deviceConnected.next(server.connected);
+    gattServer = event.target.gatt;
   }
 
   if (!event && serverPrev) {
+    // softReset: Cleanup withot disconnect
+
     resetClient(/*softReset=*/true);
 
     if (leaderIdCharacteristicPrev) await cleanupLeaderIdNotify(leaderIdCharacteristicPrev);
@@ -282,22 +282,36 @@ async function onDisconnected(event?: any) {
     );
 
     Log.debug('onDisconnected(): serverPrev (previous server)');
-  } else if (server) {
-    resetClient();
+  } else if (gattServer && server) {
+    if (gattServer.device.id !== server.device.id) {
+      // noCleanup: Just disconnect, cleanup aleady done
+      return;
+    } else {
+      // server cleanup (auto or manual disconnect)
 
-    if (leaderIdCharacteristic) await cleanupLeaderIdNotify(leaderIdCharacteristic);
-    if (experimentStatusCharacteristic) await cleanupExperimentStatusNotify(experimentStatusCharacteristic);
+      if (manualDisconnect) {
+        manualDisconnect = false;
+        Log.debug('onDisconnected(): manual disconnect');
+      } else {
+        reconnectServer = server;
+        Log.debug('onDisconnected(): auto disconnect');
+      }
 
-    server.device.removeEventListener(
-      "gattserverdisconnected",
-      onDisconnected
-    );
+      resetClient();
 
-    resetValues();
-
-    Log.debug('onDisconnected(): auto or manual disconnect');
+      if (leaderIdCharacteristic) await cleanupLeaderIdNotify(leaderIdCharacteristic);
+      if (experimentStatusCharacteristic) await cleanupExperimentStatusNotify(experimentStatusCharacteristic);
+  
+      server.device.removeEventListener(
+        "gattserverdisconnected",
+        onDisconnected
+      );
+  
+      resetValues();
+    }
   } else {
-    Log.warn('onDisconnected() No server found!');
+    Log.warn('onDisconnected() No server found!', !!serverPrev, !!gattServer, !!server);
+    return;
   }
 
   if (topic1) topic1.unsubscribe();
@@ -307,11 +321,24 @@ async function onDisconnected(event?: any) {
   if (subs2) subs2.unsubscribe();
   if (subs3) subs3.unsubscribe();
 
-  // TODO?
-  // Auto-reconnect if not explicitly disconnected?
-  // Ref: https://googlechrome.github.io/samples/web-bluetooth/automatic-reconnect.html
-
+  // NOTE: for previous server, resetClient(true) resets deviceConnected value to false
+  if (server && deviceConnected.value !== server.connected) {
+    deviceConnected.next(server.connected);
+  }
+  
   Log.debug('onDisconnected() complete!');
+
+  // Ref: https://googlechrome.github.io/samples/web-bluetooth/automatic-reconnect.html
+  if (reconnectServer) {
+    Log.log('Attempting re-connect..');
+    const status = await initSetupBase(reconnectServer.device);    
+    if (!status) {
+      Log.error('Unable to reconnect using (disconnected) gatt server!');
+      // location.reload(); // eslint-disable-line
+    } else {
+      Log.log('Auto-reconnect successful!');
+    }
+  }
 }
 
 export const uninitSetup = async () => {
@@ -321,8 +348,8 @@ export const uninitSetup = async () => {
     // TODO(3): Anyways, this is not called when disconnecting during trying second connection on-the-fly!
     await disconnectClient(server);
 
-    server.disconnect();
-    // NOTE: onDisconnected() called automatically
+    manualDisconnect = true;
+    server.disconnect(); // NOTE: onDisconnected() called automatically
   } else {
     Log.warn("Bluetooth device is already disconnected!");
   }

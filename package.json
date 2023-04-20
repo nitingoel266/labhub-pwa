@@ -3,9 +3,9 @@
   "version": "0.1.17",
   "private": true,
   "scripts": {
-    "dev": "BROWSER=none react-scripts start",
+    "dev": "BROWSER=none REACT_APP_ENV=dev react-scripts start",
     "start": "node server.js",
-    "build": "react-scripts build",
+    "build": "REACT_APP_ENV=prod react-scripts build",
     "prod": "npm run clean && npm run build && npm run pm2:start",
     "pm2:start": "pm2 start server.js --name labhub-pwa --time",
     "pm2:stop": "pm2 delete labhub-pwa",

@@ -32,8 +32,6 @@ let subs1: Subscription;
 let subs2: Subscription;
 let subs3: Subscription;
 
-// let clientSubs1: Subscription;
-
 initGattMap();
 
 function resetValues() {
@@ -218,12 +216,6 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
       await handleClientChannelRequest(server, value);
     });
 
-    // clientSubs1 = navStatusUpdate.subscribe((value) => {
-    //   if (value) {
-    //     navStatus.next({ ...navStatus.value, ...value });
-    //   }
-    // });
-
     // ------------------------
 
     // Read device info
@@ -314,8 +306,6 @@ async function onDisconnected(event?: any) {
   if (subs1) subs1.unsubscribe();
   if (subs2) subs2.unsubscribe();
   if (subs3) subs3.unsubscribe();
-
-  // if (clientSubs1) clientSubs1.unsubscribe();
 
   // TODO?
   // Auto-reconnect if not explicitly disconnected?

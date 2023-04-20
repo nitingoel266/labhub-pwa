@@ -17,4 +17,4 @@ root.render(
 );
 
 // Ref: https://cra.link/PWA
-serviceWorkerRegistration.unregister();
+serviceWorkerRegistration.register();  // register() <--> unregister()

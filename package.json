@@ -3,8 +3,8 @@
   "version": "0.1.17",
   "private": true,
   "scripts": {
-    "dev": "BROWSER=none npm run start",
-    "start": "react-scripts start",
+    "dev": "BROWSER=none react-scripts start",
+    "start": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -12,6 +12,7 @@
   "dependencies": {
     "chart.js": "^4.2.1",
     "chartjs-plugin-zoom": "^2.0.0",
+    "express": "^4.18.2",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",

@@ -1,16 +1,16 @@
 import short from 'short-uuid';
 import { clientChannelRequest, clientChannelResponse } from './status';
-import { navStatusUpdate } from './status-client';
+// import { navStatusUpdate } from './status-client';
 import { ClientChannelRequest, ClientChannelResponse } from '../types/common';
 import { Log } from '../utils/utils';
 
-export const setSelectedMode = (mode: 'manual' | 'project' | null) => {
-  navStatusUpdate.next({ modeSelected: mode });
-};
+// export const setSelectedMode = (mode: 'manual' | 'project' | null) => {
+//   navStatusUpdate.next({ modeSelected: mode });
+// };
 
-export const setSelectedFunction = (func: 'data_setup' | 'sensor' | 'heater' | 'rgb_spect' | null) => {
-  navStatusUpdate.next({ funcSelected: func });
-};
+// export const setSelectedFunction = (func: 'data_setup' | 'sensor' | 'heater' | 'rgb_spect' | null) => {
+//   navStatusUpdate.next({ funcSelected: func });
+// };
 
 const doClientAction = async (reqValue: ClientChannelRequest) => {
   let channelResp: ClientChannelResponse | null = null;

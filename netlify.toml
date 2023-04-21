@@ -3,8 +3,13 @@
   publish = "build/"
   command = "npm run build"
 
-# The following redirect is intended for use with most SPAs
-# that handle routing internally.
+# Do not rewrite /static/* paths
+[[redirects]]
+  from = "/static/*"
+  to = "/static/:splat"
+  status = 200
+
+# Handle internal routing for SPAs
 [[redirects]]
   from = "/*"
   to = "/index.html"

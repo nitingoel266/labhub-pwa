@@ -21,16 +21,16 @@ const ShowErrorModal = () => {
     className={styles.SecondWrapper}
     >
         <div className={styles.TextContainer}>
-                <div className={styles.Headertext}>
+                <div className={styles.ErrorHeadertext}>
                     <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
-                    <div>Warning</div>
+                    <div>Error Message</div>
                 </div>
                 <div className={styles.BodyWrapper}>
                     <div className={styles.Bodytext}>
                         <div>{errorMessage}</div>
                     </div>
                     <div className={styles.ButtonWrapper}>
-                        <div onClick={() => setErrorMessage(null)} className={styles.CancelButton}>No</div>
+                        {/* <div onClick={() => setErrorMessage(null)} className={styles.CancelButton}>No</div> */}
                         <div onClick={handleResetConnection} className={styles.YesButton}>Ok</div>
                     </div>
                 </div>

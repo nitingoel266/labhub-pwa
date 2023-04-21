@@ -11,6 +11,7 @@ import {
   setScreenNumber,
   simulateRgb
 } from "../labhub/actions";
+import {getClientId} from "../labhub/utils";
 import {getScreenNumber} from "../labhub/actions-client";
 import styles from "../styles/header.module.css";
 import {
@@ -28,13 +29,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
-import { LABHUB_CLIENT_ID ,GetScreenName} from "../utils/const";
+import { GetScreenName} from "../utils/const";
 
 function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
   const [status] = useDeviceStatus();
   const [dataFeed] = useDeviceDataFeed();
   const [connected] = useDeviceConnected();
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientId = getClientId()
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setModal] = useState("");

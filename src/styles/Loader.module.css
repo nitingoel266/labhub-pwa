@@ -8,8 +8,8 @@
     opacity: 0.5;
 }
 .SecondWrapper {
-    top: 40%;
-    left: 5%;
+    top: 180px;
+    /* left: 5%; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -20,7 +20,7 @@
 }
 
 .TextContainer {
-    width: 250px;
+    width: 300px;
     background-color: #EFEFEF;
     border-radius: 8px;
     display: flex;
@@ -29,6 +29,17 @@
 }
 .Headertext {
     background-color: #424C58;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 15px;
+    color: #FFFFFF;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+.ErrorHeadertext {
+    background-color: #CC0000;
     height: 30px;
     display: flex;
     flex-direction: row;
@@ -53,7 +64,6 @@
     min-height: 50px;
     flex-direction: column;
     justify-content: center;
-    color: red;
 }
 .ButtonWrapper {
     display: flex;
@@ -73,7 +83,7 @@
     cursor: pointer;
 }
 .YesButton {
-    background-color: #9CD5CD;
+    background-color: #C0C0C0;
     padding: 7px;
     border-radius: 5px;
     margin-right: 10px;

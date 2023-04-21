@@ -9,7 +9,7 @@ import {
 import styles from "../../styles/functionSelection.module.css";
 import RightArrow from "../../components/RightArrow";
 import IButtonModal from "../../components/Modal/IButtonModal";
-import { setSelectedFunction } from "../../labhub/actions-client";
+// import { setSelectedFunction } from "../../labhub/actions-client";
 import { useNavigate } from "react-router-dom";
 import IButtonComponent from "../../components/IButtonComponent";
 import {
@@ -37,7 +37,7 @@ const FunctionSelection = () => {
   };
   const handleSubmit = () => {
     if (selectedItem) {
-      setSelectedFunction(selectedItem.replace(" ", "_").toLowerCase());
+      // setSelectedFunction(selectedItem.replace(" ", "_").toLowerCase());
       navigate(`/${selectedItem.replace(" ", "-").toLowerCase()}`);
     }
   };

@@ -7,7 +7,6 @@ import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
 import { useDeviceStatus,useDeviceConnected} from './labhub/status';
 import styles from './styles/App.module.css';
-import { GrTest } from '@react-icons/all-files/gr/GrTest';
 import FunctionSelection from './pages/functionProcedure/FunctionSelection';
 import ModeSelection from './pages/modeProcedure/ModeSelection';
 import ProjectMode from './components/projectMode';
@@ -33,6 +32,7 @@ import SpectrophotometerTesting from './components/CalibrateSpectrophotometer/Sp
 import AbsorbanceMeasuring from './components/MeasureAbsorbance/AbsorbanceMeasuring';
 import Loader from './components/Modal/Loader';
 import ShowErrorModal from './components/Modal/ShowErrorModal';
+import pkg from '../package.json';
 
 function App() {
   const [status] = useDeviceStatus();
@@ -75,10 +75,17 @@ function App() {
           <Route path='*' element={<NotFound />} />
         </Routes>
       </main>
-      <div className={styles.testIcon}>
-        <Link to='/test'><GrTest /></Link>
+      <div className={styles.version}>
+        {connected ? (
+          <span>Firmware version: {status?.deviceVersion || "NA"} ({process.env.REACT_APP_ENV === 'prod' ? (
+            <span>{pkg.version}</span>
+          ) : (
+            <Link to='/test'>{pkg.version}</Link>
+          )})</span>
+        ) : (
+          <span>App version: {pkg.version}</span>
+        )}
       </div>
-      <div className={styles.version}>Firmware version: {connected ? status?.deviceVersion : ""}</div>
       <LeaderDisconnect />
       <Loader />
       <ShowErrorModal />

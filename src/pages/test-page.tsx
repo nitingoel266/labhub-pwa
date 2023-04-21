@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDeviceConnected, useDeviceStatus, useDeviceDataFeed } from '../labhub/status';
 import { joinAsLeader, resetLeader, resetAll, setupData, simulateSensor, startSensorExperiment, stopSensorExperiment, changeSetpointTemp, simulateHeater, startHeaterExperiment, stopHeaterExperiment, calibrateRgb, simulateRgb, startRgbExperiment } from '../labhub/actions';
 // import { setSelectedMode, setSelectedFunction } from '../labhub/actions-client';
-import { initSetup, uninitSetup } from '../labhub/setup';
+import { initSetup, uninitSetup } from '../labhub/init-setup';
 import { getClientType } from '../labhub/utils';
 import { getTemperatureLog, getVoltageLog, getScreenNumber } from '../labhub/actions-client';
 

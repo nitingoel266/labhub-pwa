@@ -10,7 +10,6 @@ export const deviceStatusUpdate = new BehaviorSubject<DeviceStatusUpdate | null>
 export const deviceDataFeedUpdate = new BehaviorSubject<DeviceDataFeedUpdate | null>(null);
 export const clientChannelResponse = new BehaviorSubject<ClientChannelResponse | null>(null);
 export const clientChannelRequest = new BehaviorSubject<ClientChannelRequest | null>(null);
-
 export const deviceDataFeed = new BehaviorSubject<DeviceDataFeed>({
   sensor: null,
   heater: null,

@@ -19,11 +19,12 @@ import {
 import IButtonComponent from "../IButtonComponent";
 import { startRgbExperiment, simulateRgb } from "../../labhub/actions";
 import { useDeviceDataFeed, useDeviceStatus } from "../../labhub/status";
-import { LABHUB_CLIENT_ID, RGB_DATA } from "../../utils/const";
+import {getClientId} from "../../labhub/utils";
+import { RGB_DATA } from "../../utils/const";
 
 const AbsorbanceMeasuring = () => {
   const navigate = useNavigate();
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientId = getClientId()
   const [audio] = useState(new Audio(sound));
   const [status] = useDeviceStatus();
   const [dataStream] = useDeviceDataFeed();

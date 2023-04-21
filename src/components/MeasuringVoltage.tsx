@@ -3,6 +3,7 @@ import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed } from "../labhub/status";
 import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
+import {getClientId} from "../labhub/utils";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
 import {getVoltageLog} from "../labhub/actions-client";
@@ -14,12 +15,12 @@ import {
   getStorageKeys,
   mobileWidth,
 } from "./Constants";
-import { LABHUB_CLIENT_ID, VOLTAGE_DATA } from "../utils/const";
+import { VOLTAGE_DATA } from "../utils/const";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
 
 const MeasuringVoltage = () => {
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientId = getClientId()
   const [status] = useDeviceStatus();
   const navigate = useNavigate();
   const [dataStream] = useDeviceDataFeed();

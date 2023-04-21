@@ -3,6 +3,7 @@ import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed } from "../labhub/status";
 import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
+import {getClientId} from "../labhub/utils";
 import {getTemperatureLog} from "../labhub/actions-client";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
@@ -14,12 +15,12 @@ import {
   getStorageKeys,
   mobileWidth,
 } from "./Constants";
-import { LABHUB_CLIENT_ID, TEMPERATURE_DATA } from "../utils/const";
+import { TEMPERATURE_DATA } from "../utils/const";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
 
 const MeasuringTemprature = () => {
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientId = getClientId()
   const [status] = useDeviceStatus();
   const navigate = useNavigate();
   const [dataStream] = useDeviceDataFeed();

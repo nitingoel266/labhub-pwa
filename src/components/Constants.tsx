@@ -1,7 +1,7 @@
 import IButtonContent from "./IButtonContent";
 
 const mobileWidth = 414;
-const LEADER_SELECTIONMODAL_INITIATE = 5000;
+const LEADER_SELECTIONMODAL_INITIATE = process.env.APP_ENV === 'prod' ? 15000 : 5000;
 const MANUAL_MODE = "Manual Mode";
 const PRESET_MODE = "Preset Mode";
 const DATA_SETUP = "Data Setup";

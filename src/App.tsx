@@ -31,6 +31,8 @@ import CalibrationTesting from './components/CalibrateSpectrophotometer/Calibrat
 import SpectrophotometerCalibration from './components/CalibrateSpectrophotometer/SpectrophotometerCalibration';
 import SpectrophotometerTesting from './components/CalibrateSpectrophotometer/SpectrophotometerTesting';
 import AbsorbanceMeasuring from './components/MeasureAbsorbance/AbsorbanceMeasuring';
+import Loader from './components/Modal/Loader';
+import ShowErrorModal from './components/Modal/ShowErrorModal';
 
 function App() {
   const [status] = useDeviceStatus();
@@ -78,6 +80,8 @@ function App() {
       </div>
       <div className={styles.version}>Firmware version: {connected ? status?.deviceVersion : ""}</div>
       <LeaderDisconnect />
+      <Loader />
+      <ShowErrorModal />
     </div>
   );
 }

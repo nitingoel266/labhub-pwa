@@ -7,13 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,MEASURE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
 import { useDeviceStatus } from '../../labhub/status';
-import { LABHUB_CLIENT_ID } from "../../utils/const";
+import {getClientId} from "../../labhub/utils";
 import {startRgbExperiment} from "../../labhub/actions";
 
 const CuvetteInsertion = () => {
     const [status] = useDeviceStatus();
     const navigate = useNavigate();
-    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const clientId = getClientId()
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");

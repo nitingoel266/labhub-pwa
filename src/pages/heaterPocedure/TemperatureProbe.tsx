@@ -6,15 +6,15 @@ import IButtonModal from "../../components/Modal/IButtonModal";
 import RightArrow from "../../components/RightArrow";
 import {useDeviceStatus, useDeviceDataFeed} from "../../labhub/status";
 import {changeSetpointTemp, startHeaterExperiment,stopHeaterExperiment} from "../../labhub/actions";
+import {getClientId} from "../../labhub/utils";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import {mobileWidth,SETPOINT_TEMPERATURE,getDescription} from "../../components/Constants";
 import IButtonComponent from '../../components/IButtonComponent';
-import {LABHUB_CLIENT_ID} from "../../utils/const";
 import Header from '../../components/header';
 
 let temperatureTimmer:any;
 const TemperatureProbe = () => {
-    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const clientId = getClientId()
     const [status] = useDeviceStatus();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [dataStream] = useDeviceDataFeed();

@@ -10,11 +10,11 @@ import IButtonComponent from '../IButtonComponent';
 import MemberDisconnect from '../Modal/MemberDisconnectModal';
 import {startRgbExperiment,simulateRgb} from "../../labhub/actions";
 import { useDeviceDataFeed, useDeviceStatus } from '../../labhub/status';
-import { LABHUB_CLIENT_ID } from "../../utils/const";
+import {getClientId} from "../../labhub/utils";
 
 const SpectrophotometerTesting = () => {
     const navigate = useNavigate();
-    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const clientId = getClientId()
     const [audio] = useState(new Audio(sound));
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
@@ -31,7 +31,6 @@ const SpectrophotometerTesting = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
-            // navigate("/spectrophotometer-testing")
             setSelectedItem("")
             if(clientId === status?.leaderSelected){
                 startRgbExperiment()
@@ -52,10 +51,6 @@ const SpectrophotometerTesting = () => {
 
         navigate("/cuvette-insertion")
     }
-    // useEffect(() => {
-    //     if(clientId === status?.leaderSelected)
-    //     startRgbExperiment()
-    // },[clientId,status?.leaderSelected])
 
     useEffect(() => {
         if(dataStream?.rgb?.calibrateTest){

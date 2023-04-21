@@ -1,0 +1,84 @@
+.TopWrapper {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    background-color: #000000;
+    opacity: 0.5;
+}
+.SecondWrapper {
+    top: 40%;
+    left: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    /* transition: all 0.3s ease-out; */
+
+}
+
+.TextContainer {
+    width: 250px;
+    background-color: #EFEFEF;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    flex:1;
+}
+.Headertext {
+    background-color: #424C58;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 15px;
+    color: #FFFFFF;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+.BodyWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 120px;
+    margin:10px 0px;
+    flex:1;
+}
+.Bodytext {
+    margin: 10px;
+    display: flex;
+    flex:1;
+    min-height: 50px;
+    flex-direction: column;
+    justify-content: center;
+    color: red;
+}
+.ButtonWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+.CancelButton {
+    background-color: #424C58;
+    padding: 7px;
+    border-radius: 5px;
+    margin-right: 10px;
+    width:55px;
+    text-align: center;
+    font-weight: 400;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.YesButton {
+    background-color: #9CD5CD;
+    padding: 7px;
+    border-radius: 5px;
+    margin-right: 10px;
+    width:55px;
+    text-align: center;
+    font-weight: 400;
+    cursor: pointer;
+}

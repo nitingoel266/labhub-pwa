@@ -1,6 +1,6 @@
 import styles from '../../styles/scanDevice.module.css';
 import {LabHubSticker,BluetoothIcon,BlackBluetoothIcon} from "../../images/index";
-import { useDeviceConnected,useDeviceStatus} from '../../labhub/status';
+import { useDeviceConnected,useDeviceStatus,applicationErrorMessage} from '../../labhub/status';
 import {initSetup,uninitSetup} from "../../labhub/init-setup";
 import RightArrow from '../../components/RightArrow';
 import { useNavigate } from 'react-router-dom';
@@ -18,12 +18,14 @@ const ScanDevices = () => {
         navigate("/mode-selection")
     }
     const handleSubmit = async () => {
-        if(!connected){
            await initSetup()
            if(status?.leaderSelected){
             navigate("/mode-selection")
            }
-        }
+    }
+
+    const changeConnection = () => {
+        applicationErrorMessage.next('Do you want to connect to another device?');
     }
    
     const handleDisconnectDevice = async () => {
@@ -35,7 +37,7 @@ const ScanDevices = () => {
     return <> 
         <div className={styles.ScanDeviceWrapper}>
             <img src={LabHubSticker} className={styles.LabHubStickerWrapper} alt="al"/>
-            <div className={styles.ScanDeviceButton} style={connected ? {} : {backgroundColor:"#FFFFFF",boxShadow:"0px 1px 2px 1px #B6B5B5"}} onClick={handleSubmit}>
+            <div className={styles.ScanDeviceButton} style={connected ? {} : {backgroundColor:"#FFFFFF",boxShadow:"0px 1px 2px 1px #B6B5B5"}} onClick={() => connected ? changeConnection() : handleSubmit()}>
                 <img src={connected ? BluetoothIcon : BlackBluetoothIcon} className={styles.BluetoothIconWrapper} alt="bluetoothIcon"/>
                 <div className={styles.ScanDeviceText} style={connected ? {} :{color:"#424C58"}}>Scan Devices</div>
             </div>

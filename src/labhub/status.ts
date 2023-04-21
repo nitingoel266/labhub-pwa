@@ -56,6 +56,26 @@ export const getDeviceApiResponse = (): DeviceApiResponse => {
   };
 };
 
+export const useConnectionStablished = () => {
+  const [connected, setConnected] = useState(connectionAttemptOngoing.value);
+
+  useEffect(() => {
+    const subs = connectionAttemptOngoing.subscribe((value) => setConnected(value));
+    return () => subs.unsubscribe();
+  }, []);
+
+  return [connected];
+};
+export const useErrorMessage = () => {
+  const [errorMessage, setErrorMessage] = useState(applicationErrorMessage.value);
+
+  useEffect(() => {
+    const subs = applicationErrorMessage.subscribe((value) => setErrorMessage(value));
+    return () => subs.unsubscribe();
+  }, []);
+
+  return [errorMessage];
+};
 export interface DeviceApiResponse {
   version: string;
   forceUpdate: boolean;

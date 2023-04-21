@@ -1,7 +1,7 @@
 import styles from '../styles/dataSetup.module.css';
 import {useDeviceStatus} from "../labhub/status";
 import {setupData} from "../labhub/actions";
-// import {setSelectedFunction} from "../labhub/actions-client";
+import {getClientId} from "../labhub/utils";
 import { useEffect, useState } from 'react';
 import RightArrow from './RightArrow';
 import {BlackIButtonIcon} from "../images/index"
@@ -10,11 +10,10 @@ import IButtonComponent from './IButtonComponent';
 import WheelPicker from './WheelPicker';
 import {mobileWidth,getDataRate,getDataSample,getDescription,DATA_RATE,NO_OF_SAMPLES,dataRateOption,dataSampleOption} from "../components/Constants";
 import IButtonModal from './Modal/IButtonModal';
-import {LABHUB_CLIENT_ID} from "../utils/const";
 
 const DataSetup = () => {
+    const clientId = getClientId()
     const [status] = useDeviceStatus();
-    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
     const navigate = useNavigate();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [isOpen,setModal] = useState<string>("");

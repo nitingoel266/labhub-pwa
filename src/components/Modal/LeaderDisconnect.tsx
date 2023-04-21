@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react"
 import {useDeviceStatus,useDeviceConnected} from "../../labhub/status";
-// import {joinAsMember} from "../../labhub/actions";
 import LeadeSelectionModal from "./leaderSelectionModal";
 import {LEADER_SELECTIONMODAL_INITIATE} from "../../components/Constants";
 
 const LeaderDisconnect = () => {
-    // const navigate = useNavigate();
     const [isOpen,setModal] = useState(false)
     const [status] = useDeviceStatus();
     const [connected] = useDeviceConnected();
@@ -35,8 +33,6 @@ const LeaderDisconnect = () => {
     //             navigate("/mode-selection")
     //         }
     // },[status?.leaderSelected,connected,navigate,status,location?.pathname,joinedAsLeader])
-    // console.log("??>> joinedAsLeader ",joinedAsLeader)
-    // console.log("in the leader selection :- connected",connected,"status :- ",status)
     return <>
         {connected && !status?.leaderSelected && isOpen && <LeadeSelectionModal isOpen={isOpen} setModal={(value) => setModal(value)} />}
     </>

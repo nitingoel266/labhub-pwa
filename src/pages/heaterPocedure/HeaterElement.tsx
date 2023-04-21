@@ -16,18 +16,18 @@ import {
   startHeaterExperiment,
   stopHeaterExperiment,
 } from "../../labhub/actions";
+import {getClientId} from "../../labhub/utils";
 import IButtonComponent from "../../components/IButtonComponent";
 import {
   mobileWidth,
   SETPOINT_TEMPERATURE,
   getDescription,
 } from "../../components/Constants";
-import { LABHUB_CLIENT_ID } from "../../utils/const";
 import Header from "../../components/header";
 
 let temperatureTimmer: any;
 const HeaterElement = () => {
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientId = getClientId()
   const [status] = useDeviceStatus();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [dataStream] = useDeviceDataFeed();
@@ -84,22 +84,6 @@ const HeaterElement = () => {
     if (isOpen === title) setModal("");
     else setModal(title);
   };
-  // useEffect(() => {
-  //     const handleTabClose = (event:any) => {
-  //       event.preventDefault();
-
-  //       console.log('beforeunload event triggered');
-
-  //       return (event.returnValue =
-  //         'Are you sure you want to exit..................?');
-  //     };
-
-  //     window.addEventListener('beforeunload', handleTabClose);
-
-  //     return () => {
-  //       window.removeEventListener('beforeunload', handleTabClose);
-  //     };
-  //   }, []);
   useEffect(() => {
     if (dataStream?.heater?.element) {
       if (!isStart) setIsStart(true);

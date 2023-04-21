@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
 import {simulateRgb, startRgbExperiment} from "../../labhub/actions";
+import {getClientId} from "../../labhub/utils";
 import { useDeviceStatus } from '../../labhub/status';
-import { LABHUB_CLIENT_ID } from "../../utils/const";
 
 const CalibrationTesting = () => {
     const navigate = useNavigate();
-    const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
+    const clientId = getClientId()
     const [status] = useDeviceStatus();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")

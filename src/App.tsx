@@ -30,6 +30,8 @@ import CalibrationTesting from './components/CalibrateSpectrophotometer/Calibrat
 import SpectrophotometerCalibration from './components/CalibrateSpectrophotometer/SpectrophotometerCalibration';
 import SpectrophotometerTesting from './components/CalibrateSpectrophotometer/SpectrophotometerTesting';
 import AbsorbanceMeasuring from './components/MeasureAbsorbance/AbsorbanceMeasuring';
+import Loader from './components/Modal/Loader';
+import ShowErrorModal from './components/Modal/ShowErrorModal';
 import pkg from '../package.json';
 
 function App() {
@@ -85,6 +87,8 @@ function App() {
         )}
       </div>
       <LeaderDisconnect />
+      <Loader />
+      <ShowErrorModal />
     </div>
   );
 }

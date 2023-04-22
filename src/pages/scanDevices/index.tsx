@@ -1,17 +1,20 @@
 import styles from '../../styles/scanDevice.module.css';
 import {LabHubSticker,BluetoothIcon,BlackBluetoothIcon,LoaderImage} from "../../images/index";
-import { useDeviceConnected,useDeviceStatus,useConnectionStablished} from '../../labhub/status';
+import { useDeviceConnected,useDeviceStatus,useConnectionStablished, usePwaInstallPromotion, useSwPendingUpdate} from '../../labhub/status';
 import {initSetup,uninitSetup} from "../../labhub/init-setup";
 import RightArrow from '../../components/RightArrow';
 import { useNavigate } from 'react-router-dom';
 import MemberDisconnect from '../../components/Modal/MemberDisconnectModal';
 import { useState } from 'react';
+import { installClickHandler, updateServiceWorker } from '../../pwaSetup';
 
 const ScanDevices = () => {
     const navigate = useNavigate();
     const [isConnected] = useConnectionStablished();
     const [connected] = useDeviceConnected();
     const [status] = useDeviceStatus();
+    const [installPromotion] = usePwaInstallPromotion();
+    const [updatePending] = useSwPendingUpdate();
     const [isOpen,setModal] = useState("")
 
 
@@ -41,6 +44,10 @@ const ScanDevices = () => {
     setModal("")
   }
     return <> 
+        <div>
+            {installPromotion && <button onClick={installClickHandler}>Add to Home Screen</button>}
+            {updatePending && <button onClick={updateServiceWorker}>Update Application</button>}
+        </div>
         <div className={styles.ScanDeviceWrapper}>
             <div className={styles.LabHubStickerWrapper}>
             <img src={LabHubSticker} style={{width:'100%'}} alt="al"/>

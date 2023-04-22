@@ -18,9 +18,10 @@ const isLocalhost = Boolean(
     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
 
-type Config = {
+export type Config = {
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
+  onComplete?: (status: 'success' | 'error' | 'offline' | null) => void;
 };
 
 export function register(config?: Config) {
@@ -34,7 +35,7 @@ export function register(config?: Config) {
       return;
     }
 
-    window.addEventListener('load', () => {
+    window.addEventListener('load', async () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
       if (isLocalhost) {
@@ -51,14 +52,44 @@ export function register(config?: Config) {
         });
       } else {
         // Is not localhost. Just register service worker
-        registerValidSW(swUrl, config);
+        // NOTE: checkValidServiceWorker(swUrl, config); is somewhat slower for it to be used in production
+
+        const p1 = checkValidServiceWorker(swUrl, config, true);
+        const p2 = registerValidSW(swUrl, config, true);
+        const [status1, status2] = await Promise.all([p1, p2]);
+        const status = status1 || status2;
+        // Execute callback
+        if (config && config.onComplete && status) {
+          config.onComplete(status);
+        }
       }
+
+      let refreshing = false;
+      const originalSW = navigator.serviceWorker.controller;
+
+      // detect controller change and refresh the page
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (originalSW) {
+          // This is due to a SW update.
+          if (!refreshing) {
+            window.location.reload();
+            refreshing = true;  
+          }  
+        } else {
+          // This is due to a SW taking control for the first time
+        }
+      });
     });
+  } else {
+    // Execute callback
+    if (config && config.onComplete) {
+      config.onComplete(null);
+    }    
   }
 }
 
-function registerValidSW(swUrl: string, config?: Config) {
-  navigator.serviceWorker
+async function registerValidSW(swUrl: string, config?: Config, validate?: boolean) {
+  const statusPromise = navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
       registration.onupdatefound = () => {
@@ -68,6 +99,7 @@ function registerValidSW(swUrl: string, config?: Config) {
         }
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
+            // NOTE: navigator.serviceWorker.controller === registration.active
             if (navigator.serviceWorker.controller) {
               // At this point, the updated precached content has been fetched,
               // but the previous service worker will still serve the older
@@ -95,15 +127,27 @@ function registerValidSW(swUrl: string, config?: Config) {
           }
         };
       };
+      return 'success' as 'success';
     })
     .catch((error) => {
       console.error('Error during service worker registration:', error);
+      return 'error' as 'error';
     });
+
+    const status = await statusPromise;
+    if (!validate) {
+      // Execute callback
+      if (config && config.onComplete) {
+        config.onComplete(status);
+      }
+    }
+
+    return status;
 }
 
-function checkValidServiceWorker(swUrl: string, config?: Config) {
+async function checkValidServiceWorker(swUrl: string, config?: Config, validate?: boolean) {
   // Check if the service worker can be found. If it can't reload the page.
-  fetch(swUrl, {
+  const statusPromise = fetch(swUrl, {
     headers: { 'Service-Worker': 'script' },
   })
     .then((response) => {
@@ -121,19 +165,48 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
         });
       } else {
         // Service worker found. Proceed as normal.
-        registerValidSW(swUrl, config);
+        if (!validate) registerValidSW(swUrl, config);
       }
+
+      return null; // nothing to emit (as of now)
     })
     .catch(() => {
       console.log('No internet connection found. App is running in offline mode.');
+      return 'offline' as 'offline';
     });
+
+  const status = await statusPromise;
+  if (!validate) {
+    // Execute callback
+    if (config && config.onComplete && status) {
+      config.onComplete(status); // emit 'offline'
+    }
+  }
+
+  return status;
 }
 
-export function unregister() {
+export function unregister(config?: Config) {
   if ('serviceWorker' in navigator) {
+    if (!navigator.serviceWorker.controller) {
+      // Execute callback
+      if (config && config.onComplete) {
+        config.onComplete(null);
+      }
+      return;
+    }
+
     navigator.serviceWorker.ready
       .then((registration) => {
-        registration.unregister();
+        return registration.unregister();
+      })
+      .then(status => {
+        console.log('serviceWorker unregister status:', status);
+
+        // Execute callback
+        if (config && config.onComplete) {
+          config.onComplete(null);
+        }
       })
       .catch((error) => {
         console.error(error.message);

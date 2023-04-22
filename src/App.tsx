@@ -5,7 +5,7 @@ import Home from './components/home';
 import ScanDevice from "./pages/scanDevices/index"
 import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
-import { useDeviceStatus,useDeviceConnected} from './labhub/status';
+import { useDeviceStatus,useDeviceConnected, useSwInstallStatus, useSwPendingUpdate} from './labhub/status';
 import styles from './styles/App.module.css';
 import FunctionSelection from './pages/functionProcedure/FunctionSelection';
 import ModeSelection from './pages/modeProcedure/ModeSelection';
@@ -37,8 +37,17 @@ import pkg from '../package.json';
 function App() {
   const [status] = useDeviceStatus();
   const [connected] = useDeviceConnected();
+  const [swStatus] = useSwInstallStatus();
+  const [swWaiting] = useSwPendingUpdate();
   const location = useLocation();
   const showHeader = location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe" || location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" ? false : true
+
+  const style = swStatus === undefined ? 'dotted' : swStatus === 'offline' ? 'solid' : swStatus === 'error' ? 'wavy' : '';
+  const textDecoration = style ? `${style} underline`: '';
+  const statusIcon = swStatus === null ? <sup>&#8224;</sup> : swWaiting ? <sup>*</sup> : null;
+  const pkgVersion = (
+    <span style={{ textDecoration }}>{pkg.version}{statusIcon}</span>
+  );
 
   return (
     <div className={styles.app}>
@@ -77,13 +86,13 @@ function App() {
       </main>
       <div className={styles.version}>
         {connected ? (
-          <span>Firmware version: {status?.deviceVersion || "NA"} ({process.env.REACT_APP_ENV === 'prod' ? (
-            <span>{pkg.version}</span>
-          ) : (
-            <Link to='/test'>{pkg.version}</Link>
-          )})</span>
+          <span>Firmware version: {status?.deviceVersion || "NA"} (
+            {process.env.REACT_APP_ENV === 'prod' ? pkgVersion : (
+              <Link to='/test'>{pkgVersion}</Link>
+            )}
+          )</span>
         ) : (
-          <span>App version: {pkg.version}</span>
+          <span>App version: {pkgVersion}</span>
         )}
       </div>
       <LeaderDisconnect />

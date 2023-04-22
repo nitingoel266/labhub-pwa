@@ -77,4 +77,17 @@ self.addEventListener('message', (event) => {
   }
 });
 
-// Any other custom service worker logic can go here.
+/******* Any other custom service worker logic can go here. *******/
+
+self.addEventListener('message', async (event) => {
+  if (event.data && event.data.type === 'FORCE_RELOAD') {    
+    // NOTE: This reloads `all` tabs including the (ServiceWorker installer) one that sent the message 
+    const tabs = await self.clients.matchAll({type: 'window'});
+    // No need to reload if no `other` tab exists
+    if (tabs.length > 1) {
+      tabs.forEach((tab) => {
+        tab.navigate(tab.url);
+      });  
+    }    
+  }
+});

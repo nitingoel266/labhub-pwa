@@ -8,6 +8,7 @@
 .LabHubStickerWrapper {
     /* width:70%; */
     width:200px;
+    height:130px;
     margin-bottom: 25px;
 }
 .ScanDeviceButton {
@@ -37,6 +38,7 @@
 @media (min-width:580px) {
     .LabHubStickerWrapper {
         width: 250px;
+        height:160px;
     }
     .ScanDeviceWrapper {
         margin-top: 90px;

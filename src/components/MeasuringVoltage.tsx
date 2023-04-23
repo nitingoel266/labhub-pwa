@@ -41,6 +41,7 @@ const MeasuringVoltage = () => {
     } else navigate("/function-selection");
   };
   const handleRestart = () => {
+    setCheckForLog(1)
     setGraphData([]);
     setCapturePoint([]);
     startSensorExperiment();
@@ -128,7 +129,7 @@ const MeasuringVoltage = () => {
         setGraphData([]);
         setCapturePoint([]);
       }
-      if(clientId !== status?.leaderSelected && dataStream?.sensor?.voltageIndex && dataStream?.sensor?.voltageIndex > 0 && dataStream?.sensor?.voltageIndex > checkForLog && checkForLog <= 0){
+      if(/* clientId !== status?.leaderSelected && */ dataStream?.sensor?.voltageIndex && dataStream?.sensor?.voltageIndex > 0 && dataStream?.sensor?.voltageIndex > checkForLog && checkForLog <= 0){
         setCheckForLog(1)
         let volLogData:any = await getVoltageLog(dataStream?.sensor?.voltageIndex || 0);
           let logData:any = [];

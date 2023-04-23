@@ -65,6 +65,7 @@ const MeasuringTemprature = () => {
     }else navigate("/function-selection");
   };
   const handleRestart = () => {
+    setCheckForLog(1)
     setGraphData([]);
     setCapturePoint([]);
     startSensorExperiment();
@@ -151,8 +152,8 @@ const MeasuringTemprature = () => {
         setGraphData([]);
         setCapturePoint([]);
       }
-      if(clientId !== status?.leaderSelected && dataStream?.sensor?.temperatureIndex && dataStream?.sensor?.temperatureIndex > 0 && dataStream?.sensor?.temperatureIndex > checkForLog && checkForLog <= 0){
-         setCheckForLog(1)
+      if(/* clientId !== status?.leaderSelected &&  */dataStream?.sensor?.temperatureIndex && dataStream?.sensor?.temperatureIndex > 0 && dataStream?.sensor?.temperatureIndex > checkForLog && checkForLog <= 0){
+        setCheckForLog(1)
         let tempLogData:any = await getTemperatureLog(dataStream?.sensor?.temperatureIndex || 0);
           let logData:any = [];
           let capturePoints:any = [];

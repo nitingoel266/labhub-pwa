@@ -1,6 +1,6 @@
 {
   "name": "labhub_pwa",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "private": true,
   "scripts": {
     "dev": "BROWSER=none REACT_APP_ENV=dev react-scripts start",

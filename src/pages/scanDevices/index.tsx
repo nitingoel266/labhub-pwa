@@ -42,7 +42,9 @@ const ScanDevices = () => {
   }
     return <> 
         <div className={styles.ScanDeviceWrapper}>
-            <img src={LabHubSticker} className={styles.LabHubStickerWrapper} alt="al"/>
+            <div className={styles.LabHubStickerWrapper}>
+            <img src={LabHubSticker} style={{width:'100%'}} alt="al"/>
+            </div>
            {!isConnected && <div className={styles.ScanDeviceButton} style={connected ? {} : {backgroundColor:"#FFFFFF",boxShadow:"0px 1px 2px 1px #B6B5B5"}} onClick={() => connected ? setModal("resetConnection") : handleSubmit()}>
                 <img src={connected ? BluetoothIcon : BlackBluetoothIcon} className={styles.BluetoothIconWrapper} alt="bluetoothIcon"/>
                 <div className={styles.ScanDeviceText} style={connected ? {} :{color:"#424C58"}}>Scan Devices</div>

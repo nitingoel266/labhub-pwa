@@ -8,7 +8,7 @@ export const clientChannelResponse = new BehaviorSubject<ClientChannelResponse |
 export const clientChannelRequest = new BehaviorSubject<ClientChannelRequest | null>(null);
 
 export const connectionAttemptOngoing = new BehaviorSubject<boolean>(false);
-export const applicationErrorMessage = new BehaviorSubject<string | null>(null);
+export const applicationMessage = new BehaviorSubject<string | null>(null);
 export const pwaInstallPromotion = new BehaviorSubject<boolean>(false);
 export const swInstallStatus = new BehaviorSubject<'success' | 'error' | 'offline' | null | undefined>(undefined);
 export const swPendingUpdate = new BehaviorSubject<boolean>(false);
@@ -35,7 +35,7 @@ export const useDeviceConnected = getValueHook<boolean>(deviceConnected);
 export const useDeviceStatus = getValueHook<DeviceStatus | null>(deviceStatus);
 export const useDeviceDataFeed = getValueHook<DeviceDataFeed>(deviceDataFeed);
 export const useConnectionStablished = getValueHook<boolean>(connectionAttemptOngoing);
-export const useErrorMessage = getValueHook<string | null>(applicationErrorMessage);
+export const useAppMessage = getValueHook<string | null>(applicationMessage);
 export const usePwaInstallPromotion = getValueHook<boolean>(pwaInstallPromotion);
 export const useSwInstallStatus = getValueHook<'success' | 'error' | 'offline' | null | undefined>(swInstallStatus);
 export const useSwPendingUpdate = getValueHook<boolean>(swPendingUpdate);

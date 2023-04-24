@@ -1,13 +1,13 @@
-import {useErrorMessage,applicationErrorMessage} from "../../labhub/status";
+import {useAppMessage,applicationMessage} from "../../labhub/status";
 import {WhiteWarningIcon} from "../../images/index";
 import styles from '../../styles/Loader.module.css';
 
 
 const ShowErrorModal = () => {
-    const [errorMessage] = useErrorMessage();
+    const [errorMessage] = useAppMessage();
 
     const setErrorMessage = (value:any) => {
-        applicationErrorMessage.next(value)
+        applicationMessage.next(value)
     }
     const handleResetConnection = () => {
         setErrorMessage(null)

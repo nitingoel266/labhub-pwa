@@ -5,7 +5,7 @@ import { DeviceStatus, DeviceDataFeed, ClientChannelResponse } from '../types/co
 import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED, TOPIC_DEVICE_DATA_FEED_UPDATE, TOPIC_CLIENT_CHANNEL } from '../utils/const';
 import { assertClientId, clearClientId } from './utils';
 // import { navStatus, navStatusUpdate } from './status-client';
-import { delay, Log } from '../utils/utils';
+import { Log } from '../utils/utils';
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 let subs1: Subscription;
@@ -22,9 +22,6 @@ export const initSetup = async (): Promise<boolean> => {
   }
 
   connectionAttemptOngoing.next(true);
-
-  // simulate delay
-  await delay(500);
  
   socket = io('http://localhost:4000', { query: { clientId } });
 

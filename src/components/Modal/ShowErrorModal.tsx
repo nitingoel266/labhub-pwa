@@ -4,7 +4,9 @@ import styles from '../../styles/Loader.module.css';
 
 
 const ShowErrorModal = () => {
-    const [errorMessage] = useAppMessage();
+    const [appMessage] = useAppMessage();
+
+    const errorMessage = appMessage?.message ?? null;
 
     const setErrorMessage = (value:any) => {
         applicationMessage.next(value)

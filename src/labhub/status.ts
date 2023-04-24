@@ -8,7 +8,7 @@ export const clientChannelResponse = new BehaviorSubject<ClientChannelResponse |
 export const clientChannelRequest = new BehaviorSubject<ClientChannelRequest | null>(null);
 
 export const connectionAttemptOngoing = new BehaviorSubject<boolean>(false);
-export const applicationErrorMessage = new BehaviorSubject<string | null>(null);
+export const applicationMessage = new BehaviorSubject<string | AppMessageInfo | null>(null);
 export const pwaInstallPromotion = new BehaviorSubject<boolean>(false);
 export const swInstallStatus = new BehaviorSubject<'success' | 'error' | 'offline' | null | undefined>(undefined);
 export const swPendingUpdate = new BehaviorSubject<boolean>(false);
@@ -35,10 +35,28 @@ export const useDeviceConnected = getValueHook<boolean>(deviceConnected);
 export const useDeviceStatus = getValueHook<DeviceStatus | null>(deviceStatus);
 export const useDeviceDataFeed = getValueHook<DeviceDataFeed>(deviceDataFeed);
 export const useConnectionStablished = getValueHook<boolean>(connectionAttemptOngoing);
-export const useErrorMessage = getValueHook<string | null>(applicationErrorMessage);
 export const usePwaInstallPromotion = getValueHook<boolean>(pwaInstallPromotion);
 export const useSwInstallStatus = getValueHook<'success' | 'error' | 'offline' | null | undefined>(swInstallStatus);
 export const useSwPendingUpdate = getValueHook<boolean>(swPendingUpdate);
+
+export const useAppMessage = () => {
+  const [value, setValue] = useState<AppMessageInfo | null>(() => assertAppMessage(applicationMessage.value));
+
+  useEffect(() => {
+    const subs = applicationMessage.subscribe((value) => setValue(assertAppMessage(value)));
+    return () => subs.unsubscribe();
+  }, []);
+
+  return [value];
+};
+
+function assertAppMessage(value: string | AppMessageInfo | null) {
+  if (typeof value === 'string') {
+    return { type: 'error', message: value } as AppMessageInfo;
+  } else {
+    return value;
+  }
+}
 
 export const getDeviceApiResponse = (): DeviceApiResponse => {
   return {
@@ -50,4 +68,9 @@ export const getDeviceApiResponse = (): DeviceApiResponse => {
 export interface DeviceApiResponse {
   version: string;
   forceUpdate: boolean;
+}
+
+export interface AppMessageInfo {
+  type: 'info' | 'warn' | 'error';
+  message: string;
 }

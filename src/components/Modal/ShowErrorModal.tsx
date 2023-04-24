@@ -1,17 +1,22 @@
-import {useErrorMessage,applicationErrorMessage} from "../../labhub/status";
+import {useAppMessage,applicationMessage} from "../../labhub/status";
 import {WhiteWarningIcon} from "../../images/index";
 import styles from '../../styles/Loader.module.css';
 
 
 const ShowErrorModal = () => {
-    const [errorMessage] = useErrorMessage();
+    const [appMessage] = useAppMessage();
 
+    const errorMessage = appMessage?.message ?? null;
+    const messageType = appMessage?.type;
+    const getMessageType = {"warn":"Warning","info":"Information","error":"Error Message"}
+    
     const setErrorMessage = (value:any) => {
-        applicationErrorMessage.next(value)
+        applicationMessage.next(value)
     }
     const handleResetConnection = () => {
         setErrorMessage(null)
     }
+    const messageColor = {backgroundColor:messageType === 'warn' ? "#FFC000" : messageType === "info" ? "#424C58" : "#CC0000"}
     return errorMessage ? <div style={{position:"absolute",zIndex:1}}>
     {errorMessage &&
     <div
@@ -21,9 +26,9 @@ const ShowErrorModal = () => {
     className={styles.SecondWrapper}
     >
         <div className={styles.TextContainer}>
-                <div className={styles.ErrorHeadertext}>
+                <div className={styles.ErrorHeadertext} style={messageColor}>
                     <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
-                    <div>Error Message</div>
+                    <div>{messageType && getMessageType[messageType]}</div>
                 </div>
                 <div className={styles.ErrorBodyWrapper}>
                     <div className={styles.Bodytext}>

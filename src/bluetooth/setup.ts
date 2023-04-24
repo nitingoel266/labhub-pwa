@@ -13,9 +13,10 @@ import {
   deviceDataFeed,
   deviceDataFeedUpdate,
   clientChannelRequest,
+  applicationMessage,
+  connectionAttemptOngoing,
 } from "../labhub/status";
 
-let connectionAttemptOngoing = false;
 let statusPrev = false;
 let manualDisconnect = false;
 
@@ -72,15 +73,16 @@ export const initSetup = async () => {
   return status;
 };
 
-async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean> {
-  if (connectionAttemptOngoing) {
+async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = false): Promise<boolean> {
+  if (connectionAttemptOngoing.value) {
     Log.error("[ERROR:initSetup] Another connection attempt ongoing! Please wait..");
+    if (!autoReconnect) applicationMessage.next('Another connection attempt ongoing! Please wait..');
     return false;
   }
 
   manualDisconnect = false;
-  connectionAttemptOngoing = true;
   let retValue = true;
+  connectionAttemptOngoing.next(true);
 
   try {
     if (!("bluetooth" in navigator)) {
@@ -94,6 +96,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
       const timeout = setTimeout(() => {
         isTimedOut = true;
         Log.error('[ERROR:initSetup] bluetooth.getAvailability() timeout!');
+        if (!autoReconnect) applicationMessage.next('Bluetooth timeout!');
         resolve(false);
       }, 1000);
       navigator.bluetooth.getAvailability().then(status => {
@@ -102,6 +105,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
       }).catch(e => {
         clearTimeout(timeout);
         Log.error('[ERROR:initSetup]', e);
+        if (!autoReconnect) applicationMessage.next(e.message || `${e}`);
         resolve(false);
       });
     });
@@ -241,11 +245,12 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
     Log.debug('[NODE_ENV]:', process.env.NODE_ENV);
     Log.debug('[REACT_APP_ENV]:', process.env.REACT_APP_ENV);
 
-    if (deviceConnected.value !== server.connected) {
+    if (server && deviceConnected.value !== server.connected) {
       deviceConnected.next(server.connected);
     }
   } catch (e) {
     Log.error('[ERROR:initSetup]', e);
+    if (!autoReconnect) applicationMessage.next((e as any).message || `${e}`);
     retValue = false;
 
     try {
@@ -254,10 +259,11 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice): Promise<boolean
       }
     } catch (e) {
       Log.error('[ERROR:initSetup] unable to uninitSetup()', e);
+      if (!autoReconnect) applicationMessage.next('Unable to cleanup Bluetooth initialization!');
     }
   }
 
-  connectionAttemptOngoing = false;
+  connectionAttemptOngoing.next(false);
   return retValue;
 };
 
@@ -331,9 +337,10 @@ async function onDisconnected(event?: any) {
   // Ref: https://googlechrome.github.io/samples/web-bluetooth/automatic-reconnect.html
   if (reconnectServer) {
     Log.log('Attempting re-connect..');
-    const status = await initSetupBase(reconnectServer.device);    
+    const status = await initSetupBase(reconnectServer.device, true);
     if (!status) {
       Log.error('Unable to reconnect using (disconnected) gatt server!');
+      // applicationMessage.next('Unable to re-connect!');
       // location.reload(); // eslint-disable-line
     } else {
       Log.log('Auto-reconnect successful!');

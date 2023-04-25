@@ -1,3 +1,5 @@
+import fastq from "fastq";
+import type { queueAsPromised } from "fastq";
 import isEqual from 'lodash/isEqual';
 import { Subscription } from "rxjs";
 import { initGattMap } from "./gatt/map";
@@ -40,7 +42,24 @@ let subs1: Subscription;
 let subs2: Subscription;
 let subs3: Subscription;
 
+type Task = {
+  id: number;
+  value: any;
+};
+
+const q: queueAsPromised<Task> = fastq.promise(asyncWorker, 1);
+
 initGattMap();
+
+async function asyncWorker(arg: Task): Promise<void> {
+  if (arg.id === 1) {
+    await handleDeviceStatusUpdate(server, arg.value);
+  } else if (arg.id === 2) {
+    await handleClientChannelRequest(server, arg.value);
+  } else if (arg.id === 3) {
+    await handleDeviceDataFeedUpdate(server, arg.value);
+  }
+}
 
 function resetValues() {
   server = null;
@@ -223,17 +242,17 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
 
     subs1 = deviceStatusUpdate.subscribe(async (value) => {
       Log.debug("TOPIC_DEVICE_STATUS_UPDATE:", value);
-      await handleDeviceStatusUpdate(server, value);
+      q.push({ id: 1, value }).catch((err) => Log.error(err))
     });
 
     subs2 = deviceDataFeedUpdate.subscribe(async (value) => {
       Log.debug("TOPIC_DEVICE_DATA_FEED_UPDATE:", value);
-      await handleDeviceDataFeedUpdate(server, value);
+      q.push({ id: 2, value }).catch((err) => Log.error(err))
     });
 
     subs3 = clientChannelRequest.subscribe(async (value) => {
       Log.debug('TOPIC_CLIENT_CHANNEL:', value);
-      await handleClientChannelRequest(server, value);
+      q.push({ id: 3, value }).catch((err) => Log.error(err))
     });
 
     // ------------------------

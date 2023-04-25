@@ -1,5 +1,7 @@
+import { acquireSemaphore, releaseSemaphore } from "../status";
 import { getShortHexCode, serviceListMap, characteristicListMap } from "./map";
 import { Log } from "../../utils/utils";
+import { DEBUG_MODE } from "../../utils/const";
 
 const decoder = new TextDecoder("utf-8");
 const encoder = new TextEncoder(); // Always "utf-8"
@@ -62,7 +64,11 @@ export const getCharacteristicTuple = async <T = number | string | ArrayBuffer |
 ): Promise<[string, T | undefined]> => {
   const name = getCharacteristicName(characteristic.uuid);
   try {
+    await acquireSemaphore();
+    // console.warn('semaphore acquired! (read)', getShortHexCode(characteristic.uuid));
     const val = await characteristic.readValue();
+    releaseSemaphore();
+    // console.warn('semaphore released. (read)', getShortHexCode(characteristic.uuid));
     const value = getValueFromDataView(val, valueType);
 
     Log.debug(`getCharacteristicTuple: [${name}, ${value}]`);
@@ -115,11 +121,19 @@ export const setCharacteristicValue = async (
     }
 
     if (characteristic.properties.write) {
+      await acquireSemaphore();
+      // console.warn('semaphore acquired! (write)', getShortHexCode(characteristic.uuid));
       await characteristic.writeValueWithResponse(bufferSource);
+      releaseSemaphore();
+      // console.warn('semaphore released. (write)', getShortHexCode(characteristic.uuid));
       Log.debug('setCharacteristicValue: writeValueWithResponse successful!')
       return true;
     } else if (characteristic.properties.writeWithoutResponse) {
+      await acquireSemaphore();
+      // console.warn('semaphore acquired! (writeWithoutResponse)', getShortHexCode(characteristic.uuid));
       await characteristic.writeValueWithoutResponse(bufferSource);
+      releaseSemaphore();
+      // console.warn('semaphore released. (writeWithoutResponse)', getShortHexCode(characteristic.uuid));
       Log.debug('setCharacteristicValue: writeValueWithoutResponse successful!')
       return true;
     } else {

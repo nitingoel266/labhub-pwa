@@ -176,7 +176,7 @@ function handleExperimentStatusChanged(event: any) {
     const battery_level = getValueFromDataView(statusDataView, 'int8', 4) as number;
     const sensor_attach = getValueFromDataView(statusDataView, 'int8', 5) as number;
 
-    const data_rate = getValueFromDataView(statusDataView, 'int16', 6) as number;
+    let data_rate = getValueFromDataView(statusDataView, 'int16', 6) as number;
     const num_of_samples = getValueFromDataView(statusDataView, 'int16', 8) as number;
     const current_sample = getValueFromDataView(statusDataView, 'int16', 10) as number;
     const heater_temp_setpoint = getValueFromDataView(statusDataView, 'int16', 12) as number;
@@ -206,6 +206,14 @@ function handleExperimentStatusChanged(event: any) {
     if ((sensor_attach & 0x4) === 0x4) {
       // TODO?: How to differentiate b/w 'element' and 'probe'
       heaterConnected = 'probe';
+    }
+
+    // TODO [temp]:
+    // 1a. data_rate (default) 1 second not coming from device on first notify
+    // 1b. setpoint_temp (default) 20*C not coming from device on first notify
+    // 2. Unable to write (0,0) pair for data_rate and num_of_samples
+    if (data_rate === 0 && num_of_samples === 0) {
+      data_rate = 1;
     }
 
     const setupData: SetupData = {

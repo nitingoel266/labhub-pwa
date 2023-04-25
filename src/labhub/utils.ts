@@ -1,4 +1,5 @@
 import { deviceStatus } from './status';
+import { MOCK_DATA } from '../utils/const';
 import { ClientType } from '../types/common';
 import { Log } from '../utils/utils';
 
@@ -36,7 +37,7 @@ export const setClientId = (clientId?: number): string | null => {
     }
 
     Log.debug('Passed client ID validated!');
-  } else if (clientId === undefined) {
+  } else if (MOCK_DATA && clientId === undefined) {
     // Generate a new client ID (for mock data purpose)
     const uint16 = Math.floor(Math.random() * (2 ** 16 - 1)) + 1; // 1-65535
     const uint16Array = Uint16Array.of(uint16);

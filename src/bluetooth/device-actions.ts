@@ -5,7 +5,6 @@ import { getArrayBuffer, getByteArray, getDataRateN, getDataSampleN, getOperatio
 import { initialDeviceStatus } from "./status";
 import { topicDeviceStatus, resetTopics } from "./topics";
 import { LABHUB_SERVICE, STUDENT_ID_CHAR, LEADER_ID_CHAR, EXPERIMENT_CONTROL_CHAR, EXPERIMENT_DATA_SERIES_CHAR, LEADER_STATUS_CHAR } from "./const";
-import { MOCK_TEST } from "../utils/const";
 import { DeviceDataFeedUpdate, DeviceStatus, DeviceStatusUpdate, SetupData, ClientChannelRequest, ClientChannelResponse, RgbFuncSelect } from "../types/common";
 import { ControlOperation, ExperimentControl, TimerControl, LeaderStatus } from "./device-types";
 import { getValueFromDataView } from "./gatt/utils";
@@ -72,11 +71,6 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
     Log.log('Reusing existing/stored clientId!');
   }
 
-  if (!clientId && MOCK_TEST) {
-    Log.debug('Using mock clientId!');
-    clientId = setClientId();
-  }
-
   if (clientId) {
     const deviceStatusValue = getDeviceStatusValue();
 
@@ -133,11 +127,7 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
 
         if (candidate && value === clientId) {
           let leaderIdn = await readCharacteristicValue<number>(server, LABHUB_SERVICE, LEADER_ID_CHAR, 'int16');
-
           Log.debug('[B] Leader ID read from device:', leaderIdn);
-          if (leaderIdn === undefined && MOCK_TEST) {
-            leaderIdn = 0;
-          }
 
           if (leaderIdn === 0) {
             let ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, LEADER_ID_CHAR, candidate, 2);
@@ -147,20 +137,14 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
             } else {
               Log.debug('Unable to set new Leader ID in device');
             }
-            if (!ret1 && MOCK_TEST) {
-              ret1 = true;
-            }
 
             if (ret1) {
               let leaderIdn2 = await readCharacteristicValue<number>(server, LABHUB_SERVICE, LEADER_ID_CHAR, 'int16');
 
               if (leaderIdn2 === undefined) {
-                Log.debug('Unable to verify set Leader ID in device');
+                Log.error('[ERROR:handleDeviceStatusUpdate] Unable to verify set Leader ID in device');
               } else {
                 Log.debug('New Leader ID verification successful!', leaderIdn2);
-              }
-              if (leaderIdn2 === undefined && MOCK_TEST) {
-                leaderIdn2 = candidate;
               }
 
               if (leaderIdn2 === candidate) {
@@ -177,6 +161,8 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
             } else {
               Log.error('[ERROR:handleDeviceStatusUpdate] Unable to set new leader in LabHub device!', key);
             }
+          } else if (leaderIdn === undefined) {
+            Log.error('[ERROR:handleDeviceStatusUpdate] Unable to read Leader Id!', leaderIdn, key);
           } else {
             Log.error('[ERROR:handleDeviceStatusUpdate] Leader slot not available! Current leader:', leaderIdn, key);
           }
@@ -191,21 +177,13 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
           const leaderIdn = await readCharacteristicValue<number>(server, LABHUB_SERVICE, LEADER_ID_CHAR, 'int16');
           let leaderId = `${leaderIdn}`;
           Log.debug('[C] Leader ID read from device:', leaderId);
-  
-          if (leaderIdn === undefined && MOCK_TEST) {
-            leaderId = clientId;
-          }
-  
+
           if (leaderId !== '0' && leaderId === clientId && deviceStatusValue[key] === clientId) {
             let ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, LEADER_ID_CHAR, 0, 2);
             if (ret1) {
               Log.debug('Leader ID successfully released from device');
             } else {
               Log.debug('Unable to release Leader ID from device');
-            }
-
-            if (!ret1 && MOCK_TEST) {
-              ret1 = true;
             }
   
             if (ret1) {
@@ -214,10 +192,6 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
                 Log.debug('Leader ID release from device verified sucessfully');
               } else {
                 Log.debug('Unable to verify Leader ID release from device');
-              }
-
-              if (leaderIdn === undefined && MOCK_TEST) {
-                leaderIdn = 0;
               }
   
               if (leaderIdn === 0) {

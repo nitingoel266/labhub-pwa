@@ -80,6 +80,13 @@ export const printCharacteristic = async (
   Log.log(`${name}:`, value);
 };
 
+export const printCharacteristicName = (
+  characteristic: BluetoothRemoteGATTCharacteristic
+) => {
+  const name = getCharacteristicName(characteristic.uuid);
+  Log.log(`> ${name}`);
+};
+
 export const setCharacteristicValue = async (
   characteristic: BluetoothRemoteGATTCharacteristic,
   value: number | string | ArrayBuffer,

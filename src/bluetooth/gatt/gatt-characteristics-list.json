@@ -3,6 +3,7 @@
     "id": "org.bluetooth.characteristic.model_number_string",
     "name": "Model Number String",
     "code": "0x2A24",
+    "full_code": "00002a24-0000-1000-8000-00805f9b34fb",
     "specification": "GSS"
   },
   {
@@ -15,12 +16,21 @@
     "id": "org.bluetooth.characteristic.firmware_revision_string",
     "name": "Firmware Revision String",
     "code": "0x2A26",
+    "full_code": "00002a26-0000-1000-8000-00805f9b34fb",
     "specification": "GSS"
   },
   {
     "id": "org.bluetooth.characteristic.manufacturer_name_string",
     "name": "Manufacturer Name String",
     "code": "0x2A29",
+    "full_code": "00002a29-0000-1000-8000-00805f9b34fb",
+    "specification": "GSS"
+  },
+  {
+    "id": "org.bluetooth.characteristic.pnp_id",
+    "name": "PnP ID",
+    "code": "0x2A50",
+    "full_code": "00002a50-0000-1000-8000-00805f9b34fb",
     "specification": "GSS"
   },
   {

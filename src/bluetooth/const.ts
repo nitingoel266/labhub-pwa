@@ -1,5 +1,5 @@
-export const DEVICE_INFO_SERVICE = 0x180a;
-export const LABHUB_SERVICE = "eb714300-2f6b-11ed-a261-0242ac120002";
+export const DEVICE_INFO_SERVICE = 0x180a; // uuid: 0000180a-0000-1000-8000-00805f9b34fb
+export const LABHUB_SERVICE = "eb714300-2f6b-11ed-a261-0242ac120002"; // TODO: Try hex_code: 0x4300 ??
 
 export const EXPERIMENT_STATUS_CHAR = 0x4301;  // N
 export const EXPERIMENT_DATA_SERIES_CHAR = 0x4302;  // R W (data log)

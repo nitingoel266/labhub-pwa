@@ -134,13 +134,13 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
         filters: [
           {
             // namePrefix: "MacBook",
-            manufacturerData: [
-              {
-                companyIdentifier: 0x004c, // Apple
-                // companyIdentifier: 0x0059,  // Nordic Semiconductor ASA
-                // dataPrefix: new Uint8Array([0x01, 0x02])
-              },
-            ],
+            namePrefix: "LabHub",
+            // manufacturerData: [
+            //   {
+            //     // companyIdentifier: 0x004c, // Apple
+            //     companyIdentifier: 0x0059,  // Nordic Semiconductor ASA
+            //   },
+            // ],
             // services: ['0000180a-0000-1000-8000-00805f9b34fb'],
           },
         ],

@@ -1,3 +1,4 @@
+import isEqual from 'lodash/isEqual';
 import { Subscription } from "rxjs";
 import { initGattMap } from "./gatt/map";
 import { handleDeviceInfoService } from "./device-info";
@@ -6,6 +7,8 @@ import { requestClientId, disconnectClient, handleDeviceStatusUpdate, handleDevi
 import { setupLeaderIdNotify, cleanupLeaderIdNotify, setupExperimentStatusNotify, cleanupExperimentStatusNotify, requestLeaderId } from "./device-notify";
 import { DEVICE_INFO_SERVICE, LABHUB_SERVICE } from "./const";
 import { Log, timeoutPromise } from "../utils/utils";
+import { DEBUG_MODE } from '../utils/const';
+import { DeviceDataFeed, DeviceStatus } from "../types/common";
 import {
   deviceConnected,
   deviceStatus,
@@ -16,6 +19,9 @@ import {
   applicationMessage,
   connectionAttemptOngoing,
 } from "../labhub/status";
+
+let deviceStatusPrev: DeviceStatus | null = null;
+let deviceDataFeedPrev: DeviceDataFeed | null = null;
 
 let statusPrev = false;
 let manualDisconnect = false;
@@ -198,12 +204,20 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     // ------------------------
 
     topic1 = topicDeviceStatus.subscribe((value) => {
-      Log.debug("TOPIC_DEVICE_STATUS:", value);
+      if (DEBUG_MODE) {
+        const isDiff = !isEqual(deviceStatusPrev, value);
+        if (isDiff) Log.debug("TOPIC_DEVICE_STATUS:", value);
+        deviceStatusPrev = JSON.parse(JSON.stringify(value));
+      }
       deviceStatus.next(value);
     });
 
     topic2 = topicDeviceDataFeed.subscribe((value) => {
-      Log.debug("TOPIC_DEVICE_DATA_FEED:", value);
+      if (DEBUG_MODE) {
+        const isDiff = !isEqual(deviceDataFeedPrev, value);
+        if (isDiff) Log.debug("TOPIC_DEVICE_DATA_FEED:", value);
+        deviceDataFeedPrev = JSON.parse(JSON.stringify(value));
+      }
       deviceDataFeed.next(value);
     });
 

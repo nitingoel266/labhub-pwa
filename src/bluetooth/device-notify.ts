@@ -1,7 +1,7 @@
 import { LABHUB_SERVICE, LEADER_ID_CHAR, EXPERIMENT_STATUS_CHAR } from "./const";
 import { getServiceItem, getValueFromDataView } from "./gatt/utils";
 import { getShortHexCode } from "./gatt/map";
-import { getClientId } from "../labhub/utils";
+import { getClientId, getClientType } from "../labhub/utils";
 import { getDataRate, getDataSample, getOperation } from "./device-utils";
 import { getDeviceStatusValue } from "./device-actions";
 import { topicDeviceDataFeed, topicDeviceStatus } from "./topics";
@@ -66,23 +66,29 @@ export async function cleanupLeaderIdNotify(characteristic: BluetoothRemoteGATTC
 }
 
 function handleLeaderIdChangedBase(leaderId: string) {
-  const clientId = getClientId();
+  // NOTE: Though the condition is put here, it cannot be fully trusted because of possible race conditions
+  // So, proper handling has been done in the conditions for if-else block below
+  if (getClientType() === 'leader') return;
 
+  const clientId = getClientId();
   const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
 
-  if (deviceStatusValue.leaderSelected && leaderId === '0') {
+  if (deviceStatusValue.leaderSelected && leaderId === '0' && clientId && clientId !== deviceStatusValue.leaderSelected) {
     deviceStatusValue.leaderSelected = null;
     topicDeviceStatus.next(deviceStatusValue);
-  } else if (deviceStatusValue.leaderSelected === null && leaderId && leaderId !== '0' && leaderId !== clientId) {
+  } else if (deviceStatusValue.leaderSelected === null && leaderId && leaderId !== '0' && clientId && leaderId !== clientId) {
     deviceStatusValue.leaderSelected = leaderId;
     topicDeviceStatus.next(deviceStatusValue);
+  } else {
+    // Log.error('handleLeaderIdChangedBase: Unhandled value!', clientId, leaderId, deviceStatusValue.leaderSelected);
   }
 }
 
-// TODO: Is it called for leader in action?
 function handleLeaderIdChanged(event: any) {
   const dataView = event.target.value;
   const leaderIdn = getValueFromDataView(dataView, 'int16') as number;
+
+  Log.debug('handleLeaderIdChanged:', leaderIdn);
   const leaderId = `${leaderIdn}`;
   handleLeaderIdChangedBase(leaderId);
 }
@@ -92,7 +98,7 @@ export const requestLeaderId = async (server: BluetoothRemoteGATTServer | null) 
   if (leaderIdn === undefined) {
     Log.error('[ERROR:fetchLeaderId] Unable to fetch Leader ID from device');
   } else {
-    Log.debug('Leader ID read from device:', leaderIdn);
+    Log.debug('[A] Leader ID read from device:', leaderIdn);
 
     const leaderId = `${leaderIdn}`;
     handleLeaderIdChangedBase(leaderId);
@@ -332,9 +338,11 @@ function handleExperimentStatusChanged(event: any) {
       };
     }
 
-    Log.debug('handleExperimentStatusChanged:', deviceDataFeed);
+    Log.debug('handleExperimentStatusChanged:', !!deviceDataFeed);
     if (deviceDataFeed) {
       topicDeviceDataFeed.next(deviceDataFeed);
+    } else {
+      Log.error('handleExperimentStatusChanged: Unhandled value!', deviceDataFeed);
     }
   } else {
     Log.error('[ERROR:handleExperimentStatusChanged] Invalid experimentStatusBuffer:', experimentStatusBuffer?.byteLength);

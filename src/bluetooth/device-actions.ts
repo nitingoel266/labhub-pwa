@@ -22,7 +22,7 @@ export function getDeviceStatusValue(init = false): DeviceStatus {
     if (!deviceStatus.value) {
       Log.warn('Unexpected! deviceStatus value is supposed to be existing (non-null) here');
     }
-    return deviceStatus.value || JSON.parse(JSON.stringify(initialDeviceStatus));
+    return JSON.parse(JSON.stringify(deviceStatus.value || initialDeviceStatus));
   }
 }
 
@@ -134,7 +134,7 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
         if (candidate && value === clientId) {
           let leaderIdn = await readCharacteristicValue<number>(server, LABHUB_SERVICE, LEADER_ID_CHAR, 'int16');
 
-          Log.debug('Leader ID read from device:', leaderIdn);
+          Log.debug('[B] Leader ID read from device:', leaderIdn);
           if (leaderIdn === undefined && MOCK_TEST) {
             leaderIdn = 0;
           }
@@ -157,7 +157,7 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
               if (leaderIdn2 === undefined) {
                 Log.debug('Unable to verify set Leader ID in device');
               } else {
-                Log.debug('Leader ID verification successful!');
+                Log.debug('New Leader ID verification successful!', leaderIdn2);
               }
               if (leaderIdn2 === undefined && MOCK_TEST) {
                 leaderIdn2 = candidate;
@@ -168,8 +168,8 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
                 deviceStatusValue[key] = value as string;
                 topicDeviceStatus.next(deviceStatusValue);
 
-                // deviceStatusUpdate with `resetAll` key dispatches ExperimentControl struct to device
-                // with all experiment related values reset
+                // The new leader calls resetAll() here which sends deviceStatusUpdate with `resetAll` key which
+                // dispatches ExperimentControl struct to device with all experiment related values reset
                 resetAll();
               } else {
                 Log.error('[ERROR:handleDeviceStatusUpdate] Unable to verify new leader in LabHub device!', key);
@@ -190,7 +190,7 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
         } else {
           const leaderIdn = await readCharacteristicValue<number>(server, LABHUB_SERVICE, LEADER_ID_CHAR, 'int16');
           let leaderId = `${leaderIdn}`;
-          Log.debug('Leader ID read from device:', leaderId);
+          Log.debug('[C] Leader ID read from device:', leaderId);
   
           if (leaderIdn === undefined && MOCK_TEST) {
             leaderId = clientId;
@@ -256,7 +256,8 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
         let heaterSetpointTempN = deviceStatusValue.setpointTemp || 20;
 
         if (key === 'resetAll') {
-          // dispatch ExperimentControl struct to device with all experiment related values reset
+          // TODO:check-reset?already-done?:Leader dispatches ExperimentControl struct to device with all experiment related values reset
+          Log.debug('resetAll dispatched by leader');
         } else if (key === 'setupData') {
           const { dataRate, dataSample } = value as SetupData;
           dataRateN = getDataRateN(dataRate);
@@ -317,8 +318,8 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
     return;
   }
 
-  // const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
-  const deviceStatusValue: DeviceStatus = deviceStatus.value;
+  // const deviceStatusValue: DeviceStatus = deviceStatus.value;
+  const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
 
   // (default) 0=stop/reset
   let timerControlN: TimerControl = TimerControl.STOP_RESET;
@@ -423,12 +424,12 @@ async function dispatchLeaderStatus(server: BluetoothRemoteGATTServer | null, le
   if (leaderStatusStruct !== null) {
     const ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, LEADER_STATUS_CHAR, leaderStatusStruct);
     if (ret1) {
-      Log.debug('leaderStatus (screen_number) dispatched to device');
+      Log.debug('leaderStatus (screen_number) dispatched to device:', screen_number);
     } else {
-      Log.error('[ERROR:dispatchLeaderStatus] Unable to write to leader status characteristic');
+      Log.error('[ERROR:dispatchLeaderStatus] Unable to write to leader status characteristic:', screen_number);
     }
   } else {
-    Log.error('[ERROR:dispatchLeaderStatus] Unable to create leader status struct:', [!!a1]);
+    Log.error('[ERROR:dispatchLeaderStatus] Unable to create leader status struct:', [!!a1], screen_number);
   }
 }
 
@@ -437,8 +438,8 @@ export const handleClientChannelRequest = async (server: BluetoothRemoteGATTServ
 
   if (!server || !reqValue) return;
 
-  // const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
-  const deviceStatusValue: DeviceStatus = deviceStatus.value;
+  // const deviceStatusValue: DeviceStatus = deviceStatus.value;
+  const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
 
   const { requestId, temperatureIndex, voltageIndex, getScreenNumber } = reqValue;
 

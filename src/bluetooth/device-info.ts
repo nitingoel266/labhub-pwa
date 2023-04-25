@@ -3,7 +3,8 @@ import { getShortHexCode } from "./gatt/map";
 import {
   getServiceName,
   getCharacteristicTuple,
-  printCharacteristic,
+  // printCharacteristic,
+  // printCharacteristicName,
   getValueFromDataView,
 } from "./gatt/utils";
 import { topicDeviceStatus } from "./topics";
@@ -24,6 +25,19 @@ export async function handleDeviceInfoService(
     return;
   }
 
+  // const services = await server.getPrimaryServices();
+  // console.log('==>>', services.length);
+  // if (services.length) {
+  //   for (const service of services) {
+  //     console.log('-->', service.uuid);      
+  //     const chars = await service.getCharacteristics();
+  //     for (const char of chars) {
+  //       // await printCharacteristic(char);
+  //       printCharacteristicName(char);
+  //     }
+  //   }
+  // }
+  
   const service = await server.getPrimaryService(serviceId);
   if (!service) {
     Log.error(`[ERROR:handleDeviceInfoService] Bluetooth GATT Service not found: ${getShortHexCode(serviceId)}`);
@@ -32,13 +46,8 @@ export async function handleDeviceInfoService(
 
   const chars = await service.getCharacteristics();
 
-  Log.debug("service.name:", serviceName);
-  Log.debug("characteristics.count:", chars.length);
-  // if (DEBUG_MODE) {
-  //   for (const char of chars) {
-  //     await printCharacteristic(char);
-  //   }
-  // }
+  // Log.debug("service.name:", serviceName);
+  // Log.debug("characteristics.count:", chars.length);
 
   let deviceName = "";
   let deviceVersion = "";

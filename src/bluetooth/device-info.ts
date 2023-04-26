@@ -14,17 +14,6 @@ export async function handleDeviceInfoService(
   server: BluetoothRemoteGATTServer | null,
   serviceId: number | string
 ) {
-  if (!server || !serviceId) {
-    Log.error("[ERROR:handleDeviceInfoService] Invalid arguments passed!");
-    return;
-  }
-
-  const serviceName = getServiceName(serviceId);
-  if (serviceName !== "Device Information") {
-    Log.error("[ERROR:handleDeviceInfoService] Invalid serviceId passed! [1]");
-    return;
-  }
-
   // const services = await server.getPrimaryServices();
   // console.log('==>>', services.length);
   // if (services.length) {
@@ -38,6 +27,17 @@ export async function handleDeviceInfoService(
   //   }
   // }
   
+  if (!server || !serviceId) {
+    Log.error("[ERROR:handleDeviceInfoService] Invalid arguments passed!");
+    return;
+  }
+
+  const serviceName = getServiceName(serviceId);
+  if (serviceName !== "Device Information") {
+    Log.error("[ERROR:handleDeviceInfoService] Invalid serviceId passed! [1]");
+    return;
+  }
+
   const service = await server.getPrimaryService(serviceId);
   if (!service) {
     Log.error(`[ERROR:handleDeviceInfoService] Bluetooth GATT Service not found: ${getShortHexCode(serviceId)}`);

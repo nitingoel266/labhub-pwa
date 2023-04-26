@@ -1,5 +1,5 @@
 import { LABHUB_SERVICE, LEADER_ID_CHAR, EXPERIMENT_STATUS_CHAR } from "./const";
-import { getServiceItem, getValueFromDataView } from "./gatt/utils";
+import { getValueFromDataView } from "./gatt/utils";
 import { getShortHexCode } from "./gatt/map";
 import { getClientId, getClientType } from "../labhub/utils";
 import { getDataRate, getDataSample, getOperation } from "./device-utils";
@@ -8,7 +8,7 @@ import { topicDeviceDataFeed, topicDeviceStatus } from "./topics";
 import { DeviceDataFeed, DeviceStatus, HeaterSelect, LeaderOperation, SensorSelect, SetupData, SensorDataStream, HeaterDataStream, RgbDataStream } from "../types/common";
 import { ExperimentDataType } from "./device-types";
 import { Log } from "../utils/utils";
-import { readCharacteristicValue } from "./read-write";
+import { getCachedCharacteristic, readCharacteristicValue } from "./read-write";
 
 let prevSampleIndex = -1;
 let prevLeaderOperation: LeaderOperation = null;
@@ -20,23 +20,10 @@ export async function setupLeaderIdNotify(server: BluetoothRemoteGATTServer | nu
   let characteristic: BluetoothRemoteGATTCharacteristic | null = null;
 
   try {
-    if (!server) {
-      throw new Error("Invalid argument passed!");
+    characteristic = await getCachedCharacteristic(server, serviceId, characteristicId);
+    if (!characteristic) {
+      throw new Error(`Unable to get characteristic: ${getShortHexCode(serviceId)}, ${getShortHexCode(characteristicId)}`);
     }
-
-    const serviceItem = getServiceItem(serviceId);
-    if (!serviceItem) {
-      throw new Error("Invalid service!");
-    }
-
-    const service = await server.getPrimaryService(serviceId);
-    if (!service) {
-      throw new Error(
-        `Bluetooth GATT Service not found: ${getShortHexCode(serviceId)}`
-      );
-    }
-
-    characteristic = await service.getCharacteristic(characteristicId);
 
     characteristic.addEventListener('characteristicvaluechanged', handleLeaderIdChanged);
     await characteristic.startNotifications();
@@ -132,23 +119,10 @@ export async function setupExperimentStatusNotify(server: BluetoothRemoteGATTSer
   let characteristic: BluetoothRemoteGATTCharacteristic | null = null;
 
   try {
-    if (!server) {
-      throw new Error("Invalid argument passed!");
+    characteristic = await getCachedCharacteristic(server, serviceId, characteristicId);
+    if (!characteristic) {
+      throw new Error(`Unable to get characteristic: ${getShortHexCode(serviceId)}, ${getShortHexCode(characteristicId)}`);
     }
-
-    const serviceItem = getServiceItem(serviceId);
-    if (!serviceItem) {
-      throw new Error("Invalid service!");
-    }
-
-    const service = await server.getPrimaryService(serviceId);
-    if (!service) {
-      throw new Error(
-        `Bluetooth GATT Service not found: ${getShortHexCode(serviceId)}`
-      );
-    }
-
-    characteristic = await service.getCharacteristic(characteristicId);
 
     characteristic.addEventListener('characteristicvaluechanged', handleExperimentStatusChanged);
     await characteristic.startNotifications();

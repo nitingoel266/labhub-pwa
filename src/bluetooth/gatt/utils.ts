@@ -1,7 +1,6 @@
 import { acquireSemaphore, releaseSemaphore } from "../status";
 import { getShortHexCode, serviceListMap, characteristicListMap } from "./map";
 import { Log } from "../../utils/utils";
-import { DEBUG_MODE } from "../../utils/const";
 
 const decoder = new TextDecoder("utf-8");
 const encoder = new TextEncoder(); // Always "utf-8"

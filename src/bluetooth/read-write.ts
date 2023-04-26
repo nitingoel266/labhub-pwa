@@ -6,16 +6,15 @@ import {
   setCharacteristicValue,
 } from "./gatt/utils";
 
-export async function readCharacteristicValue<T = string | number | ArrayBuffer>(
+export async function getCachedCharacteristic(
   server: BluetoothRemoteGATTServer | null,
   serviceId: number | string,
   characteristicId: number | string,
-  valueType: 'int8' | 'int16' | 'string' | 'buffer'
 ) {
   let characteristic: BluetoothRemoteGATTCharacteristic | null = null;
 
   try {
-    if (!server || !serviceId) {
+    if (!server || !serviceId || !characteristicId) {
       throw new Error("Invalid arguments passed!");
     }
 
@@ -33,7 +32,21 @@ export async function readCharacteristicValue<T = string | number | ArrayBuffer>
 
     characteristic = await service.getCharacteristic(characteristicId);
   } catch (e) {
-    Log.error("[ERROR:readCharacteristicValue]", e);
+    Log.error("[ERROR:getCachedCharacteristic]", e);
+  }
+
+  return characteristic;
+}
+
+export async function readCharacteristicValue<T = string | number | ArrayBuffer>(
+  server: BluetoothRemoteGATTServer | null,
+  serviceId: number | string,
+  characteristicId: number | string,
+  valueType: 'int8' | 'int16' | 'string' | 'buffer'
+) {
+  const characteristic = await getCachedCharacteristic(server, serviceId, characteristicId);
+  if (!characteristic) {
+    Log.error("[ERROR:readCharacteristicValue] Unable to read characteristic value", getShortHexCode(serviceId), getShortHexCode(characteristicId));
     return undefined;
   }
 
@@ -56,28 +69,9 @@ export async function writeCharacteristicValue(
   characteristicValue: number | string | ArrayBuffer,
   bytes?: number
 ) {
-  let characteristic: BluetoothRemoteGATTCharacteristic | null = null;
-
-  try {
-    if (!server || !serviceId) {
-      throw new Error("Invalid arguments passed!");
-    }
-
-    const serviceItem = getServiceItem(serviceId);
-    if (!serviceItem) {
-      throw new Error("Invalid serviceId passed! [3]");
-    }
-
-    const service = await server.getPrimaryService(serviceId);
-    if (!service) {
-      throw new Error(
-        `Bluetooth GATT Service not found: ${getShortHexCode(serviceId)}`
-      );
-    }
-
-    characteristic = await service.getCharacteristic(characteristicId);
-  } catch (e) {
-    Log.error("[ERROR:writeCharacteristicValue]", e);
+  const characteristic = await getCachedCharacteristic(server, serviceId, characteristicId);
+  if (!characteristic) {
+    Log.error("[ERROR:writeCharacteristicValue] Unable to write characteristic value", getShortHexCode(serviceId), getShortHexCode(characteristicId));
     return false;
   }
 

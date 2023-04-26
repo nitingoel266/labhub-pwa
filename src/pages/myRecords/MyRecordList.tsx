@@ -83,10 +83,48 @@ const MyRecordList = () => {
         return;
       }
       try {
+        let header:any = ["Time ( Sec )", "Temperature ( C )"];
+        if (selectedButton === "voltage") header = ["Time ( Sec )", "Voltage (V)"];
+        else if (selectedButton === "rgb")
+          header = ["Measurement No.", "RED", "GREEN", "BLUE"];
+        
+        let csv:any = "";
+        if(header && header[2] === "GREEN" && item?.isCalibratedAndTested){
+          csv += "Calibrated and Tested";
+          csv += "\n";
+        }
+        if (header) {
+          for (let one of header) {
+            csv += one + ",";
+          }
+          csv += "\n";
+        }
+        // csv += data.name + '\n';
+        if (item && item.data && item.data.length > 0) {
+          for(let one of item.data){
+            if(header && header[1] === "Temperature ( C )"){
+              csv += one.time;
+              csv += "," + one.temp;
+            }else if(header && header[1] === "Voltage (V)"){
+              csv += one.time;
+              csv += "," + one.voltage;
+            }else if(header && header[2] === "GREEN"){
+              csv += one["Measuement No"];
+              csv += "," + one['RED'];
+              csv += "," + one['GREEN'];
+              csv += "," + one['BLUE'];
+      
+            }
+            csv += "\n";
+          }
+        }
+        const file = new File([csv], `${item?.name}.csv`,{type:"text/csv"});
+        // console.log("???????? ",file)
         await navigator.share({
-          url:item,
-          title: `${selectedButton}`,
-          text: `${selectedButton} Experiment Data`,
+          url:`${selectedButton} Experiment data of ${item.name}`,
+          text: `${selectedButton} data of ${item?.name}`,
+          title: `${selectedButton} Experiment Data`,
+          files:[file]
         });
         console.log("data has been shared Successfully!")
       } catch (error) {

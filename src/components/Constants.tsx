@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import IButtonContent from "./IButtonContent";
 
 const mobileWidth = 414;
@@ -107,6 +108,16 @@ const getTime = () => {
     return time;
 }
 
+const  useIsTouchDeviceDetect =() => {
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+    useEffect(() => {
+      if (!window.matchMedia) return;
+      setIsTouchDevice(window.matchMedia("(pointer:coarse)").matches);
+    }, []);
+  
+    return isTouchDevice;
+  }
+
 export {
     mobileWidth,
     LEADER_SELECTIONMODAL_INITIATE,
@@ -141,5 +152,7 @@ export {
     validateFileName,
     getStorageData,
     getStorageKeys,
-    getShortedData
+    getShortedData,
+
+    useIsTouchDeviceDetect
 }

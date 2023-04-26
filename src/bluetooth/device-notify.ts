@@ -38,8 +38,8 @@ export async function setupLeaderIdNotify(server: BluetoothRemoteGATTServer | nu
 
     characteristic = await service.getCharacteristic(characteristicId);
 
-    await characteristic.startNotifications();
     characteristic.addEventListener('characteristicvaluechanged', handleLeaderIdChanged);
+    await characteristic.startNotifications();
 
     Log.debug('Notifications setup successfully for leader_notify!');
   } catch (e) {
@@ -50,19 +50,22 @@ export async function setupLeaderIdNotify(server: BluetoothRemoteGATTServer | nu
   return characteristic;
 }
 
-export async function cleanupLeaderIdNotify(characteristic: BluetoothRemoteGATTCharacteristic | null) {
+export async function cleanupLeaderIdNotify(characteristic: BluetoothRemoteGATTCharacteristic | null) {  
   try {
     if (characteristic) {
-      await characteristic.stopNotifications();
       characteristic.removeEventListener('characteristicvaluechanged', handleLeaderIdChanged);
-      characteristic = null;
+      if (characteristic.service.device.gatt?.connected) {
+        await characteristic.stopNotifications();
+      }
 
-      Log.debug('Notification cleanup successful for leader_notify!');
+      Log.debug('Notifications cleanup successful for leader_notify!');
     }
   } catch (e) {
     Log.error("[ERROR:cleanupLeaderIdNotify]", e);
     return;
   }
+
+  characteristic = null;
 }
 
 function handleLeaderIdChangedBase(leaderId: string) {
@@ -132,8 +135,8 @@ export async function setupExperimentStatusNotify(server: BluetoothRemoteGATTSer
 
     characteristic = await service.getCharacteristic(characteristicId);
 
-    await characteristic.startNotifications();
     characteristic.addEventListener('characteristicvaluechanged', handleExperimentStatusChanged);
+    await characteristic.startNotifications();
 
     Log.debug('Notifications setup successfully for experiment_status_notify!');
   } catch (e) {
@@ -147,16 +150,19 @@ export async function setupExperimentStatusNotify(server: BluetoothRemoteGATTSer
 export async function cleanupExperimentStatusNotify(characteristic: BluetoothRemoteGATTCharacteristic | null) {
   try {
     if (characteristic) {
-      await characteristic.stopNotifications();
       characteristic.removeEventListener('characteristicvaluechanged', handleExperimentStatusChanged);
-      characteristic = null;
+      if (characteristic.service.device.gatt?.connected) {
+        await characteristic.stopNotifications();
+      }
 
-      Log.debug('Notification cleanup successful for experiment_status_notify!');
+      Log.debug('Notifications cleanup successful for experiment_status_notify!');
     }
   } catch (e) {
     Log.error("[ERROR:cleanupExperimentStatusNotify]", e);
     return;
   }
+
+  characteristic = null;
 }
 
 // TODO: Is it called for leader in action?

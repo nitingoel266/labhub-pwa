@@ -159,7 +159,7 @@ export const setCharacteristicValue = async (
 
   if (criticalSection) {
     releaseSemaphore(0);
-    Log.warn('Semaphore forced eviction:', criticalSection);
+    Log.warn('Semaphore forced eviction! id:', criticalSection);
     criticalSection = undefined;
   }
 

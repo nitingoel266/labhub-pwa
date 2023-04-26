@@ -9,7 +9,7 @@ export async function acquireSemaphore(id: number) {
   let acquired = undefined;
   while (!acquired) {
     acquired = semaphore.tryAcquire();
-    // Log.warn(`trying to acquire [${id}]`);
+    // Log.warn(`trying to acquire [id: ${id}]`);
     await delay(100);
   }
   return acquired;
@@ -17,7 +17,7 @@ export async function acquireSemaphore(id: number) {
 
 export function releaseSemaphore(id: number) {
   semaphore.release();
-  // Log.warn(`release [${id}]`);
+  // Log.warn(`release [id: ${id}]`);
 }
 
 export const initialDeviceStatus: DeviceStatus = {

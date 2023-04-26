@@ -187,28 +187,16 @@ function handleExperimentStatusChanged(event: any) {
 
     const leaderOperation: LeaderOperation = getOperation(operation);
 
-    // TODO: Test if ExperimentStatus notify automatically comes when a sensor/heater is connected to the device??
-
     let sensorConnected: SensorSelect = null;
     if ((sensor_attach & 0x1) === 0x1) {
       sensorConnected = 'temperature';
     } else if ((sensor_attach & 0x2) === 0x2) {
-      // TODO?: Clarify only one of 'temperature' (more priority) and 'voltage' is connected at a time
       sensorConnected = 'voltage';
     }
     
     let heaterConnected: HeaterSelect = null;
     if ((sensor_attach & 0x4) === 0x4) {
-      // TODO?: How to differentiate b/w 'element' and 'probe'
-      heaterConnected = 'probe';
-    }
-
-    // TODO [temp]:
-    // 1a. data_rate (default) 1 second not coming from device on first notify
-    // 1b. setpoint_temp (default) 20*C not coming from device on first notify
-    // 2. Unable to write (0,0) pair for data_rate and num_of_samples
-    if (data_rate === 0 && num_of_samples === 0) {
-      data_rate = 1;
+      heaterConnected = 'element';
     }
 
     const setupData: SetupData = {
@@ -222,7 +210,7 @@ function handleExperimentStatusChanged(event: any) {
 
     const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
 
-    // TODO: Check 0-100(%) or level 0-3 or ???
+    // 0-100 (0-100%)
     deviceStatusValue.batteryLevel = battery_level;
 
     deviceStatusValue.sensorConnected = sensorConnected;
@@ -231,7 +219,7 @@ function handleExperimentStatusChanged(event: any) {
     deviceStatusValue.setupData = setupData;
     deviceStatusValue.setpointTemp = setpointTemp;
 
-    // TODO: Is the ExperimentStatus notify really always as a result of new operation??
+    // TODO: ExperimentStatus notify not always as a result of new operation: Handle it!
     deviceStatusValue.operationPrev = deviceStatusValue.operation;
     deviceStatusValue.operation = leaderOperation;
 
@@ -306,7 +294,7 @@ function handleExperimentStatusChanged(event: any) {
         element: null,
         probe: null,
       };
-      if (heaterConnected === 'probe' && leaderOperation === 'heater_control') {
+      if (heaterConnected === 'element' && leaderOperation === 'heater_control') {
         const power = data1 / 1000;
         const probeTemp = data2x === null ? data2x : data2x / 100;
 

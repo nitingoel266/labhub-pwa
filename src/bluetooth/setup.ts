@@ -9,6 +9,7 @@ import { requestClientId, disconnectClient, handleDeviceStatusUpdate, handleDevi
 import { setupLeaderIdNotify, cleanupLeaderIdNotify, setupExperimentStatusNotify, cleanupExperimentStatusNotify, requestLeaderId } from "./device-notify";
 import { DEVICE_INFO_SERVICE, LABHUB_SERVICE } from "./const";
 import { Log, timeoutPromise } from "../utils/utils";
+import { clearCharacteristicsCache } from "./read-write";
 import { DEBUG_MODE } from '../utils/const';
 import { DeviceDataFeed, DeviceStatus } from "../types/common";
 import {
@@ -86,6 +87,10 @@ export const initSetup = async () => {
       Log.debug("Reusing the previous bluetooth connection!");
     } else {
       Log.debug("Disconnecting previous bluetooth connection..");
+
+      // partial cleanup
+      clearCharacteristicsCache(serverPrev.device.id);
+
       serverPrev.disconnect(); // noCleanup (just disconnect, cleanup aleady done)
     }
   } else if (!status && serverPrev) {
@@ -261,7 +266,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
 
     // Read device info
     const pr1 = handleDeviceInfoService(server, DEVICE_INFO_SERVICE);
-    await timeoutPromise(pr1, 8000);
+    await timeoutPromise(pr1, 10000);
 
     const connectionReuse = !!server && !!serverPrev && serverPrev.device.id === server.device.id && server.connected;
     const clientId = await requestClientId(server, connectionReuse);
@@ -370,16 +375,26 @@ async function onDisconnected(event?: any) {
   Log.debug('onDisconnected() complete!');
 
   // Ref: https://googlechrome.github.io/samples/web-bluetooth/automatic-reconnect.html
+  // NOTE: Auto-reconnect is disabled due to the issue that device status notifications
+  // are not working (even after resubscribing notifications) after reconnect
   if (reconnectServer) {
-    Log.log('Attempting re-connect..');
-    const status = await initSetupBase(reconnectServer.device, true);
-    if (!status) {
-      Log.error('Unable to reconnect using (disconnected) gatt server!');
-      // applicationMessage.next('Unable to re-connect!');
-      // location.reload(); // eslint-disable-line
-    } else {
-      Log.log('Auto-reconnect successful!');
-    }
+    // Log.log('Attempting re-connect..');
+    // const status = await initSetupBase(reconnectServer.device, true);
+    // if (!status) {
+    //   Log.error('Unable to reconnect using (disconnected) gatt server!');
+    //   // applicationMessage.next('Unable to re-connect!');
+    //   // location.reload(); // eslint-disable-line
+    // } else {
+    //   Log.log('Auto-reconnect successful!');
+    // }
+  }
+
+  // Issue: Device status notifications are not working (even after resubscribing notifications) after reconnect
+  // Repro: Disconnect and Connect --> notifications are not subscribed (not working)
+  // NOTE: The following runs for current server disconnect (manual or auto), but not for prev server disconnect
+  if (gattServer) {
+    // Fix the above issue
+    window.location.reload();
   }
 }
 

@@ -6,6 +6,8 @@ import {
   setCharacteristicValue,
 } from "./gatt/utils";
 
+const characteristicsCache = new Map<string, BluetoothRemoteGATTCharacteristic>();
+
 export async function getCachedCharacteristic(
   server: BluetoothRemoteGATTServer | null,
   serviceId: number | string,
@@ -16,6 +18,12 @@ export async function getCachedCharacteristic(
   try {
     if (!server || !serviceId || !characteristicId) {
       throw new Error("Invalid arguments passed!");
+    }
+
+    const key = `${server.device.id}.${getShortHexCode(serviceId)}.${getShortHexCode(characteristicId)}`;
+    const cachedValue = characteristicsCache.get(key);
+    if (cachedValue) {
+      return cachedValue;
     }
 
     const serviceItem = getServiceItem(serviceId);
@@ -31,11 +39,24 @@ export async function getCachedCharacteristic(
     }
 
     characteristic = await service.getCharacteristic(characteristicId);
+    characteristicsCache.set(key, characteristic);
   } catch (e) {
     Log.error("[ERROR:getCachedCharacteristic]", e);
   }
 
   return characteristic;
+}
+
+export function clearCharacteristicsCache(keyPrefix?: string) {
+  if (!keyPrefix) {
+    characteristicsCache.clear();
+  } else {
+    for (const key of characteristicsCache.keys()) {
+      if (key.startsWith(keyPrefix)) {
+        characteristicsCache.delete(key);
+      }
+    }
+  }
 }
 
 export async function readCharacteristicValue<T = string | number | ArrayBuffer>(

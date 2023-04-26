@@ -1,6 +1,6 @@
 import { clientChannelResponse, deviceStatus, resetStatus } from "../labhub/status";
 import { clearClientId, getClientId, setClientId, getClientType } from "../labhub/utils";
-import { readCharacteristicValue, writeCharacteristicValue } from "./read-write";
+import { clearCharacteristicsCache, readCharacteristicValue, writeCharacteristicValue } from "./read-write";
 import { getArrayBuffer, getByteArray, getDataRateN, getDataSampleN, getOperationN } from "./device-utils";
 import { initialDeviceStatus } from "./status";
 import { topicDeviceStatus, resetTopics } from "./topics";
@@ -114,6 +114,7 @@ export const resetClient = (softReset = false) => {
     Log.debug('Client (soft) reset complete!');
   } else {
     clearClientId();
+    clearCharacteristicsCache();
     Log.debug('Client reset complete!');
   }
 };

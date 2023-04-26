@@ -222,11 +222,13 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
       }
     } else if (key === 'resetAll' || key === 'setupData' || key === 'setpointTemp') {
       if (getClientType() === 'leader') {
+        const activeOperation = deviceStatusValue.operation;
+
         // (default) 0=stop/reset
-        const timerControlN: TimerControl = TimerControl.STOP_RESET;
+        const timerControlN: TimerControl = activeOperation ? TimerControl.RUN : TimerControl.STOP_RESET;
 
         // (default) OP_IDLE (0)
-        const operationN: ControlOperation = getOperationN(deviceStatusValue.operation || /*idle*/null);
+        const operationN: ControlOperation = getOperationN(activeOperation || /*idle*/null);
 
         // (default) 1 second:
         let dataRateN = getDataRateN(deviceStatusValue.setupData.dataRate || 1);
@@ -255,7 +257,7 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
           operation: operationN,        
           data_rate: dataRateN,
           num_of_samples: dataSampleN,
-          heater_temp_setpoint: heaterSetpointTempN * 100,
+          heater_temp_setpoint: heaterSetpointTempN,
         };
 
         await dispatchExperimentControl(server, experimentControl);
@@ -334,13 +336,11 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
       timerControlN = TimerControl.RUN;
     }
   } else if (heaterExperiment !== undefined) {
-    if (deviceStatusValue.heaterConnected === 'probe') {
+    if (deviceStatusValue.heaterConnected === 'element') {
       operationN = ControlOperation.OP_HEATER_MANUAL_CONTROL;
+    } else if (deviceStatusValue.heaterConnected === 'probe') {
+      operationN = ControlOperation.OP_HEATER_AUTO_CONTROL;
     }
-    // TODO?: How to differentiate b/w 'element' and 'probe'
-    // else if (deviceStatusValue.heaterConnected === 'element') {
-    //   operationN = ControlOperation.OP_HEATER_MANUAL_CONTROL;
-    // }
 
     if (heaterExperiment === false) {
       timerControlN = TimerControl.STOP_RESET;
@@ -368,7 +368,7 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
     operation: operationN,        
     data_rate: dataRateN,
     num_of_samples: dataSampleN,
-    heater_temp_setpoint: heaterSetpointTempN * 100,
+    heater_temp_setpoint: heaterSetpointTempN,
   };
 
   await dispatchExperimentControl(server, experimentControl);
@@ -377,12 +377,14 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
 async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | null, experimentControl: ExperimentControl) {
   const { timer_control, operation, data_rate, num_of_samples, heater_temp_setpoint } = experimentControl;
 
+  Log.debug('experimentControl:', experimentControl);
+
   const a1 = getByteArray(timer_control);
   const a2 = getByteArray(operation);
 
   const b1 = getByteArray(data_rate, 2);
   const b2 = getByteArray(num_of_samples, 2);
-  const b3 = getByteArray(heater_temp_setpoint, 2);
+  const b3 = getByteArray(heater_temp_setpoint * 100, 2);
 
   const controlStruct: ArrayBuffer | null = getArrayBuffer(a1, a2, b1, b2, b3);
   if (controlStruct !== null) {
@@ -485,7 +487,7 @@ async function getDataSeriesPartial(server: BluetoothRemoteGATTServer | null, st
       if (dataSeriesBuffer && dataSeriesBuffer.byteLength === 22) {
         const dataSeriesView = new DataView(dataSeriesBuffer);
 
-        // const index = getValueFromDataView(dataSeriesView, 'int16', 0) as number;
+        const index = getValueFromDataView(dataSeriesView, 'int16', 0) as number;
         const data0 = getValueFromDataView(dataSeriesView, 'int16', 2) as number;
         const data1 = getValueFromDataView(dataSeriesView, 'int16', 4) as number;
         const data2 = getValueFromDataView(dataSeriesView, 'int16', 6) as number;
@@ -507,6 +509,10 @@ async function getDataSeriesPartial(server: BluetoothRemoteGATTServer | null, st
         const data7x = (data7 & 0xffff) === 0xffff ? null : data7;
         const data8x = (data8 & 0xffff) === 0xffff ? null : data8;
         const data9x = (data9 & 0xffff) === 0xffff ? null : data9;
+
+        if (index !== startIndex) {
+          Log.warn('Unexpected! Data series requested and received sample index not same:', startIndex, index);
+        }
 
         Log.debug('Partial data series read from device..');
         return [data0x, data1x, data2x, data3x, data4x, data5x, data6x, data7x, data8x, data9x];

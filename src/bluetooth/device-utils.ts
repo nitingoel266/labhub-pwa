@@ -60,6 +60,8 @@ export function getOperationN(operation: LeaderOperation): ControlOperation {
       return ControlOperation.OP_MEASURE_VOLTAGE;
     case 'heater_control':
       return ControlOperation.OP_HEATER_MANUAL_CONTROL;
+    case 'heater_probe':
+      return ControlOperation.OP_HEATER_AUTO_CONTROL;
     case 'rgb_calibrate':
       return ControlOperation.OP_RGB_CALIBRATE;
     case 'rgb_measure':
@@ -80,6 +82,8 @@ export function getOperation(operationN: ControlOperation): LeaderOperation {
       return 'measure_voltage';
     case ControlOperation.OP_HEATER_MANUAL_CONTROL:
       return 'heater_control';
+    case ControlOperation.OP_HEATER_AUTO_CONTROL:
+      return 'heater_probe';
     case ControlOperation.OP_RGB_CALIBRATE:
       return 'rgb_calibrate';
     case ControlOperation.OP_RGB_MEASURE:

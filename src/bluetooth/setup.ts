@@ -1,6 +1,5 @@
 import fastq from "fastq";
 import type { queueAsPromised } from "fastq";
-import isEqual from 'lodash/isEqual';
 import { Subscription } from "rxjs";
 import { initGattMap } from "./gatt/map";
 import { handleDeviceInfoService } from "./device-info";
@@ -10,8 +9,6 @@ import { setupLeaderIdNotify, cleanupLeaderIdNotify, setupExperimentStatusNotify
 import { DEVICE_INFO_SERVICE, LABHUB_SERVICE } from "./const";
 import { Log, timeoutPromise } from "../utils/utils";
 import { clearCharacteristicsCache } from "./read-write";
-import { DEBUG_MODE } from '../utils/const';
-import { DeviceDataFeed, DeviceStatus } from "../types/common";
 import {
   deviceConnected,
   deviceStatus,
@@ -22,9 +19,6 @@ import {
   applicationMessage,
   connectionAttemptOngoing,
 } from "../labhub/status";
-
-let deviceStatusPrev: DeviceStatus | null = null;
-let deviceDataFeedPrev: DeviceDataFeed | null = null;
 
 let statusPrev = false;
 let manualDisconnect = false;
@@ -56,9 +50,9 @@ async function asyncWorker(arg: Task): Promise<void> {
   if (arg.id === 1) {
     await handleDeviceStatusUpdate(server, arg.value);
   } else if (arg.id === 2) {
-    await handleClientChannelRequest(server, arg.value);
-  } else if (arg.id === 3) {
     await handleDeviceDataFeedUpdate(server, arg.value);
+  } else if (arg.id === 3) {
+    await handleClientChannelRequest(server, arg.value);
   }
 }
 
@@ -230,20 +224,10 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     // ------------------------
 
     topic1 = topicDeviceStatus.subscribe((value) => {
-      if (DEBUG_MODE) {
-        const isDiff = !isEqual(deviceStatusPrev, value);
-        if (isDiff) Log.debug("TOPIC_DEVICE_STATUS:", value);
-        deviceStatusPrev = JSON.parse(JSON.stringify(value));
-      }
       deviceStatus.next(value);
     });
 
     topic2 = topicDeviceDataFeed.subscribe((value) => {
-      if (DEBUG_MODE) {
-        const isDiff = !isEqual(deviceDataFeedPrev, value);
-        if (isDiff) Log.debug("TOPIC_DEVICE_DATA_FEED:", value);
-        deviceDataFeedPrev = JSON.parse(JSON.stringify(value));
-      }
       deviceDataFeed.next(value);
     });
 

@@ -1,15 +1,14 @@
-// NUM_OPS = 9
 export enum ControlOperation {
   OP_IDLE = 0,
   OP_MEASURE_TEMPERATURE,
   OP_MEASURE_VOLTAGE,
-  OP_HEATER_CALIBRATE,  // calibrate?? (No example)
-  OP_HEATER_MANUAL_CONTROL,  // ??
-  OP_HEATER_AUTO_CONTROL,  // ??
-  OP_RGB_CALIBRATE,  // calibrate vs test calibrate?
+  OP_HEATER_CALIBRATE,  // unused
+  OP_HEATER_MANUAL_CONTROL,
+  OP_HEATER_AUTO_CONTROL,
+  OP_RGB_CALIBRATE,
   OP_RGB_MEASURE,
-  OP_RAW_MEASURE,
-  NUM_OPS
+  OP_RAW_MEASURE,  // unused
+  NUM_OPS  /* NUM_OPS = 9 */
 }
 
 export enum TimerControl {

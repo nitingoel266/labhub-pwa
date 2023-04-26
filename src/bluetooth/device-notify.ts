@@ -6,9 +6,11 @@ import { getDataRate, getDataSample, getOperation } from "./device-utils";
 import { getDeviceStatusValue, isReusedClientId, removeMember } from "./device-actions";
 import { topicDeviceDataFeed, topicDeviceStatus } from "./topics";
 import { DeviceDataFeed, DeviceStatus, HeaterSelect, LeaderOperation, SensorSelect, SetupData, SensorDataStream, HeaterDataStream, RgbDataStream } from "../types/common";
-import { ExperimentDataType } from "./device-types";
-import { Log } from "../utils/utils";
+import { ExperimentDataType, TimerControl } from "./device-types";
+import { delay, Log, roundTwoDec } from "../utils/utils";
 import { getCachedCharacteristic, readCharacteristicValue } from "./read-write";
+import { stopRgbExperiment } from "../labhub/actions";
+import { getTemperatureValue, getVoltageValue } from "../labhub/actions-client";
 
 let prevSampleIndex = -1;
 let prevLeaderOperation: LeaderOperation = null;
@@ -154,24 +156,21 @@ export async function cleanupExperimentStatusNotify(characteristic: BluetoothRem
   characteristic = null;
 }
 
-// TODO: Is it called for leader in action?
-function handleExperimentStatusChanged(event: any) {
+async function handleExperimentStatusChanged(event: any) {
   const dataView = event.target.value;
   const experimentStatusBuffer = getValueFromDataView(dataView, 'buffer') as ArrayBuffer;
-
-  // TODO: Handle reset of deviceStatus value (at least client-side) when experiment starts/stops!!
 
   if (experimentStatusBuffer && experimentStatusBuffer.byteLength === 20) {
     const statusDataView = new DataView(experimentStatusBuffer);
 
-    // const timer_control = getValueFromDataView(statusDataView, 'int8', 0) as number;  // TODO: ??
+    const timer_control = getValueFromDataView(statusDataView, 'int8', 0) as number;
     const operation = getValueFromDataView(statusDataView, 'int8', 1) as number;
     const data_type = getValueFromDataView(statusDataView, 'int8', 2) as number;
     // const status_fault = getValueFromDataView(statusDataView, 'int8', 3) as number;
     const battery_level = getValueFromDataView(statusDataView, 'int8', 4) as number;
     const sensor_attach = getValueFromDataView(statusDataView, 'int8', 5) as number;
 
-    let data_rate = getValueFromDataView(statusDataView, 'int16', 6) as number;
+    const data_rate = getValueFromDataView(statusDataView, 'int16', 6) as number;
     const num_of_samples = getValueFromDataView(statusDataView, 'int16', 8) as number;
     const current_sample = getValueFromDataView(statusDataView, 'int16', 10) as number;
     const heater_temp_setpoint = getValueFromDataView(statusDataView, 'int16', 12) as number;
@@ -196,7 +195,11 @@ function handleExperimentStatusChanged(event: any) {
     
     let heaterConnected: HeaterSelect = null;
     if ((sensor_attach & 0x4) === 0x4) {
-      heaterConnected = 'element';
+      if ((sensor_attach & 0x1) === 0x1) {
+        heaterConnected = 'probe';
+      } else {
+        heaterConnected = 'element';
+      }
     }
 
     const setupData: SetupData = {
@@ -210,8 +213,7 @@ function handleExperimentStatusChanged(event: any) {
 
     const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
 
-    // 0-100 (0-100%)
-    deviceStatusValue.batteryLevel = battery_level;
+    deviceStatusValue.batteryLevel = battery_level;  // 0-100 (0-100%)
 
     deviceStatusValue.sensorConnected = sensorConnected;
     deviceStatusValue.heaterConnected = heaterConnected;
@@ -219,31 +221,18 @@ function handleExperimentStatusChanged(event: any) {
     deviceStatusValue.setupData = setupData;
     deviceStatusValue.setpointTemp = setpointTemp;
 
-    // TODO: ExperimentStatus notify not always as a result of new operation: Handle it!
-    deviceStatusValue.operationPrev = deviceStatusValue.operation;
-    deviceStatusValue.operation = leaderOperation;
-
-    {
-      const { operationPrev, operation } = deviceStatusValue;
-      if (operation === 'rgb_measure') {
-        if (operationPrev === 'rgb_calibrate') {
-          deviceStatusValue.rgbCalibratedAndTested = true;
-        } else if (operationPrev === 'rgb_measure') {
-          // remains same
-        } else {
-          deviceStatusValue.rgbCalibratedAndTested = false;
-        }
-      } else {
-        deviceStatusValue.rgbCalibratedAndTested = false;
-      }  
+    if (!deviceStatusValue.operation && leaderOperation && timer_control !== TimerControl.STOP_RESET) {
+      deviceStatusValue.operation = leaderOperation;
+    } else if (deviceStatusValue.operation && (deviceStatusValue.operation !== leaderOperation || timer_control === TimerControl.STOP_RESET)) {
+      deviceStatusValue.operationPrev = deviceStatusValue.operation;
+      deviceStatusValue.operation = null;
     }
-
-    topicDeviceStatus.next(deviceStatusValue);
 
     // --------------------
 
     const dataType: ExperimentDataType = data_type;
     let deviceDataFeed: DeviceDataFeed | null = null;
+    let rgbCalibratedAndTested = false;
 
     if ((prevLeaderOperation !== leaderOperation) || (current_sample === 0 && prevSampleIndex > 0)) {
       prevSampleIndex = -1;
@@ -251,6 +240,8 @@ function handleExperimentStatusChanged(event: any) {
     prevLeaderOperation = leaderOperation;
 
     if (dataType === ExperimentDataType.NONE) {
+      rgbCalibratedAndTested = deviceStatusValue.rgbCalibratedAndTested;  // let it be unchanged
+
       deviceDataFeed = {
         sensor: null,
         heater: null,
@@ -269,12 +260,67 @@ function handleExperimentStatusChanged(event: any) {
           voltageIndex: null,
         };
         if (sensorConnected === 'temperature' && leaderOperation === 'measure_temperature') {
-          sensorDataStream.temperature = data3 / 100;
-          sensorDataStream.temperatureIndex = current_sample;
+          // sensorDataStream.temperature = data3;  // temperature is C, not C * 100
+          // sensorDataStream.temperatureIndex = current_sample;
+
+          if (current_sample === 0) {
+            sensorDataStream = null;
+          } else if (current_sample === 1) {
+            const lastValue = await getTemperatureValue(current_sample - 1);
+
+            sensorDataStream.temperature = lastValue;
+            sensorDataStream.temperatureIndex = current_sample - 1;
+          } else if (current_sample === 2) {
+            const lastValue = await getTemperatureValue(current_sample - 1);
+
+            const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
+            sensorDataStreamPrev.temperature = lastValue;
+            sensorDataStreamPrev.temperatureIndex = current_sample - 1;
+            const deviceDataFeedPrev = {
+              sensor: sensorDataStreamPrev,
+              heater: null,
+              rgb: null,
+            };            
+            topicDeviceDataFeed.next(deviceDataFeedPrev);
+            await delay(100);
+
+            sensorDataStream.temperature = data3;  // temperature is C, not C * 100
+            sensorDataStream.temperatureIndex = current_sample;
+          } else {
+            sensorDataStream.temperature = data3;  // temperature is C, not C * 100
+            sensorDataStream.temperatureIndex = current_sample;
+          }
         } else if (sensorConnected === 'voltage' && leaderOperation === 'measure_voltage') {
-          sensorDataStream.voltage = data3 / 100;
-          // sensorDataStream.voltage = (data3 / 1000) - 12; //  TODO: 100 vs 1000 w/ -12 adjust
-          sensorDataStream.voltageIndex = current_sample;
+          // sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
+          // sensorDataStream.voltageIndex = current_sample;
+
+          if (current_sample === 0) {
+            sensorDataStream = null;
+          } else if (current_sample === 1) {
+            const lastValue = await getVoltageValue(current_sample - 1);
+
+            sensorDataStream.voltage = lastValue;
+            sensorDataStream.voltageIndex = current_sample - 1;
+          } else if (current_sample === 2) {
+            const lastValue = await getVoltageValue(current_sample - 1);
+
+            const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
+            sensorDataStreamPrev.voltage = lastValue;
+            sensorDataStreamPrev.voltageIndex = current_sample - 1;
+            const deviceDataFeedPrev = {
+              sensor: sensorDataStreamPrev,
+              heater: null,
+              rgb: null,
+            };            
+            topicDeviceDataFeed.next(deviceDataFeedPrev);
+            await delay(100);
+
+            sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
+            sensorDataStream.voltageIndex = current_sample;
+          } else {
+            sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
+            sensorDataStream.voltageIndex = current_sample;
+          }
         } else {
           sensorDataStream = null;
         }
@@ -296,9 +342,10 @@ function handleExperimentStatusChanged(event: any) {
       };
       if (heaterConnected === 'element' && leaderOperation === 'heater_control') {
         const power = data1 / 1000;
-        const probeTemp = data2x === null ? data2x : data2x / 100;
-
-        // TODO: as any ==> probeTemp can be null in case of heater (vs probe confusion!)
+        heaterDataStream.element = [power];
+      } else if (heaterConnected === 'probe' && leaderOperation === 'heater_probe') {
+        const power = data1 / 1000;
+        const probeTemp = data2x === null ? data2x : data2x;  // temperature is C, not C * 100
         heaterDataStream.probe = [power, probeTemp as any];
       } else {
         heaterDataStream = null;
@@ -315,9 +362,17 @@ function handleExperimentStatusChanged(event: any) {
         measure: null,
       };
       if (leaderOperation === 'rgb_calibrate') {
+        rgbCalibratedAndTested = true;
         rgbDataStream.calibrateTest = [data1x, data2x, data3x];
+        if (data1x !== null && data2x !== null && data3x !== null) {
+          stopRgbExperiment();
+        }
       } else if (leaderOperation === 'rgb_measure') {
+        rgbCalibratedAndTested = deviceStatusValue.rgbCalibratedAndTested;  // let it be unchanged
         rgbDataStream.measure = [data1x, data2x, data3x];
+        if (data1x !== null && data2x !== null && data3x !== null) {
+          stopRgbExperiment();
+        }
       } else {
         rgbDataStream = null;
       }
@@ -329,11 +384,16 @@ function handleExperimentStatusChanged(event: any) {
       };
     }
 
-    Log.debug('handleExperimentStatusChanged:', !!deviceDataFeed);
+    deviceStatusValue.rgbCalibratedAndTested = rgbCalibratedAndTested;
+
+    topicDeviceStatus.next(deviceStatusValue);
+
+    Log.debug('handleExperimentStatusChanged:', !!deviceDataFeed, data1, data2, data3, '#', data_type, operation, timer_control, current_sample);
+
     if (deviceDataFeed) {
       topicDeviceDataFeed.next(deviceDataFeed);
     } else {
-      Log.error('handleExperimentStatusChanged: Unhandled value!', deviceDataFeed);
+      // Log.error('handleExperimentStatusChanged: Unhandled value!', deviceDataFeed);
     }
   } else {
     Log.error('[ERROR:handleExperimentStatusChanged] Invalid experimentStatusBuffer:', experimentStatusBuffer?.byteLength);

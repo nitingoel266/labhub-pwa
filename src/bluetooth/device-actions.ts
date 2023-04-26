@@ -11,6 +11,8 @@ import { getValueFromDataView } from "./gatt/utils";
 import { resetAll } from "../labhub/actions";
 import { Log } from "../utils/utils";
 
+let reusedClientId = false;
+
 export function getDeviceStatusValue(init = false): DeviceStatus {
   if (init) {
     if (deviceStatus.value) {
@@ -25,7 +27,7 @@ export function getDeviceStatusValue(init = false): DeviceStatus {
   }
 }
 
-function removeMember(membersList: string[], clientId: string) {
+export function removeMember(membersList: string[], clientId: string) {
   if (membersList.includes(clientId as string)) {
     const idx = membersList.indexOf(clientId as string);
     if (idx >= 0) membersList.splice(idx, 1);
@@ -47,6 +49,8 @@ function addMember(membersList: string[], clientId: string) {
 }
   
 export const requestClientId = async (server: BluetoothRemoteGATTServer, connectionReuse = false) => {
+  reusedClientId = false;
+
   let clientId = connectionReuse ? getClientId() : null;
   if (!clientId) {
     if (connectionReuse) {
@@ -68,6 +72,7 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
       Log.error('[ERROR:requestClientId] Unable to get new Student ID from LabHub device [1]');
     }
   } else {
+    reusedClientId = true;
     Log.log('Reusing existing/stored clientId!');
   }
 
@@ -98,6 +103,8 @@ export const disconnectClient = async (server: BluetoothRemoteGATTServer) => {
     }
   }
 };
+
+export const isReusedClientId = () => reusedClientId;
 
 export const resetClient = (softReset = false) => {
   resetTopics();

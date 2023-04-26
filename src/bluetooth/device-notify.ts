@@ -3,7 +3,7 @@ import { getServiceItem, getValueFromDataView } from "./gatt/utils";
 import { getShortHexCode } from "./gatt/map";
 import { getClientId, getClientType } from "../labhub/utils";
 import { getDataRate, getDataSample, getOperation } from "./device-utils";
-import { getDeviceStatusValue } from "./device-actions";
+import { getDeviceStatusValue, isReusedClientId, removeMember } from "./device-actions";
 import { topicDeviceDataFeed, topicDeviceStatus } from "./topics";
 import { DeviceDataFeed, DeviceStatus, HeaterSelect, LeaderOperation, SensorSelect, SetupData, SensorDataStream, HeaterDataStream, RgbDataStream } from "../types/common";
 import { ExperimentDataType } from "./device-types";
@@ -68,21 +68,36 @@ export async function cleanupLeaderIdNotify(characteristic: BluetoothRemoteGATTC
   characteristic = null;
 }
 
-function handleLeaderIdChangedBase(leaderId: string) {
+function handleLeaderIdChangedBase(leaderId: string, manual = false) {
   // NOTE: Though the condition is put here, it cannot be fully trusted because of possible race conditions
   // So, proper handling has been done in the conditions for if-else block below
+  // However, if it is called manually (manual === true), then it is safe to say that there are no race conditions
   if (getClientType() === 'leader') return;
 
+  let handled = false;
   const clientId = getClientId();
+  const reusedClientId = isReusedClientId();
   const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
 
   if (deviceStatusValue.leaderSelected && leaderId === '0' && clientId && clientId !== deviceStatusValue.leaderSelected) {
+    handled = true;
     deviceStatusValue.leaderSelected = null;
     topicDeviceStatus.next(deviceStatusValue);
-  } else if (deviceStatusValue.leaderSelected === null && leaderId && leaderId !== '0' && clientId && leaderId !== clientId) {
-    deviceStatusValue.leaderSelected = leaderId;
-    topicDeviceStatus.next(deviceStatusValue);
-  } else {
+  } else if (deviceStatusValue.leaderSelected === null && leaderId && leaderId !== '0' && clientId) {
+    if (leaderId !== clientId) {
+      handled = true;
+      deviceStatusValue.leaderSelected = leaderId;
+      topicDeviceStatus.next(deviceStatusValue);
+    } else if (manual && reusedClientId) {
+      handled = true;
+      removeMember(deviceStatusValue.membersJoined, clientId);
+      deviceStatusValue.leaderSelected = leaderId;
+      topicDeviceStatus.next(deviceStatusValue);
+      Log.debug('Automatically upgraded to leader status!');
+    }
+  }
+
+  if (!handled) {
     // Log.error('handleLeaderIdChangedBase: Unhandled value!', clientId, leaderId, deviceStatusValue.leaderSelected);
   }
 }
@@ -104,7 +119,7 @@ export const requestLeaderId = async (server: BluetoothRemoteGATTServer | null) 
     Log.debug('[A] Leader ID read from device:', leaderIdn);
 
     const leaderId = `${leaderIdn}`;
-    handleLeaderIdChangedBase(leaderId);
+    handleLeaderIdChangedBase(leaderId, true);
   }
 }
 

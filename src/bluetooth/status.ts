@@ -5,14 +5,19 @@ import { DeviceStatus } from "../types/common";
 // Create a semaphore with a limit of 1
 const semaphore = new Sema(1);
 
-export async function acquireSemaphore() {
-  while (!semaphore.tryAcquire()) {
+export async function acquireSemaphore(id: number) {
+  let acquired = undefined;
+  while (!acquired) {
+    acquired = semaphore.tryAcquire();
+    // Log.warn(`trying to acquire [${id}]`);
     await delay(100);
   }
+  return acquired;
 }
 
-export function releaseSemaphore() {
+export function releaseSemaphore(id: number) {
   semaphore.release();
+  // Log.warn(`release [${id}]`);
 }
 
 export const initialDeviceStatus: DeviceStatus = {

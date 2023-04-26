@@ -62,12 +62,15 @@ export const getCharacteristicTuple = async <T = number | string | ArrayBuffer |
   characteristic: BluetoothRemoteGATTCharacteristic,
   valueType: 'int8' | 'int16' | 'string' | 'buffer'
 ): Promise<[string, T | undefined]> => {
+  let criticalSection = undefined;
   const name = getCharacteristicName(characteristic.uuid);
   try {
-    await acquireSemaphore();
+    await acquireSemaphore(1);
+    criticalSection = 1;
     // console.warn('semaphore acquired! (read)', getShortHexCode(characteristic.uuid));
     const val = await characteristic.readValue();
-    releaseSemaphore();
+    releaseSemaphore(1);
+    criticalSection = undefined;
     // console.warn('semaphore released. (read)', getShortHexCode(characteristic.uuid));
     const value = getValueFromDataView(val, valueType);
 
@@ -75,8 +78,15 @@ export const getCharacteristicTuple = async <T = number | string | ArrayBuffer |
     return [name, value as T];
   } catch (e) {
     Log.error(`[ERROR:getCharacteristicTuple] Cannot read characteristic[${characteristic.uuid}]:`, e);
-    return [name, undefined];
   }
+
+  if (criticalSection) {
+    releaseSemaphore(0);
+    Log.warn('Semaphore forced eviction:', criticalSection);
+    criticalSection = undefined;
+  }
+
+  return [name, undefined];
 };
 
 export const printCharacteristic = async (
@@ -98,6 +108,7 @@ export const setCharacteristicValue = async (
   value: number | string | ArrayBuffer,
   bytes?: number
 ): Promise<boolean> => {
+  let criticalSection = undefined;
   try {
     let bufferSource;
     if (typeof value === 'number') {
@@ -121,18 +132,22 @@ export const setCharacteristicValue = async (
     }
 
     if (characteristic.properties.write) {
-      await acquireSemaphore();
+      await acquireSemaphore(2);
+      criticalSection = 2;
       // console.warn('semaphore acquired! (write)', getShortHexCode(characteristic.uuid));
       await characteristic.writeValueWithResponse(bufferSource);
-      releaseSemaphore();
+      releaseSemaphore(2);
+      criticalSection = undefined;
       // console.warn('semaphore released. (write)', getShortHexCode(characteristic.uuid));
       Log.debug('setCharacteristicValue: writeValueWithResponse successful!')
       return true;
     } else if (characteristic.properties.writeWithoutResponse) {
-      await acquireSemaphore();
+      await acquireSemaphore(3);
+      criticalSection = 3;
       // console.warn('semaphore acquired! (writeWithoutResponse)', getShortHexCode(characteristic.uuid));
       await characteristic.writeValueWithoutResponse(bufferSource);
-      releaseSemaphore();
+      releaseSemaphore(3);
+      criticalSection = undefined;
       // console.warn('semaphore released. (writeWithoutResponse)', getShortHexCode(characteristic.uuid));
       Log.debug('setCharacteristicValue: writeValueWithoutResponse successful!')
       return true;
@@ -141,6 +156,12 @@ export const setCharacteristicValue = async (
     }
   } catch (e) {
     Log.error(`[ERROR:setCharacteristicValue] Cannot write characteristic[${characteristic.uuid}]:`, e);
+  }
+
+  if (criticalSection) {
+    releaseSemaphore(0);
+    Log.warn('Semaphore forced eviction:', criticalSection);
+    criticalSection = undefined;
   }
 
   return false;

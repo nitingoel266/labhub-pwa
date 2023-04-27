@@ -16,7 +16,7 @@ import {
   startHeaterExperiment,
   stopHeaterExperiment,
 } from "../../labhub/actions";
-import {getClientId} from "../../labhub/utils";
+import { getClientId } from "../../labhub/utils";
 import IButtonComponent from "../../components/IButtonComponent";
 import {
   mobileWidth,
@@ -27,7 +27,7 @@ import Header from "../../components/header";
 
 let temperatureTimmer: any;
 const HeaterElement = () => {
-  const clientId = getClientId()
+  const clientId = getClientId();
   const [status] = useDeviceStatus();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [dataStream] = useDeviceDataFeed();
@@ -176,13 +176,15 @@ const HeaterElement = () => {
           <div className={styles.ButtonWrapper}>
             <div
               onClick={() =>
-                clientId === status?.leaderSelected && !isStart
+                clientId === status?.leaderSelected &&
+                status?.heaterConnected === "element" &&
+                !isStart
                   ? setModal("start")
                   : {}
               }
               className={styles.Button}
               style={
-                isStart
+                isStart || status?.heaterConnected === "probe"
                   ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
                   : extraStyle
               }

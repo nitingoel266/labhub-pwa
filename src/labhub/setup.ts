@@ -14,6 +14,10 @@ let subs3: Subscription;
 
 let clientSubs1: Subscription;
 
+setInterval(() => {
+  deviceStatus.next(JSON.parse(JSON.stringify(deviceStatus.value)));
+}, 1000);
+
 export const initSetup = async (): Promise<boolean> => {
   const clientId = assertClientId();
   if (!clientId) {

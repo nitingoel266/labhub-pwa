@@ -146,12 +146,12 @@ const TemperatureProbe = () => {
             <div className={styles.TextStyle}>{temperature}</div>
             <img
               onMouseDown={() =>
-                clientId === status?.leaderSelected && isDeviceTouchable
+                clientId === status?.leaderSelected && !isDeviceTouchable
                   ? handleMouseDownEvent("enter", "add")
                   : {}
               }
               onMouseUp={() =>
-                clientId === status?.leaderSelected && isDeviceTouchable
+                clientId === status?.leaderSelected && !isDeviceTouchable
                   ? handleMouseDownEvent("leave", "add")
                   : {}
               }
@@ -213,13 +213,15 @@ const TemperatureProbe = () => {
           <div className={styles.ButtonWrapper}>
             <div
               onClick={() =>
-                clientId === status?.leaderSelected && !isStart
+                clientId === status?.leaderSelected &&
+                status?.heaterConnected === "probe" &&
+                !isStart
                   ? setModal("start")
                   : {}
               }
               className={styles.Button}
               style={
-                isStart
+                isStart || status?.heaterConnected === "element"
                   ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
                   : extraStyle
               }

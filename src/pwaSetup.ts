@@ -1,4 +1,4 @@
-import { connectionAttemptOngoing, pwaInstallPromotion, swInstallStatus, swPendingUpdate } from "./labhub/status";
+import { applicationMessage, connectionAttemptOngoing, pwaInstallPromotion, swInstallStatus, swPendingUpdate } from "./labhub/status";
 import { isLocalhost } from "./utils/utils";
 import { Config } from "./serviceWorkerRegistration";
 
@@ -84,7 +84,8 @@ function handleAppInstalled() {
     // Clear the deferredPrompt so it can be garbage collected
     deferredPrompt = null;
 
-    console.log('PWA has been installed and added to Home Screen!');
+    console.log('LabHub PWA has been installed and added to Home Screen!');
+    applicationMessage.next({ type: 'info', message: 'LabHub PWA has been installed and added to Home Screen!' });
   });
 }
 

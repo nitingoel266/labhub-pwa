@@ -21,7 +21,7 @@ const DataSetup = () => {
     const isLeader = clientId === status?.leaderSelected ? true : false;
     
     useEffect(() => {
-        if(status?.setupData){
+        if(status?.setupData?.dataRate){
             let rate;
             for(let one in getDataRate){
                 if(getDataRate[one] === status?.setupData?.dataRate){
@@ -30,7 +30,8 @@ const DataSetup = () => {
             }
             setDataSetup({dataRate:rate,dataSample:status?.setupData?.dataSample === 'cont' ? 'CONT' : status?.setupData?.dataSample})
         }
-    },[status?.setupData])
+    },[status?.setupData?.dataRate,status?.setupData?.dataSample])
+
     const handleSubmit = () => {
         setupData({ dataRate:getDataRate[dataSetup.dataRate], dataSample: getDataSample[dataSetup.dataSample]})
         // setSelectedFunction(null)

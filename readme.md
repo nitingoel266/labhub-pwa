@@ -1,5 +1,13 @@
 # LabHub PWA
 
+## Before deployment
+
+Bfore starting the deployment process please ensure that you have the latest code from the `main` branch of the following repo:
+
+`git clone git@github.com:abraj-dew/labhub_pwa.git`  
+`git checkout main`  
+`git pull origin main`  
+
 ## Deployment process
 Go to the root directory of the project and run the following command:  
 `npm run prod`  

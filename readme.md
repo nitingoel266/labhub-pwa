@@ -19,4 +19,4 @@ You can check the deployment status by running the following command:
 
 ## Notes
 
-* Before running the deployment command `npm run prod`, please ensure that `Node.js` *version 18+* is installed in the deployment environment.  
+* Before running the deployment command `npm run prod`, please ensure that `Node.js` **version 18+** is installed in the deployment environment.  

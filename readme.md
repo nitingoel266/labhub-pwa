@@ -2,7 +2,7 @@
 
 ## Before deployment
 
-Before starting the deployment process please ensure that you have the latest code from the `main` branch of the following repo:
+Before starting the deployment process, please ensure to take the latest code from the `main` branch of the following repo:
 
 `git clone -b main --single-branch git@github.com:abraj-dew/labhub_pwa.git`  
 `cd labhub_pwa && git checkout main`  
@@ -19,4 +19,4 @@ You can check the deployment status by running the following command:
 
 ## Notes
 
-* Before the above deployment command is run, please ensure that a `Node.js` version 18+ is installed in the deployment environment.  
+* Before running the deployment command `npm run prod`, please ensure that `Node.js` *version 18+* is installed in the deployment environment.  

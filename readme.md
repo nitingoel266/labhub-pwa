@@ -2,7 +2,7 @@
 
 ## Before deployment
 
-Before starting the deployment process, please ensure to take the latest code from the `main` branch of the following repo:
+Before starting the deployment process, please ensure to take the latest code from the `main` branch of the repo:
 
 `git clone -b main --single-branch git@github.com:abraj-dew/labhub_pwa.git`  
 `cd labhub_pwa && git checkout main`  

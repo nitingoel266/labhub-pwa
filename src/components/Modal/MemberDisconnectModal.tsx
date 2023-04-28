@@ -6,7 +6,7 @@ type Props= {
     isOpen:boolean;
     setModal:(value:any) => void;
     handleDisconnect:() => void;
-    message?:string;
+    message?:any;
     handleCancel?:() => void;
 }
 
@@ -28,11 +28,12 @@ const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen
             <div className={styles.TextContainer}>
                 <div className={styles.Headertext}>
                     <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
-                    <div>Title</div>
+                    <div>Information</div>
                 </div>
                 <div className={styles.BodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <div>{message}</div>
+                        {/* <div>{message}</div> */}
+                        <div dangerouslySetInnerHTML={{__html:message}}></div>
                     </div>
                     <div className={styles.ButtonWrapper}>
                         <div onClick={() => handleCancel ? handleCancel() : setModal("")} className={styles.CancelButton}>No</div>

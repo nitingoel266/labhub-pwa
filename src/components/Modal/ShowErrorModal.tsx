@@ -6,7 +6,7 @@ import styles from '../../styles/Loader.module.css';
 const ShowErrorModal = () => {
     const [appMessage] = useAppMessage();
 
-    const errorMessage = appMessage?.message ?? null;
+    const errorMessage = appMessage?.message ?? null; // it will be an html component
     const messageType = appMessage?.type;
     const getMessageType = {"warn":"Warning","info":"Information","error":"Error Message"}
     
@@ -32,7 +32,8 @@ const ShowErrorModal = () => {
                 </div>
                 <div className={styles.ErrorBodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <div>{errorMessage}</div>
+                        <div dangerouslySetInnerHTML={{__html:errorMessage}}/>
+                        {/* <div>{errorMessage}</div> */}
                     </div>
                     <div className={styles.ErrorButtonWrapper}>
                         {/* <div onClick={() => setErrorMessage(null)} className={styles.CancelButton}>No</div> */}

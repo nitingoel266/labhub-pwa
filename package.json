@@ -5,13 +5,13 @@
   "scripts": {
     "dev": "BROWSER=none REACT_APP_ENV=dev react-scripts start",
     "start": "node server.js",
-    "build": "npm run clean && REACT_APP_ENV=prod react-scripts build",
+    "build": "npm run clean && npm ci && REACT_APP_ENV=prod react-scripts build",
     "prod": "npm run build && npm run pm2:stop && npm run pm2:start",
     "pm2:start": "pm2 start server.js --name labhub-pwa --time",
     "pm2:stop": "pm2 delete labhub-pwa || true",
     "pm2:logs": "pm2 logs labhub-pwa",
     "pm2:ls": "pm2 ls",
-    "clean": "rm -rf build",
+    "clean": "rm -rf build node_modules",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1,10 +1,7 @@
-import { uninitSetup as uninitSetupMock } from "./setup";
-import { applicationMessage } from "./status";
+import { initSetup as initSetupMock, uninitSetup as uninitSetupMock } from "./setup";
 
 export const initSetup = async (): Promise<boolean> => {
-  // return await initSetupMock();
-  applicationMessage.next({ type: 'info', message: 'Awesome! Your deploy is complete.' });
-  return true;
+  return await initSetupMock();
 };
 
 export const uninitSetup = async () => {

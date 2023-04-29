@@ -1,4 +1,4 @@
-import { clientChannelResponse, deviceStatus, resetStatus } from "../labhub/status";
+import { applicationMessage, clientChannelResponse, deviceStatus, resetStatus } from "../labhub/status";
 import { clearClientId, getClientId, setClientId, getClientType } from "../labhub/utils";
 import { clearCharacteristicsCache, readCharacteristicValue, writeCharacteristicValue } from "./read-write";
 import { getArrayBuffer, getByteArray, getDataRateN, getDataSampleN, getOperationN } from "./device-utils";
@@ -57,6 +57,7 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
       Log.warn('Unexpected! clientId should already exist in case of connection reuse.');
     }
 
+    let success = false;
     const voidClientId = await readCharacteristicValue<number>(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 'int16');
     if (voidClientId === 0) {
       const ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 0, 2);
@@ -65,6 +66,7 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
         if (clientIdn) {
           Log.debug('New clientId requested successfully:', clientIdn);
           clientId = setClientId(clientIdn);
+          success = true;
         } else {
           Log.error('[ERROR:requestClientId] Unable to get new Student ID from LabHub device [2]');
         }
@@ -76,9 +78,13 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
     } else {
       Log.error('[ERROR:requestClientId] Unable to read/check for clientId value from device:', voidClientId);
     }
+
+    if (!success) {
+      applicationMessage.next('Unable to request new clientId.');
+    }
   } else {
     reusedClientId = true;
-    Log.log('Reusing existing/stored clientId!');
+    Log.log('Reusing existing/stored clientId:', clientId);
   }
 
   if (clientId) {
@@ -380,26 +386,33 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
 
 async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | null, experimentControl: ExperimentControl) {
   const { timer_control, operation, data_rate, num_of_samples, heater_temp_setpoint } = experimentControl;
+  let dataRate = data_rate;
 
   Log.debug('experimentControl:', experimentControl);
 
   const a1 = getByteArray(timer_control);
   const a2 = getByteArray(operation);
 
-  const b1 = getByteArray(data_rate, 2);
+  const b1 = getByteArray(dataRate, 2);
   const b2 = getByteArray(num_of_samples, 2);
   const b3 = getByteArray(heater_temp_setpoint * 100, 2);
 
+  let success = false;
   const controlStruct: ArrayBuffer | null = getArrayBuffer(a1, a2, b1, b2, b3);
   if (controlStruct !== null) {
     const ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, EXPERIMENT_CONTROL_CHAR, controlStruct);
     if (ret1) {
       Log.debug('Experiment control struct sent to device!');
+      success = true;
     } else {
       Log.error('[ERROR:dispatchExperimentControl] Unable to write to experiment control characteristic');
     }
   } else {
     Log.error('[ERROR:dispatchExperimentControl] Unable to create control struct:', [!!a1, !!a2, !!b1, !!b2, !!b3]);
+  }
+
+  if (!success) {
+    applicationMessage.next('Unable to dispatch experiment control message.');
   }
 }
 

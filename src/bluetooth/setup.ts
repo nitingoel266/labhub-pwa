@@ -309,6 +309,8 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
 async function onDisconnected(event?: any) {
   let reconnectServer: BluetoothRemoteGATTServer | null = null;
   let gattServer: BluetoothRemoteGATTServer | null = null;
+  let isManualDisconnect = false;
+
   if (event?.target) {
     gattServer = event.target.gatt;
   }
@@ -335,6 +337,7 @@ async function onDisconnected(event?: any) {
       // server cleanup (auto or manual disconnect)
 
       if (manualDisconnect) {
+        isManualDisconnect = true;
         manualDisconnect = false;
         Log.debug('onDisconnected(): manual disconnect');
       } else {
@@ -393,7 +396,7 @@ async function onDisconnected(event?: any) {
   // NOTE: The following runs for current server disconnect (manual or auto), but not for prev server disconnect
   if (gattServer) {
     // Fix the above issue
-    if (!DISABLE_RELOAD) {
+    if (!DISABLE_RELOAD && !isManualDisconnect) {
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -412,5 +415,6 @@ export const uninitSetup = async () => {
     server.disconnect(); // NOTE: onDisconnected() called automatically
   } else {
     Log.warn("Bluetooth device is already disconnected!");
+    window.location.reload();
   }
 };

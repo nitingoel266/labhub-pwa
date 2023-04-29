@@ -251,8 +251,6 @@ async function handleExperimentStatusChanged(event: any) {
       if (prevSampleIndex < current_sample) {
         prevSampleIndex = current_sample;
 
-        // TODO: handle continuous data (and ensure it results in NO duplicates)
-
         let sensorDataStream: SensorDataStream | null = {
           temperature: null,
           temperatureIndex: null,
@@ -332,10 +330,6 @@ async function handleExperimentStatusChanged(event: any) {
         };
       }
     } else if (dataType === ExperimentDataType.HEATER) {
-      // TODO: Handle heater element
-
-      // TODO: Ensure continuous data results in NO duplicates
-
       let heaterDataStream: HeaterDataStream | null = {
         element: null,
         probe: null,

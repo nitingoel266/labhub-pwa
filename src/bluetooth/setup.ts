@@ -7,6 +7,7 @@ import { topicDeviceDataFeed, topicDeviceStatus } from "./topics";
 import { requestClientId, disconnectClient, handleDeviceStatusUpdate, handleDeviceDataFeedUpdate, handleClientChannelRequest, resetClient } from "./device-actions";
 import { setupLeaderIdNotify, cleanupLeaderIdNotify, setupExperimentStatusNotify, cleanupExperimentStatusNotify, requestLeaderId } from "./device-notify";
 import { DEVICE_INFO_SERVICE, LABHUB_SERVICE } from "./const";
+import { DISABLE_RELOAD } from "../utils/const";
 import { Log, timeoutPromise } from "../utils/utils";
 import { clearCharacteristicsCache } from "./read-write";
 import {
@@ -90,7 +91,11 @@ export const initSetup = async () => {
   } else if (!status && serverPrev) {
     status = await initSetupBase(serverPrev.device);
     if (!status) {
-      location.reload(); // eslint-disable-line
+      if (!DISABLE_RELOAD) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
     }
   }
 
@@ -367,7 +372,7 @@ async function onDisconnected(event?: any) {
     // if (!status) {
     //   Log.error('Unable to reconnect using (disconnected) gatt server!');
     //   // applicationMessage.next('Unable to re-connect!');
-    //   // location.reload(); // eslint-disable-line
+    //   // window.location.reload();
     // } else {
     //   Log.log('Auto-reconnect successful!');
     // }
@@ -378,7 +383,11 @@ async function onDisconnected(event?: any) {
   // NOTE: The following runs for current server disconnect (manual or auto), but not for prev server disconnect
   if (gattServer) {
     // Fix the above issue
-    window.location.reload();
+    if (!DISABLE_RELOAD) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
   }
 }
 

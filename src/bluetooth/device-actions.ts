@@ -101,6 +101,8 @@ export const disconnectClient = async (server: BluetoothRemoteGATTServer) => {
       Log.error('[ERROR:disconnectClient] Unable to disconnect client from LabHub device');
       return;
     }
+  } else {
+    Log.warn('[disconnectClient] clientId missing!');
   }
 };
 
@@ -240,7 +242,6 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
         let heaterSetpointTempN = deviceStatusValue.setpointTemp || 20;
 
         if (key === 'resetAll') {
-          // TODO:check-reset?already-done?:Leader dispatches ExperimentControl struct to device with all experiment related values reset
           Log.debug('resetAll dispatched by leader');
         } else if (key === 'setupData') {
           const { dataRate, dataSample } = value as SetupData;
@@ -332,7 +333,6 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
     if (sensorExperiment === false) {
       timerControlN = TimerControl.STOP_RESET;
     } else if (sensorExperiment === true) {
-      // TODO?: Handle value 2 (TimerControl.RESTART)
       timerControlN = TimerControl.RUN;
     }
   } else if (heaterExperiment !== undefined) {
@@ -345,7 +345,6 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
     if (heaterExperiment === false) {
       timerControlN = TimerControl.STOP_RESET;
     } else if (heaterExperiment === true) {
-      // TODO?: Handle value 2 (TimerControl.RESTART)
       timerControlN = TimerControl.RUN;
     }
   } else if (rgbExperiment !== undefined) {
@@ -358,7 +357,6 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
     if (rgbExperiment === false) {
       timerControlN = TimerControl.STOP_RESET;
     } else if (rgbExperiment === true) {
-      // TODO?: Handle value 2 (TimerControl.RESTART)
       timerControlN = TimerControl.RUN;
     }
   }

@@ -1,10 +1,11 @@
 import { deviceStatus } from './status';
-import { LABHUB_CLIENT_ID } from '../utils/const';
 import { ClientType } from '../types/common';
 import { Log } from '../utils/utils';
 
+let clientIdStore: string | null = null;
+
 export const getClientId = (): string | null => {
-  const clientIdx = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientIdx = clientIdStore;
   let clientId = null;
   if (clientIdx) {
     clientId = Number.parseInt(clientIdx, 10) || null; // NOTE: 0, NaN -> null
@@ -45,15 +46,9 @@ export const setClientId = (clientId?: number): string | null => {
     Log.debug('Passed client ID validated!');
   }
 
-  localStorage.setItem(LABHUB_CLIENT_ID, `${clientId}`);
-  const retVal = getClientId();
-  if (retVal) {
-    Log.debug('LABHUB_CLIENT_ID created in localStorage');
-  } else {
-    Log.error('[ERROR:setClientId] Unable to retrieve set clientId from localStorage:', clientId);
-  }
+  clientIdStore = `${clientId}`;
 
-  return retVal;
+  return clientIdStore;
 };
 
 export const assertClientId = (): string | null => {
@@ -65,11 +60,7 @@ export const assertClientId = (): string | null => {
 };
 
 export const clearClientId = () => {
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
-  if (clientId) {
-    localStorage.removeItem(LABHUB_CLIENT_ID);
-    Log.debug('LABHUB_CLIENT_ID cleaned up from localStorage');  
-  }
+  clientIdStore = null;
 };
 
 export const getClientType = (): ClientType => {

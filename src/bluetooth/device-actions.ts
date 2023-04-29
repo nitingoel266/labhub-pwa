@@ -57,19 +57,24 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
       Log.warn('Unexpected! clientId should already exist in case of connection reuse.');
     }
 
-    // TODO: readCharacteristicValue first to see that clientId is 0??
-    // TODO: what happens when 0 clientId is written to existing acive connection??
-    const ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 0, 2);
-    if (ret1) {
-      const clientIdn = await readCharacteristicValue<number>(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 'int16');
-      if (clientIdn) {
-        clientId = setClientId(clientIdn);
-        Log.debug('New clientId requested successfully!');
+    const voidClientId = await readCharacteristicValue<number>(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 'int16');
+    if (voidClientId === 0) {
+      const ret1 = await writeCharacteristicValue(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 0, 2);
+      if (ret1) {
+        const clientIdn = await readCharacteristicValue<number>(server, LABHUB_SERVICE, STUDENT_ID_CHAR, 'int16');
+        if (clientIdn) {
+          Log.debug('New clientId requested successfully:', clientIdn);
+          clientId = setClientId(clientIdn);
+        } else {
+          Log.error('[ERROR:requestClientId] Unable to get new Student ID from LabHub device [2]');
+        }
       } else {
-        Log.error('[ERROR:requestClientId] Unable to get new Student ID from LabHub device [2]');
+        Log.error('[ERROR:requestClientId] Unable to get new Student ID from LabHub device [1]');
       }
+    } else if (voidClientId) {
+      Log.error('[ERROR:requestClientId] Cannot request a new clientId! clientId already exists for this connection:', voidClientId);
     } else {
-      Log.error('[ERROR:requestClientId] Unable to get new Student ID from LabHub device [1]');
+      Log.error('[ERROR:requestClientId] Unable to read/check for clientId value from device:', voidClientId);
     }
   } else {
     reusedClientId = true;
@@ -97,6 +102,7 @@ export const disconnectClient = async (server: BluetoothRemoteGATTServer) => {
 
     if (ret1) {
       Log.debug('Client disconnect successful!');
+      clearClientId();
     } else {
       Log.error('[ERROR:disconnectClient] Unable to disconnect client from LabHub device');
       return;
@@ -145,7 +151,7 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
             if (ret1) {
               Log.debug('New Leader ID set in device');
             } else {
-              Log.debug('Unable to set new Leader ID in device');
+              Log.debug('Unable to set new Leader ID in device:', clientId);
             }
 
             if (ret1) {
@@ -284,8 +290,8 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
           deviceStatusValue.rgbCalibrated = value as boolean;
           topicDeviceStatus.next(deviceStatusValue);
         } else if (key === 'rgbConnected') {
-          // TODO1: Can we get away with rgbConnected and simulateRgb() 
-          // TODO2: I don't think so! Stuctural changes required!! e.g. rgbExperiment: boolean --> 'calibrate_test' | 'measure' | null
+          // TODO: Can we get away with rgbConnected and simulateRgb() 
+          // TODO: No! Stuctural changes required!! e.g. rgbExperiment: boolean --> 'calibrate_test' | 'measure' | null
           deviceStatusValue.rgbConnected = value as RgbFuncSelect;
           topicDeviceStatus.next(deviceStatusValue);
         }

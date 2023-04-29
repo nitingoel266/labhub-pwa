@@ -82,7 +82,7 @@ function handleLeaderIdChangedBase(leaderId: string, manual = false) {
       removeMember(deviceStatusValue.membersJoined, clientId);
       deviceStatusValue.leaderSelected = leaderId;
       topicDeviceStatus.next(deviceStatusValue);
-      Log.debug('Automatically upgraded to leader status!');
+      Log.debug('Automatically upgraded to leader status:', clientId);
     }
   }
 

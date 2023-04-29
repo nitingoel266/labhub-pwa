@@ -7,7 +7,7 @@ import { topicDeviceDataFeed, topicDeviceStatus } from "./topics";
 import { requestClientId, disconnectClient, handleDeviceStatusUpdate, handleDeviceDataFeedUpdate, handleClientChannelRequest, resetClient } from "./device-actions";
 import { setupLeaderIdNotify, cleanupLeaderIdNotify, setupExperimentStatusNotify, cleanupExperimentStatusNotify, requestLeaderId } from "./device-notify";
 import { DEVICE_INFO_SERVICE, LABHUB_SERVICE } from "./const";
-import { DISABLE_RELOAD } from "../utils/const";
+import { DISABLE_RELOAD, REUSE_CLIENTID_ONCONNREUSE } from "../utils/const";
 import { Log, timeoutPromise } from "../utils/utils";
 import { clearCharacteristicsCache } from "./read-write";
 import {
@@ -72,6 +72,11 @@ export const initSetup = async () => {
 
   if (serverPrev) {
     Log.debug("Cleaning up previous bluetooth connection..");
+
+    if (!REUSE_CLIENTID_ONCONNREUSE) {
+      await disconnectClient(serverPrev);
+    }
+
     await onDisconnected(); // softReset (cleanup withot disconnect)
   }
 
@@ -257,8 +262,13 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     const pr1 = handleDeviceInfoService(server, DEVICE_INFO_SERVICE);
     await timeoutPromise(pr1, 10000);
 
-    const connectionReuse = !!server && !!serverPrev && serverPrev.device.id === server.device.id && server.connected;
-    const clientId = await requestClientId(server, connectionReuse);
+    let clientId;
+    if (REUSE_CLIENTID_ONCONNREUSE) {
+      const connectionReuse = !!server && !!serverPrev && serverPrev.device.id === server.device.id && server.connected;
+      clientId = await requestClientId(server, connectionReuse);
+    } else {
+      clientId = await requestClientId(server);
+    }
     if (!clientId) throw new Error('Unable to request client Id');
 
     // Setup for leader_notify and experiment_status_notify events
@@ -393,9 +403,9 @@ async function onDisconnected(event?: any) {
 
 export const uninitSetup = async () => {
   if (server?.connected) {
-    // TODO: what is the point of disconnecting from labhub device!
-    // TODO(2): Is terminating bluetooth connection not enough?
-    // TODO(3): Anyways, this is not called when disconnecting during trying second connection on-the-fly!
+    // Optional here, since disconnecting the bluetooth connection will anyways disconnect the client.
+    // However, not optional in case we do not want to reuse the same clientId after reconnect over the same bluetooth connection (connection reuse)
+    // NOTE: see usage of REUSE_CLIENTID_ONCONNREUSE flag
     await disconnectClient(server);
 
     manualDisconnect = true;

@@ -27,15 +27,7 @@ export const getClientId = (): string | null => {
 };
 
 export const setClientId = (clientId?: number): string | null => {
-  if (clientId === undefined) {
-    // TODO: Generate a new client ID (for mock data purpose)
-    // TODO: No longer needed when MOCK_TEST support is removed?
-    const uint16 = Math.floor(Math.random() * (2 ** 16 - 1)) + 1; // 1-65535
-    const uint16Array = Uint16Array.of(uint16);
-    clientId = uint16Array[0];
-    
-    Log.debug('New client ID created!');
-  } else {
+  if (clientId) {
     // Validate client ID
     const uint16Array = Uint16Array.of(clientId);
     if (clientId !== uint16Array[0]) {
@@ -44,6 +36,19 @@ export const setClientId = (clientId?: number): string | null => {
     }
 
     Log.debug('Passed client ID validated!');
+  } else if (clientId === undefined) {
+    // Generate a new client ID (for mock data purpose)
+    const uint16 = Math.floor(Math.random() * (2 ** 16 - 1)) + 1; // 1-65535
+    const uint16Array = Uint16Array.of(uint16);
+    clientId = uint16Array[0];
+    
+    Log.debug('New client ID created (for mock data)!');
+  } else {
+    Log.error('[ERROR:setClientId] Invalid clientId passed:', clientId);
+  }
+
+  if (!clientId) {
+    return null;
   }
 
   clientIdStore = `${clientId}`;

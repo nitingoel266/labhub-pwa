@@ -6,6 +6,10 @@ export const delay = (ms: number) => {
   });
 };
 
+export const roundTwoDec = (value: number) => {
+  return Math.round(value * 100) / 100;
+};
+
 export const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.

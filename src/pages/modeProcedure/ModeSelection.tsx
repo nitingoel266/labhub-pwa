@@ -1,10 +1,7 @@
-
-
 import { useState } from "react";
 import {DataSetupIcon,IButtonIcon,SensorIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
-// import {setSelectedMode} from "../../labhub/actions-client"
 import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import IButtonComponent from "../../components/IButtonComponent";
@@ -22,8 +19,6 @@ const ModeSelection = () => {
     }
     const handleSubmit = () => {
         if(selectedItem){
-            // let mode = selectedItem.slice(0,selectedItem.indexOf(" ")).toLowerCase()
-            // setSelectedMode(mode)
             navigate(selectedItem === MANUAL_MODE ? "/function-selection" : "/preset-mode")
         }
 

@@ -28,7 +28,7 @@ export function timeoutPromise<T>(pr: Promise<any>, duration: number): Promise<T
       resolve(value as T);
     }).catch(e => {
       clearTimeout(timeout);
-      resolve(e);
+      reject(e);
     });
   });
 }

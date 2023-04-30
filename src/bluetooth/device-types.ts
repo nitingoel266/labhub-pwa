@@ -67,6 +67,7 @@ interface RawData {
 }
 
 // DEVICE_SETUP_CHAR = 0x4307;  // W (admin)
+export
 interface DeviceSetup {
   cmd: number; // uint8_t: 0=store to NVM, 1 = reset device
   number_of_connections: number;  // uint8_t: 1-7, (default) 7
@@ -78,6 +79,7 @@ interface DeviceSetup {
 // EXPERIMENT_STATUS_CHAR = 0x4301;  // N
 // Experiment Status Struct [DONE]
 // max 20 bytes for BLE notify without modifying message structure
+export
 interface ExperimentStatus {
   timer_control: TimerControl;  // uint8_t: (default) 0=stop/reset, 1=run, 2=restart
   operation: ControlOperation;  // uint8_t: (default) OP_IDLE
@@ -96,6 +98,7 @@ interface ExperimentStatus {
 
 // EXPERIMENT_DATA_SERIES_CHAR = 0x4302;  // RW (data log)
 // Experiment Data Series Struct
+export
 interface ExperimentDataSeries {
   index: number; // uint16_t: [0-1790] starting index for sample data series
   data: number[]; // uint16_t[10]: [(N), (N+1) ... (N+9)], (0xffff = measurement not collected)

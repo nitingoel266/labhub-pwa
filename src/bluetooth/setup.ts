@@ -260,7 +260,10 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
 
     // Read device info
     const pr1 = handleDeviceInfoService(server, DEVICE_INFO_SERVICE);
-    await timeoutPromise(pr1, 10000);
+    const status1 = await timeoutPromise<boolean>(pr1, 10000);
+    if (!status1) {
+      throw new Error('Unable to request Device Info.');
+    }
 
     let clientId;
     if (REUSE_CLIENTID_ONCONNREUSE) {

@@ -17,7 +17,7 @@ export async function getCachedCharacteristic(
 
   try {
     if (!server || !serviceId || !characteristicId) {
-      throw new Error("Invalid arguments passed!");
+      throw new Error(`Invalid arguments passed! ${server}, ${serviceId}, ${characteristicId}`);
     }
 
     const key = `${server.device.id}.${getShortHexCode(serviceId)}.${getShortHexCode(characteristicId)}`;

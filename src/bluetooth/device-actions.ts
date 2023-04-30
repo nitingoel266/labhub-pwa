@@ -388,6 +388,9 @@ async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | nul
   const { timer_control, operation, data_rate, num_of_samples, heater_temp_setpoint } = experimentControl;
   let dataRate = data_rate;
 
+  // TODO: Tempporary hack to handle device bug!
+  if (dataRate === 0) dataRate = 1;
+
   Log.debug('experimentControl:', experimentControl);
 
   const a1 = getByteArray(timer_control);

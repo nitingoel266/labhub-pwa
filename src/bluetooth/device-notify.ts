@@ -261,6 +261,21 @@ async function handleExperimentStatusChanged(event: any) {
           // sensorDataStream.temperature = data3;  // temperature is C, not C * 100
           // sensorDataStream.temperatureIndex = current_sample;
 
+          async function forceEmit(index: number) {
+            const lastValue = await getTemperatureValue(index);
+        
+            const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
+            sensorDataStreamPrev.temperature = lastValue;
+            sensorDataStreamPrev.temperatureIndex = index;
+            const deviceDataFeedPrev = {
+              sensor: sensorDataStreamPrev,
+              heater: null,
+              rgb: null,
+            };            
+            topicDeviceDataFeed.next(deviceDataFeedPrev);
+            await delay(100);
+          }
+
           if (current_sample === 0) {
             sensorDataStream = null;
           } else if (current_sample === 1) {
@@ -269,18 +284,7 @@ async function handleExperimentStatusChanged(event: any) {
             sensorDataStream.temperature = lastValue;
             sensorDataStream.temperatureIndex = current_sample - 1;
           } else if (current_sample === 2) {
-            const lastValue = await getTemperatureValue(current_sample - 1);
-
-            const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
-            sensorDataStreamPrev.temperature = lastValue;
-            sensorDataStreamPrev.temperatureIndex = current_sample - 1;
-            const deviceDataFeedPrev = {
-              sensor: sensorDataStreamPrev,
-              heater: null,
-              rgb: null,
-            };            
-            topicDeviceDataFeed.next(deviceDataFeedPrev);
-            await delay(100);
+            await forceEmit(current_sample - 1);
 
             sensorDataStream.temperature = data3;  // temperature is C, not C * 100
             sensorDataStream.temperatureIndex = current_sample;
@@ -292,6 +296,21 @@ async function handleExperimentStatusChanged(event: any) {
           // sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
           // sensorDataStream.voltageIndex = current_sample;
 
+          async function forceEmit(index: number) {
+            const lastValue = await getVoltageValue(index);
+        
+            const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
+            sensorDataStreamPrev.voltage = lastValue;
+            sensorDataStreamPrev.voltageIndex = index;
+            const deviceDataFeedPrev = {
+              sensor: sensorDataStreamPrev,
+              heater: null,
+              rgb: null,
+            };            
+            topicDeviceDataFeed.next(deviceDataFeedPrev);
+            await delay(100);
+          }
+
           if (current_sample === 0) {
             sensorDataStream = null;
           } else if (current_sample === 1) {
@@ -300,18 +319,7 @@ async function handleExperimentStatusChanged(event: any) {
             sensorDataStream.voltage = lastValue;
             sensorDataStream.voltageIndex = current_sample - 1;
           } else if (current_sample === 2) {
-            const lastValue = await getVoltageValue(current_sample - 1);
-
-            const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
-            sensorDataStreamPrev.voltage = lastValue;
-            sensorDataStreamPrev.voltageIndex = current_sample - 1;
-            const deviceDataFeedPrev = {
-              sensor: sensorDataStreamPrev,
-              heater: null,
-              rgb: null,
-            };            
-            topicDeviceDataFeed.next(deviceDataFeedPrev);
-            await delay(100);
+            await forceEmit(current_sample - 1);
 
             sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
             sensorDataStream.voltageIndex = current_sample;

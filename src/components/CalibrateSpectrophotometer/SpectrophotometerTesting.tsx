@@ -33,6 +33,8 @@ const SpectrophotometerTesting = () => {
         if(selectedItem){
             setSelectedItem("")
             if(clientId === status?.leaderSelected){
+                if(status?.rgbConnected !== "calibrate_test")
+                simulateRgb("calibrate_test")
                 startRgbExperiment()
                 setTestCalibrate([])
             }

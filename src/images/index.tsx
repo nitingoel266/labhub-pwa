@@ -45,6 +45,7 @@ import LinkedInIcon from "../assets/LinkedIn-Icon.png";
 import TwitterIcon from "../assets/Twitter-Icon.png";
 import WhiteCrossIcon from "../assets/White-Cross-Icon.png";
 import LoaderImage from "../assets/Loader-Image.gif";
+import UpdateIcon from "../assets/Update-Icon.png";
 
 export {
     LabIcon,
@@ -93,5 +94,6 @@ export {
     LinkedInIcon,
     TwitterIcon,
     WhiteCrossIcon,
-    LoaderImage
+    LoaderImage,
+    UpdateIcon
 };

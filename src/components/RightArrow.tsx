@@ -12,7 +12,7 @@ const RightArrow = ({handleSubmit,isSelected=false}:Props) => {
             handleSubmit()
         }
     }
-    return <div onClick={() => isSelected ? clickHandler() : {}} style={{position:"fixed",bottom:20,right:20,cursor:isSelected ? "pointer" : "not-allowed"}}>
+    return <div onClick={() => isSelected ? clickHandler() : {}} style={{position:"fixed",bottom:30,right:20,cursor:isSelected ? "pointer" : "not-allowed"}}>
     <img src={isSelected ? RightArrowIcon : RightArrowDisabedIcon} style={{width:40}} alt="RightArrowIcon"/>
 </div>
 }

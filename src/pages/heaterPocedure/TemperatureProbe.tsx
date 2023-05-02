@@ -34,14 +34,14 @@ const TemperatureProbe = () => {
   const setpointTemperatureRef = useRef<any>();
   const [isOpen, setModal] = useState("");
   const [isStart, setIsStart] = useState<boolean>(false);
-  const [temperature, setTemperature] = useState<number>(25);
+  const [temperature, setTemperature] = useState<number>(20);
   const [temperatureShouldBe, setTemperatureShouldBe] = useState<number>(0);
   const [power, setPower] = useState<number>(0);
   const [istemperature, setisTemperature] = useState<number>(0);
 
   const handleTemperature = (title: string) => {
-    if (title === "sub" && temperature > 25)
-      setTemperature((temp) => (temp > 25 ? temp - 1 : temp));
+    if (title === "sub" && temperature > 20)
+      setTemperature((temp) => (temp > 20 ? temp - 1 : temp));
     if (title === "add" && temperature < 150)
       setTemperature((temp) => (temp < 150 ? temp + 1 : temp));
   };
@@ -114,23 +114,27 @@ const TemperatureProbe = () => {
         <div>{SETPOINT_TEMPERATURE}</div>
         <div className={styles.RateMeasureRightSide}>
           <div className={styles.DataMeasureButtom}>
+            <div
+            className={styles.ArrowButtonContainer}
+            onMouseDown={() =>
+              clientId === status?.leaderSelected
+                ? handleMouseDownEvent("enter", "sub")
+                : {}
+            }
+            onMouseUp={() =>
+              clientId === status?.leaderSelected
+                ? handleMouseDownEvent("leave", "sub")
+                : {}
+            }
+            >
             <img
-              onMouseDown={() =>
-                clientId === status?.leaderSelected
-                  ? handleMouseDownEvent("enter", "sub")
-                  : {}
-              }
-              onMouseUp={() =>
-                clientId === status?.leaderSelected
-                  ? handleMouseDownEvent("leave", "sub")
-                  : {}
-              }
               src={ExpandIcon}
-              style={{ cursor: "pointer" }}
               alt="subtract"
-            />
+              />
+              </div>
             <div className={styles.TextStyle}>{temperature}</div>
-            <img
+            <div 
+              className={styles.ArrowButtonContainer}
               onMouseDown={() =>
                 clientId === status?.leaderSelected
                   ? handleMouseDownEvent("enter", "add")
@@ -141,10 +145,12 @@ const TemperatureProbe = () => {
                   ? handleMouseDownEvent("leave", "add")
                   : {}
               }
+            >
+            <img
               src={CollapsedIcon}
-              style={{ cursor: "pointer" }}
               alt="add"
-            />
+              />
+              </div>
           </div>
           <img
             onClick={() => handleIModal(SETPOINT_TEMPERATURE)}
@@ -195,7 +201,7 @@ const TemperatureProbe = () => {
               }
               className={styles.Button}
               style={
-                isStart || status?.heaterConnected === "element"
+                isStart || status?.heaterConnected !== "probe"
                   ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
                   : extraStyle
               }

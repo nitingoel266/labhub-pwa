@@ -68,10 +68,10 @@ const MeasuringTemprature = () => {
     setCheckForLog(1)
     setGraphData([]);
     setCapturePoint([]);
+    setIsStart(true);
     startSensorExperiment();
     setModal("");
     setIsSaved(false);
-    setIsStart(true);
   };
   const handleStop = () => {
     setModal("");
@@ -239,13 +239,13 @@ const MeasuringTemprature = () => {
   ]);
 
   useEffect(() => {
-    if (dataStream.sensor === null) {
+    if (status?.operation !== "measure_temperature") {
       setIsStart(false);
-    } else if (dataStream?.sensor?.temperature && !isStart) {
+    } else if (status?.operation === "measure_temperature" && !isStart) {
       // for test-screen
       setIsStart(true);
     }
-  }, [dataStream?.sensor, isStart]);
+  }, [status?.operation, isStart]);
 
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
@@ -318,18 +318,18 @@ const MeasuringTemprature = () => {
             <div className={styles.ButtonWrapper}>
               <div
                 onClick={() =>
-                  clientId === status?.leaderSelected && status?.sensorConnected === "temperature"
-                    ? setModal(graphData?.length ? "restart" : "start")
+                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
+                    ? setModal(status?.operation === "measure_temperature" ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected
+                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "temperature"
                     ? extraStyle
                     : {}
                 }
               >
-                {isStart || graphData?.length ? "Restart" : "Start"}
+                {isStart || status?.operation === "measure_temperature" || graphData?.length ? "Restart" : "Start"}
               </div>
               <div
                 onClick={() =>
@@ -386,18 +386,18 @@ const MeasuringTemprature = () => {
             <div className={styles.ButtonHorizontalInnerWrapper}>
               <div
                 onClick={() =>
-                  clientId === status?.leaderSelected && status?.sensorConnected === "temperature"
-                    ? setModal(graphData?.length ? "restart" : "start")
+                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
+                    ? setModal(status?.operation === "measure_temperature" ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected
+                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "temperature"
                     ? extraStyle
                     : {}
                 }
               >
-                {graphData?.length ? "Restart" : "Start"}
+                {isStart || status?.operation === "measure_temperature" || graphData?.length ? "Restart" : "Start"}
               </div>
               <div
                 onClick={() =>
@@ -414,13 +414,13 @@ const MeasuringTemprature = () => {
               >
                 Stop
               </div>
-              <div
+              {status?.setupData?.dataRate === "user" && <div
                 className={styles.CaptureHorizontalButton}
                 style={graphData?.length > 0 ? {} : extraStyle}
                 onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
               >
                 Capture
-              </div>
+              </div>}
             </div>
           </div>
         ) : null}

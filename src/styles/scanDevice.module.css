@@ -41,13 +41,13 @@
     font-size: 14px;
     position: fixed;
     top:80px;
-    right:25px;
+    right:0px;
 }
 .ExtraButton {
     cursor: pointer;
-    margin-top: 10px;
-    margin-right: 20px;
-    padding:8px;
+    margin-top: 6px;
+    margin-right: 10px;
+    padding:5px;
     background-color: #4285F4;
     color:#FFFFFF;
     border-radius: 5px;

@@ -45,12 +45,12 @@ const ScanDevices = () => {
   }
     return <> 
         <div className={styles.ExtraButtonWrapper}>
-            {!installPromotion && <div className={styles.ExtraButton} onClick={installClickHandler}>
-                <img src={DownloadIcon} style={{width:18,marginRight:10}} alt="add to home"/>
+            {installPromotion && <div className={styles.ExtraButton} onClick={installClickHandler}>
+                <img src={DownloadIcon} style={{width:18,marginRight:8}} alt="add to home"/>
                 <div>Add to Home Screen</div>
                 </div>}
-            {!updatePending && <div className={styles.ExtraButton} onClick={updateServiceWorker}>
-                <img src={UpdateIcon} style={{width:18,marginRight:10}} alt="update"/>
+            {updatePending && <div className={styles.ExtraButton} style={{backgroundColor:"#32cd32"}} onClick={updateServiceWorker}>
+                <img src={UpdateIcon} style={{width:18,marginRight:8}} alt="update"/>
                 <div>Update Application</div>
                 </div>}
         </div>

@@ -1,5 +1,5 @@
 import styles from '../../styles/scanDevice.module.css';
-import {LabHubSticker,BluetoothIcon,BlackBluetoothIcon,LoaderImage} from "../../images/index";
+import {LabHubSticker,BluetoothIcon,BlackBluetoothIcon,LoaderImage,UpdateIcon,DownloadIcon} from "../../images/index";
 import { useDeviceConnected,useDeviceStatus,useConnectionStablished, usePwaInstallPromotion, useSwPendingUpdate} from '../../labhub/status';
 import {initSetup,uninitSetup} from "../../labhub/init-setup";
 import RightArrow from '../../components/RightArrow';
@@ -44,9 +44,15 @@ const ScanDevices = () => {
     setModal("")
   }
     return <> 
-        <div>
-            {installPromotion && <button onClick={installClickHandler}>Add to Home Screen</button>}
-            {updatePending && <button onClick={updateServiceWorker}>Update Application</button>}
+        <div className={styles.ExtraButtonWrapper}>
+            {!installPromotion && <div className={styles.ExtraButton} onClick={installClickHandler}>
+                <img src={DownloadIcon} style={{width:18,marginRight:10}} alt="add to home"/>
+                <div>Add to Home Screen</div>
+                </div>}
+            {!updatePending && <div className={styles.ExtraButton} onClick={updateServiceWorker}>
+                <img src={UpdateIcon} style={{width:18,marginRight:10}} alt="update"/>
+                <div>Update Application</div>
+                </div>}
         </div>
         <div className={styles.ScanDeviceWrapper}>
             <div className={styles.LabHubStickerWrapper}>

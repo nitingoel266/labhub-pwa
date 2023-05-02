@@ -58,7 +58,7 @@ const AbsorbanceMeasuring = () => {
         });
       }
 
-      // setMeasure([])
+      setMeasure([]) // remove values when getting new
       setSelectedItem("");
       setIsSaved(false);
     } else {

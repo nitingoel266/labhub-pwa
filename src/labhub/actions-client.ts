@@ -62,9 +62,17 @@ export const getVoltageLog = async (voltageIndex: number) => {
 
   let voltageLog = null;
   if (channelResp?.voltageLog) {
-    voltageLog = channelResp.voltageLog.map(v => roundTwoDec(v));
+    voltageLog = channelResp.voltageLog.map(v => roundTwoDec(v / 1000 - 12));
   }
   return voltageLog;
+};
+
+export const getTemperatureValue = async (sampleIndex: number) => {
+  return (await getTemperatureLog(sampleIndex + 1) || [])[sampleIndex] || null;
+};
+
+export const getVoltageValue = async (sampleIndex: number) => {
+  return (await getVoltageLog(sampleIndex + 1) || [])[sampleIndex] || null;
 };
 
 export const getScreenNumber = async () => {

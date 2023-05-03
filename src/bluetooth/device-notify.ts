@@ -249,8 +249,6 @@ async function handleExperimentStatusChanged(event: any) {
       };
     } else if (dataType === ExperimentDataType.MEASURE) {
       if (prevSampleIndex < current_sample) {
-        prevSampleIndex = current_sample;
-
         let sensorDataStream: SensorDataStream | null = {
           temperature: null,
           temperatureIndex: null,
@@ -258,6 +256,10 @@ async function handleExperimentStatusChanged(event: any) {
           voltageIndex: null,
         };
         if (sensorConnected === 'temperature' && leaderOperation === 'measure_temperature') {
+          if (prevSampleIndex + 1 !== current_sample) {
+            Log.warn(`Missing temperatureIndex: ${current_sample - 1} [${prevSampleIndex}, ${current_sample}]`);
+          }
+
           // sensorDataStream.temperature = data3;  // temperature is C, not C * 100
           // sensorDataStream.temperatureIndex = current_sample;
 
@@ -293,6 +295,10 @@ async function handleExperimentStatusChanged(event: any) {
             sensorDataStream.temperatureIndex = current_sample;
           }
         } else if (sensorConnected === 'voltage' && leaderOperation === 'measure_voltage') {
+          if (prevSampleIndex + 1 !== current_sample) {
+            Log.warn(`Missing voltageIndex: ${current_sample - 1} [${prevSampleIndex}, ${current_sample}]`);
+          }
+
           // sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
           // sensorDataStream.voltageIndex = current_sample;
 
@@ -336,6 +342,7 @@ async function handleExperimentStatusChanged(event: any) {
           heater: null,
           rgb: null,
         };
+        prevSampleIndex = current_sample;
       }
     } else if (dataType === ExperimentDataType.HEATER) {
       let heaterDataStream: HeaterDataStream | null = {

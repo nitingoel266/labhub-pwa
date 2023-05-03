@@ -35,13 +35,13 @@ const HeaterElement = () => {
   const [dataStream] = useDeviceDataFeed();
   const [isOpen, setModal] = useState("");
   const [isStart, setIsStart] = useState<boolean>(false);
-  const [temperature, setTemperature] = useState<number>(25); //25-150
+  const [temperature, setTemperature] = useState<number>(20); //20-150
   const [temperatureShouldBe, setTemperatureShouldBe] = useState<number>(0);
   const [power, setPower] = useState<number>(0);
 
   const handleTemperature = (title: string) => {
-    if (title === "sub" && temperature > 25)
-      setTemperature((temp) => (temp > 25 ? temp - 1 : temp));
+    if (title === "sub" && temperature > 20)
+      setTemperature((temp) => (temp > 20 ? temp - 1 : temp));
     if (title === "add" && temperature < 150)
       setTemperature((temp) => (temp < 150 ? temp + 1 : temp));
   };
@@ -113,61 +113,69 @@ const HeaterElement = () => {
         <div>{SETPOINT_TEMPERATURE}</div>
         <div className={styles.RateMeasureRightSide}>
           <div className={styles.DataMeasureButtom}>
+            <div
+                className={styles.ArrowButtonContainer}
+
+                onMouseDown={() =>
+                  clientId === status?.leaderSelected && !isDeviceTouchable
+                    ? handleMouseDownEvent("enter", "sub")
+                    : {}
+                }
+                onMouseUp={() =>
+                  clientId === status?.leaderSelected && !isDeviceTouchable
+                    ? handleMouseDownEvent("leave", "sub")
+                    : {}
+                }
+                onTouchStart={
+                  () =>
+                  clientId === status?.leaderSelected && isDeviceTouchable
+                    ? handleMouseDownEvent("enter", "sub")
+                    : {}
+                }
+                onPointerOut={
+                  () =>
+                  clientId === status?.leaderSelected && isDeviceTouchable
+                    ? handleMouseDownEvent("leave", "sub")
+                    : {}
+                }
+            >
             <img
-              onMouseDown={() =>
-                clientId === status?.leaderSelected && !isDeviceTouchable
-                  ? handleMouseDownEvent("enter", "sub")
-                  : {}
-              }
-              onMouseUp={() =>
-                clientId === status?.leaderSelected && !isDeviceTouchable
-                  ? handleMouseDownEvent("leave", "sub")
-                  : {}
-              }
-              onTouchStart={
-                () =>
-                clientId === status?.leaderSelected && isDeviceTouchable
-                  ? handleMouseDownEvent("enter", "sub")
-                  : {}
-              }
-              onPointerOut={
-                () =>
-                clientId === status?.leaderSelected && isDeviceTouchable
-                  ? handleMouseDownEvent("leave", "sub")
-                  : {}
-              }
               src={ExpandIcon}
-              style={{ cursor: "pointer" }}
               alt="subtract"
             />
+            </div>
             <div className={styles.TextStyle}>{temperature}</div>
+            <div
+                className={styles.ArrowButtonContainer}
+
+                onMouseDown={() =>
+                  clientId === status?.leaderSelected && !isDeviceTouchable
+                    ? handleMouseDownEvent("enter", "add")
+                    : {}
+                }
+                onMouseUp={() =>
+                  clientId === status?.leaderSelected && !isDeviceTouchable
+                    ? handleMouseDownEvent("leave", "add")
+                    : {}
+                }
+                onTouchStart={
+                  () =>
+                  clientId === status?.leaderSelected && isDeviceTouchable
+                    ? handleMouseDownEvent("enter", "add")
+                    : {}
+                }
+                onPointerOut={
+                  () =>
+                  clientId === status?.leaderSelected && isDeviceTouchable
+                    ? handleMouseDownEvent("leave", "add")
+                    : {}
+                }
+            >
             <img
-              onMouseDown={() =>
-                clientId === status?.leaderSelected && !isDeviceTouchable
-                  ? handleMouseDownEvent("enter", "add")
-                  : {}
-              }
-              onMouseUp={() =>
-                clientId === status?.leaderSelected && !isDeviceTouchable
-                  ? handleMouseDownEvent("leave", "add")
-                  : {}
-              }
-              onTouchStart={
-                () =>
-                clientId === status?.leaderSelected && isDeviceTouchable
-                  ? handleMouseDownEvent("enter", "add")
-                  : {}
-              }
-              onPointerOut={
-                () =>
-                clientId === status?.leaderSelected && isDeviceTouchable
-                  ? handleMouseDownEvent("leave", "add")
-                  : {}
-              }
               src={CollapsedIcon}
-              style={{ cursor: "pointer" }}
               alt="add"
             />
+            </div>
           </div>
           <img
             onClick={() => handleIModal(SETPOINT_TEMPERATURE)}
@@ -210,7 +218,7 @@ const HeaterElement = () => {
               }
               className={styles.Button}
               style={
-                isStart || status?.heaterConnected === "probe"
+                isStart || status?.heaterConnected !== "element"
                   ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
                   : extraStyle
               }

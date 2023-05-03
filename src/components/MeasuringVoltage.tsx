@@ -44,10 +44,10 @@ const MeasuringVoltage = () => {
     setCheckForLog(1)
     setGraphData([]);
     setCapturePoint([]);
+    setIsStart(true);
     startSensorExperiment();
     setModal("");
     setIsSaved(false);
-    setIsStart(true);
   };
   const handleStop = () => {
     setModal("");
@@ -112,14 +112,14 @@ const MeasuringVoltage = () => {
       navigate("/function-selection");
     }
   };
-  useEffect(() =>{
-    if(graphData.length > 0 && graphData.length <= 1 && clientId !== status?.leaderSelected){
-      setCheckForLog(graphData.length)
-    }
-  },[graphData,clientId,status?.leaderSelected])
+  // useEffect(() =>{
+  //   if(graphData.length > 0 && graphData.length <= 1 && clientId !== status?.leaderSelected){
+  //     setCheckForLog(graphData.length)
+  //   }
+  // },[graphData,clientId,status?.leaderSelected])
 
   useEffect(() => {
-    const getTemperatureData = async () =>{
+    const getVoltageData = async () =>{
     if (
       status?.sensorConnected === "voltage" &&
       dataStream?.sensor //&&
@@ -202,10 +202,11 @@ const MeasuringVoltage = () => {
       }
     } */
     }
-    getTemperatureData()
+    getVoltageData()
   }, [
-    dataStream,
+    dataStream?.sensor,
     dataStream?.sensor?.voltage,
+    dataStream?.sensor?.voltageIndex,
     status?.setupData?.dataRate,
     status?.sensorConnected,
     clientId,
@@ -214,13 +215,13 @@ const MeasuringVoltage = () => {
   ]);
 
   useEffect(() => {
-    if (dataStream.sensor === null) {
+    if (status?.operation !== "measure_voltage") {
       setIsStart(false);
-    } else if (dataStream?.sensor?.voltage && !isStart) {
+    } else if (status?.operation === "measure_voltage" && !isStart) {
       // for test-screen
       setIsStart(true);
     }
-  }, [dataStream?.sensor, isStart]);
+  }, [status?.operation, isStart]);
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
@@ -251,18 +252,18 @@ const MeasuringVoltage = () => {
             <div className={styles.ButtonWrapper}>
               <div
                 onClick={() =>
-                  clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
+                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
                     ? setModal(graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected
+                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "voltage"
                     ? extraStyle
                     : {}
                 }
               >
-                {isStart || graphData?.length ? "Restart" : "Start"}
+                {isStart || status?.operation === "measure_voltage" || graphData?.length ? "Restart" : "Start"}
               </div>
               <div
                 onClick={() =>
@@ -319,18 +320,18 @@ const MeasuringVoltage = () => {
             <div className={styles.ButtonHorizontalInnerWrapper}>
               <div
                 onClick={() =>
-                  clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
+                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
                     ? setModal(graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected
+                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "voltage"
                     ? extraStyle
                     : {}
                 }
               >
-                {isStart || graphData?.length ? "Restart" : "Start"}
+                {isStart || status?.operation === "measure_voltage" || graphData?.length ? "Restart" : "Start"}
               </div>
               <div
                 onClick={() =>
@@ -347,13 +348,13 @@ const MeasuringVoltage = () => {
               >
                 Stop
               </div>
-              <div
+              {status?.setupData?.dataRate === "user" && <div
                 className={styles.CaptureHorizontalButton}
                 style={graphData?.length > 0 ? {} : extraStyle}
                 onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
               >
                 Capture
-              </div>
+              </div>}
             </div>
           </div>
         ) : null}

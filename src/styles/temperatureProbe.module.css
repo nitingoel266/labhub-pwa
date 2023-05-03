@@ -17,12 +17,16 @@
     align-items: center;
     border: 2px solid #000000;
     border-radius: 5px;
-    padding: 8px;
+    /* padding: 8px; */
     margin-right: 10px;
 }
+.ArrowButtonContainer {
+    padding:7px;
+    cursor:pointer;
+}
 .TextStyle {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
     font-weight: 500;
     width: 25px;
     text-align: center;

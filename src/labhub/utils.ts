@@ -1,10 +1,12 @@
 import { deviceStatus } from './status';
-import { LABHUB_CLIENT_ID } from '../utils/const';
+import { MOCK_DATA } from '../utils/const';
 import { ClientType } from '../types/common';
 import { Log } from '../utils/utils';
 
+let clientIdStore: string | null = null;
+
 export const getClientId = (): string | null => {
-  const clientIdx = localStorage.getItem(LABHUB_CLIENT_ID);
+  const clientIdx = clientIdStore;
   let clientId = null;
   if (clientIdx) {
     clientId = Number.parseInt(clientIdx, 10) || null; // NOTE: 0, NaN -> null
@@ -26,15 +28,7 @@ export const getClientId = (): string | null => {
 };
 
 export const setClientId = (clientId?: number): string | null => {
-  if (clientId === undefined) {
-    // TODO: Generate a new client ID (for mock data purpose)
-    // TODO: No longer needed when MOCK_TEST support is removed?
-    const uint16 = Math.floor(Math.random() * (2 ** 16 - 1)) + 1; // 1-65535
-    const uint16Array = Uint16Array.of(uint16);
-    clientId = uint16Array[0];
-    
-    Log.debug('New client ID created!');
-  } else {
+  if (clientId) {
     // Validate client ID
     const uint16Array = Uint16Array.of(clientId);
     if (clientId !== uint16Array[0]) {
@@ -43,17 +37,24 @@ export const setClientId = (clientId?: number): string | null => {
     }
 
     Log.debug('Passed client ID validated!');
-  }
-
-  localStorage.setItem(LABHUB_CLIENT_ID, `${clientId}`);
-  const retVal = getClientId();
-  if (retVal) {
-    Log.debug('LABHUB_CLIENT_ID created in localStorage');
+  } else if (MOCK_DATA && clientId === undefined) {
+    // Generate a new client ID (for mock data purpose)
+    const uint16 = Math.floor(Math.random() * (2 ** 16 - 1)) + 1; // 1-65535
+    const uint16Array = Uint16Array.of(uint16);
+    clientId = uint16Array[0];
+    
+    Log.debug('New client ID created (for mock data)!');
   } else {
-    Log.error('[ERROR:setClientId] Unable to retrieve set clientId from localStorage:', clientId);
+    Log.error('[ERROR:setClientId] Invalid clientId passed:', clientId);
   }
 
-  return retVal;
+  if (!clientId) {
+    return null;
+  }
+
+  clientIdStore = `${clientId}`;
+
+  return clientIdStore;
 };
 
 export const assertClientId = (): string | null => {
@@ -65,11 +66,7 @@ export const assertClientId = (): string | null => {
 };
 
 export const clearClientId = () => {
-  const clientId = localStorage.getItem(LABHUB_CLIENT_ID);
-  if (clientId) {
-    localStorage.removeItem(LABHUB_CLIENT_ID);
-    Log.debug('LABHUB_CLIENT_ID cleaned up from localStorage');  
-  }
+  clientIdStore = null;
 };
 
 export const getClientType = (): ClientType => {

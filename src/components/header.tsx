@@ -8,7 +8,7 @@ import {
   stopHeaterExperiment,
   stopSensorExperiment /* ,unjoinMember */,
   changeSetpointTemp,
-  setScreenNumber,
+  // setScreenNumber,
   simulateRgb
 } from "../labhub/actions";
 import {getClientId} from "../labhub/utils";
@@ -332,18 +332,20 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     screenName,
     location.state?.screenName
   ]);
-  useEffect(() => { // setScreen name as a leader for sync for member
-    if(clientId === status?.leaderSelected){
-      if(location?.pathname){
-        for(let one in GetScreenName){
-          if(GetScreenName[one] === location?.pathname){
-            setScreenNumber(Number(one))
-            break;
-          }
-        }
-      }
-    }
-  },[clientId,status?.leaderSelected,location?.pathname])
+
+  // useEffect(() => { // setScreen name as a leader for sync for member
+  //   if(clientId === status?.leaderSelected){
+  //     if(location?.pathname){
+  //       for(let one in GetScreenName){
+  //         if(GetScreenName[one] === location?.pathname){
+  //           setScreenNumber(Number(one))
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
+  // },[clientId,status?.leaderSelected,location?.pathname])
+
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (
     <div>

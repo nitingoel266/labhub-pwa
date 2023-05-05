@@ -112,14 +112,14 @@ const MeasuringVoltage = () => {
       navigate("/function-selection");
     }
   };
-  useEffect(() =>{
-    if(graphData.length > 0 && graphData.length <= 1 && clientId !== status?.leaderSelected){
-      setCheckForLog(graphData.length)
-    }
-  },[graphData,clientId,status?.leaderSelected])
+  // useEffect(() =>{
+  //   if(graphData.length > 0 && graphData.length <= 1 && clientId !== status?.leaderSelected){
+  //     setCheckForLog(graphData.length)
+  //   }
+  // },[graphData,clientId,status?.leaderSelected])
 
   useEffect(() => {
-    const getTemperatureData = async () =>{
+    const getVoltageData = async () =>{
     if (
       status?.sensorConnected === "voltage" &&
       dataStream?.sensor //&&
@@ -202,10 +202,11 @@ const MeasuringVoltage = () => {
       }
     } */
     }
-    getTemperatureData()
+    getVoltageData()
   }, [
-    dataStream,
+    dataStream?.sensor,
     dataStream?.sensor?.voltage,
+    dataStream?.sensor?.voltageIndex,
     status?.setupData?.dataRate,
     status?.sensorConnected,
     clientId,

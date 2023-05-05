@@ -21,6 +21,7 @@ import {
   mobileWidth,
   SETPOINT_TEMPERATURE,
   getDescription,
+  useIsTouchDeviceDetect,
 } from "../../components/Constants";
 import IButtonComponent from "../../components/IButtonComponent";
 import Header from "../../components/header";
@@ -29,6 +30,7 @@ let temperatureTimmer: any;
 const TemperatureProbe = () => {
   const clientId = getClientId();
   const [status] = useDeviceStatus();
+  const isDeviceTouchable = useIsTouchDeviceDetect();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [dataStream] = useDeviceDataFeed();
   const setpointTemperatureRef = useRef<any>();
@@ -117,12 +119,24 @@ const TemperatureProbe = () => {
             <div
             className={styles.ArrowButtonContainer}
             onMouseDown={() =>
-              clientId === status?.leaderSelected
+              clientId === status?.leaderSelected && !isDeviceTouchable
                 ? handleMouseDownEvent("enter", "sub")
                 : {}
             }
             onMouseUp={() =>
-              clientId === status?.leaderSelected
+              clientId === status?.leaderSelected && !isDeviceTouchable
+                ? handleMouseDownEvent("leave", "sub")
+                : {}
+            }
+               onTouchStart={
+              () =>
+              clientId === status?.leaderSelected && isDeviceTouchable
+                ? handleMouseDownEvent("enter", "sub")
+                : {}
+            }
+            onPointerOut={
+              () =>
+              clientId === status?.leaderSelected && isDeviceTouchable
                 ? handleMouseDownEvent("leave", "sub")
                 : {}
             }
@@ -136,12 +150,24 @@ const TemperatureProbe = () => {
             <div 
               className={styles.ArrowButtonContainer}
               onMouseDown={() =>
-                clientId === status?.leaderSelected
+                clientId === status?.leaderSelected && !isDeviceTouchable
                   ? handleMouseDownEvent("enter", "add")
                   : {}
               }
               onMouseUp={() =>
-                clientId === status?.leaderSelected
+                clientId === status?.leaderSelected && !isDeviceTouchable
+                  ? handleMouseDownEvent("leave", "add")
+                  : {}
+              }
+              onTouchStart={
+                () =>
+                clientId === status?.leaderSelected && isDeviceTouchable
+                  ? handleMouseDownEvent("enter", "add")
+                  : {}
+              }
+              onPointerOut={
+                () =>
+                clientId === status?.leaderSelected && isDeviceTouchable
                   ? handleMouseDownEvent("leave", "add")
                   : {}
               }

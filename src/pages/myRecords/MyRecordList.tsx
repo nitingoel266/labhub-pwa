@@ -78,21 +78,7 @@ const MyRecordList = () => {
   }
   const handleShare = async (item: any, title?: string) => {
     if(item){
-      if (!navigator.canShare) {
-        console.log("Your browser doesn't support the Web Share API.")
-        return;
-      }
-      try {
-        await navigator.share({
-          url:item,
-          title: `${selectedButton}`,
-          text: `${selectedButton} Experiment Data`,
-        });
-        console.log("data has been shared Successfully!")
-      } catch (error) {
-        console.error(error)
-      }
-      // console.log("share data",item)
+      console.log("Share Api is not working...")
     }
   };
   const handleSelection = (value: any) => {

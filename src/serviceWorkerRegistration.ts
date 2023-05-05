@@ -69,12 +69,15 @@ export function register(config?: Config) {
 
       // detect controller change and refresh the page
       navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('3. controllerchange');
         if (originalSW) {
+          console.log('4. originalSW');
           // This is due to a SW update.
           if (!refreshing) {
+            console.log('5. reloadling..');
             window.location.reload();
             refreshing = true;  
-          }  
+          }
         } else {
           // This is due to a SW taking control for the first time
         }

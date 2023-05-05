@@ -1,4 +1,4 @@
-export const DEBUG_MODE = false;
+export const DEBUG_MODE = !false;
 export const DISABLE_RELOAD = false;
 export const REUSE_CLIENTID_ONCONNREUSE = true;
 export const MOCK_DATA = false;

@@ -68,11 +68,11 @@ export const getVoltageLog = async (voltageIndex: number) => {
 };
 
 export const getTemperatureValue = async (sampleIndex: number) => {
-  return (await getTemperatureLog(sampleIndex + 1) || [])[sampleIndex] || null;
+  return (await getTemperatureLog(sampleIndex + 1) || [])[sampleIndex] ?? null;
 };
 
 export const getVoltageValue = async (sampleIndex: number) => {
-  return (await getVoltageLog(sampleIndex + 1) || [])[sampleIndex] || null;
+  return (await getVoltageLog(sampleIndex + 1) || [])[sampleIndex] ?? null;
 };
 
 export const getScreenNumber = async () => {

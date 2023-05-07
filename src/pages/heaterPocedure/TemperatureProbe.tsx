@@ -252,7 +252,7 @@ const TemperatureProbe = () => {
           </div>
         </div>
         <div className={styles.HeaterElementText}>
-          Power: <span style={{ color: "#DC2828" }}>{power} W</span>
+          Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(2)} W</span>
         </div>
       </div>
       <MemberDisconnect

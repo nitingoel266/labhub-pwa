@@ -13,7 +13,7 @@ const MyRecordList = () => {
   const [isOpen, setModal] = useState("");
   const [isEditOpen, setEditModal] = useState("");
   const [selectedData, setSelectedData] = useState<any>();
-  const [selectedButton, setSelectedButton] = useState<string>("temperature");
+  const [selectedButton, setSelectedButton] = useState<string>("temperature"); // temperature , voltage ,rgb
   const [actionItem, setActionItem] = useState<any>(); // contain one data that will change by the action
   const [myRecords, setMyRecords] = useState<any>();
 

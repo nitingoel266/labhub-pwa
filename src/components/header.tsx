@@ -2,6 +2,7 @@ import {
   useDeviceStatus,
   useDeviceConnected,
   useDeviceDataFeed,
+  applicationMessage
 } from "../labhub/status";
 import {
   resetLeader,
@@ -70,9 +71,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      (dataFeed.sensor !== null || checkForSave)
+      ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
-      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
@@ -113,9 +114,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      (dataFeed.sensor !== null || checkForSave)
+      ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
-      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
@@ -144,9 +145,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      (dataFeed.sensor !== null || checkForSave)
+      ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
-      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
@@ -208,9 +209,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      (dataFeed.sensor !== null || checkForSave)
+      ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
-      if(dataFeed.sensor !== null && clientId === status?.leaderSelected)
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected)
         stopSensorExperiment();
       else if(checkForSave && handleSave) {
         handleSave()
@@ -229,9 +230,20 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
 
   const handleSyncNavigate = async () => {
     let index = await getScreenNumber();
-    navigate(GetScreenName[index || 0])
+    if(GetScreenName[index || 0]){
+      let screenName = GetScreenName[index || 0]; 
+      navigate(screenName)
+      if(screenName === "/scan-devices")
+      setScreenName("/scan-devices")
+    }
+    else {
+      let screenName = GetScreenName[0]; 
+      navigate(screenName)
+      if(screenName === "/scan-devices")
+      setScreenName("/scan-devices")
+      applicationMessage.next({message:`There is no screen available for screen number :- ${index}`,type:"info"})
+    }
   }
-
   const handleSync  = () => {
     setOnClick("sync")
     if (
@@ -267,20 +279,8 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       location.state.data.selectedButton &&
       location.state.data.selectedData
     ) {
-      let storageData = localStorage.getItem(
-        `${location.state.data.selectedButton}_data`
-      );
-      storageData = storageData ? JSON.parse(storageData) : [];
-      let resultData =
-        storageData && Array.isArray(storageData)
-          ? [...storageData].filter(
-              (el: any) => el?.name !== location.state.data.selectedData.name
-            )
-          : [];
-      localStorage.setItem(
-        `${location.state.data.selectedButton}_data`,
-        JSON.stringify(resultData)
-      );
+
+      localStorage.removeItem(`${location.state.data.selectedButton}_data_${location.state.data.selectedData.name}`)
       navigate(-1);
     }
   };

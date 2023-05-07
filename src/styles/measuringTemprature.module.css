@@ -179,6 +179,7 @@
     height: 22px;
     width: 40px;
     font-size: 11px;
+    cursor: pointer;
 }
 .TempratureDegreeIcon {
     height: 2px;

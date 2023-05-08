@@ -65,7 +65,8 @@
 }
 .HeaterElementText {
     font-weight: 500;
-    width: 120px;
+    font-size: 14px;
+    width: 105px;
 }
 .HeaterElementSubWraper {
     display: flex;
@@ -85,11 +86,13 @@
 .Button {
     background-color: #424C58;
     color: #FFFFFF;
-    font-size: 13px;
+    text-align: center;
+    font-size: 11px;
     font-weight: 500;
     margin-right: 20px;
-    padding:20px 13px;
     border-radius: 100px;
+    width:50px;
+    padding: 20px 0px;
     cursor: pointer;
 }
 @media (min-width:600px) {

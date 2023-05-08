@@ -44,7 +44,7 @@ const MeasuringVoltage = () => {
     setCheckForLog(1)
     setGraphData([]);
     setCapturePoint([]);
-    setIsStart(true);
+    // setIsStart(true);
     startSensorExperiment();
     setModal("");
     setIsSaved(false);
@@ -52,7 +52,7 @@ const MeasuringVoltage = () => {
   const handleStop = () => {
     setModal("");
     stopSensorExperiment();
-    setIsStart(false);
+    // setIsStart(false);
   };
   const handleCapture = () => {
     if (graphData) {
@@ -215,13 +215,13 @@ const MeasuringVoltage = () => {
   ]);
 
   useEffect(() => {
-    if (status?.operation !== "measure_voltage") {
+    if (status?.operation !== "measure_voltage" || status?.sensorConnected !== "voltage") {
       setIsStart(false);
     } else if (status?.operation === "measure_voltage" && !isStart) {
       // for test-screen
       setIsStart(true);
     }
-  }, [status?.operation, isStart]);
+  }, [status?.operation,status?.sensorConnected, isStart]);
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
@@ -263,7 +263,7 @@ const MeasuringVoltage = () => {
                     : {}
                 }
               >
-                {isStart || status?.operation === "measure_voltage" || graphData?.length ? "Restart" : "Start"}
+                {isStart || graphData?.length ? "Restart" : "Start"}
               </div>
               <div
                 onClick={() =>
@@ -317,7 +317,7 @@ const MeasuringVoltage = () => {
         </div>
         {window.innerWidth <= mobileWidth ? (
           <div className={styles.ButtonHorizontalWrapper}>
-            <div className={styles.ButtonHorizontalInnerWrapper}>
+            <div className={styles.ButtonHorizontalInnerWrapper} style={status?.setupData?.dataRate !== "user" ? {justifyContent:"center"} : {}}>
               <div
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
@@ -331,7 +331,7 @@ const MeasuringVoltage = () => {
                     : {}
                 }
               >
-                {isStart || status?.operation === "measure_voltage" || graphData?.length ? "Restart" : "Start"}
+                {isStart || graphData?.length ? "Restart" : "Start"}
               </div>
               <div
                 onClick={() =>
@@ -342,8 +342,8 @@ const MeasuringVoltage = () => {
                 className={styles.StopHorizontalButton}
                 style={
                   !isStart || clientId !== status?.leaderSelected
-                    ? extraStyle
-                    : {}
+                    ? {...extraStyle,...(status?.setupData?.dataRate !== "user" ? {marginLeft:20} : {})}
+                    : {...(status?.setupData?.dataRate !== "user" ? {marginLeft:20} : {})}
                 }
               >
                 Stop

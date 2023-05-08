@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import IButtonComponent from "../../components/IButtonComponent";
 import {mobileWidth,MANUAL_MODE,PRESET_MODE,getDescription,HIGHLIGHT_BACKGROUND} from "../../components/Constants";
+import {applicationMessage} from "../../labhub/status"
 
 const ModeSelection = () => {
     const navigate = useNavigate();
@@ -18,8 +19,11 @@ const ModeSelection = () => {
         else setSelectedItem(item)
     }
     const handleSubmit = () => {
-        if(selectedItem){
-            navigate(selectedItem === MANUAL_MODE ? "/function-selection" : "/preset-mode")
+        if(selectedItem === MANUAL_MODE){
+            // navigate(selectedItem === MANUAL_MODE ? "/function-selection" : "/preset-mode")
+            navigate("/function-selection")
+        }else if(selectedItem === PRESET_MODE){
+            applicationMessage.next({message:"Preset Mode is not available right now!",type:"info"})
         }
 
     }

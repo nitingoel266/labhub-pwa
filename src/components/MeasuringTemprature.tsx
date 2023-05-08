@@ -33,29 +33,6 @@ const MeasuringTemprature = () => {
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,temp}
   const [checkForLog,setCheckForLog] = useState<any>(0)
 
-  const handleTemperatureUnit = (title: string) => {
-    if (title === "f" && tempratureUnit !== title) {
-      let updatedTemp = [];
-      for (let one of graphData) {
-        if (one && one.temp) {
-          let fahrenheit = ((9 / 5) * one.temp + 32).toFixed(1);
-          updatedTemp.push({ ...one, temp: fahrenheit });
-        }
-      }
-      setGraphData(updatedTemp);
-      setTempratureUnit(title);
-    } else if (title === "c" && tempratureUnit !== title) {
-      let updatedTemp = [];
-      for (let one of graphData) {
-        if (one && one.temp) {
-          let celcius = (((one.temp - 32) * 5) / 9).toFixed(1);
-          updatedTemp.push({ ...one, temp: celcius });
-        }
-      }
-      setGraphData(updatedTemp);
-      setTempratureUnit(title);
-    }
-  };
   const handleSubmit = () => {
     if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
       if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
@@ -68,7 +45,7 @@ const MeasuringTemprature = () => {
     setCheckForLog(1)
     setGraphData([]);
     setCapturePoint([]);
-    setIsStart(true);
+    //setIsStart(true);
     startSensorExperiment();
     setModal("");
     setIsSaved(false);
@@ -76,7 +53,7 @@ const MeasuringTemprature = () => {
   const handleStop = () => {
     setModal("");
     stopSensorExperiment();
-    setIsStart(false);
+    //setIsStart(false);
   };
   const handleSubmitProcess = () => {
     setModal("");
@@ -97,11 +74,11 @@ const MeasuringTemprature = () => {
     for (let one in capturePoint) {
       if (capturePoint[one] > 0) {
         let item = graphData[one];
-        if (tempratureUnit === "f")
-          item = {
-            ...item,
-            temp: Number((((item?.temp - 32) * 5) / 9).toFixed(1)),
-          };
+        // if (tempratureUnit === "f")
+        //   item = {
+        //     ...item,
+        //     temp: Number((((item?.temp - 32) * 5) / 9).toFixed(1)),
+        //   };
         resultTemperature.push(item);
       }
     }
@@ -239,13 +216,13 @@ const MeasuringTemprature = () => {
   ]);
 
   useEffect(() => {
-    if (status?.operation !== "measure_temperature") {
+    if (status?.operation !== "measure_temperature" || status?.sensorConnected !== "temperature") {
       setIsStart(false);
     } else if (status?.operation === "measure_temperature" && !isStart) {
       // for test-screen
       setIsStart(true);
     }
-  }, [status?.operation, isStart]);
+  }, [status?.operation,status?.sensorConnected, isStart]);
 
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
@@ -259,7 +236,7 @@ const MeasuringTemprature = () => {
           <div style={{ fontWeight: 500 }}>Measuring Temperature</div>
           <div className={styles.HeaderRightWrapper}>
             <div
-              onClick={() => handleTemperatureUnit("c")}
+              onClick={() => setTempratureUnit("c")}
               className={styles.TempratureDegree}
               style={{
                 backgroundColor: tempratureUnit === "c" ? "#424C58" : "#9CD5CD",
@@ -279,7 +256,7 @@ const MeasuringTemprature = () => {
               </div>
             </div>
             <div
-              onClick={() => handleTemperatureUnit("f")}
+              onClick={() => setTempratureUnit("f")}
               className={styles.TempratureDegree}
               style={{
                 backgroundColor: tempratureUnit === "f" ? "#424C58" : "#9CD5CD",
@@ -301,7 +278,7 @@ const MeasuringTemprature = () => {
           </div>
         </div>
         <div className={styles.SecondaryHeaderWrapper}>
-          <div>Temperature Value : {graphData[graphData.length - 1]?.temp}</div>
+          <div>Temperature Value : {tempratureUnit === 'f' && graphData[graphData.length - 1]?.temp ? ((9 / 5) * graphData[graphData.length - 1]?.temp + 32).toFixed(1) : graphData[graphData.length - 1]?.temp}</div>
           <div className={styles.DegreeStyle}> </div>
           <div>{tempratureUnit.toUpperCase()}</div>
         </div>
@@ -312,6 +289,7 @@ const MeasuringTemprature = () => {
               showPoint={status?.setupData?.dataRate === "user" ? false : true}
               capturePoint={capturePoint}
               title={"Temperature"}
+              temperatureUnit = {tempratureUnit}
             />
           </div>
           {window.innerWidth > mobileWidth ? (
@@ -329,7 +307,7 @@ const MeasuringTemprature = () => {
                     : {}
                 }
               >
-                {isStart || status?.operation === "measure_temperature" || graphData?.length ? "Restart" : "Start"}
+                {isStart || graphData?.length ? "Restart" : "Start"}
               </div>
               <div
                 onClick={() =>
@@ -383,7 +361,7 @@ const MeasuringTemprature = () => {
         </div>
         {window.innerWidth <= mobileWidth ? (
           <div className={styles.ButtonHorizontalWrapper}>
-            <div className={styles.ButtonHorizontalInnerWrapper}>
+            <div className={styles.ButtonHorizontalInnerWrapper} style={status?.setupData?.dataRate !== "user" ? {justifyContent:"center"} : {}} >
               <div
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
@@ -397,7 +375,7 @@ const MeasuringTemprature = () => {
                     : {}
                 }
               >
-                {isStart || status?.operation === "measure_temperature" || graphData?.length ? "Restart" : "Start"}
+                {isStart || graphData?.length ? "Restart" : "Start"}
               </div>
               <div
                 onClick={() =>
@@ -408,8 +386,8 @@ const MeasuringTemprature = () => {
                 className={styles.StopHorizontalButton}
                 style={
                   !isStart || clientId !== status?.leaderSelected
-                    ? extraStyle
-                    : {}
+                    ? {...extraStyle,...(status?.setupData?.dataRate !== "user" ? {marginLeft:20} : {})}
+                    : {...(status?.setupData?.dataRate !== "user" ? {marginLeft:20} : {})}
                 }
               >
                 Stop

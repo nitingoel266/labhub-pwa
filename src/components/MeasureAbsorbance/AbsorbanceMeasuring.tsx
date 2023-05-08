@@ -46,15 +46,25 @@ const AbsorbanceMeasuring = () => {
       if (clientId === status?.leaderSelected) {
         startRgbExperiment();
         setMeasuredValue((prevState: any) => {
-          return [
-            ...prevState,
-            {
-              "Measuement No": prevState.length,
-              RED: measure[0],
-              GREEN: measure[1],
-              BLUE: measure[2],
-            },
-          ];
+          if(measure && measure[2]){
+            return prevState ? [
+              ...prevState,
+              {
+                "Measuement No": prevState?.length || 0,
+                RED: measure[0],
+                GREEN: measure[1],
+                BLUE: measure[2],
+              }
+            ] : [
+              {
+                "Measuement No": prevState?.length || 0,
+                RED: measure[0],
+                GREEN: measure[1],
+                BLUE: measure[2],
+              }
+            ];
+          }
+          
         });
       }
 
@@ -68,10 +78,13 @@ const AbsorbanceMeasuring = () => {
     }
   };
   const handleSave = () => {
-    let resultRGB = [...measuredValue];
+    let resultRGB:any = [];
+    if(measuredValue){
+      resultRGB = [...measuredValue]
+    }
     if (measure.length > 0) {
       resultRGB.push({
-        "Measuement No": measuredValue.length,
+        "Measuement No": measuredValue?.length || 0,
         RED: measure[0],
         GREEN: measure[1],
         BLUE: measure[2],
@@ -104,16 +117,15 @@ const AbsorbanceMeasuring = () => {
     else setModal(title);
   };
   useEffect(() => {
-    if (dataStream?.rgb) {
       if (
+        dataStream?.rgb &&
         dataStream?.rgb?.measure &&
-        dataStream?.rgb?.measure.some((e: any) => e > 0) &&
+        dataStream?.rgb?.measure.some((e: any) => e) &&
         JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure)
       ) {
         audio.play();
         setMeasure(dataStream?.rgb?.measure || []);
       }
-    }
   }, [dataStream?.rgb, measure, audio]);
   return (
     <div>

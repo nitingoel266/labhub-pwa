@@ -426,18 +426,18 @@ const FirstHeader = ({
               color: "white",
               marginLeft: 8,
               fontSize: 15,
-              cursor: "pointer",
+              // cursor: "pointer",
             }}
           >
             {connected ? status?.deviceName : ""}
           </div>
           <div
-            onClick={() => handleClick("leaderMember")}
+            // onClick={() => handleClick("leaderMember")}
             style={{
               color: "white",
               marginLeft: 8,
               fontSize: 15,
-              cursor: "pointer",
+              // cursor: "pointer",
             }}
           >
             {connected &&
@@ -445,7 +445,7 @@ const FirstHeader = ({
           </div>
         </div>
       </div>
-      <div className={styles.BatteryWapper}>
+      <div className={styles.BatteryWapper} title={(status?.batteryLevel || 0)+"%"}>
         <div className={styles.BatteryInnerWapper}>
           <div style={unFilledStyle}></div>
           <div style={filledStyle}></div>

@@ -14,6 +14,7 @@ const Toast = () => {
   //   const handleResetConnection = () => {
   //     setToastMessage(null);
   //   };
+
   useEffect(() => {
     let timeOut: any;
     if (message) {
@@ -23,6 +24,7 @@ const Toast = () => {
       clearTimeout(timeOut);
     };
   }, [message, timmer]);
+  
   return (
     <div
       className={styles.ToastWrapper}

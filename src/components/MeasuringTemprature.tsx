@@ -18,6 +18,7 @@ import {
 import { TEMPERATURE_DATA } from "../utils/const";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
+import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
 
 const MeasuringTemprature = () => {
   const clientId = getClientId()
@@ -116,6 +117,11 @@ const MeasuringTemprature = () => {
     if(isOpen === "Do you want to save Data?"){
         navigate("/function-selection")
     }
+  }
+
+  const handleSensorDisconnected = (value:any) => {
+    setModal(value)
+    navigate("/sensors")
   }
 
   useEffect(() => {
@@ -224,12 +230,24 @@ const MeasuringTemprature = () => {
     }
   }, [status?.operation,status?.sensorConnected, isStart]);
 
+  useEffect(() => { // stop temperature experiment and show a modal that sensor disconnected and for go back
+    if(status?.sensorConnected !== "temperature"){
+      if(status?.operation === "measure_temperature"){
+        stopSensorExperiment();
+      }
+      setModal("Temperature Sensor disconnected")
+    }else if(status?.sensorConnected === "temperature"){
+      setModal("")
+    }
+  },[status?.sensorConnected,status?.operation])
+
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
       <Header
         checkForSave={capturePoint.some((e:any) => e > 0) && !isSaved ? true : false}
         handleSave={handleSave}
+        shouldCloseModal = {isOpen === "Temperature Sensor disconnected" ? true : false}
       />
       <div className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>
@@ -402,7 +420,7 @@ const MeasuringTemprature = () => {
             </div>
           </div>
         ) : null}
-        <MemberDisconnect
+        {isOpen !== "Temperature Sensor disconnected" && <MemberDisconnect
           isOpen={isOpen ? true : false}
           setModal={(value) => setModal(value)}
           handleDisconnect={
@@ -414,7 +432,12 @@ const MeasuringTemprature = () => {
           }
           message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment.`}
           handleCancel = {handleCancelModal}
-        />
+        />}
+        {isOpen === "Temperature Sensor disconnected" && <SensorDisconnectModal 
+           isOpen={isOpen ? true : false}
+           setModal={(value) => handleSensorDisconnected(value)}
+           message="Temperature Sensor isn't Connected!"
+        />}
         <RightArrow
           isSelected={capturePoint?.some((el: number) => el > 0) ? true : false}
           handleSubmit={handleSubmit}

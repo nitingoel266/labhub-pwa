@@ -8,11 +8,14 @@ import { useNavigate } from "react-router-dom";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import {mobileWidth,HEATER_ELEMENT,TEMPERATURE_PROBE,getDescription,HIGHLIGHT_BACKGROUND} from "../../components/Constants";
 import IButtonComponent from "../../components/IButtonComponent";
+import { useDeviceStatus } from "../../labhub/status";
+import SensorDisconnectModal from "../../components/Modal/SensorDisconnectModal";
 
 const MethodSelection = () => {
     const heaterElementRef = useRef()
     const temperatureProbeRef = useRef()
     const navigate = useNavigate();
+    const [status] = useDeviceStatus();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
@@ -30,6 +33,12 @@ const MethodSelection = () => {
         }
 
     }
+
+    const handleSensorDisconnected = (value:any) => {
+        setModal(value)
+        navigate("/heater")
+      }
+      
     useEffect(() => {
         // if(status?.modeSelected){
         //     let result = status.modeSelected[0].toUpperCase()+status.modeSelected.slice(1) + " Mode"
@@ -40,6 +49,16 @@ const MethodSelection = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
+
+    useEffect(() => { // stop probe experiment and show a modal that sensor disconnected and for go back
+        if(status?.heaterConnected === null){
+          setModal("Heater isn't Connected!")
+        }else if(status?.heaterConnected !== null){
+          setModal("")
+        }
+      },[status?.heaterConnected,status?.operation])
+
+
     return <div style={{position:"relative"}}>
          <div className={styles.HeaderText}>
             <div style={{marginBottom:20,marginTop:20}}>Control Method</div>
@@ -60,8 +79,13 @@ const MethodSelection = () => {
                 </div>
             ))}
             </div>
+        {isOpen === "Heater isn't Connected!" && <SensorDisconnectModal 
+             isOpen={isOpen ? true : false}
+             setModal={(value) => handleSensorDisconnected(value)}
+             message="Heater isn't Connected!"
+        />}
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
+        {!isMobile && isOpen !== "Heater isn't Connected!" && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

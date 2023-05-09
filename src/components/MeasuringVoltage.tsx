@@ -18,6 +18,7 @@ import {
 import { VOLTAGE_DATA } from "../utils/const";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
+import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
 
 const MeasuringVoltage = () => {
   const clientId = getClientId()
@@ -117,6 +118,11 @@ const MeasuringVoltage = () => {
   //     setCheckForLog(graphData.length)
   //   }
   // },[graphData,clientId,status?.leaderSelected])
+
+  const handleSensorDisconnected = (value:any) => {
+    setModal(value)
+    navigate("/sensors")
+  }
 
   useEffect(() => {
     const getVoltageData = async () =>{
@@ -222,12 +228,25 @@ const MeasuringVoltage = () => {
       setIsStart(true);
     }
   }, [status?.operation,status?.sensorConnected, isStart]);
+
+  useEffect(() => { // stop voltage experiment and show a modal that sensor disconnected and for go back
+    if(status?.sensorConnected !== "voltage"){
+      if(status?.operation === "measure_voltage"){
+        stopSensorExperiment();
+      }
+      setModal("Voltage Sensor disconnected")
+    }else if(status?.sensorConnected === "voltage"){
+      setModal("")
+    }
+  },[status?.sensorConnected,status?.operation])
+
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
       <Header
         checkForSave={capturePoint.some((e:any) => e > 0) && !isSaved ? true : false}
         handleSave={handleSave}
+        shouldCloseModal = {isOpen === "Voltage Sensor disconnected" ? true : false}
       />
       <div className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>
@@ -358,7 +377,7 @@ const MeasuringVoltage = () => {
             </div>
           </div>
         ) : null}
-        <MemberDisconnect
+        {isOpen !== "Voltage Sensor disconnected" && <MemberDisconnect
           isOpen={isOpen ? true : false}
           setModal={(value) => setModal(value)}
           handleDisconnect={
@@ -370,7 +389,12 @@ const MeasuringVoltage = () => {
           }
           message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment.`}
           handleCancel = {handleCancelModal}
-        />
+        />}
+        {isOpen === "Voltage Sensor disconnected" && <SensorDisconnectModal 
+          isOpen={isOpen ? true : false}
+          setModal={(value) => handleSensorDisconnected(value)}
+          message="Voltage Sensor isn't Connected!"
+        />}
         <RightArrow
           isSelected={capturePoint?.some((el: number) => el > 0) ? true : false}
           handleSubmit={handleSubmit}

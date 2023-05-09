@@ -34,6 +34,7 @@ const AbsorbanceMeasuring = () => {
   const [measure, setMeasure] = useState<any>(dataStream?.rgb?.measure || []);
   const [measuredValue, setMeasuredValue] = useState<any>([]); //{Measuement No,RED,GREEN,BLUE}
   const [isOpen, setModal] = useState("");
+  const [screenName,setScreenName] = useState<string>("cuvette-insertion"); // measure-absorbance
 
   const clickHandler = (item: string) => {
     if (selectedItem && selectedItem === item) setSelectedItem("");
@@ -43,6 +44,9 @@ const AbsorbanceMeasuring = () => {
   const handleSubmit = () => {
     if (selectedItem) {
       navigate("/measure-absorbance");
+      if(screenName === "cuvette-insertion"){
+        setScreenName("measure-absorbance")
+      }
       if (clientId === status?.leaderSelected) {
         startRgbExperiment();
         setMeasuredValue((prevState: any) => {
@@ -129,7 +133,8 @@ const AbsorbanceMeasuring = () => {
   }, [dataStream?.rgb, measure, audio]);
   return (
     <div>
-      <div className={styles.ButtonWrapper}>
+      {screenName === "cuvette-insertion" && <div className={styles.HeaderText}>Please insert cuvette to measure absorbance of RGB light.</div>}
+      <div className={styles.ButtonWrapper} style={screenName === "cuvette-insertion" ? {marginTop:0} : {marginTop:66}}>
         <div
           className={styles.Button}
           style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
@@ -156,15 +161,15 @@ const AbsorbanceMeasuring = () => {
       )}
       <div className={styles.BodyWrapper}>
         <div className={styles.BodyBollWrapper}>
-          <div className={styles.BodyRedBoll}>{measure[0]}</div>
+          <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#D08080"} : {}}>{measure[0]}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
         <div className={styles.BodyBollWrapper}>
-          <div className={styles.BodyGreenBoll}>{measure[1]}</div>
+          <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#7BAA81"} : {}}>{measure[1]}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
         <div className={styles.BodyBollWrapper}>
-          <div className={styles.BodyBlueBoll}>{measure[2]}</div>
+          <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#8AA3BB"} : {}}>{measure[2]}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>

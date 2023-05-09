@@ -90,7 +90,7 @@ function App() {
           <Route path='/calibration-testing' element={<CalibrationTesting />} />
           <Route path='/spectrophotometer-testing' element={<SpectrophotometerTesting />} />
 
-          <Route path='/cuvette-insertion' element={<CuvetteInsertion />} />
+          <Route path='/cuvette-insertion' element={<CuvetteInsertion />} /> {/* currently not in use */}
           <Route path='/measure-absorbance' element={<AbsorbanceMeasuring />} />
 
           <Route path="/my-records" element={<MyRecordList />} />

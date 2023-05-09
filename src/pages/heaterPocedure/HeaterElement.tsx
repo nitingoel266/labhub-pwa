@@ -25,10 +25,13 @@ import {
   useIsTouchDeviceDetect
 } from "../../components/Constants";
 import Header from "../../components/header";
+import { useNavigate } from "react-router-dom";
+import SensorDisconnectModal from "../../components/Modal/SensorDisconnectModal";
 
 let temperatureTimmer: any;
 const HeaterElement = () => {
   const clientId = getClientId();
+  const navigate = useNavigate();
   const [status] = useDeviceStatus();
   const isDeviceTouchable =  useIsTouchDeviceDetect();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
@@ -86,6 +89,12 @@ const HeaterElement = () => {
     if (isOpen === title) setModal("");
     else setModal(title);
   };
+
+  const handleSensorDisconnected = (value:any) => {
+    setModal(value)
+    navigate("/heater")
+  }
+
   useEffect(() => {
     if (dataStream?.heater?.element) {
       if (!isStart) setIsStart(true);
@@ -102,13 +111,28 @@ const HeaterElement = () => {
     }
   }, [status?.setpointTemp]);
 
+  useEffect(() => { // stop element experiment and show a modal that sensor disconnected and for go back
+    if(status?.heaterConnected !== "element"){
+      if(status?.operation === "heater_control"){
+        setIsStart(false);
+        stopHeaterExperiment();
+      }
+      setModal("Heater Element disconnected")
+    }else if(status?.heaterConnected === "element"){
+      setModal("")
+    }
+  },[status?.heaterConnected,status?.operation])
+
   const extraStyle =
     clientId !== status?.leaderSelected
       ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
       : {};
   return (
     <div style={{ position: "relative" }}>
-      <Header setPointTemp={temperature} />
+      <Header 
+      setPointTemp={temperature} 
+      shouldCloseModal = {isOpen === "Heater Element disconnected" ? true : false}
+      />
       <div className={styles.HeaderTextWrapper}>
         <div>{SETPOINT_TEMPERATURE}</div>
         <div className={styles.RateMeasureRightSide}>
@@ -246,12 +270,17 @@ const HeaterElement = () => {
           Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(2)} W</span>
         </div>
       </div>
-      <MemberDisconnect
+      {isOpen !== "Heater Element disconnected" && <MemberDisconnect
         isOpen={isOpen && isOpen !== SETPOINT_TEMPERATURE ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={isOpen === "start" ? handleStart : handleStop}
         message={`Do you want to ${isOpen} the experiment.`}
-      />
+      />}
+      {isOpen === "Heater Element disconnected" && <SensorDisconnectModal 
+          isOpen={isOpen ? true : false}
+          setModal={(value) => handleSensorDisconnected(value)}
+          message="Heater Element isn't Connected!"
+      />}
       <RightArrow
         isSelected={
           clientId === status?.leaderSelected &&

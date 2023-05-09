@@ -25,10 +25,13 @@ import {
 } from "../../components/Constants";
 import IButtonComponent from "../../components/IButtonComponent";
 import Header from "../../components/header";
+import SensorDisconnectModal from "../../components/Modal/SensorDisconnectModal";
+import { useNavigate } from "react-router-dom";
 
 let temperatureTimmer: any;
 const TemperatureProbe = () => {
   const clientId = getClientId();
+  const navigate = useNavigate();
   const [status] = useDeviceStatus();
   const isDeviceTouchable = useIsTouchDeviceDetect();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
@@ -88,6 +91,12 @@ const TemperatureProbe = () => {
     if (isOpen === title) setModal("");
     else setModal(title);
   };
+
+  const handleSensorDisconnected = (value:any) => {
+    setModal(value)
+    navigate("/heater")
+  }
+
   useEffect(() => {
     if (dataStream?.heater?.probe) {
       if (!isStart) setIsStart(true);
@@ -105,13 +114,30 @@ const TemperatureProbe = () => {
     }
   }, [status?.setpointTemp]);
 
+  useEffect(() => { // stop probe experiment and show a modal that sensor disconnected and for go back
+    if(status?.heaterConnected !== "probe"){
+      if(status?.operation === 'heater_probe'){
+        setIsStart(false);
+        stopHeaterExperiment();
+      }
+      setModal("Temperature probe disconnected")
+    }else if(status?.heaterConnected === "probe"){
+      setModal("")
+    }
+  },[status?.heaterConnected,status?.operation])
+
+
+
   const extraStyle =
     clientId !== status?.leaderSelected
       ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
       : {};
   return (
     <div style={{ position: "relative" }}>
-      <Header setPointTemp={temperature} />
+      <Header 
+      setPointTemp={temperature} 
+      shouldCloseModal = {isOpen === "Temperature probe disconnected" ? true : false}
+      />
       <div className={styles.HeaderTextWrapper}>
         <div>{SETPOINT_TEMPERATURE}</div>
         <div className={styles.RateMeasureRightSide}>
@@ -255,12 +281,17 @@ const TemperatureProbe = () => {
           Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(2)} W</span>
         </div>
       </div>
-      <MemberDisconnect
+      {isOpen !== "Temperature probe disconnected" && <MemberDisconnect
         isOpen={isOpen && isOpen !== SETPOINT_TEMPERATURE ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={isOpen === "start" ? handleStart : handleStop}
         message={`Do you want to ${isOpen} the experiment.`}
-      />
+      />}
+     {isOpen === "Temperature probe disconnected" && <SensorDisconnectModal 
+          isOpen={isOpen ? true : false}
+          setModal={(value) => handleSensorDisconnected(value)}
+          message="Temperature Probe isn't Connected!"
+      />}
       <RightArrow
         isSelected={
           clientId === status?.leaderSelected &&

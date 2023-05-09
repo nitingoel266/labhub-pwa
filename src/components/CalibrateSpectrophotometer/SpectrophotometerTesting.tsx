@@ -53,8 +53,7 @@ const SpectrophotometerTesting = () => {
   const handleMeasure = () => {
     setModal("");
     if (clientId === status?.leaderSelected) simulateRgb("measure");
-
-    navigate("/cuvette-insertion");
+    navigate("/measure-absorbance");
   };
 
   useEffect(() => {

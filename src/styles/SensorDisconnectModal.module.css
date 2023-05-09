@@ -20,24 +20,14 @@
 }
 
 .TextContainer {
-    width: 300px;
+    width: 320px;
     background-color: #EFEFEF;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     flex:1;
 }
-.Headertext {
-    background-color: #424C58;
-    height: 30px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 15px;
-    color: #FFFFFF;
-    border-top-right-radius: 8px;
-    border-top-left-radius: 8px;
-}
+
 .ErrorHeadertext {
     background-color: #CC0000;
     height: 30px;
@@ -49,14 +39,7 @@
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
 }
-.BodyWrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 120px;
-    margin:10px 0px 0px;
-    flex:1;
-}
+
 .ErrorBodyWrapper {
     display: flex;
     flex-direction: column;
@@ -73,13 +56,8 @@
     flex-direction: column;
     justify-content: center;
 }
-.ButtonWrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-}
 .ErrorButtonWrapper {
+    margin-top: 8px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -120,6 +98,7 @@
 
 @media (max-width:680px) {
     .TextContainer{
+        /* height: 150px; */
         width: 220px;
     }
 }

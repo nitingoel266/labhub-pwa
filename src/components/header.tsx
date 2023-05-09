@@ -32,7 +32,7 @@ import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { GetScreenName} from "../utils/const";
 
-function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
+function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderProps) {
   const [status] = useDeviceStatus();
   const [dataFeed] = useDeviceDataFeed();
   const [connected] = useDeviceConnected();
@@ -91,6 +91,10 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       if(clientId === status?.leaderSelected)
       simulateRgb(null)
       navigate("/rgb-spect")
+    }else if(location?.pathname === "/sensors"){
+      navigate("/function-selection")
+    }else if(location?.pathname === "/heater") {
+      navigate("/function-selection")
     } else navigate(-1);
   };
 
@@ -333,6 +337,12 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     location.state?.screenName
   ]);
 
+  useEffect(() => { // stop temperature experiment and show a modal that sensor disconnected and for go back
+    if(shouldCloseModal){
+      setModal("")
+    }
+  },[shouldCloseModal])
+
   // useEffect(() => { // setScreen name as a leader for sync for member
   //   if(clientId === status?.leaderSelected){
   //     if(location?.pathname){
@@ -558,4 +568,5 @@ export interface HeaderProps {
   setPointTemp ?:number;
   checkForSave?:boolean;
   handleSave ? :() => void;
+  shouldCloseModal ? :boolean;
 }

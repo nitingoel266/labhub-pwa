@@ -27,6 +27,7 @@ import {
   WhiteDeleteIcon,
 } from "../images/index";
 import { useNavigate, useLocation } from "react-router-dom";
+import {toastMessage} from "./Constants";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
@@ -247,6 +248,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       setScreenName("/scan-devices")
       applicationMessage.next({message:`There is no screen available for screen number :- ${index}`,type:"info"})
     }
+    toastMessage.next("Synced with Leader!")
   }
   const handleSync  = () => {
     setOnClick("sync")

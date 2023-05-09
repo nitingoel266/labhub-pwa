@@ -120,10 +120,11 @@ const MyRecordList = () => {
         }
         const file = new File([csv], `${item?.name}.csv`,{type:"text/csv"});
         // console.log("???????? ",file)
+        let expType = (selectedButton.slice(0,1)).toLocaleUpperCase() + selectedButton.slice(1)
         await navigator.share({
-          url:`${selectedButton} Experiment data of ${item.name}`,
-          text: `${selectedButton} data of ${item?.name}`,
-          title: `${selectedButton} Experiment Data`,
+          url:`${expType} Experiment data of ${item.name}`,
+          text: `${expType} data of ${item?.name}`,
+          title: `${expType} Experiment Data`, // Email subject
           files:[file]
         });
         console.log("data has been shared Successfully!")

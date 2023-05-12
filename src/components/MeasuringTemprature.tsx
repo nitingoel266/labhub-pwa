@@ -249,11 +249,12 @@ const MeasuringTemprature = () => {
         handleSave={handleSave}
         shouldCloseModal = {isOpen === "Temperature Sensor disconnected" ? true : false}
       />
-      <div className={styles.TopWrapper}>
+      <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>
-          <div style={{ fontWeight: 500 }}>Measuring Temperature</div>
+          <h4 aria-label="Measuring temperture header text" style={{ fontWeight: 500 }}>Measuring Temperature</h4>
           <div className={styles.HeaderRightWrapper}>
-            <div
+            <button
+              aria-label="Degree Celcius button"
               onClick={() => setTempratureUnit("c")}
               className={styles.TempratureDegree}
               style={{
@@ -261,7 +262,7 @@ const MeasuringTemprature = () => {
                 color: tempratureUnit === "c" ? "#FFFFFF" : "#000000",
               }}
             >
-              <div>C</div>
+              <div style={{fontSize:14}}>C</div>
               <div
                 className={styles.TempratureDegreeIcon}
                 style={{
@@ -272,8 +273,9 @@ const MeasuringTemprature = () => {
               >
                 {" "}
               </div>
-            </div>
-            <div
+            </button>
+            <button
+              aria-label="Degree farahenit button"
               onClick={() => setTempratureUnit("f")}
               className={styles.TempratureDegree}
               style={{
@@ -281,7 +283,7 @@ const MeasuringTemprature = () => {
                 color: tempratureUnit === "f" ? "#FFFFFF" : "#000000",
               }}
             >
-              <div>F</div>
+              <div style={{fontSize:14}}>F</div>
               <div
                 className={styles.TempratureDegreeIcon}
                 style={{
@@ -292,13 +294,13 @@ const MeasuringTemprature = () => {
               >
                 {" "}
               </div>
-            </div>
+            </button>
           </div>
         </div>
         <div className={styles.SecondaryHeaderWrapper}>
-          <div>Temperature Value : {tempratureUnit === 'f' && graphData[graphData.length - 1]?.temp ? ((9 / 5) * graphData[graphData.length - 1]?.temp + 32).toFixed(1) : graphData[graphData.length - 1]?.temp}</div>
+          <div aria-label="Temperature value">Temperature Value : {tempratureUnit === 'f' && graphData[graphData.length - 1]?.temp ? ((9 / 5) * graphData[graphData.length - 1]?.temp + 32).toFixed(1) : graphData[graphData.length - 1]?.temp}</div>
           <div className={styles.DegreeStyle}> </div>
-          <div>{tempratureUnit.toUpperCase()}</div>
+          <div aria-label={"in degree "+ tempratureUnit.toUpperCase()}>{tempratureUnit.toUpperCase()}</div>
         </div>
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
@@ -312,7 +314,8 @@ const MeasuringTemprature = () => {
           </div>
           {window.innerWidth > mobileWidth ? (
             <div className={styles.ButtonWrapper}>
-              <div
+              <button
+                aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
                     ? setModal(status?.operation === "measure_temperature" ? "restart" : "start")
@@ -326,8 +329,9 @@ const MeasuringTemprature = () => {
                 }
               >
                 {isStart || graphData?.length ? "Restart" : "Start"}
-              </div>
-              <div
+              </button>
+              <button
+                aria-label="stop button"
                 onClick={() =>
                   clientId === status?.leaderSelected && isStart
                     ? setModal("stop")
@@ -341,25 +345,27 @@ const MeasuringTemprature = () => {
                 }
               >
                 Stop
-              </div>
+              </button>
               {status?.setupData?.dataRate === "user" && (
-                <div
+                <button
+                  aria-label="Capture button"
                   className={styles.CaptureButton}
                   style={graphData?.length > 0 ? {} : extraStyle}
                   onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
                 >
                   Capture
-                </div>
+                </button>
               )}
             </div>
           ) : null}
         </div>
         <div className={styles.FooterTextWrapper}>
           <div className={styles.FooterInnerTextWrapper}>
-            <div>TITLE</div>
+            <div aria-label="title sub header">TITLE</div>
             <div className={styles.FooterText}>
-              <div>T101722-1334-M4</div>
-              <div
+              <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
+              <button
+                aria-label="Save button"
                 className={styles.SaveButton}
                 style={
                   capturePoint?.some((el: number) => el > 0) && !isSaved
@@ -373,14 +379,15 @@ const MeasuringTemprature = () => {
                 }
               >
                 Save
-              </div>
+              </button>
             </div>
           </div>
         </div>
         {window.innerWidth <= mobileWidth ? (
           <div className={styles.ButtonHorizontalWrapper}>
             <div className={styles.ButtonHorizontalInnerWrapper} style={status?.setupData?.dataRate !== "user" ? {justifyContent:"center"} : {}} >
-              <div
+              <button
+                aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
                     ? setModal(status?.operation === "measure_temperature" ? "restart" : "start")
@@ -394,8 +401,9 @@ const MeasuringTemprature = () => {
                 }
               >
                 {isStart || graphData?.length ? "Restart" : "Start"}
-              </div>
-              <div
+              </button>
+              <button
+                aria-label="stop button"
                 onClick={() =>
                   clientId === status?.leaderSelected && isStart
                     ? setModal("stop")
@@ -409,18 +417,19 @@ const MeasuringTemprature = () => {
                 }
               >
                 Stop
-              </div>
-              {status?.setupData?.dataRate === "user" && <div
+              </button>
+              {status?.setupData?.dataRate === "user" && <button
+                aria-label="Capture button"
                 className={styles.CaptureHorizontalButton}
                 style={graphData?.length > 0 ? {} : extraStyle}
                 onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
               >
                 Capture
-              </div>}
+              </button>}
             </div>
           </div>
         ) : null}
-        {isOpen !== "Temperature Sensor disconnected" && <MemberDisconnect
+        {isOpen !== "Temperature Sensor disconnected" && isOpen && <MemberDisconnect
           isOpen={isOpen ? true : false}
           setModal={(value) => setModal(value)}
           handleDisconnect={

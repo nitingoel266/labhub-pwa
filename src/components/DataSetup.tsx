@@ -51,22 +51,34 @@ const DataSetup = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
-    return <div className={styles.DataSetupWrapper}>
-        <div style={{fontWeight:500}}>Setup</div>
+    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.DataSetupWrapper}>
+        <h4 aria-label='Setup header' style={{fontWeight:500}}>Setup</h4>
         <div className={styles.RateMeasureRightSide}>
-            <div>{DATA_RATE}</div>
-            <img onClick={() => handleIModal(DATA_RATE)} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
+            <div aria-label={DATA_RATE + "title"} >{DATA_RATE}</div>
+            <button
+                aria-label={DATA_RATE + "i button"}
+                style={{border:"none",outline:"none",backgroundColor:"inherit"}}
+                onClick={() => handleIModal(DATA_RATE)}
+            >
+                <img  src={BlackIButtonIcon} className={styles.IButton} alt="i Icon"/>
+            </button>
         </div>
         {isOpen === DATA_RATE && isMobile && <IButtonComponent title={DATA_RATE} description={getDescription(DATA_RATE)} marginTop = {5}/>}
-        <div className={styles.DataRateWapper}>
+        <div aria-label={DATA_RATE + "picker"} className={styles.DataRateWapper}>
             <WheelPicker data={dataRateOption.map((el:string,index:number) => ({id:`${index}`,value:el}))} selectedId={`${dataRateOption.indexOf(dataSetup?.dataRate)}`} handleData={(value:string) => handleDataSetup({dataRate:value})}/>
         </div>
         <div className={styles.RateMeasureRightSide}>
-            <div>{NO_OF_SAMPLES}</div>
-            <img onClick={() => handleIModal(NO_OF_SAMPLES)} src={BlackIButtonIcon} className={styles.IButton} alt="i Button"/>
+            <div aria-label={NO_OF_SAMPLES +"title"}>{NO_OF_SAMPLES}</div>
+            <button
+                aria-label={NO_OF_SAMPLES+"i button"}
+                style={{border:"none",outline:"none",backgroundColor:"inherit"}}
+                onClick={() => handleIModal(NO_OF_SAMPLES)}
+            >
+                <img  src={BlackIButtonIcon} className={styles.IButton} alt="i icon"/>
+            </button>
         </div>
         {isOpen === NO_OF_SAMPLES && isMobile && <IButtonComponent title={NO_OF_SAMPLES} description={getDescription(NO_OF_SAMPLES)} marginTop = {5}/>}
-        <div className={styles.DataRateWapper}>
+        <div aria-label={NO_OF_SAMPLES + "picker"} className={styles.DataRateWapper}>
             <WheelPicker data={dataSampleOption.map((el:any,index:number) => ({id:`${index}`,value:el}))} selectedId={`${dataSampleOption.indexOf(dataSetup?.dataSample)}`} handleData={(value:any) => handleDataSetup({dataSample:value === 'CONT' ? value : Number(value)})}/>
         </div>
         <RightArrow isSelected={(getDataRate[dataSetup.dataRate] !== status?.setupData?.dataRate || getDataSample[dataSetup.dataSample] !== status?.setupData?.dataSample) && isLeader ? true : false} handleSubmit = {handleSubmit}/>

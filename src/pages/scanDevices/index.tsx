@@ -43,34 +43,34 @@ const ScanDevices = () => {
     }
     setModal("")
   }
-    return <> 
+    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc"> 
         <div className={styles.ExtraButtonWrapper}>
-            {installPromotion && <div className={styles.ExtraButton} onClick={installClickHandler}>
-                <img src={DownloadIcon} style={{width:18,marginRight:8}} alt="add to home"/>
+            {installPromotion && <button aria-label={"Add to home screen Button"} className={styles.ExtraButton} onClick={installClickHandler}>
+                <img src={DownloadIcon} style={{width:18,marginRight:8}} alt="add to home icon"/>
                 <div>Add to Home Screen</div>
-                </div>}
-            {updatePending && <div className={styles.ExtraButton} style={{backgroundColor:"#32cd32"}} onClick={updateServiceWorker}>
-                <img src={UpdateIcon} style={{width:18,marginRight:8}} alt="update"/>
+                </button>}
+            {updatePending && <button aria-label={"update Button"} className={styles.ExtraButton} style={{backgroundColor:"#32cd32"}} onClick={updateServiceWorker}>
+                <img src={UpdateIcon} style={{width:18,marginRight:8}} alt="update icon"/>
                 <div>Update Application</div>
-                </div>}
+                </button>}
         </div>
         <div className={styles.ScanDeviceWrapper}>
             <div className={styles.LabHubStickerWrapper}>
-            <img src={LabHubSticker} style={{width:'100%'}} alt="al"/>
+            <img src={LabHubSticker} style={{width:'100%'}} alt="labhub images"/>
             </div>
-           {!isConnected && <div className={styles.ScanDeviceButton} style={connected ? {} : {backgroundColor:"#FFFFFF",boxShadow:"0px 1px 2px 1px #B6B5B5"}} onClick={() => connected ? setModal("resetConnection") : handleSubmit()}>
+           {!isConnected && <button aria-label={"Scan Device Button"} className={styles.ScanDeviceButton} style={connected ? {} : {backgroundColor:"#FFFFFF",boxShadow:"0px 1px 2px 1px #B6B5B5"}} onClick={() => connected ? setModal("resetConnection") : handleSubmit()}>
                 <img src={connected ? BluetoothIcon : BlackBluetoothIcon} className={styles.BluetoothIconWrapper} alt="bluetoothIcon"/>
                 <div className={styles.ScanDeviceText} style={connected ? {} :{color:"#424C58"}}>Scan Devices</div>
-            </div>}
-            {!isConnected && connected ? <div className={styles.ScanDeviceButton} onClick={() => setModal("device")}>
+            </button>}
+            {!isConnected && connected ? <button aria-label={"Disconnect Device Button"} className={styles.ScanDeviceButton} onClick={() => setModal("device")}>
                 <img src={BluetoothIcon} className={styles.BluetoothIconWrapper} alt="bluetoothIcon"/>
                 <div className={styles.ScanDeviceText}>Disconnect</div>
-            </div> : null}
+            </button> : null}
             {connected && status?.leaderSelected && <RightArrow isSelected={!isConnected && status?.leaderSelected ? true : false} handleSubmit={handleRightArrow}/>}
             {isConnected && <img src={LoaderImage} style={{width:70}} alt="loader gif"/>}
         </div>
-        <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "resetConnection" ? resetConnection : handleDisconnectDevice} message={isOpen === "resetConnection" ? "Do you want to connect to another device?" : `Are you sure to Disconnect from <strong style="white-space: nowrap;">${status?.deviceName}</strong>!`}/>
-    </>
+        {isOpen && <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "resetConnection" ? resetConnection : handleDisconnectDevice} message={isOpen === "resetConnection" ? "Do you want to connect to another device?" : `Are you sure to Disconnect from <strong style="white-space: nowrap;">${status?.deviceName}</strong>!`}/>}
+    </div>
 }
 
 export default ScanDevices;

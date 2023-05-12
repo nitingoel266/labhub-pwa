@@ -15,11 +15,13 @@ const SensorDisconnectModal = ({message = "Sensor has been disconnected!",isOpen
     />}
     <div
     className={styles.SecondWrapper}
+    role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
+
     >
         <div className={styles.TextContainer}>
                 <div className={styles.ErrorHeadertext} style={{backgroundColor:"#424C58"}}>
                     <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
-                    <div>Information</div>
+                    <h4>Information</h4>
                 </div>
                 <div className={styles.ErrorBodyWrapper}>
                     <div className={styles.Bodytext}>
@@ -28,7 +30,7 @@ const SensorDisconnectModal = ({message = "Sensor has been disconnected!",isOpen
                     </div>
                     <div className={styles.ErrorButtonWrapper}>
                         {/* <div onClick={() => setErrorMessage(null)} className={styles.CancelButton}>No</div> */}
-                        <div onClick={setModal} className={styles.DismissButton}>Ok</div>
+                        <button onClick={setModal} className={styles.DismissButton}>Ok</button>
                     </div>
                 </div>
             </div>

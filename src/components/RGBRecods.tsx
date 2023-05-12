@@ -4,7 +4,7 @@ import styles from "../styles/TemperatureRecords.module.css";
 const RGBRecord = () => {
   const { state } = useLocation() || {};
   return (
-    <div className={styles.Wrapper}>
+    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.Wrapper}>
       {[
         { key: 1, value: "Measuement No" },
         { key: 2, value: "RED" },

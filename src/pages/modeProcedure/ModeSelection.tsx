@@ -32,26 +32,26 @@ const ModeSelection = () => {
         else setModal(title)
     }
 
-    return <div style={{position:"relative"}}>
-        <div className={styles.HeaderText}>Select Mode</div>
+    return <div style={{position:"relative"}} role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+        <h4 className={styles.HeaderText} aria-label="Select mode header">Select Mode</h4>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:MANUAL_MODE},{icon:SensorIcon,title:PRESET_MODE}].map((el:any) => (
                 <div className={styles.ButtonSubWrapper} key={el.title}>
                 <div className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                    <div onClick={() => clickHandler(el.title)} className={styles.SubButton}>
+                    <button aria-label={el.title + "button"} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                         <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
-                        <div style={{marginLeft:10}}>{el.title}</div>
-                    </div>
-                    <div onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
-                        <img src={IButtonIcon} style={{width:20}} alt="i button"/>
-                    </div>
+                        <p style={{marginLeft:10,fontSize:16,fontWeight:500}}>{el.title}</p>
+                    </button>
+                    <button aria-label={el.title + "i button"} onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
+                        <img src={IButtonIcon} style={{width:20}} alt={el.title + "i icon"}/>
+                    </button>
                 </div>
                 {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
                 </div>
             ))}
             </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
+        {!isMobile && isOpen && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

@@ -48,11 +48,11 @@
     flex-direction: column;
     justify-content: space-between;
     height: 120px;
-    margin:10px 0px;
+    margin-bottom:10px;
     flex:1;
 }
 .Bodytext {
-    margin: 10px;
+    margin: 0px 10px;
     display: flex;
     flex:1;
     min-height: 50px;
@@ -77,24 +77,30 @@
 }
 .CancelButton {
     background-color: #424C58;
-    padding: 7px;
+    padding: 8px;
     border-radius: 5px;
     margin-right: 10px;
-    width:55px;
+    width:60px;
     text-align: center;
-    font-weight: 400;
+    font-weight: 500;
+    font-size: 15px;
     color: #FFFFFF;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 .YesButton {
     background-color: #9CD5CD;
-    padding: 7px;
+    padding: 8px;
     border-radius: 5px;
     margin-right: 10px;
-    width:55px;
+    width:60px;
     text-align: center;
-    font-weight: 400;
+    font-weight: 500;
+    font-size: 15px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 .IButtonTopWrapper {
     top: 0;

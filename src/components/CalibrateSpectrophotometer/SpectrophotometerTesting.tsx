@@ -68,25 +68,29 @@ const SpectrophotometerTesting = () => {
         setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
       }
   }, [dataStream?.rgb, audio, testCalibrate]);
+
   return (
-    <div>
+    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" >
       <div className={styles.ButtonWrapper}>
         <div
           className={styles.Button}
           style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
         >
-          <div
+          <button
+            aria-label={TEST_CALIBRATE}
             onClick={() => clickHandler(TEST_CALIBRATE)}
             className={styles.SubButton}
+            style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
           >
-            <div style={{ marginLeft: 10 }}>{TEST_CALIBRATE}</div>
-          </div>
-          <div
+            <p style={{ marginLeft: 10 ,fontSize:15,fontWeight:500}}>{TEST_CALIBRATE}</p>
+          </button>
+          <button
+            aria-label={TEST_CALIBRATE + "i button"}
             onClick={() => handleIModal(TEST_CALIBRATE)}
             className={styles.IButtonWrapper}
           >
-            <img src={IButtonIcon} style={{ width: 20 }} alt="i button" />
-          </div>
+            <img src={IButtonIcon} style={{ width: 20 }} alt="i icon" />
+          </button>
         </div>
       </div>
       {isOpen === TEST_CALIBRATE && isMobile && (
@@ -96,34 +100,35 @@ const SpectrophotometerTesting = () => {
         />
       )}
       <div className={styles.BodyWrapper}>
-        <div className={styles.BodyBollWrapper}>
+        <div aria-label={"red light value is "+testCalibrate[0]} className={styles.BodyBollWrapper}>
           <div className={styles.BodyRedBoll}>{testCalibrate[0]}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
-        <div className={styles.BodyBollWrapper}>
+        <div aria-label={"green light value is"+testCalibrate[1]} className={styles.BodyBollWrapper}>
           <div className={styles.BodyGreenBoll}>{testCalibrate[1]}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
-        <div className={styles.BodyBollWrapper}>
+        <div aria-label={"blue light value is"+testCalibrate[2]} className={styles.BodyBollWrapper}>
           <div className={styles.BodyBlueBoll}>{testCalibrate[2]}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>
-      <div className={styles.FooterText}>
+      <div aria-label="Spectrophotometer tested for calibration successfully." className={styles.FooterText}>
         Spectrophotometer tested for calibration successfully.
       </div>
-      <div className={styles.FooterText}>
+      <div aria-label="These values should be within the range of -0.2 to 0.2. If these values
+        are outside of the range, please check with your teacher." className={styles.FooterText}>
         These values should be within the range of -0.2 to 0.2. If these values
         are outside of the range, please check with your teacher.
       </div>
-      <MemberDisconnect
+      {isOpen && <MemberDisconnect
         isOpen={isOpen === "measure now" ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={handleMeasure}
         message={`Do you want to ${isOpen}?`}
-      />
+      />}
       <RightArrow isSelected={true} handleSubmit={handleSubmit} />
-      {!isMobile && (
+      {!isMobile && isOpen && (
         <IButtonModal
           isOpen={isOpen === TEST_CALIBRATE ? true : false}
           title={isOpen}

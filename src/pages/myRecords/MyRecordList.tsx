@@ -112,9 +112,10 @@ const MyRecordList = () => {
     setMyRecords(resultData);
   }, []);
   return (
-    <div className={styles.myRecordWrapper}>
+    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.myRecordWrapper}>
       <div className={styles.myRecordButtonWrapper}>
-        <div
+        <button
+          aria-label="temperature button"
           onClick={() => setSelectedButton("temperature")}
           className={styles.myRecordButton}
           style={
@@ -124,8 +125,9 @@ const MyRecordList = () => {
           }
         >
           Temperature
-        </div>
-        <div
+        </button>
+        <button
+          aria-label="voltage button"
           onClick={() => setSelectedButton("voltage")}
           className={styles.myRecordButton}
           style={
@@ -135,8 +137,9 @@ const MyRecordList = () => {
           }
         >
           Voltage
-        </div>
-        <div
+        </button>
+        <button
+          aria-label="RGB button"
           onClick={() => setSelectedButton("rgb")}
           className={styles.myRecordButton}
           style={
@@ -146,7 +149,7 @@ const MyRecordList = () => {
           }
         >
           RGB
-        </div>
+        </button>
       </div>
       <div style={{ overflowY: "auto", height: window.innerHeight - 171 }}>
         {myRecords &&
@@ -166,12 +169,12 @@ const MyRecordList = () => {
           ))}
       </div>
       {isEditOpen && <EditFileModal isOpen = {isEditOpen} setEditModal ={(value:any) => setEditModal(value)} EditFileName={EditFileName} />}
-      <MemberDisconnect
+      {isOpen && <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={isOpen === "delete" ? handleDelete : handleEdit}
         message={`Do you want to ${isOpen}.`}
-      />
+      />}
       <RightArrow
         isSelected={selectedData ? true : false}
         handleSubmit={handleSubmit}

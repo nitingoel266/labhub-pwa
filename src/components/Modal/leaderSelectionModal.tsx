@@ -13,6 +13,7 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
         setModal(false)
         // navigate("/mode-selection")
     }
+
     return (
         <div>
         {isOpen &&
@@ -24,23 +25,25 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
         className={styles.TopSecondWrapper}
         style={{
         left:0,
+        zIndex:1,
         opacity: isOpen ? 1 : 0,
         transform: isOpen ? "translateY(0)" : "translateY(-100vh)"
         }}
+        role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
         >
             <div className={styles.TextContainer}>
                 <div className={styles.Headertext}>
                     {/* <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/> */}
-                    <div>Warning</div>
+                    <h4>Warning</h4>
                 </div>
                 <div className={styles.BodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <div className={styles.BodyPrimaryText}>Selected Device does not have a leader. Press Yes to become a Leader</div>
+                        <p className={styles.BodyPrimaryText}>Selected Device does not have a leader. Press Yes to become a Leader</p>
                         {/* <div className={styles.BodySecondaryText}>Press <span style={{fontWeight:500}}>Yes</span> to become a Leader</div> */}
                     </div>
                     <div className={styles.ButtonWrapper}>
-                        <div onClick={() => setModal(false)} className={styles.CancelButton}>Cancel</div>
-                        <div onClick={submitHandler} className={styles.YesButton}>Yes</div>
+                        <button onClick={() => setModal(false)} className={styles.CancelButton}>Cancel</button>
+                        <button onClick={submitHandler} className={styles.YesButton}>Yes</button>
                     </div>
                 </div>
             </div>

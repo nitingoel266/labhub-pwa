@@ -111,10 +111,13 @@
     padding: 7px;
     border-radius: 5px;
     /* margin-right: 10px; */
-    width:65px;
+    width:70px;
     text-align: center;
-    font-weight: 400;
+    font-size: 15px;
+    font-weight: 500;
     cursor: pointer;
+    border: none;
+    outline: none;
     
 }
 

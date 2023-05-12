@@ -131,26 +131,31 @@ const AbsorbanceMeasuring = () => {
         setMeasure(dataStream?.rgb?.measure || []);
       }
   }, [dataStream?.rgb, measure, audio]);
+
+
   return (
-    <div>
-      {screenName === "cuvette-insertion" && <div className={styles.HeaderText}>Please insert cuvette to measure absorbance of RGB light.</div>}
+    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+      {screenName === "cuvette-insertion" && <div aria-label="Please insert cuvette to measure absorbance of RGB light. header" className={styles.HeaderText}>Please insert cuvette to measure absorbance of RGB light.</div>}
       <div className={styles.ButtonWrapper} style={screenName === "cuvette-insertion" ? {marginTop:0} : {marginTop:66}}>
         <div
           className={styles.Button}
           style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
         >
-          <div
+          <button
+            aria-label={MEASURE + "button"}
             onClick={() => clickHandler(MEASURE)}
             className={styles.SubButton}
+            style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
           >
-            <div style={{ marginLeft: 10 }}>{MEASURE}</div>
-          </div>
-          <div
+            <p style={{ marginLeft: 10 ,fontSize:15,fontWeight:500}}>{MEASURE}</p>
+          </button>
+          <button
+            aria-label={MEASURE + " i button"}
             onClick={() => handleIModal(MEASURE)}
             className={styles.IButtonWrapper}
           >
-            <img src={IButtonIcon} style={{ width: 20 }} alt="i button" />
-          </div>
+            <img src={IButtonIcon} style={{ width: 20 }} alt="i icon" />
+          </button>
         </div>
       </div>
       {isOpen === MEASURE && isMobile && (
@@ -160,28 +165,29 @@ const AbsorbanceMeasuring = () => {
         />
       )}
       <div className={styles.BodyWrapper}>
-        <div className={styles.BodyBollWrapper}>
+        <div aria-label={"red light value is"+measure[0]} className={styles.BodyBollWrapper}>
           <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#D08080"} : {}}>{measure[0]}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
-        <div className={styles.BodyBollWrapper}>
+        <div aria-label={"green light value is"+measure[1]} className={styles.BodyBollWrapper}>
           <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#7BAA81"} : {}}>{measure[1]}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
-        <div className={styles.BodyBollWrapper}>
+        <div aria-label={"blue light value is"+measure[2]} className={styles.BodyBollWrapper}>
           <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#8AA3BB"} : {}}>{measure[2]}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>
-      <div className={styles.FooterPlainText}>
+      <div aria-label="Values are in Absorbance units in AU text" className={styles.FooterPlainText}>
         Values are in Absorbance units (AU)
       </div>
       <div className={styles.FooterTextWrapper}>
         <div className={styles.FooterInnerTextWrapper}>
-          <div>TITLE</div>
+          <div aria-label="TITLE sub header">TITLE</div>
           <div className={styles.FooterText}>
-            <div>T0918564122-1123-7T09185...</div>
-            <div
+            <div aria-label="file format T0918564122-1123-7T09185">T0918564122-1123-7T09185...</div>
+            <button
+              aria-label="save button"
               className={styles.SaveButton}
               onClick={() => (measure.length > 0 ? handleSave() : {})}
               style={
@@ -191,7 +197,7 @@ const AbsorbanceMeasuring = () => {
               }
             >
               Save
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -199,7 +205,7 @@ const AbsorbanceMeasuring = () => {
         isSelected={selectedItem ? true : false}
         handleSubmit={handleSubmit}
       />
-      {!isMobile && (
+      {!isMobile && isOpen && (
         <IButtonModal
           isOpen={isOpen ? true : false}
           title={isOpen}

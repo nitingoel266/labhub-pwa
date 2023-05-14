@@ -378,7 +378,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         handleDownload={handleDownload}
         handleSync={handleSync}
       />
-      <MemberDisconnect
+      {isOpen && <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={
@@ -404,7 +404,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
             : (isOpen === "Do you want to save Data?" || isOpen === "Do you want to save Setpoint Temperature?" ? isOpen :  "Are you sure to Disconnect!")
         }
         handleCancel = {() => handleCancelModal()}
-      />
+      />}
     </div>
   );
 }
@@ -433,7 +433,7 @@ const FirstHeader = ({
           <img src={BluetoothIcon} style={{ width: 12 }} alt="Bluetooth Icon" />
         )}
         <div className={styles.FistHeaderSubWrapper}>
-          <div
+          <p
             style={{
               color: "white",
               marginLeft: 8,
@@ -442,8 +442,8 @@ const FirstHeader = ({
             }}
           >
             {connected ? status?.deviceName : ""}
-          </div>
-          <div
+          </p>
+          <p
             // onClick={() => handleClick("leaderMember")}
             style={{
               color: "white",
@@ -454,7 +454,7 @@ const FirstHeader = ({
           >
             {connected &&
               (clientId === status?.leaderSelected ? "(Leader)" : "(Member)")}
-          </div>
+          </p>
         </div>
       </div>
       <div className={styles.BatteryWapper} title={(status?.batteryLevel || 0)+"%"}>
@@ -487,8 +487,8 @@ const SecondHeader = ({
   const location = useLocation();
   return (
     <div className={styles.SecondHeaderWrapper}>
+      <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={location?.pathname === "/scan-devices" ? () => {} : handleBack}>
       <img
-        onClick={location?.pathname === "/scan-devices" ? () => {} : handleBack}
         src={BackIcon}
         style={{
           cursor:
@@ -497,50 +497,76 @@ const SecondHeader = ({
         }}
         alt="Back Icon"
       />
+      </button>
       {!["/temperature-records", "/voltage-records", "/rgb-records"].includes(
         location?.pathname
       ) ? (
         <div className={styles.FistHeaderSubWrapper}>
-          <img
+          <button 
+            style={{outline:"none",border:"none",backgroundColor:"inherit"}}
             onClick={() => (connected ? handleMyRecord() : {})}
-            src={MyRecordsIcon}
-            style={{ cursor: "pointer", width: 32, marginRight: 10 }}
-            alt="Text Icon"
-          />
+          >
           <img
+            src={MyRecordsIcon}
+            style={{ cursor: "pointer", width: 32,marginTop:2 }}
+            alt="my record Icon"
+            />
+            </button>
+          <button
+            style={{outline:"none",border:"none",backgroundColor:"inherit"}}
             onClick={() => (connected ? handleConnectionManager() : {})}
+          >
+          <img
             src={ShareIcon}
             style={{ cursor: "pointer", width: 25 }}
-            alt="Share Icon"
-          />
-          {connected && clientId !== status?.leaderSelected && (
-            <img
-              onClick={() => handleSync()}
-              src={SyncIcon}
-              style={{ cursor: "pointer", marginLeft: 10, width: 20 }}
-              alt="syn button"
+            alt="connection manager Icon"
             />
+            </button>
+          {connected && clientId !== status?.leaderSelected && (
+            <button 
+              style={{outline:"none",border:"none",backgroundColor:"inherit"}}
+              onClick={() => handleSync()}
+            >
+            <img
+              src={SyncIcon}
+              style={{ cursor: "pointer", marginLeft: 5, width: 20 }}
+              alt="syn icon"
+            />
+              </button>
           )}
         </div>
       ) : (
         <div className={styles.FistHeaderSubWrapper}>
+          <button
+            style={{outline:"none",border:"none",backgroundColor:"inherit"}}
+
+          >
           <img
             src={WhiteShareIcon}
-            style={{ cursor: "pointer", width: 20, marginRight: 15 }}
+            style={{ cursor: "pointer", width: 20, marginRight: 5 }}
             alt="Share Icon"
-          />
+            />
+            </button>
+            <button 
+              style={{outline:"none",border:"none",backgroundColor:"inherit"}}
+              onClick={handleDownload}
+            >
           <img
             src={WhiteDownloadIcon}
-            onClick={handleDownload}
-            style={{ cursor: "pointer", width: 20, marginRight: 15 }}
+            style={{ cursor: "pointer", width: 20, marginRight: 5 }}
             alt="Download Icon"
-          />
+            />
+            </button>
+            <button 
+              style={{outline:"none",border:"none",backgroundColor:"inherit"}}
+              onClick={() => setModal("delete")}
+            >
           <img
-            onClick={() => setModal("delete")}
             src={WhiteDeleteIcon}
-            style={{ cursor: "pointer", width: 20, marginRight: 10 }}
+            style={{ cursor: "pointer", width: 20, marginRight: 5 }}
             alt="Delete Icon"
-          />
+            />
+            </button>
         </div>
       )}
     </div>

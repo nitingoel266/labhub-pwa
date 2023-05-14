@@ -62,8 +62,8 @@ const MyRecordsCard = ({
   return (
     <div key={data?.date} style={{ marginBottom: 10 }}>
       <div className={styles.HeaderWrapper}>
-        <img src={CalenderIcon} style={{ marginRight: 5 }} alt="date" />
-        <div>{data?.date}</div>
+        <img src={CalenderIcon} style={{ marginRight: 5 }} alt="date icon" />
+        <h4>{data?.date}</h4>
       </div>
       <div className={isMobile ? styles.CadMobileWrapper : styles.CadWrapper}>
         {data?.data?.map((el: any) => (
@@ -147,7 +147,7 @@ const TabCard = ({
   // };
   return (
     <>
-      <div
+      <button
         onClick={() => setSelectedData(data)}
         key={data?.name}
         className={styles.oneCardWrapper}
@@ -162,47 +162,63 @@ const TabCard = ({
             <img
               src={FileIcon}
               style={{ marginRight: 12, width: 20 }}
-              alt="file"
+              alt="file icon"
             />
-            <div>{data?.name}</div>
+            <div style={{fontSize:15,fontWeight:500}}>{data?.name}</div>
           </div>
+          <button
+            style={{border:"none",outline:"none",backgroundColor:"inherit"}}
+            onClick={() => handleActionItem(data, "edit")}
+          >
           <img
             src={EditIcon}
-            onClick={() => handleActionItem(data, "edit")}
             style={{ cursor: "pointer", width: 20 }}
-            alt="edit"
-          />
+            alt="edit icon"
+            />
+            </button>
         </div>
         <div className={styles.CardTitleWrapperLeft}>
           <img
             src={TimeIcon}
             style={{ marginRight: 15, width: 20 }}
-            alt="time"
+            alt="time icon"
           />
-          <div>{data && data["time"]}</div>
+          <div style={{fontSize:15,fontWeight:500}}>{data && data["time"]}</div>
         </div>
         <div className={styles.FooterWrapper}>
+          <button
+            style={{border:"none",outline:"none",backgroundColor:"inherit"}}
+            onClick = {() => handleShare(data)}
+          >
           <img
             src={BlackShareIcon}
             // onClick={() => setIsOpen(!isOpen)}
-            onClick = {() => handleShare(data)}
             className={styles.FooterIcons}
-            alt="share"
+            alt="share icon"
           />
+          </button>
+          <button
+            style={{border:"none",outline:"none",backgroundColor:"inherit"}}
+            onClick={() => handleDownload(data)}
+          >
           <img
             src={DownloadIcon}
-            onClick={() => handleDownload(data)}
             className={styles.FooterIcons}
-            alt="download"
-          />
+            alt="download icon"
+            />
+            </button>
+          <button
+            style={{border:"none",outline:"none",backgroundColor:"inherit"}}
+            onClick={() => handleActionItem(data, "delete")}
+          >
           <img
             src={DeleteIcon}
-            onClick={() => handleActionItem(data, "delete")}
             className={styles.FooterIcons}
-            alt="delete"
-          />
+            alt="delete icon"
+            />
+            </button>
         </div>
-      </div>
+      </button>
       {/* {isOpen && (
         <ShareModal
           isOpen={isOpen}
@@ -249,7 +265,7 @@ const MobileCard = ({
   // };
   return (
     <>
-      <div
+      <button
         onClick={() => setSelectedData(data)}
         key={data?.name}
         className={styles.oneCardMobileWrapper}
@@ -264,24 +280,28 @@ const MobileCard = ({
             <img
               src={FileIcon}
               style={{ marginRight: 12, width: 20 }}
-              alt="file"
+              alt="file icon"
             />
-            <div>{data?.name}</div>
+            <div style={{fontSize:13,fontWeight:500}}>{data?.name}</div>
           </div>
+          <button
+            onClick={() => setIsOpen("more")}
+            style={{border:"none",outline:"none",backgroundColor:"inherit"}}
+          >
           <img
             src={MoreIcon}
-            onClick={() => setIsOpen("more")}
             style={{ cursor: "pointer", width: 40, marginTop: 10 }}
             alt="edit"
-          />
+            />
+            </button>
         </div>
         <div className={styles.CardTitleWrapperLeft}>
           <img
             src={TimeIcon}
             style={{ marginRight: 15, width: 20 }}
-            alt="time"
+            alt="time icon"
           />
-          <div>{data && data["time"]}</div>
+          <div style={{fontSize:13,fontWeight:500}}>{data && data["time"]}</div>
         </div>
         {/* <div className={styles.FooterWrapper}>
         <img src={BlackShareIcon} className={styles.FooterIcons} alt="share"/>
@@ -289,7 +309,7 @@ const MobileCard = ({
         <img src={DeleteIcon} onClick={() => handleActionItem(data,"delete")} className={styles.FooterIcons} alt="delete"/>
         
     </div> */}
-      </div>
+      </button>
       {isOpen === "more" && (
         <MoreSelectionModal
           isOpen={isOpen}

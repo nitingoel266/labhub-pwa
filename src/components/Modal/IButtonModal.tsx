@@ -9,6 +9,7 @@ type Props= {
 }
 
 const IButtonModal = ({setModal,isOpen,title,description} : Props)=> {
+
     return (
         <div className={styles.IButtonWrapper}>
         {isOpen &&
@@ -23,13 +24,20 @@ const IButtonModal = ({setModal,isOpen,title,description} : Props)=> {
             opacity: isOpen ? 1 : 0,
             transform: isOpen ? "translateY(0)" : "translateY(100vh)",
         }}
+        role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
+
         >
             <div className={styles.IButtonTextContainer}>
                 <div className={styles.IButtonHeader}>
                     <div>Note:</div>
-                    <img src={CloseIcon} onClick={() => setModal("")} style={{width:12,cursor:"pointer"}} alt="close"/>
+                    <button
+                        style={{border:"none",outline:"none",backgroundColor:"inherit"}}
+                        onClick={() => setModal("")}
+                    >
+                        <img src={CloseIcon} style={{width:12,cursor:"pointer"}} alt="close icon"/>
+                    </button>
                 </div>
-                <div style={{marginTop:5,fontSize:14}}><span style={{fontSize:15,marginRight:4}}>{title.toUpperCase()}:</span>{description}</div>
+                <p style={{marginTop:5,fontSize:14}}><span style={{fontSize:15,marginRight:4}}>{title.toUpperCase()}:</span>{description}</p>
             </div>
         </div>
         </div>)

@@ -11,9 +11,9 @@ const HeaterInitialPage = () => {
         if(status?.heaterConnected)
         navigate("/method-selection")
     }
-    return <div className={styles.TopWrapper} style={{height:window.innerHeight-150}}>
-            <div className={styles.PimaryText}>{status?.heaterConnected ? 'Heater is Connected' : 'Plug in the Heater and connect Power to proceed'}</div>
-            {status?.heaterConnected && <div>Press right arrow to proceed</div>}
+    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.TopWrapper} style={{height:window.innerHeight-150}}>
+            <div aria-label={status?.heaterConnected ? 'Heater is Connected' : 'Plug in the Heater and connect Power to proceed'} className={styles.PimaryText}>{status?.heaterConnected ? 'Heater is Connected' : 'Plug in the Heater and connect Power to proceed'}</div>
+            {status?.heaterConnected && <div aria-label="Press right arrow to proceed">Press right arrow to proceed</div>}
             <RightArrow isSelected={status?.heaterConnected ? true : false} handleSubmit = {handleSubmit}/>
     </div>
 }

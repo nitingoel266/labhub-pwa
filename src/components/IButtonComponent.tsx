@@ -18,6 +18,7 @@ const IButtonComponent = ({title,description,marginTop=-10} : Props)=> {
             alignItems: "center",
             width: '100%',
         }}
+        role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
         >
             <div className={styles.IButtonTextContainer}>
                 <div className={styles.IButtonHeader}>

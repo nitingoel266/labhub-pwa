@@ -36,35 +36,35 @@ const InsertReferenceCuvette = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
-    return <div>
-        <div className={styles.HeaderText}>Please Insert Reference Cuvette and press calibrate</div>
+    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+        <h4 aria-label="Please Insert Reference Cuvette and press calibrate header" className={styles.HeaderText}>Please Insert Reference Cuvette and press calibrate</h4>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <div onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton}>
-                     <div style={{marginLeft:10}}>{CALIBRATE}</div>
-                 </div>
-                 <div onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>
-                     <img src={IButtonIcon} style={{width:20}} alt="i button"/>
-                 </div>
+                 <button aria-label={CALIBRATE + "button"} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                    <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{CALIBRATE}</p>
+                 </button>
+                 <button aria-label={CALIBRATE + "i button"} onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>
+                     <img src={IButtonIcon} style={{width:20}} alt="i icon"/>
+                 </button>
              </div>
         </div>
         {isOpen === CALIBRATE && isMobile && <IButtonComponent title={CALIBRATE} description={getDescription(CALIBRATE)}/>}
         <div className={styles.BodyWrapper}>
-            <div className={styles.BodyBollWrapper}>
+            <div aria-label='red ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyRedBoll}></div>
                 <div className={styles.BodyText}>Red</div>
             </div>
-            <div className={styles.BodyBollWrapper}>
+            <div aria-label='green ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyGreenBoll}></div>
                 <div className={styles.BodyText}>Green</div>
             </div>
-            <div className={styles.BodyBollWrapper}>
+            <div aria-label='blue ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyBlueBoll}></div>
                 <div className={styles.BodyText}>Blue</div>
             </div>
         </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
+        {!isMobile && isOpen && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

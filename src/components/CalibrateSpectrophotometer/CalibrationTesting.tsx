@@ -38,35 +38,35 @@ const CalibrationTesting = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
-    return <div>
-        <div className={styles.HeaderHighLightText}>Spectrophotometer calibrated successfully. Test calibration by measuring absorbance of reference solution.</div>
+    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+        <h4 aria-label="Spectrophotometer calibrated successfully. Test calibration by measuring absorbance of reference solution. header" className={styles.HeaderHighLightText}>Spectrophotometer calibrated successfully. Test calibration by measuring absorbance of reference solution.</h4>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <div onClick={() => clickHandler(TEST_CALIBRATE)} className={styles.SubButton}>
-                     <div style={{marginLeft:10}}>{TEST_CALIBRATE}</div>
-                 </div>
-                 <div onClick={() => handleIModal(TEST_CALIBRATE)} className={styles.IButtonWrapper}>
-                     <img src={IButtonIcon} style={{width:20}} alt="i button"/>
-                 </div>
+                 <button aria-label={TEST_CALIBRATE + "button"} onClick={() => clickHandler(TEST_CALIBRATE)} className={styles.SubButton} style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                     <p style={{marginLeft:10,fontSize:15,fontWeight:500}}>{TEST_CALIBRATE}</p>
+                 </button>
+                 <button aria-label={TEST_CALIBRATE + "i button"} onClick={() => handleIModal(TEST_CALIBRATE)} className={styles.IButtonWrapper}>
+                     <img src={IButtonIcon} style={{width:20}} alt="i icon"/>
+                 </button>
              </div>
         </div>
         {isOpen === TEST_CALIBRATE && isMobile && <IButtonComponent title={TEST_CALIBRATE} description={getDescription(TEST_CALIBRATE)}/>}
         <div className={styles.BodyWrapper}>
-            <div className={styles.BodyBollWrapper}>
+            <div aria-label='Red ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyRedBoll}></div>
                 <div className={styles.BodyText}>Red</div>
             </div>
-            <div className={styles.BodyBollWrapper}>
+            <div aria-label='green ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyGreenBoll}></div>
                 <div className={styles.BodyText}>Green</div>
             </div>
-            <div className={styles.BodyBollWrapper}>
+            <div aria-label='blue ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyBlueBoll}></div>
                 <div className={styles.BodyText}>Blue</div>
             </div>
         </div>
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleSubmit}/>
-        {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
+        {!isMobile && isOpen && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }
 

@@ -26,16 +26,17 @@ const Toast = () => {
   }, [message, timmer]);
   
   return (
-    <div
+    <p
       className={styles.ToastWrapper}
       style={{
         opacity: message ? 1 : 0,
         transform: message ? "translateX(0)" : "translateX(-100vh)",
         transition: "all 0.5s ease-out",
       }}
+      role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
     >
       {message}
-    </div>
+    </p>
   );
 };
 

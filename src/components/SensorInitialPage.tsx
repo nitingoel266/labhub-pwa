@@ -11,9 +11,9 @@ const Sensor = () => {
         if(status?.sensorConnected)
         navigate(`/${status?.sensorConnected}-sensor`)
     }
-    return <div className={styles.TopWrapper} style={{height:window.innerHeight-150}}>
-            <div className={styles.PimaryText}>{status?.sensorConnected ? `${status?.sensorConnected[0].toUpperCase()+status?.sensorConnected.slice(1)} sensor connected` :"Sensors not Detected"}</div>
-            <div className={styles.SecondaryText}>{status?.sensorConnected ? "Press right arrow to start measuring" :"Connect sensor to proceed"}</div>
+    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.TopWrapper} style={{height:window.innerHeight-150}}>
+            <div aria-label={status?.sensorConnected ? `${status?.sensorConnected} sensor connected` :"Sensors not Detected"} className={styles.PimaryText}>{status?.sensorConnected ? `${status?.sensorConnected[0].toUpperCase()+status?.sensorConnected.slice(1)} sensor connected` :"Sensors not Detected"}</div>
+            <div aria-label={status?.sensorConnected ? "Press right arrow to start measuring" :"Connect sensor to proceed"} className={styles.SecondaryText}>{status?.sensorConnected ? "Press right arrow to start measuring" :"Connect sensor to proceed"}</div>
             <RightArrow isSelected={status?.sensorConnected ? true : false} handleSubmit = {handleSubmit}/>
     </div>
 }

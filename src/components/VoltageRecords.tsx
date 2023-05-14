@@ -4,7 +4,7 @@ import styles from "../styles/TemperatureRecords.module.css";
 const VoltageRecord = () => {
   const { state } = useLocation() || {};
   return (
-    <div className={styles.Wrapper}>
+    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.Wrapper}>
       {[
         { key: "time", value: "Time ( Sec )" },
         { key: "voltage", value: "Voltage ( V )" },

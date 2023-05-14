@@ -3,7 +3,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin: 20px 25px 5px 25px;
+    margin: 10px 25px 5px 25px;
     font-weight: 500;
 }
 .RateMeasureRightSide {
@@ -16,13 +16,15 @@
     flex-direction: row;
     align-items: center;
     border: 2px solid #000000;
-    border-radius: 5px;
+    border-radius: 4px;
     /* padding: 8px; */
     margin-right: 10px;
 }
 .ArrowButtonContainer {
-    padding:7px;
+    padding:8px;
     cursor:pointer;
+    outline: none;
+    border: none;
 }
 .TextStyle {
     margin-left: 5px;
@@ -90,13 +92,15 @@
     background-color: #424C58;
     color: #FFFFFF;
     text-align: center;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     margin-right: 20px;
     border-radius: 100px;
     width:50px;
-    padding: 20px 0px;
+    padding: 18px 2px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 @media (min-width:600px) {
@@ -104,7 +108,7 @@
         margin-left: 50px;
     }
     .HeaderTextWrapper{
-        margin: 20px 100px 0px 100px;
+        margin: 10px 100px 0px 100px;
     }
     .HeaterEelementImage {
         height: 180px;

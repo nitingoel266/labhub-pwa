@@ -5,8 +5,9 @@ import {initSetup,uninitSetup} from "../../labhub/init-setup";
 import RightArrow from '../../components/RightArrow';
 import { useNavigate } from 'react-router-dom';
 import MemberDisconnect from '../../components/Modal/MemberDisconnectModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { installClickHandler, updateServiceWorker } from '../../pwaSetup';
+import SensorDisconnectModal from '../../components/Modal/SensorDisconnectModal';
 
 const ScanDevices = () => {
     const navigate = useNavigate();
@@ -43,6 +44,13 @@ const ScanDevices = () => {
     }
     setModal("")
   }
+
+  useEffect(() => {
+    if(!connected){
+        setModal("Device isn't Connected!")
+    }else setModal("")
+  },[connected]);
+
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc"> 
         <div className={styles.ExtraButtonWrapper}>
             {installPromotion && <button aria-label={"Add to home screen Button"} className={styles.ExtraButton} onClick={installClickHandler}>
@@ -69,7 +77,12 @@ const ScanDevices = () => {
             {connected && status?.leaderSelected && <RightArrow isSelected={!isConnected && status?.leaderSelected ? true : false} handleSubmit={handleRightArrow}/>}
             {isConnected && <img src={LoaderImage} style={{width:70}} alt="loader gif"/>}
         </div>
-        {isOpen && <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "resetConnection" ? resetConnection : handleDisconnectDevice} message={isOpen === "resetConnection" ? "Do you want to connect to another device?" : `Are you sure to Disconnect from <strong style="white-space: nowrap;">${status?.deviceName}</strong>!`}/>}
+        {isOpen === "Device isn't Connected!" && <SensorDisconnectModal 
+          isOpen={isOpen ? true : false}
+          setModal={() => setModal("")}
+          message="Device isn't Connected!"
+      />}
+        {isOpen && isOpen !== "Device isn't Connected!" && <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "resetConnection" ? resetConnection : handleDisconnectDevice} message={isOpen === "resetConnection" ? "Do you want to connect to another device?" : `Are you sure to Disconnect from <strong style="white-space: nowrap;">${status?.deviceName}</strong>!`}/>}
     </div>
 }
 

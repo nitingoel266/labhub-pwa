@@ -1,0 +1,106 @@
+.TopWrapper {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    background-color: #000000;
+    opacity: 0.5;
+}
+.SecondWrapper {
+    top: 180px;
+    /* left: 5%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    /* transition: all 0.3s ease-out; */
+
+}
+
+.TextContainer {
+    width: 320px;
+    background-color: #EFEFEF;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    flex:1;
+}
+
+.ErrorHeadertext {
+    background-color: #CC0000;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 15px;
+    color: #FFFFFF;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+.ErrorBodyWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 120px;
+    margin:10px 0px 2px;
+    flex:1;
+}
+.Bodytext {
+    margin: 10px;
+    display: flex;
+    flex:1;
+    min-height: 50px;
+    flex-direction: column;
+    justify-content: center;
+}
+.ErrorButtonWrapper {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.CancelButton {
+    background-color: #424C58;
+    padding: 7px;
+    border-radius: 5px;
+    margin-right: 10px;
+    width:55px;
+    text-align: center;
+    font-weight: 400;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.YesButton {
+    background-color: #C0C0C0;
+    padding: 7px;
+    border-radius: 5px;
+    margin-right: 10px;
+    width:55px;
+    text-align: center;
+    font-weight: 400;
+    cursor: pointer;
+}
+.DismissButton {
+    background-color: #C0C0C0;
+    padding: 8px;
+    border-radius: 5px;
+    /* margin-right: 10px; */
+    width:65px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+@media (max-width:680px) {
+    .TextContainer{
+        /* height: 150px; */
+        width: 220px;
+    }
+}

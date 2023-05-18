@@ -18,6 +18,8 @@
     justify-content: center;
     background-color: #424C58;
     border-radius: 5px;
+    border: none;
+    outline: none;
     padding: 10px;
     width:70%;
     width:160px;
@@ -35,6 +37,31 @@
     font-weight: 400;
 }
 
+.ExtraButtonWrapper {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    position: fixed;
+    top:80px;
+    right:0px;
+}
+.ExtraButton {
+    cursor: pointer;
+    margin-top: 6px;
+    margin-right: 10px;
+    padding:5px;
+    background-color: #4285F4;
+    color:#FFFFFF;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    outline: none;
+}
+
 @media (min-width:580px) {
     .LabHubStickerWrapper {
         width: 250px;
@@ -44,6 +71,6 @@
         margin-top: 90px;
     }
     .ScanDeviceButton {
-        width: 180px;
+        width: 200px;
     }
 }

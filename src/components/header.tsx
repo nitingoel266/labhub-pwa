@@ -2,13 +2,14 @@ import {
   useDeviceStatus,
   useDeviceConnected,
   useDeviceDataFeed,
+  applicationMessage
 } from "../labhub/status";
 import {
   resetLeader,
   stopHeaterExperiment,
   stopSensorExperiment /* ,unjoinMember */,
   changeSetpointTemp,
-  setScreenNumber,
+  // setScreenNumber,
   simulateRgb
 } from "../labhub/actions";
 import {getClientId} from "../labhub/utils";
@@ -26,12 +27,13 @@ import {
   WhiteDeleteIcon,
 } from "../images/index";
 import { useNavigate, useLocation } from "react-router-dom";
+import {toastMessage} from "./Constants";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { GetScreenName} from "../utils/const";
 
-function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
+function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderProps) {
   const [status] = useDeviceStatus();
   const [dataFeed] = useDeviceDataFeed();
   const [connected] = useDeviceConnected();
@@ -70,9 +72,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      (dataFeed.sensor !== null || checkForSave)
+      ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
-      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
@@ -90,6 +92,10 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       if(clientId === status?.leaderSelected)
       simulateRgb(null)
       navigate("/rgb-spect")
+    }else if(location?.pathname === "/sensors"){
+      navigate("/function-selection")
+    }else if(location?.pathname === "/heater") {
+      navigate("/function-selection")
     } else navigate(-1);
   };
 
@@ -113,9 +119,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      (dataFeed.sensor !== null || checkForSave)
+      ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
-      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
@@ -144,9 +150,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      (dataFeed.sensor !== null || checkForSave)
+      ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
-      if(dataFeed.sensor !== null && clientId === status?.leaderSelected){
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
         setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
@@ -208,9 +214,9 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
-      (dataFeed.sensor !== null || checkForSave)
+      ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
-      if(dataFeed.sensor !== null && clientId === status?.leaderSelected)
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected)
         stopSensorExperiment();
       else if(checkForSave && handleSave) {
         handleSave()
@@ -229,9 +235,21 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
 
   const handleSyncNavigate = async () => {
     let index = await getScreenNumber();
-    navigate(GetScreenName[index || 0])
+    if(GetScreenName[index || 0]){
+      let screenName = GetScreenName[index || 0]; 
+      navigate(screenName)
+      if(screenName === "/scan-devices")
+      setScreenName("/scan-devices")
+    }
+    else {
+      let screenName = GetScreenName[0]; 
+      navigate(screenName)
+      if(screenName === "/scan-devices")
+      setScreenName("/scan-devices")
+      applicationMessage.next({message:`There is no screen available for screen number :- ${index}`,type:"info"})
+    }
+    toastMessage.next("Synced with Leader!")
   }
-
   const handleSync  = () => {
     setOnClick("sync")
     if (
@@ -267,20 +285,8 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
       location.state.data.selectedButton &&
       location.state.data.selectedData
     ) {
-      let storageData = localStorage.getItem(
-        `${location.state.data.selectedButton}_data`
-      );
-      storageData = storageData ? JSON.parse(storageData) : [];
-      let resultData =
-        storageData && Array.isArray(storageData)
-          ? [...storageData].filter(
-              (el: any) => el?.name !== location.state.data.selectedData.name
-            )
-          : [];
-      localStorage.setItem(
-        `${location.state.data.selectedButton}_data`,
-        JSON.stringify(resultData)
-      );
+
+      localStorage.removeItem(`${location.state.data.selectedButton}_data_${location.state.data.selectedData.name}`)
       navigate(-1);
     }
   };
@@ -332,18 +338,26 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
     screenName,
     location.state?.screenName
   ]);
-  useEffect(() => { // setScreen name as a leader for sync for member
-    if(clientId === status?.leaderSelected){
-      if(location?.pathname){
-        for(let one in GetScreenName){
-          if(GetScreenName[one] === location?.pathname){
-            setScreenNumber(Number(one))
-            break;
-          }
-        }
-      }
+
+  useEffect(() => { // stop temperature experiment and show a modal that sensor disconnected and for go back
+    if(shouldCloseModal){
+      setModal("")
     }
-  },[clientId,status?.leaderSelected,location?.pathname])
+  },[shouldCloseModal])
+
+  // useEffect(() => { // setScreen name as a leader for sync for member
+  //   if(clientId === status?.leaderSelected){
+  //     if(location?.pathname){
+  //       for(let one in GetScreenName){
+  //         if(GetScreenName[one] === location?.pathname){
+  //           setScreenNumber(Number(one))
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
+  // },[clientId,status?.leaderSelected,location?.pathname])
+
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (
     <div>
@@ -364,7 +378,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
         handleDownload={handleDownload}
         handleSync={handleSync}
       />
-      <MemberDisconnect
+      {isOpen && <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={
@@ -390,7 +404,7 @@ function Header({setPointTemp,checkForSave,handleSave}: HeaderProps) {
             : (isOpen === "Do you want to save Data?" || isOpen === "Do you want to save Setpoint Temperature?" ? isOpen :  "Are you sure to Disconnect!")
         }
         handleCancel = {() => handleCancelModal()}
-      />
+      />}
     </div>
   );
 }
@@ -419,31 +433,31 @@ const FirstHeader = ({
           <img src={BluetoothIcon} style={{ width: 12 }} alt="Bluetooth Icon" />
         )}
         <div className={styles.FistHeaderSubWrapper}>
-          <div
+          <p
             style={{
               color: "white",
               marginLeft: 8,
               fontSize: 15,
-              cursor: "pointer",
+              // cursor: "pointer",
             }}
           >
             {connected ? status?.deviceName : ""}
-          </div>
-          <div
-            onClick={() => handleClick("leaderMember")}
+          </p>
+          <p
+            // onClick={() => handleClick("leaderMember")}
             style={{
               color: "white",
               marginLeft: 8,
               fontSize: 15,
-              cursor: "pointer",
+              // cursor: "pointer",
             }}
           >
             {connected &&
               (clientId === status?.leaderSelected ? "(Leader)" : "(Member)")}
-          </div>
+          </p>
         </div>
       </div>
-      <div className={styles.BatteryWapper}>
+      <div className={styles.BatteryWapper} title={(status?.batteryLevel || 0)+"%"}>
         <div className={styles.BatteryInnerWapper}>
           <div style={unFilledStyle}></div>
           <div style={filledStyle}></div>
@@ -473,8 +487,8 @@ const SecondHeader = ({
   const location = useLocation();
   return (
     <div className={styles.SecondHeaderWrapper}>
+      <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={location?.pathname === "/scan-devices" ? () => {} : handleBack}>
       <img
-        onClick={location?.pathname === "/scan-devices" ? () => {} : handleBack}
         src={BackIcon}
         style={{
           cursor:
@@ -483,50 +497,76 @@ const SecondHeader = ({
         }}
         alt="Back Icon"
       />
+      </button>
       {!["/temperature-records", "/voltage-records", "/rgb-records"].includes(
         location?.pathname
       ) ? (
         <div className={styles.FistHeaderSubWrapper}>
-          <img
+          <button 
+            style={{outline:"none",border:"none",backgroundColor:"inherit"}}
             onClick={() => (connected ? handleMyRecord() : {})}
-            src={MyRecordsIcon}
-            style={{ cursor: "pointer", width: 32, marginRight: 10 }}
-            alt="Text Icon"
-          />
+          >
           <img
+            src={MyRecordsIcon}
+            style={{ cursor: "pointer", width: 32,marginTop:2 }}
+            alt="my record Icon"
+            />
+            </button>
+          <button
+            style={{outline:"none",border:"none",backgroundColor:"inherit"}}
             onClick={() => (connected ? handleConnectionManager() : {})}
+          >
+          <img
             src={ShareIcon}
             style={{ cursor: "pointer", width: 25 }}
-            alt="Share Icon"
-          />
-          {connected && clientId !== status?.leaderSelected && (
-            <img
-              onClick={() => handleSync()}
-              src={SyncIcon}
-              style={{ cursor: "pointer", marginLeft: 10, width: 20 }}
-              alt="syn button"
+            alt="connection manager Icon"
             />
+            </button>
+          {connected && clientId !== status?.leaderSelected && (
+            <button 
+              style={{outline:"none",border:"none",backgroundColor:"inherit"}}
+              onClick={() => handleSync()}
+            >
+            <img
+              src={SyncIcon}
+              style={{ cursor: "pointer", marginLeft: 5, width: 20 }}
+              alt="syn icon"
+            />
+              </button>
           )}
         </div>
       ) : (
         <div className={styles.FistHeaderSubWrapper}>
+          <button
+            style={{outline:"none",border:"none",backgroundColor:"inherit"}}
+
+          >
           <img
             src={WhiteShareIcon}
-            style={{ cursor: "pointer", width: 20, marginRight: 15 }}
+            style={{ cursor: "pointer", width: 20, marginRight: 5 }}
             alt="Share Icon"
-          />
+            />
+            </button>
+            <button 
+              style={{outline:"none",border:"none",backgroundColor:"inherit"}}
+              onClick={handleDownload}
+            >
           <img
             src={WhiteDownloadIcon}
-            onClick={handleDownload}
-            style={{ cursor: "pointer", width: 20, marginRight: 15 }}
+            style={{ cursor: "pointer", width: 20, marginRight: 5 }}
             alt="Download Icon"
-          />
+            />
+            </button>
+            <button 
+              style={{outline:"none",border:"none",backgroundColor:"inherit"}}
+              onClick={() => setModal("delete")}
+            >
           <img
-            onClick={() => setModal("delete")}
             src={WhiteDeleteIcon}
-            style={{ cursor: "pointer", width: 20, marginRight: 10 }}
+            style={{ cursor: "pointer", width: 20, marginRight: 5 }}
             alt="Delete Icon"
-          />
+            />
+            </button>
         </div>
       )}
     </div>
@@ -556,4 +596,5 @@ export interface HeaderProps {
   setPointTemp ?:number;
   checkForSave?:boolean;
   handleSave ? :() => void;
+  shouldCloseModal ? :boolean;
 }

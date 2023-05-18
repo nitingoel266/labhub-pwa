@@ -13,7 +13,7 @@ const MyRecordList = () => {
   const [isOpen, setModal] = useState("");
   const [isEditOpen, setEditModal] = useState("");
   const [selectedData, setSelectedData] = useState<any>();
-  const [selectedButton, setSelectedButton] = useState<string>("temperature");
+  const [selectedButton, setSelectedButton] = useState<string>("temperature"); // temperature , voltage ,rgb
   const [actionItem, setActionItem] = useState<any>(); // contain one data that will change by the action
   const [myRecords, setMyRecords] = useState<any>();
 
@@ -83,10 +83,49 @@ const MyRecordList = () => {
         return;
       }
       try {
+        let header:any = ["Time ( Sec )", "Temperature ( C )"];
+        if (selectedButton === "voltage") header = ["Time ( Sec )", "Voltage (V)"];
+        else if (selectedButton === "rgb")
+          header = ["Measurement No.", "RED", "GREEN", "BLUE"];
+        
+        let csv:any = "";
+        if(header && header[2] === "GREEN" && item?.isCalibratedAndTested){
+          csv += "Calibrated and Tested";
+          csv += "\n";
+        }
+        if (header) {
+          for (let one of header) {
+            csv += one + ",";
+          }
+          csv += "\n";
+        }
+        // csv += data.name + '\n';
+        if (item && item.data && item.data.length > 0) {
+          for(let one of item.data){
+            if(header && header[1] === "Temperature ( C )"){
+              csv += one.time;
+              csv += "," + one.temp;
+            }else if(header && header[1] === "Voltage (V)"){
+              csv += one.time;
+              csv += "," + one.voltage;
+            }else if(header && header[2] === "GREEN"){
+              csv += one["Measuement No"];
+              csv += "," + one['RED'];
+              csv += "," + one['GREEN'];
+              csv += "," + one['BLUE'];
+      
+            }
+            csv += "\n";
+          }
+        }
+        const file = new File([csv], `${item?.name}.csv`,{type:"text/csv"});
+        // console.log("???????? ",file)
+        let expType = (selectedButton.slice(0,1)).toLocaleUpperCase() + selectedButton.slice(1)
         await navigator.share({
-          url:item,
-          title: `${selectedButton}`,
-          text: `${selectedButton} Experiment Data`,
+          url:`${expType} Experiment data of ${item.name}`,
+          text: `${expType} data of ${item?.name}`,
+          title: `${expType} Experiment Data`, // Email subject
+          files:[file]
         });
         console.log("data has been shared Successfully!")
       } catch (error) {
@@ -126,9 +165,10 @@ const MyRecordList = () => {
     setMyRecords(resultData);
   }, []);
   return (
-    <div className={styles.myRecordWrapper}>
+    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.myRecordWrapper}>
       <div className={styles.myRecordButtonWrapper}>
-        <div
+        <button
+          aria-label="temperature button"
           onClick={() => setSelectedButton("temperature")}
           className={styles.myRecordButton}
           style={
@@ -138,8 +178,9 @@ const MyRecordList = () => {
           }
         >
           Temperature
-        </div>
-        <div
+        </button>
+        <button
+          aria-label="voltage button"
           onClick={() => setSelectedButton("voltage")}
           className={styles.myRecordButton}
           style={
@@ -149,8 +190,9 @@ const MyRecordList = () => {
           }
         >
           Voltage
-        </div>
-        <div
+        </button>
+        <button
+          aria-label="RGB button"
           onClick={() => setSelectedButton("rgb")}
           className={styles.myRecordButton}
           style={
@@ -160,7 +202,7 @@ const MyRecordList = () => {
           }
         >
           RGB
-        </div>
+        </button>
       </div>
       <div style={{ overflowY: "auto", height: window.innerHeight - 171 }}>
         {myRecords &&
@@ -180,12 +222,12 @@ const MyRecordList = () => {
           ))}
       </div>
       {isEditOpen && <EditFileModal isOpen = {isEditOpen} setEditModal ={(value:any) => setEditModal(value)} EditFileName={EditFileName} />}
-      <MemberDisconnect
+      {isOpen && <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={isOpen === "delete" ? handleDelete : handleEdit}
         message={`Do you want to ${isOpen}.`}
-      />
+      />}
       <RightArrow
         isSelected={selectedData ? true : false}
         handleSubmit={handleSubmit}

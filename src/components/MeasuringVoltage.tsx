@@ -18,6 +18,7 @@ import {
 import { VOLTAGE_DATA } from "../utils/const";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
+import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
 
 const MeasuringVoltage = () => {
   const clientId = getClientId()
@@ -44,15 +45,15 @@ const MeasuringVoltage = () => {
     setCheckForLog(1)
     setGraphData([]);
     setCapturePoint([]);
+    // setIsStart(true);
     startSensorExperiment();
     setModal("");
     setIsSaved(false);
-    setIsStart(true);
   };
   const handleStop = () => {
     setModal("");
     stopSensorExperiment();
-    setIsStart(false);
+    // setIsStart(false);
   };
   const handleCapture = () => {
     if (graphData) {
@@ -112,14 +113,19 @@ const MeasuringVoltage = () => {
       navigate("/function-selection");
     }
   };
-  useEffect(() =>{
-    if(graphData.length > 0 && graphData.length <= 1 && clientId !== status?.leaderSelected){
-      setCheckForLog(graphData.length)
-    }
-  },[graphData,clientId,status?.leaderSelected])
+  // useEffect(() =>{
+  //   if(graphData.length > 0 && graphData.length <= 1 && clientId !== status?.leaderSelected){
+  //     setCheckForLog(graphData.length)
+  //   }
+  // },[graphData,clientId,status?.leaderSelected])
+
+  const handleSensorDisconnected = (value:any) => {
+    setModal(value)
+    navigate("/sensors")
+  }
 
   useEffect(() => {
-    const getTemperatureData = async () =>{
+    const getVoltageData = async () =>{
     if (
       status?.sensorConnected === "voltage" &&
       dataStream?.sensor //&&
@@ -202,10 +208,11 @@ const MeasuringVoltage = () => {
       }
     } */
     }
-    getTemperatureData()
+    getVoltageData()
   }, [
-    dataStream,
+    dataStream?.sensor,
     dataStream?.sensor?.voltage,
+    dataStream?.sensor?.voltageIndex,
     status?.setupData?.dataRate,
     status?.sensorConnected,
     clientId,
@@ -214,27 +221,40 @@ const MeasuringVoltage = () => {
   ]);
 
   useEffect(() => {
-    if (dataStream.sensor === null) {
+    if (status?.operation !== "measure_voltage" || status?.sensorConnected !== "voltage") {
       setIsStart(false);
-    } else if (dataStream?.sensor?.voltage && !isStart) {
+    } else if (status?.operation === "measure_voltage" && !isStart) {
       // for test-screen
       setIsStart(true);
     }
-  }, [dataStream?.sensor, isStart]);
+  }, [status?.operation,status?.sensorConnected, isStart]);
+
+  useEffect(() => { // stop voltage experiment and show a modal that sensor disconnected and for go back
+    if(status?.sensorConnected !== "voltage"){
+      if(status?.operation === "measure_voltage"){
+        stopSensorExperiment();
+      }
+      setModal("Voltage Sensor disconnected")
+    }else if(status?.sensorConnected === "voltage"){
+      setModal("")
+    }
+  },[status?.sensorConnected,status?.operation])
+
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
       <Header
         checkForSave={capturePoint.some((e:any) => e > 0) && !isSaved ? true : false}
         handleSave={handleSave}
+        shouldCloseModal = {isOpen === "Voltage Sensor disconnected" ? true : false}
       />
-      <div className={styles.TopWrapper}>
+      <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>
-          <div style={{ fontWeight: 500 }}>Measuring Voltage</div>
+          <div aria-label="measuring voltage header text" style={{ fontWeight: 500 }}>Measuring Voltage</div>
           <div> </div>
         </div>
         <div className={styles.SecondaryHeaderWrapper}>
-          <div>
+          <div aria-label="voltage value in volt">
             Voltage Value : {graphData[graphData.length - 1]?.temp || 0}V
           </div>
         </div>
@@ -249,22 +269,24 @@ const MeasuringVoltage = () => {
           </div>
           {window.innerWidth > mobileWidth ? (
             <div className={styles.ButtonWrapper}>
-              <div
+              <button
+                aria-label="start button"
                 onClick={() =>
-                  clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
+                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
                     ? setModal(graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected
+                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "voltage"
                     ? extraStyle
                     : {}
                 }
               >
                 {isStart || graphData?.length ? "Restart" : "Start"}
-              </div>
-              <div
+              </button>
+              <button
+                aria-label="stop button"
                 onClick={() =>
                   clientId === status?.leaderSelected && isStart
                     ? setModal("stop")
@@ -278,25 +300,27 @@ const MeasuringVoltage = () => {
                 }
               >
                 Stop
-              </div>
+              </button>
               {status?.setupData?.dataRate === "user" && (
-                <div
+                <button
+                  aria-label="capture button"
                   className={styles.CaptureButton}
                   style={graphData?.length > 0 ? {} : extraStyle}
                   onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
                 >
                   Capture
-                </div>
+                </button>
               )}
             </div>
           ) : null}
         </div>
         <div className={styles.FooterTextWrapper}>
           <div className={styles.FooterInnerTextWrapper}>
-            <div>TITLE</div>
+            <div aria-label="title text">TITLE</div>
             <div className={styles.FooterText}>
-              <div>T101722-1334-M4</div>
-              <div
+              <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
+              <button
+               aria-label="save button"
                 className={styles.SaveButton}
                 style={
                   capturePoint?.some((el: number) => el > 0) && !isSaved
@@ -310,29 +334,31 @@ const MeasuringVoltage = () => {
                 }
               >
                 Save
-              </div>
+              </button>
             </div>
           </div>
         </div>
         {window.innerWidth <= mobileWidth ? (
           <div className={styles.ButtonHorizontalWrapper}>
-            <div className={styles.ButtonHorizontalInnerWrapper}>
-              <div
+            <div className={styles.ButtonHorizontalInnerWrapper} style={status?.setupData?.dataRate !== "user" ? {justifyContent:"center"} : {}}>
+              <button
+                aria-label="Start button"
                 onClick={() =>
-                  clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
+                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
                     ? setModal(graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected
+                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "voltage"
                     ? extraStyle
                     : {}
                 }
               >
                 {isStart || graphData?.length ? "Restart" : "Start"}
-              </div>
-              <div
+              </button>
+              <button
+                aria-label="stop button"
                 onClick={() =>
                   clientId === status?.leaderSelected && isStart
                     ? setModal("stop")
@@ -341,23 +367,24 @@ const MeasuringVoltage = () => {
                 className={styles.StopHorizontalButton}
                 style={
                   !isStart || clientId !== status?.leaderSelected
-                    ? extraStyle
-                    : {}
+                    ? {...extraStyle,...(status?.setupData?.dataRate !== "user" ? {marginLeft:20} : {})}
+                    : {...(status?.setupData?.dataRate !== "user" ? {marginLeft:20} : {})}
                 }
               >
                 Stop
-              </div>
-              <div
+              </button>
+              {status?.setupData?.dataRate === "user" && <button
+                aria-label="capture button"
                 className={styles.CaptureHorizontalButton}
                 style={graphData?.length > 0 ? {} : extraStyle}
                 onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
               >
                 Capture
-              </div>
+              </button>}
             </div>
           </div>
         ) : null}
-        <MemberDisconnect
+        {isOpen !== "Voltage Sensor disconnected" && isOpen && <MemberDisconnect
           isOpen={isOpen ? true : false}
           setModal={(value) => setModal(value)}
           handleDisconnect={
@@ -369,7 +396,12 @@ const MeasuringVoltage = () => {
           }
           message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment.`}
           handleCancel = {handleCancelModal}
-        />
+        />}
+        {isOpen === "Voltage Sensor disconnected" && <SensorDisconnectModal 
+          isOpen={isOpen ? true : false}
+          setModal={(value) => handleSensorDisconnected(value)}
+          message="Voltage Sensor isn't Connected!"
+        />}
         <RightArrow
           isSelected={capturePoint?.some((el: number) => el > 0) ? true : false}
           handleSubmit={handleSubmit}

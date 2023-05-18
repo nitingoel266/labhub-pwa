@@ -51,6 +51,11 @@
     justify-content: center;
     flex:1;
     cursor: pointer;
+    border: none;
+    outline: none;
+    background-color: #FFFFFF;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 .IButtonWrapper {
     background-color: #424C58;
@@ -61,6 +66,8 @@
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 .RateMeasureRightSide {

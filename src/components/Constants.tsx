@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { BehaviorSubject } from 'rxjs';
 import IButtonContent from "./IButtonContent";
 
 const mobileWidth = 414;
@@ -107,6 +109,44 @@ const getTime = () => {
     return time;
 }
 
+const  useIsTouchDeviceDetect =() => {
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+    useEffect(() => {
+      if (!window.matchMedia) return;
+      setIsTouchDevice(window.matchMedia("(pointer:coarse)").matches);
+    }, []);
+  
+    return isTouchDevice;
+  }
+
+// for toast
+
+const toastMessage = new BehaviorSubject<string | ToastInfo | null>(null);
+
+const useToastMessage = () => {
+    const [value, setValue] = useState<ToastInfo | null>(() => assertToastMessage(toastMessage.value));
+  
+    useEffect(() => {
+      const subs = toastMessage.subscribe((value) => setValue(assertToastMessage(value)));
+      return () => subs.unsubscribe();
+    }, []);
+  
+    return [value];
+  };
+  
+  function assertToastMessage(value: string | ToastInfo | null) {
+    if (typeof value === 'string') {
+      return { timmer: 3000, message: value } as ToastInfo;
+    } else {
+      return value;
+    }
+}
+
+export interface ToastInfo {
+    timmer?:number;
+    message: string;
+  }
+
 export {
     mobileWidth,
     LEADER_SELECTIONMODAL_INITIATE,
@@ -141,5 +181,10 @@ export {
     validateFileName,
     getStorageData,
     getStorageKeys,
-    getShortedData
+    getShortedData,
+
+    useIsTouchDeviceDetect,
+
+    useToastMessage,
+    toastMessage
 }

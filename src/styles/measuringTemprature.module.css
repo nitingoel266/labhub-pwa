@@ -1,5 +1,5 @@
 .TopWrapper {
-    margin-top: 30px;
+    margin-top: 10px;
 }
 .HeaderWrapper {
     display: flex;
@@ -58,71 +58,84 @@
     background-color: #424C58;
     color: #FFFFFF;
     border-radius: 100px;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
     text-align: center;
     width:50px;
-    padding: 20px 1px;
+    padding: 18px 4px;
     margin-bottom: 10px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 .StopButton {
     background-color: #424C58;
     color: #FFFFFF;
     border-radius: 100px;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
     text-align: center;
     width: 50px;
-    padding: 19px 1px;
+    padding: 18px 4px;
     margin-bottom: 10px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 .CaptureButton {
     background-color: #424C58;
     color: #FFFFFF;
     border-radius: 100px;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 500;
     text-align: center;
     padding: 8px 10px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 .RestartHorizontalButton {
     background-color: #424C58;
     color: #FFFFFF;
     border-radius: 100px;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 500;
     text-align: center;
     width:50px;
-    padding: 20px 0px;
+    padding: 18px 4px;
     margin-bottom: 10px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 .StopHorizontalButton {
     background-color: #424C58;
     color: #FFFFFF;
     border-radius: 100px;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 500;
     text-align: center;
-    width: 40px;
-    padding: 20px 5px;
+    width: 50px;
+    padding: 18px 4px;
     margin-bottom: 10px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 .CaptureHorizontalButton {
     background-color: #424C58;
     color: #FFFFFF;
     border-radius: 100px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
     text-align: center;
     padding: 12px 15px;
     cursor: pointer;
     margin-bottom: 10px;
+    margin-left: 5px;
+    border: none;
+    outline: none;
 }
 .FooterTextWrapper {
     display: flex;
@@ -151,7 +164,7 @@
     font-size: 10px;
 }
 .SaveButton {
-    font-size: 12px;
+    font-size: 13px;
     color: #FFFFFF;
     font-weight: 500;
     background-color: #424C58;
@@ -161,6 +174,8 @@
     width: 60px;
     text-align: center;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 .DegreeStyle {
@@ -179,6 +194,9 @@
     height: 22px;
     width: 40px;
     font-size: 11px;
+    cursor: pointer;
+    border:none;
+    outline: none;
 }
 .TempratureDegreeIcon {
     height: 2px;

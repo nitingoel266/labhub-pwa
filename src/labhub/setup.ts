@@ -4,7 +4,6 @@ import { deviceConnected, deviceStatus, deviceStatusUpdate, deviceDataFeed, devi
 import { DeviceStatus, DeviceDataFeed, ClientChannelResponse } from '../types/common';
 import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED, TOPIC_DEVICE_DATA_FEED_UPDATE, TOPIC_CLIENT_CHANNEL } from '../utils/const';
 import { assertClientId, clearClientId } from './utils';
-// import { navStatus, navStatusUpdate } from './status-client';
 import { Log } from '../utils/utils';
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
@@ -71,12 +70,6 @@ export const initSetup = async (): Promise<boolean> => {
       });
     }
   });
-
-  // clientSubs1 = navStatusUpdate.subscribe((value) => {
-  //   if (value) {
-  //     navStatus.next({ ...navStatus.value, ...value });
-  //   }
-  // });
 
   connectionAttemptOngoing.next(false);
   return true;

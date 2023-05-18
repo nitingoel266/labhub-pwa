@@ -6,11 +6,12 @@ type Props= {
     isOpen:boolean;
     setModal:(value:any) => void;
     handleDisconnect:() => void;
-    message?:string;
+    message?:any;
     handleCancel?:() => void;
 }
 
 const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen,handleDisconnect,handleCancel} : Props)=> {
+ 
     return (
         <div style={{position:"absolute",zIndex:1}}>
         {isOpen &&
@@ -24,19 +25,21 @@ const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen
         opacity: isOpen ? 1 : 0,
         transform: isOpen ? "translateY(0)" : "translateY(-100vh)"
         }}
+        role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
         >
             <div className={styles.TextContainer}>
                 <div className={styles.Headertext}>
                     <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
-                    <div>Title</div>
+                    <h4>Information</h4>
                 </div>
                 <div className={styles.BodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <div>{message}</div>
+                        {/* <div>{message}</div> */}
+                        <p dangerouslySetInnerHTML={{__html:message}}></p>
                     </div>
                     <div className={styles.ButtonWrapper}>
-                        <div onClick={() => handleCancel ? handleCancel() : setModal("")} className={styles.CancelButton}>No</div>
-                        <div onClick={handleDisconnect} className={styles.YesButton}>Yes</div>
+                        <button onClick={() => handleCancel ? handleCancel() : setModal("")} className={styles.CancelButton}>No</button>
+                        <button onClick={handleDisconnect} className={styles.YesButton}>Yes</button>
                     </div>
                 </div>
             </div>

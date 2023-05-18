@@ -1,16 +1,7 @@
 import short from 'short-uuid';
-import { clientChannelRequest, clientChannelResponse } from './status';
-// import { navStatusUpdate } from './status-client';
+import { applicationMessage, clientChannelRequest, clientChannelResponse } from './status';
 import { ClientChannelRequest, ClientChannelResponse } from '../types/common';
-import { Log } from '../utils/utils';
-
-// export const setSelectedMode = (mode: 'manual' | 'project' | null) => {
-//   navStatusUpdate.next({ modeSelected: mode });
-// };
-
-// export const setSelectedFunction = (func: 'data_setup' | 'sensor' | 'heater' | 'rgb_spect' | null) => {
-//   navStatusUpdate.next({ funcSelected: func });
-// };
+import { Log, roundTwoDec } from '../utils/utils';
 
 const doClientAction = async (reqValue: ClientChannelRequest) => {
   let channelResp: ClientChannelResponse | null = null;
@@ -32,20 +23,27 @@ const doClientAction = async (reqValue: ClientChannelRequest) => {
     }
   
     channelResp = await new Promise((resolve, reject) => {
+      let unsubscribed = false;
       const timeout = setTimeout(() => {
         subs.unsubscribe();
+        unsubscribed = true;
         reject('clientChannelRequest timeout!');
       }, 10000);
       const subs = clientChannelResponse.subscribe((value) => {  
         if (value && value.requestId === requestId) {
           clearTimeout(timeout);
-          subs.unsubscribe();
           resolve(value);
         }
       });
+      setTimeout(() => {
+        if (!unsubscribed) {
+          subs.unsubscribe();
+        }
+      }, 10000);
     });
   } catch (e) {
     Log.error('[ERROR:doClientAction]', e);
+    applicationMessage.next((e as any).message || `${e}`);
   }
 
   Log.debug('channelRespponse:', channelResp);
@@ -61,7 +59,20 @@ export const getTemperatureLog = async (temperatureIndex: number) => {
 export const getVoltageLog = async (voltageIndex: number) => {
   const requestId = short.generate();
   const channelResp = await doClientAction({ requestId, voltageIndex });
-  return channelResp?.voltageLog ?? null;
+
+  let voltageLog = null;
+  if (channelResp?.voltageLog) {
+    voltageLog = channelResp.voltageLog.map(v => roundTwoDec(v / 1000 - 12));
+  }
+  return voltageLog;
+};
+
+export const getTemperatureValue = async (sampleIndex: number) => {
+  return (await getTemperatureLog(sampleIndex + 1) || [])[sampleIndex] ?? null;
+};
+
+export const getVoltageValue = async (sampleIndex: number) => {
+  return (await getVoltageLog(sampleIndex + 1) || [])[sampleIndex] ?? null;
 };
 
 export const getScreenNumber = async () => {

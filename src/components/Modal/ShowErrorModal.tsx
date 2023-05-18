@@ -6,7 +6,7 @@ import styles from '../../styles/Loader.module.css';
 const ShowErrorModal = () => {
     const [appMessage] = useAppMessage();
 
-    const errorMessage = appMessage?.message ?? null;
+    const errorMessage = appMessage?.message ?? null; // it will be an html component
     const messageType = appMessage?.type;
     const getMessageType = {"warn":"Warning","info":"Information","error":"Error Message"}
     
@@ -24,19 +24,21 @@ const ShowErrorModal = () => {
     />}
     <div
     className={styles.SecondWrapper}
+    role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
     >
         <div className={styles.TextContainer}>
                 <div className={styles.ErrorHeadertext} style={messageColor}>
                     <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
-                    <div>{messageType && getMessageType[messageType]}</div>
+                    <h4>{messageType && getMessageType[messageType]}</h4>
                 </div>
                 <div className={styles.ErrorBodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <div>{errorMessage}</div>
+                        <p dangerouslySetInnerHTML={{__html:errorMessage}}/>
+                        {/* <div>{errorMessage}</div> */}
                     </div>
                     <div className={styles.ErrorButtonWrapper}>
                         {/* <div onClick={() => setErrorMessage(null)} className={styles.CancelButton}>No</div> */}
-                        <div onClick={handleResetConnection} className={styles.DismissButton}>Ok</div>
+                        <button onClick={handleResetConnection} className={styles.DismissButton}>Ok</button>
                     </div>
                 </div>
             </div>

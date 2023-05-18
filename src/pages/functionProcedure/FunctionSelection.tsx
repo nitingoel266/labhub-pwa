@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   DataIcon,
   IButtonIcon,
@@ -9,7 +9,6 @@ import {
 import styles from "../../styles/functionSelection.module.css";
 import RightArrow from "../../components/RightArrow";
 import IButtonModal from "../../components/Modal/IButtonModal";
-// import { setSelectedFunction } from "../../labhub/actions-client";
 import { useNavigate } from "react-router-dom";
 import IButtonComponent from "../../components/IButtonComponent";
 import {
@@ -23,10 +22,6 @@ import {
 } from "../../components/Constants";
 
 const FunctionSelection = () => {
-  const dataSetUpRef = useRef();
-  const sensorRef = useRef();
-  const heaterRef = useRef();
-  const rgbSpectRef = useRef();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [selectedItem, setSelectedItem] = useState<any>("");
   const [isOpen, setModal] = useState("");
@@ -37,7 +32,6 @@ const FunctionSelection = () => {
   };
   const handleSubmit = () => {
     if (selectedItem) {
-      // setSelectedFunction(selectedItem.replace(" ", "_").toLowerCase());
       navigate(`/${selectedItem.replace(" ", "-").toLowerCase()}`);
     }
   };
@@ -46,43 +40,45 @@ const FunctionSelection = () => {
     else setModal(title);
   };
   return (
-    <div style={{ position: "relative" }}>
-      <div className={styles.HeaderText}>Select Function</div>
+    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
+      <h4 aria-label="Select Function header" className={styles.HeaderText}>Select Function</h4>
       {[
         [
-          { icon: DataIcon, title: DATA_SETUP, ref: dataSetUpRef },
-          { icon: SensorIcon, title: SENSORS, ref: sensorRef },
+          { icon: DataIcon, title: DATA_SETUP},
+          { icon: SensorIcon, title: SENSORS },
         ],
         [
-          { icon: HeaterIcon, title: HEATER, ref: heaterRef },
-          { icon: RGBSpectIcon, title: RGB_SPECT, ref: rgbSpectRef },
+          { icon: HeaterIcon, title: HEATER },
+          { icon: RGBSpectIcon, title: RGB_SPECT },
         ],
       ].map((e: any) => (
         <div key={e[0]["title"]} className={styles.ButtonWrapper}>
           {e.map((el: any) => (
             <div className={styles.ButtonSubWrapper} key={el.title}>
               <div
-                ref={el.ref}
                 className={styles.Button}
                 style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
               >
-                <div
+                <button
+                  aria-label={el?.title + "button"}
                   onClick={() => clickHandler(el.title)}
                   className={styles.SubButton}
+                  style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
                 >
                   <img
                     src={el.icon}
                     style={{ height: 35 }}
                     alt={el.title + "icon"}
                   />
-                  <div style={{ marginLeft: 10 }}>{el.title}</div>
-                </div>
-                <div
+                  <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{el.title}</p>
+                </button>
+                <button
+                  aria-label={el?.title + "i button"}
                   onClick={() => handleIModal(el.title)}
                   className={styles.IButtonWrapper}
                 >
-                  <img src={IButtonIcon} style={{ width: 20 }} alt="i button" />
-                </div>
+                  <img src={IButtonIcon} style={{ width: 20 }} alt={el.title + "i icon"} />
+                </button>
               </div>
               {isOpen === el.title && isMobile && (
                 <IButtonComponent
@@ -98,7 +94,7 @@ const FunctionSelection = () => {
         isSelected={selectedItem ? true : false}
         handleSubmit={handleSubmit}
       />
-      {!isMobile && (
+      {!isMobile && isOpen && (
         <IButtonModal
           isOpen={isOpen ? true : false}
           title={isOpen}

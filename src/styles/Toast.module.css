@@ -1,0 +1,18 @@
+.ToastWrapper {
+    position: absolute;
+    bottom: 25px;
+    left:25px;
+    width:320px;
+    padding: 14px 10px;
+    background-color: #3CABC4;
+    color: #FFFFFF;
+    border-radius: 5px;
+}
+
+@media (max-width:680px) {
+    .ToastWrapper{
+        /* height: 150px; */
+        left:15px;
+        width: 220px;
+    }
+}

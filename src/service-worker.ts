@@ -71,16 +71,18 @@ registerRoute(
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
-self.addEventListener('message', (event) => {
+self.addEventListener('message', async (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
+    console.log('1. skipWaiting..');
+    await self.skipWaiting();
+    console.log('2. skipWaiting complete');
   }
 });
 
 /******* Any other custom service worker logic can go here. *******/
 
 self.addEventListener('message', async (event) => {
-  if (event.data && event.data.type === 'FORCE_RELOAD') {    
+  if (event.data && event.data.type === 'FORCE_RELOAD') {
     // NOTE: This reloads `all` tabs including the (ServiceWorker installer) one that sent the message 
     const tabs = await self.clients.matchAll({type: 'window'});
     // No need to reload if no `other` tab exists

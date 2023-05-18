@@ -33,7 +33,7 @@ function setupInstallPrompt() {
     // Update UI notify the user they can install the PWA
     showInstallPromotion();
 
-    // console.log(`'beforeinstallprompt' event was fired.`);
+    console.log(`'beforeinstallprompt' event was fired.`);
   });
 }
 

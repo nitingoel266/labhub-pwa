@@ -34,6 +34,7 @@ const AbsorbanceMeasuring = () => {
   const [measure, setMeasure] = useState<any>(dataStream?.rgb?.measure || []);
   const [measuredValue, setMeasuredValue] = useState<any>([]); //{Measuement No,RED,GREEN,BLUE}
   const [isOpen, setModal] = useState("");
+  const [screenName,setScreenName] = useState<string>("cuvette-insertion"); // measure-absorbance
 
   const clickHandler = (item: string) => {
     if (selectedItem && selectedItem === item) setSelectedItem("");
@@ -43,22 +44,35 @@ const AbsorbanceMeasuring = () => {
   const handleSubmit = () => {
     if (selectedItem) {
       navigate("/measure-absorbance");
+      if(screenName === "cuvette-insertion"){
+        setScreenName("measure-absorbance")
+      }
       if (clientId === status?.leaderSelected) {
         startRgbExperiment();
         setMeasuredValue((prevState: any) => {
-          return [
-            ...prevState,
-            {
-              "Measuement No": prevState.length,
-              RED: measure[0],
-              GREEN: measure[1],
-              BLUE: measure[2],
-            },
-          ];
+          if(measure && measure[2]){
+            return prevState ? [
+              ...prevState,
+              {
+                "Measuement No": prevState?.length || 0,
+                RED: measure[0],
+                GREEN: measure[1],
+                BLUE: measure[2],
+              }
+            ] : [
+              {
+                "Measuement No": prevState?.length || 0,
+                RED: measure[0],
+                GREEN: measure[1],
+                BLUE: measure[2],
+              }
+            ];
+          }
+          
         });
       }
 
-      // setMeasure([])
+      setMeasure([]) // remove values when getting new
       setSelectedItem("");
       setIsSaved(false);
     } else {
@@ -68,10 +82,13 @@ const AbsorbanceMeasuring = () => {
     }
   };
   const handleSave = () => {
-    let resultRGB = [...measuredValue];
+    let resultRGB:any = [];
+    if(measuredValue){
+      resultRGB = [...measuredValue]
+    }
     if (measure.length > 0) {
       resultRGB.push({
-        "Measuement No": measuredValue.length,
+        "Measuement No": measuredValue?.length || 0,
         RED: measure[0],
         GREEN: measure[1],
         BLUE: measure[2],
@@ -104,36 +121,41 @@ const AbsorbanceMeasuring = () => {
     else setModal(title);
   };
   useEffect(() => {
-    if (dataStream?.rgb) {
       if (
+        dataStream?.rgb &&
         dataStream?.rgb?.measure &&
-        dataStream?.rgb?.measure.some((e: any) => e > 0) &&
+        dataStream?.rgb?.measure.some((e: any) => e) &&
         JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure)
       ) {
         audio.play();
         setMeasure(dataStream?.rgb?.measure || []);
       }
-    }
   }, [dataStream?.rgb, measure, audio]);
+
+
   return (
-    <div>
-      <div className={styles.ButtonWrapper}>
+    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+      {screenName === "cuvette-insertion" && <div aria-label="Please insert cuvette to measure absorbance of RGB light. header" className={styles.HeaderText}>Please insert cuvette to measure absorbance of RGB light.</div>}
+      <div className={styles.ButtonWrapper} style={screenName === "cuvette-insertion" ? {marginTop:0} : {marginTop:66}}>
         <div
           className={styles.Button}
           style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
         >
-          <div
+          <button
+            aria-label={MEASURE + "button"}
             onClick={() => clickHandler(MEASURE)}
             className={styles.SubButton}
+            style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
           >
-            <div style={{ marginLeft: 10 }}>{MEASURE}</div>
-          </div>
-          <div
+            <p style={{ marginLeft: 10 ,fontSize:15,fontWeight:500}}>{MEASURE}</p>
+          </button>
+          <button
+            aria-label={MEASURE + " i button"}
             onClick={() => handleIModal(MEASURE)}
             className={styles.IButtonWrapper}
           >
-            <img src={IButtonIcon} style={{ width: 20 }} alt="i button" />
-          </div>
+            <img src={IButtonIcon} style={{ width: 20 }} alt="i icon" />
+          </button>
         </div>
       </div>
       {isOpen === MEASURE && isMobile && (
@@ -143,28 +165,29 @@ const AbsorbanceMeasuring = () => {
         />
       )}
       <div className={styles.BodyWrapper}>
-        <div className={styles.BodyBollWrapper}>
-          <div className={styles.BodyRedBoll}>{measure[0]}</div>
+        <div aria-label={"red light value is"+measure[0]} className={styles.BodyBollWrapper}>
+          <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#D08080"} : {}}>{measure[0]}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
-        <div className={styles.BodyBollWrapper}>
-          <div className={styles.BodyGreenBoll}>{measure[1]}</div>
+        <div aria-label={"green light value is"+measure[1]} className={styles.BodyBollWrapper}>
+          <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#7BAA81"} : {}}>{measure[1]}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
-        <div className={styles.BodyBollWrapper}>
-          <div className={styles.BodyBlueBoll}>{measure[2]}</div>
+        <div aria-label={"blue light value is"+measure[2]} className={styles.BodyBollWrapper}>
+          <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#8AA3BB"} : {}}>{measure[2]}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>
-      <div className={styles.FooterPlainText}>
+      <div aria-label="Values are in Absorbance units in AU text" className={styles.FooterPlainText}>
         Values are in Absorbance units (AU)
       </div>
       <div className={styles.FooterTextWrapper}>
         <div className={styles.FooterInnerTextWrapper}>
-          <div>TITLE</div>
+          <div aria-label="TITLE sub header">TITLE</div>
           <div className={styles.FooterText}>
-            <div>T0918564122-1123-7T09185...</div>
-            <div
+            <div aria-label="file format T0918564122-1123-7T09185">T0918564122-1123-7T09185...</div>
+            <button
+              aria-label="save button"
               className={styles.SaveButton}
               onClick={() => (measure.length > 0 ? handleSave() : {})}
               style={
@@ -174,7 +197,7 @@ const AbsorbanceMeasuring = () => {
               }
             >
               Save
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -182,7 +205,7 @@ const AbsorbanceMeasuring = () => {
         isSelected={selectedItem ? true : false}
         handleSubmit={handleSubmit}
       />
-      {!isMobile && (
+      {!isMobile && isOpen && (
         <IButtonModal
           isOpen={isOpen ? true : false}
           title={isOpen}

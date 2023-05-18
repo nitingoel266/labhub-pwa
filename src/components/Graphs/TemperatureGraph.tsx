@@ -30,9 +30,10 @@ type Props = {
   showPoint: boolean;
   capturePoint:any;
   title?:string;
+  temperatureUnit ? :string;
 };
 
-const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title}: Props) => {
+const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,temperatureUnit='c'}: Props) => {
   const [enableZoom, setEnableZoom] = useState<boolean>(true);
 
   const chatData = {
@@ -40,7 +41,7 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title}: Pro
     datasets: [
       {
         label: title,
-        data: data.map((el: any) => el.temp),
+        data: data.map((el: any) => temperatureUnit === 'f' ? ((9 / 5) * el.temp + 32).toFixed(1) : el.temp),
         tension: 0.4,
         showLine: showPoint ? true : false,
         borderWidth: 2,

@@ -38,7 +38,9 @@ export const setupData = (data?: SetupData) => {
 };
 
 export const resetAll = () => {
-  if (getClientType() !== 'leader') return;
+  // NOTE: resetAll() must be called only by leader,
+  // that too when the client first acquires leader role
+  // if (getClientType() !== 'leader') return;  // disabled due to possible race condition
   deviceStatusUpdate.next({ resetAll: true });
 };
 
@@ -90,6 +92,11 @@ export const stopHeaterExperiment = () => {
 export const startRgbExperiment = () => {
   if (getClientType() !== 'leader') return;
   deviceDataFeedUpdate.next({ rgbExperiment: true });
+};
+
+export const stopRgbExperiment = () => {
+  if (getClientType() !== 'leader') return;
+  deviceDataFeedUpdate.next({ rgbExperiment: false });
 };
 
 export const setScreenNumber = (screenNumber: number) => {

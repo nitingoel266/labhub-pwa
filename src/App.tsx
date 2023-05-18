@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes, Link, useLocation } from 'react-router-dom';
 import Header from './components/header';
 import Home from './components/home';
@@ -6,6 +6,9 @@ import ScanDevice from "./pages/scanDevices/index"
 import TestPage from './pages/test-page';
 import NotFound from './pages/not-found';
 import { useDeviceStatus,useDeviceConnected, useSwInstallStatus, useSwPendingUpdate} from './labhub/status';
+import {getClientId} from "./labhub/utils"
+import {setScreenNumber} from "./labhub/actions";
+import { GetScreenName} from "./utils/const";
 import styles from './styles/App.module.css';
 import FunctionSelection from './pages/functionProcedure/FunctionSelection';
 import ModeSelection from './pages/modeProcedure/ModeSelection';
@@ -33,6 +36,7 @@ import AbsorbanceMeasuring from './components/MeasureAbsorbance/AbsorbanceMeasur
 // import Loader from './components/Modal/Loader';
 import ShowErrorModal from './components/Modal/ShowErrorModal';
 import pkg from '../package.json';
+import Toast from './components/Modal/Toast';
 
 function App() {
   const [status] = useDeviceStatus();
@@ -40,6 +44,8 @@ function App() {
   const [swStatus] = useSwInstallStatus();
   const [swWaiting] = useSwPendingUpdate();
   const location = useLocation();
+  const clientId = getClientId()
+
   const showHeader = location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe" || location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" ? false : true
 
   const style = swStatus === undefined ? 'dotted' : swStatus === 'offline' ? 'solid' : swStatus === 'error' ? 'wavy' : '';
@@ -49,6 +55,18 @@ function App() {
     <span style={{ textDecoration }}>{pkg.version}{statusIcon}</span>
   );
 
+  useEffect(() => { // setScreen name as a leader for sync for member
+    if(clientId === status?.leaderSelected){
+      if(location?.pathname){
+        for(let one in GetScreenName){
+          if(GetScreenName[one] === location?.pathname){
+            setScreenNumber(Number(one))
+            break;
+          }
+        }
+      }
+    }
+  },[clientId,status?.leaderSelected,location?.pathname])
   return (
     <div className={styles.app}>
       {showHeader && <Header />}
@@ -73,7 +91,7 @@ function App() {
           <Route path='/calibration-testing' element={<CalibrationTesting />} />
           <Route path='/spectrophotometer-testing' element={<SpectrophotometerTesting />} />
 
-          <Route path='/cuvette-insertion' element={<CuvetteInsertion />} />
+          <Route path='/cuvette-insertion' element={<CuvetteInsertion />} /> {/* currently not in use */}
           <Route path='/measure-absorbance' element={<AbsorbanceMeasuring />} />
 
           <Route path="/my-records" element={<MyRecordList />} />
@@ -98,6 +116,7 @@ function App() {
       <LeaderDisconnect />
       {/* <Loader /> */}
       <ShowErrorModal />
+      <Toast />
     </div>
   );
 }

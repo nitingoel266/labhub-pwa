@@ -41,6 +41,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setModal] = useState("");
+  const [hasConnectionEstablished,setHasConnectionEstablished] = useState(false);
   const [onClick, setOnClick] = useState("");
 
   const [screenName, setScreenName] = useState("");
@@ -248,7 +249,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       setScreenName("/scan-devices")
       applicationMessage.next({message:`There is no screen available for screen number :- ${index}`,type:"info"})
     }
-    toastMessage.next("Synced with Leader!")
+    toastMessage.next("You are now synced with leader!")
   }
   const handleSync  = () => {
     setOnClick("sync")
@@ -288,6 +289,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
 
       localStorage.removeItem(`${location.state.data.selectedButton}_data_${location.state.data.selectedData.name}`)
       navigate(-1);
+      toastMessage.next("File deleted!")
     }
   };
   const handleDownload = () => {
@@ -344,6 +346,14 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       setModal("")
     }
   },[shouldCloseModal])
+
+  useEffect(() => {
+    if(connected && !hasConnectionEstablished){
+      setHasConnectionEstablished(true)
+    }else if(!connected && hasConnectionEstablished){
+        applicationMessage.next({type:"info",message:"Device isn't Connected!"})
+    }
+  },[connected,hasConnectionEstablished]);
 
   // useEffect(() => { // setScreen name as a leader for sync for member
   //   if(clientId === status?.leaderSelected){

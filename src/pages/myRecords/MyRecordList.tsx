@@ -4,7 +4,7 @@ import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import MyRecordsCard from "../../components/MyRecordsCard";
 import RightArrow from "../../components/RightArrow";
 import { TEMPERATURE_DATA, VOLTAGE_DATA, RGB_DATA } from "../../utils/const";
-import {getStorageData,validateFileName,getStorageKeys,getShortedData} from "../../components/Constants";
+import {getStorageData,validateFileName,getStorageKeys,getShortedData,toastMessage} from "../../components/Constants";
 import styles from "../../styles/myRecordList.module.css";
 import EditFileModal from "../../components/Modal/EditFileModal";
 
@@ -35,6 +35,7 @@ const MyRecordList = () => {
         ...myRecords,
         [selectedButton]: getMyRecordData(getStorageData(`${selectedButton}_data`))
       });
+      toastMessage.next("File deleted!")
     }
   };
   const handleDeleteMobile = (item: any) => {
@@ -45,6 +46,7 @@ const MyRecordList = () => {
         ...myRecords,
         [selectedButton]: getMyRecordData(getStorageData(`${selectedButton}_data`))
       });
+      toastMessage.next("File deleted!")
     }
   };
   const handleActionItem = (item: any, action: any) => {
@@ -74,6 +76,7 @@ const MyRecordList = () => {
         ...myRecords,
         [selectedButton]: getMyRecordData(getStorageData(`${selectedButton}_data`))
       });
+      toastMessage.next("File renamed!")
     }
   }
   const handleShare = async (item: any, title?: string) => {

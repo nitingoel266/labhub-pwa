@@ -5,7 +5,7 @@ import {initSetup,uninitSetup} from "../../labhub/init-setup";
 import RightArrow from '../../components/RightArrow';
 import { useNavigate } from 'react-router-dom';
 import MemberDisconnect from '../../components/Modal/MemberDisconnectModal';
-import { useState } from 'react';
+import {  useState } from 'react';
 import { installClickHandler, updateServiceWorker } from '../../pwaSetup';
 
 const ScanDevices = () => {
@@ -43,6 +43,7 @@ const ScanDevices = () => {
     }
     setModal("")
   }
+
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc"> 
         <div className={styles.ExtraButtonWrapper}>
             {installPromotion && <button aria-label={"Add to home screen Button"} className={styles.ExtraButton} onClick={installClickHandler}>
@@ -69,7 +70,7 @@ const ScanDevices = () => {
             {connected && status?.leaderSelected && <RightArrow isSelected={!isConnected && status?.leaderSelected ? true : false} handleSubmit={handleRightArrow}/>}
             {isConnected && <img src={LoaderImage} style={{width:70}} alt="loader gif"/>}
         </div>
-        {isOpen && <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "resetConnection" ? resetConnection : handleDisconnectDevice} message={isOpen === "resetConnection" ? "Do you want to connect to another device?" : `Are you sure to Disconnect from <strong style="white-space: nowrap;">${status?.deviceName}</strong>!`}/>}
+        {isOpen && isOpen !== "Device isn't Connected!" && <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "resetConnection" ? resetConnection : handleDisconnectDevice} message={isOpen === "resetConnection" ? "Do you want to connect to another device?" : `Are you sure to Disconnect from <strong style="white-space: nowrap;">${status?.deviceName}</strong>!`}/>}
     </div>
 }
 

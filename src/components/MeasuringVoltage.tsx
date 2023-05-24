@@ -14,6 +14,7 @@ import {
   validateFileName,
   getStorageKeys,
   mobileWidth,
+  toastMessage
 } from "./Constants";
 import { VOLTAGE_DATA } from "../utils/const";
 import Header from "./header";
@@ -103,6 +104,7 @@ const MeasuringVoltage = () => {
         `${VOLTAGE_DATA}_${verifiedFileName}`,
         storageVoltageData
         );
+        toastMessage.next("Saved successfully!")
     }
     // console.log("save the data in record section ",resultVoltage)
     //save the voltage in labhub device in celcis mode

@@ -10,6 +10,7 @@ import {
   getDescription,
   TEST_CALIBRATE,
   HIGHLIGHT_BACKGROUND,
+  toastMessage
 } from "../Constants";
 import IButtonComponent from "../IButtonComponent";
 import MemberDisconnect from "../Modal/MemberDisconnectModal";
@@ -66,6 +67,9 @@ const SpectrophotometerTesting = () => {
       ) {
         audio.play();
         setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
+        if(dataStream?.rgb?.calibrateTest.some((e:any) => e > 0.2 || e < -0.2)){
+          toastMessage.next("Values are out of range!")
+        }
       }
   }, [dataStream?.rgb, audio, testCalibrate]);
 

@@ -15,6 +15,7 @@ import {
   getDate,
   getTime,
   getStorageKeys,
+  toastMessage
 } from "../Constants";
 import IButtonComponent from "../IButtonComponent";
 import { startRgbExperiment, simulateRgb } from "../../labhub/actions";
@@ -115,6 +116,7 @@ const AbsorbanceMeasuring = () => {
     let storageRGBData = JSON.stringify(resultData);
     localStorage.setItem(`${RGB_DATA}_${verifiedFileName}`, storageRGBData);
     setIsSaved(true);
+    toastMessage.next("Saved successfully!")
   };
   const handleIModal = (title: string) => {
     if (isOpen === title) setModal("");
@@ -129,6 +131,9 @@ const AbsorbanceMeasuring = () => {
       ) {
         audio.play();
         setMeasure(dataStream?.rgb?.measure || []);
+        if(dataStream?.rgb?.measure.some((e:any) => e > 0.2 || e < -0.2)){
+          toastMessage.next("Values are out of range!")
+        }
       }
   }, [dataStream?.rgb, measure, audio]);
 

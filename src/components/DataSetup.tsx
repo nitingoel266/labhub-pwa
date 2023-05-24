@@ -8,7 +8,7 @@ import {BlackIButtonIcon} from "../images/index"
 import { useNavigate } from 'react-router-dom';
 import IButtonComponent from './IButtonComponent';
 import WheelPicker from './WheelPicker';
-import {mobileWidth,getDataRate,getDataSample,getDescription,DATA_RATE,NO_OF_SAMPLES,dataRateOption,dataSampleOption} from "../components/Constants";
+import {mobileWidth,getDataRate,getDataSample,getDescription,DATA_RATE,NO_OF_SAMPLES,dataRateOption,dataSampleOption,toastMessage} from "../components/Constants";
 import IButtonModal from './Modal/IButtonModal';
 
 const DataSetup = () => {
@@ -35,6 +35,7 @@ const DataSetup = () => {
     const handleSubmit = () => {
         setupData({ dataRate:getDataRate[dataSetup.dataRate], dataSample: getDataSample[dataSetup.dataSample]})
         // setSelectedFunction(null)
+        toastMessage.next("Data successfully saved!")
         navigate(-1)
     }
     const handleDataSetup = (value:any) => {

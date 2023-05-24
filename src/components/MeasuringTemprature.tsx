@@ -14,6 +14,7 @@ import {
   validateFileName,
   getStorageKeys,
   mobileWidth,
+  toastMessage,
 } from "./Constants";
 import { TEMPERATURE_DATA } from "../utils/const";
 import Header from "./header";
@@ -107,6 +108,7 @@ const MeasuringTemprature = () => {
         `${TEMPERATURE_DATA}_${verifiedFileName}`,
         storageTempData
         );
+        toastMessage.next("Saved successfully!")
     }
     // console.log("save the data in record section ",resultTemperature,fileName)
     //save the temperature in labhub device in celcis mode

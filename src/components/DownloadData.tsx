@@ -1,3 +1,5 @@
+import {toastMessage} from "../components/Constants";
+
 type Props = {
   header?: any;
   data: any;
@@ -39,6 +41,7 @@ const DownloadData = ({ data, header }: Props) => {
   hiddenElement.target = "_blank";
   hiddenElement.download = data.name + ".csv";
   hiddenElement.click();
+  toastMessage.next(`File saved as ${data.name}.csv`)
 };
 
 export default DownloadData;

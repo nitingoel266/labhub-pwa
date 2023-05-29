@@ -26,6 +26,7 @@ const MeasuringVoltage = () => {
   const [status] = useDeviceStatus();
   const navigate = useNavigate();
   const [dataStream] = useDeviceDataFeed();
+  const [dataSetup] = useState(status?.setupData);
   const [isOpen, setModal] = useState<string>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
@@ -242,6 +243,14 @@ const MeasuringVoltage = () => {
     }
   },[status?.sensorConnected,status?.operation])
 
+  useEffect(() => { // save data and go back only for member if leader change data setup and member is n measuring screen
+    if(status?.setupData && JSON.stringify(status?.setupData) !== JSON.stringify(dataSetup) && clientId !== status?.leaderSelected){
+      if(capturePoint?.some((el: number) => el > 0) && !isSaved){
+        setModal("Do you want to save Data?")
+      }else navigate("/function-selection")
+    }
+  },[status?.setupData,dataSetup,clientId,status?.leaderSelected,capturePoint,isSaved,navigate])
+  
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>

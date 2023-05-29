@@ -219,7 +219,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
     ) {
       if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected)
         stopSensorExperiment();
-      else if(checkForSave && handleSave) {
+      else if(checkForSave && handleSave && isOpen === "Do you want to save Data?") {
         handleSave()
         let value:any = onClick === "myRecord" ? "/my-records" : -1;
         if(onClick === "connectionManager")

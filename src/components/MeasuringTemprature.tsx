@@ -8,9 +8,9 @@ import {getTemperatureLog} from "../labhub/actions-client";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
 import {
-  getFileName,
   getDate,
   getTime,
+  getTitle,
   validateFileName,
   getStorageKeys,
   mobileWidth,
@@ -31,10 +31,13 @@ const MeasuringTemprature = () => {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
   const [capturePoint, setCapturePoint] = useState<any>([]);
-
+  
+  const [title,setTitle] = useState<any>(getTitle("T", clientId,status));
   const [tempratureUnit, setTempratureUnit] = useState<string>("c");
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,temp}
   const [checkForLog,setCheckForLog] = useState<any>(0)
+  const [maxTempValue,setMaxTempValue] = useState<number>(50)
+  const [labels,setLabels] = useState<any>([]);
 
   const handleSubmit = () => {
     if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
@@ -86,14 +89,15 @@ const MeasuringTemprature = () => {
       }
     }
     if(resultTemperature.length > 0){
-        let fileName = "T" + getFileName();
-        if (clientId === status?.leaderSelected) {
-        // for leader
-        fileName += "L";
-        } else if (clientId) {
-        fileName +=
-            "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
-        }
+        // let fileName = "T" + getFileName();
+        // if (clientId === status?.leaderSelected) {
+        // // for leader
+        // fileName += "L";
+        // } else if (clientId) {
+        // fileName +=
+        //     "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+        // }
+        let fileName = title;
         let verifiedFileName = validateFileName(
         getStorageKeys(TEMPERATURE_DATA),
         fileName
@@ -251,6 +255,41 @@ const MeasuringTemprature = () => {
       }else navigate("/function-selection")
     }
   },[status?.setupData,dataSetup,clientId,status?.leaderSelected,capturePoint,isSaved,navigate])
+  
+  useEffect(() => { // set y axis for the graph
+    if(graphData?.length > 0 && ((Number(graphData[graphData.length -1]?.temp) / maxTempValue)*100) >= 80){
+      let customMaxTempValue = Number(Number(maxTempValue * 1.3).toFixed(0));
+      if(customMaxTempValue !== maxTempValue)
+      setMaxTempValue(customMaxTempValue);
+    }
+  },[graphData,maxTempValue])
+  
+  useEffect(() => { // set x axis of graph
+    let maxTime = labels?.length > 0 ? labels[labels?.length -1] : 60;
+    if(graphData?.length === 0){
+      let rate = typeof status?.setupData?.dataRate === "number" ? status?.setupData?.dataRate : 1;
+        let initialLabels = []
+      for(let i=0;i<=(rate > 60 ? rate : 60);i=i+rate){
+        initialLabels.push(Number(i))
+      }
+      if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
+      setLabels(initialLabels)
+    }else if(graphData?.length > 0 && ((Number(graphData[graphData.length -1]?.time) / maxTime)*100) >= 80){
+      let rate = typeof status?.setupData?.dataRate === "number" ? status?.setupData?.dataRate : 1;
+      let initialLabels = [...labels]
+      for(let i= maxTime + rate ;i<=(Number(Number(Number(graphData[graphData.length -1]?.time) * 1.3).toFixed(0)));i=i+rate){
+        initialLabels.push(Number(i))
+      }
+      if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
+      setLabels(initialLabels)
+    }
+  },[status?.setupData?.dataRate,graphData,labels])
+
+  useEffect(() => { // verify filename is exist or not in storage
+    if(title && localStorage.getItem(`${TEMPERATURE_DATA}_${title}`)){
+      toastMessage.next("File name already exists!")
+    }
+  },[title])
 
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
@@ -310,8 +349,8 @@ const MeasuringTemprature = () => {
         </div>
         <div className={styles.SecondaryHeaderWrapper}>
           <div aria-label="Temperature value">Temperature Value : {tempratureUnit === 'f' && graphData[graphData.length - 1]?.temp ? ((9 / 5) * graphData[graphData.length - 1]?.temp + 32).toFixed(1) : graphData[graphData.length - 1]?.temp}</div>
-          <div className={styles.DegreeStyle}> </div>
-          <div aria-label={"in degree "+ tempratureUnit.toUpperCase()}>{tempratureUnit.toUpperCase()}</div>
+          {graphData?.length ? <div className={styles.DegreeStyle}> </div> : null}
+          {graphData?.length ? <div aria-label={"in degree "+ tempratureUnit.toUpperCase()}>{tempratureUnit.toUpperCase()}</div> : null}
         </div>
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
@@ -321,6 +360,8 @@ const MeasuringTemprature = () => {
               capturePoint={capturePoint}
               title={"Temperature"}
               temperatureUnit = {tempratureUnit}
+              maxTempValue ={maxTempValue}
+              labels={labels}
             />
           </div>
           {window.innerWidth > mobileWidth ? (
@@ -374,7 +415,8 @@ const MeasuringTemprature = () => {
           <div className={styles.FooterInnerTextWrapper}>
             <div aria-label="title sub header">TITLE</div>
             <div className={styles.FooterText}>
-              <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
+              <input type="text" value={title} onChange={(e) =>setTitle(e.target.value)} style={{outline:"none",border:"none"}} />
+              {/* <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div> */}
               <button
                 aria-label="Save button"
                 className={styles.SaveButton}

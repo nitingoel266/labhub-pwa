@@ -10,8 +10,8 @@ import {
   getDescription,
   MEASURE,
   HIGHLIGHT_BACKGROUND,
-  getFileName,
   validateFileName,
+  getTitle,
   getDate,
   getTime,
   getStorageKeys,
@@ -29,6 +29,8 @@ const AbsorbanceMeasuring = () => {
   const [audio] = useState(new Audio(sound));
   const [status] = useDeviceStatus();
   const [dataStream] = useDeviceDataFeed();
+  const [title,setTitle] = useState<any>(getTitle("R",clientId,status));
+
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [selectedItem, setSelectedItem] = useState<any>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -95,15 +97,15 @@ const AbsorbanceMeasuring = () => {
         BLUE: measure[2],
       });
     }
-    let fileName = "R" + getFileName();
-    if (clientId === status?.leaderSelected) {
-      // for leader
-      fileName += "L";
-    } else if (clientId) {
-      fileName +=
-        "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
-    }
-
+    // let fileName = "R" + getFileName();
+    // if (clientId === status?.leaderSelected) {
+    //   // for leader
+    //   fileName += "L";
+    // } else if (clientId) {
+    //   fileName +=
+    //     "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+    // }
+    let fileName = title;
     let verifiedFileName = validateFileName(getStorageKeys(RGB_DATA), fileName);
 
     let resultData = {
@@ -137,6 +139,11 @@ const AbsorbanceMeasuring = () => {
       }
   }, [dataStream?.rgb, measure, audio]);
 
+  useEffect(() => { // verify filename is exist or not in storage
+    if(title && localStorage.getItem(`${RGB_DATA}_${title}`)){
+      toastMessage.next("File name already exists!")
+    }
+  },[title])
 
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
@@ -190,7 +197,8 @@ const AbsorbanceMeasuring = () => {
         <div className={styles.FooterInnerTextWrapper}>
           <div aria-label="TITLE sub header">TITLE</div>
           <div className={styles.FooterText}>
-            <div aria-label="file format T0918564122-1123-7T09185">T0918564122-1123-7T09185...</div>
+            <input type="text" value={title} onChange={(e) =>setTitle(e.target.value)} style={{outline:"none",border:"none"}} />
+            {/* <div aria-label="file format T0918564122-1123-7T09185">T0918564122-1123-7T09185...</div> */}
             <button
               aria-label="save button"
               className={styles.SaveButton}

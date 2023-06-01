@@ -8,7 +8,7 @@ import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
 import {getVoltageLog} from "../labhub/actions-client";
 import {
-  getFileName,
+  getTitle,
   getDate,
   getTime,
   validateFileName,
@@ -27,6 +27,7 @@ const MeasuringVoltage = () => {
   const navigate = useNavigate();
   const [dataStream] = useDeviceDataFeed();
   const [dataSetup] = useState(status?.setupData);
+  const [title,setTitle] = useState<any>(getTitle("V", clientId,status));
   const [isOpen, setModal] = useState<string>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
@@ -34,6 +35,7 @@ const MeasuringVoltage = () => {
   const [checkForLog,setCheckForLog] = useState<any>(0)
 
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,voltage}
+  const [labels,setLabels] = useState<any>([]);
 
   const handleSubmit = () => {
     if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
@@ -82,14 +84,15 @@ const MeasuringVoltage = () => {
       }
     }
     if(resultVoltage.length > 0){
-        let fileName = "V" + getFileName();
-        if (clientId === status?.leaderSelected) {
-        // for leader
-        fileName += "L";
-        } else if (clientId) {
-        fileName +=
-            "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
-        }
+        // let fileName = "V" + getFileName();
+        // if (clientId === status?.leaderSelected) {
+        // // for leader
+        // fileName += "L";
+        // } else if (clientId) {
+        // fileName +=
+        //     "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+        // }
+        let fileName = title;
         let verifiedFileName = validateFileName(
         getStorageKeys(VOLTAGE_DATA),
         fileName
@@ -250,7 +253,34 @@ const MeasuringVoltage = () => {
       }else navigate("/function-selection")
     }
   },[status?.setupData,dataSetup,clientId,status?.leaderSelected,capturePoint,isSaved,navigate])
-  
+
+  useEffect(() => { // set x axis of graph
+    let maxTime = labels?.length > 0 ? labels[labels?.length -1] : 60;
+    if(graphData?.length === 0){
+      let rate = typeof status?.setupData?.dataRate === "number" ? status?.setupData?.dataRate : 1;
+        let initialLabels = []
+      for(let i=0;i<=(rate > 60 ? rate : 60);i=i+rate){
+        initialLabels.push(Number(i))
+      }
+      if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
+      setLabels(initialLabels)
+    }else if(graphData?.length > 0 && ((Number(graphData[graphData.length -1]?.time) / maxTime)*100) >= 80){
+      let rate = typeof status?.setupData?.dataRate === "number" ? status?.setupData?.dataRate : 1;
+      let initialLabels = [...labels]
+      for(let i= maxTime + rate ;i<=(Number(Number(Number(graphData[graphData.length -1]?.time) * 1.3).toFixed(0)));i=i+rate){
+        initialLabels.push(Number(i))
+      }
+      if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
+      setLabels(initialLabels)
+    }
+  },[status?.setupData?.dataRate,graphData,labels])
+
+  useEffect(() => { // verify filename is exist or not in storage
+    if(title && localStorage.getItem(`${VOLTAGE_DATA}_${title}`)){
+      toastMessage.next("File name already exists!")
+    }
+  },[title])
+
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
@@ -266,7 +296,7 @@ const MeasuringVoltage = () => {
         </div>
         <div className={styles.SecondaryHeaderWrapper}>
           <div aria-label="voltage value in volt">
-            Voltage Value : {graphData[graphData.length - 1]?.temp || 0}V
+            Voltage Value : {graphData?.length ? graphData[graphData.length - 1]?.temp + "V" : null}
           </div>
         </div>
         <div className={styles.TextBody}>
@@ -276,6 +306,7 @@ const MeasuringVoltage = () => {
               showPoint={status?.setupData?.dataRate === "user" ? false : true}
               capturePoint={capturePoint}
               title={"Voltage"}
+              labels={labels}
             />
           </div>
           {window.innerWidth > mobileWidth ? (
@@ -329,7 +360,9 @@ const MeasuringVoltage = () => {
           <div className={styles.FooterInnerTextWrapper}>
             <div aria-label="title text">TITLE</div>
             <div className={styles.FooterText}>
-              <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
+              {/* <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
+               */}
+              <input type="text" value={title} onChange={(e) =>setTitle(e.target.value)} style={{outline:"none",border:"none"}} />
               <button
                aria-label="save button"
                 className={styles.SaveButton}

@@ -10,7 +10,7 @@ type Props = {
 
 const EditFileModal = ({isOpen,setEditModal,EditFileName}:Props) => {
     const inputRef:any = useRef(null);
-    const [fileName,setFileName] = useState<string>("")
+    const [fileName,setFileName] = useState<string>(isOpen?.name)
 
     useEffect(() => { // to set focus for acessibility
         inputRef?.current?.focus()
@@ -36,9 +36,9 @@ const EditFileModal = ({isOpen,setEditModal,EditFileName}:Props) => {
                         <img src={CloseIcon} style={{width:15,cursor:"pointer"}} alt="close icon"/>
                     </button>
                 </div>
-                <div className={styles.FileText}>
+                {/* <div className={styles.FileText}>
                     <input className={styles.InputElement} value={isOpen?.name} disabled/>
-                </div>
+                </div> */}
                 <div className={styles.FileText}>
                     <input ref={inputRef} type="text" value={fileName} onChange={e => setFileName(e.target.value)} className={styles.InputElement} placeholder="Enter new file name..." required />
                 </div>

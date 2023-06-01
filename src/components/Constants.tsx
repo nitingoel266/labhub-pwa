@@ -54,6 +54,17 @@ const getFileName = () => {
     return fileName;
 
 }
+const getTitle = (Prefix:any, clientId:any,status:any) => {
+    let fileName = Prefix + getFileName();
+    if (clientId === status?.leaderSelected) {
+    // for leader
+    fileName += "L";
+    } else if (clientId) {
+    fileName +=
+        "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+    }
+    return fileName
+}
 
 const getStorageData = (title:string)=> {
     let result = [];
@@ -176,6 +187,7 @@ export {
     dataSampleOption,
     getDescription,
     getFileName,
+    getTitle,
     getDate,
     getTime,
     validateFileName,

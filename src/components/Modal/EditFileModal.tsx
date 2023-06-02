@@ -6,9 +6,10 @@ type Props = {
     isOpen:any;
     setEditModal:(value:any) => void;
     EditFileName:(data:any,name:string) => void;
+    selectedButton : string;
 }
 
-const EditFileModal = ({isOpen,setEditModal,EditFileName}:Props) => {
+const EditFileModal = ({isOpen,setEditModal,EditFileName,selectedButton}:Props) => {
     const inputRef:any = useRef(null);
     const [fileName,setFileName] = useState<string>(isOpen?.name)
 
@@ -28,7 +29,7 @@ const EditFileModal = ({isOpen,setEditModal,EditFileName}:Props) => {
         >
             <div className={styles.TextContainer}>
                 <div className={styles.HeaderWrapper}>
-                    <div>Change File Name</div>
+                    <div>Rename File</div>
                     <button
                         style={{border:"none",outline:"none",backgroundColor:"inherit"}}
                         onClick={() => setEditModal("")}
@@ -41,6 +42,7 @@ const EditFileModal = ({isOpen,setEditModal,EditFileName}:Props) => {
                 </div> */}
                 <div className={styles.FileText}>
                     <input ref={inputRef} type="text" value={fileName} onChange={e => setFileName(e.target.value)} className={styles.InputElement} placeholder="Enter new file name..." required />
+                    {localStorage.getItem(`${selectedButton}_data_${fileName}`) ? <div style={{color:"red",fontSize:12,marginTop:2}}>File name already exists!</div> : <div style={{height:15}}>{" "}</div>}
                 </div>
                 <div className={styles.FooterWrapper}>
                     <button onClick={() => setEditModal("")} className={styles.CancelButton}>Cancel</button>

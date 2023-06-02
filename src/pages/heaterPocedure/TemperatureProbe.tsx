@@ -143,7 +143,15 @@ const TemperatureProbe = () => {
       />
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
       <div className={styles.HeaderTextWrapper}>
-        <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{SETPOINT_TEMPERATURE}</h4>
+        <div style={{display:"flex",flexDirection:"row"}}>
+          <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{SETPOINT_TEMPERATURE} (</h4>
+          <h4
+           className={styles.TempratureDegreeIcon}  
+           style={{
+                  border: `1px solid #000000`,
+                }}>{" "}</h4>
+          <h4>C)</h4>
+        </div>
         <div className={styles.RateMeasureRightSide}>
           <div className={styles.DataMeasureButtom}>
             <button
@@ -234,7 +242,7 @@ const TemperatureProbe = () => {
               />
               </button>
           </div>
-          <button
+          {/* <button
             aria-label="i button"
             style={{border:"none",outline:"none"}}
             onClick={() => handleIModal(SETPOINT_TEMPERATURE)}
@@ -244,7 +252,7 @@ const TemperatureProbe = () => {
             className={styles.IButton}
             alt="i icon"
             />
-            </button>
+            </button> */}
         </div>
       </div>
       {isOpen === SETPOINT_TEMPERATURE && isMobile && (
@@ -263,7 +271,7 @@ const TemperatureProbe = () => {
       </div>
       <div className={styles.HeaterElementWraper}>
         <div aria-label={"temperatue is "+istemperature && Number(istemperature).toFixed(1)+"degree celcius"} className={styles.TemperatureWrapper}>
-          <div>{istemperature && Number(istemperature).toFixed(1)}</div>
+          <div>{istemperature && Number(istemperature).toFixed(0)}</div>
           <div className={styles.TemperatureDegree}> </div>
           <div>C</div>
         </div>
@@ -314,7 +322,7 @@ const TemperatureProbe = () => {
           </div>
         </div>
         <div aria-label={"power is"+power && Number(power).toFixed(2)+"watt"} className={styles.HeaterElementText}>
-          Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(2)} W</span>
+          Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(0)} W</span>
         </div>
       </div>
       {isOpen !== "Temperature probe disconnected" && isOpen && <MemberDisconnect
@@ -326,7 +334,7 @@ const TemperatureProbe = () => {
      {isOpen === "Temperature probe disconnected" && <SensorDisconnectModal 
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
-          message="Temperature Probe isn't Connected!"
+          message="Please connect temperature probe to proceed."
       />}
       <RightArrow
         isSelected={

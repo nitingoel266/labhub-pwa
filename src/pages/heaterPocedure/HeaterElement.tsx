@@ -139,7 +139,15 @@ const HeaterElement = () => {
       />
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
       <div className={styles.HeaderTextWrapper}>
-        <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{SETPOINT_TEMPERATURE}</h4>
+        <div style={{display:"flex",flexDirection:"row"}}>
+          <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{SETPOINT_TEMPERATURE} (</h4>
+          <h4
+           className={styles.TempratureDegreeIcon}  
+           style={{
+                  border: `1px solid #000000`,
+                }}>{" "}</h4>
+          <h4>C)</h4>
+        </div>
         <div className={styles.RateMeasureRightSide}>
           <div className={styles.DataMeasureButtom}>
             <button
@@ -232,7 +240,7 @@ const HeaterElement = () => {
             />
             </button>
           </div>
-          <button
+          {/* <button
             aria-label="i button"
             style={{border:"none",outline:"none"}}
             onClick={() => handleIModal(SETPOINT_TEMPERATURE)}
@@ -242,7 +250,7 @@ const HeaterElement = () => {
             className={styles.IButton}
             alt="i icon"
           />
-            </button>
+            </button> */}
         </div>
       </div>
       {isOpen === SETPOINT_TEMPERATURE && isMobile && (
@@ -305,7 +313,7 @@ const HeaterElement = () => {
           </div>
         </div>
         <div aria-label="Power in watt" className={styles.HeaterElementText}>
-          Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(2)} W</span>
+          Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(0)} W</span>
         </div>
       </div>
       {isOpen !== "Heater Element disconnected" && isOpen && <MemberDisconnect
@@ -317,7 +325,7 @@ const HeaterElement = () => {
       {isOpen === "Heater Element disconnected" && <SensorDisconnectModal 
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
-          message= {status?.heaterConnected === "probe" ? "Temperature Probe is Connected!" : "Heater Element isn't Connected!"}
+          message= {status?.heaterConnected === "probe" ? "Temperature Probe is Connected!" : clientId === status?.leaderSelected ? "Heater is disconnected, please connect the heater to start the experiment again." : "Heater is disconnected!"}
       />}
       <RightArrow
         isSelected={

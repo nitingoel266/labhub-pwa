@@ -351,7 +351,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
     if(connected && !hasConnectionEstablished){
       setHasConnectionEstablished(true)
     }else if(!connected && hasConnectionEstablished){
-        applicationMessage.next({type:"info",message:"Device isn't Connected!"})
+        applicationMessage.next({type:"warn",message:"The device has disconnected."})
     }
   },[connected,hasConnectionEstablished]);
 
@@ -410,7 +410,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
               isOpen === "Stop Temperature Probe Experiment" ||
               isOpen === "Stop Temperature Experiment" ||
               isOpen === "Stop Voltage Experiment"
-            ? `Are you sure to ${isOpen}!`
+            ? `Are you sure to ${isOpen}?`
             : (isOpen === "Do you want to save Data?" || isOpen === "Do you want to save Setpoint Temperature?" ? isOpen :  "Are you sure to Disconnect!")
         }
         handleCancel = {() => handleCancelModal()}
@@ -513,7 +513,7 @@ const SecondHeader = ({
         location?.pathname
       ) ? (
         <div className={styles.FistHeaderSubWrapper}>
-          <button 
+         {location.pathname !== "/my-records" && <button 
             style={{outline:"none",border:"none",backgroundColor:"inherit"}}
             onClick={() => (connected ? handleMyRecord() : {})}
           >
@@ -522,8 +522,8 @@ const SecondHeader = ({
             style={{ cursor: "pointer", width: 32,marginTop:2 }}
             alt="my record Icon"
             />
-            </button>
-          <button
+            </button>}
+         {location.pathname !== "/scan-devices" && <button
             style={{outline:"none",border:"none",backgroundColor:"inherit"}}
             onClick={() => (connected ? handleConnectionManager() : {})}
           >
@@ -532,8 +532,8 @@ const SecondHeader = ({
             style={{ cursor: "pointer", width: 25 }}
             alt="connection manager Icon"
             />
-            </button>
-          {connected && clientId !== status?.leaderSelected && (
+            </button>}
+          {connected && status?.leaderSelected && clientId !== status?.leaderSelected && (
             <button 
               style={{outline:"none",border:"none",backgroundColor:"inherit"}}
               onClick={() => handleSync()}
@@ -554,7 +554,7 @@ const SecondHeader = ({
           >
           <img
             src={WhiteShareIcon}
-            style={{ cursor: "pointer", width: 20, marginRight: 5 }}
+            style={{ cursor: "pointer", width: 20,height:20, marginRight: 5 }}
             alt="Share Icon"
             />
             </button>

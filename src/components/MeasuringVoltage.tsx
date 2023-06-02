@@ -1,5 +1,5 @@
 import styles from "../styles/measuringTemprature.module.css";
-import RightArrow from "./RightArrow";
+// import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed } from "../labhub/status";
 import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
@@ -37,14 +37,14 @@ const MeasuringVoltage = () => {
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,voltage}
   const [labels,setLabels] = useState<any>([]);
 
-  const handleSubmit = () => {
-    if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
-      if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
-        setModal("stop");
-      } else if (graphData.length > 0 && !isSaved)
-        setModal("Do you want to save Data?");
-    } else navigate("/function-selection");
-  };
+  // const handleSubmit = () => {
+  //   if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
+  //     if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
+  //       setModal("stop");
+  //     } else if (graphData.length > 0 && !isSaved)
+  //       setModal("Do you want to save Data?");
+  //   } else navigate("/function-selection");
+  // };
   const handleRestart = () => {
     setCheckForLog(1)
     setGraphData([]);
@@ -294,11 +294,11 @@ const MeasuringVoltage = () => {
           <div aria-label="measuring voltage header text" style={{ fontWeight: 500 }}>Measuring Voltage</div>
           <div> </div>
         </div>
-        <div className={styles.SecondaryHeaderWrapper}>
+        {graphData?.length ? <div className={styles.SecondaryHeaderWrapper}>
           <div aria-label="voltage value in volt">
-            Voltage Value : {graphData?.length ? graphData[graphData.length - 1]?.temp + "V" : null}
+            Voltage Value : {graphData[graphData.length - 1]?.temp + "V"}
           </div>
-        </div>
+        </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
             <TemperatureGraph
@@ -315,7 +315,7 @@ const MeasuringVoltage = () => {
                 aria-label="start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
-                    ? setModal(graphData?.length ? "restart" : "start")
+                    ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
@@ -358,7 +358,7 @@ const MeasuringVoltage = () => {
         </div>
         <div className={styles.FooterTextWrapper}>
           <div className={styles.FooterInnerTextWrapper}>
-            <div aria-label="title text">TITLE</div>
+            <div aria-label="file name text">File Name</div>
             <div className={styles.FooterText}>
               {/* <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
                */}
@@ -389,7 +389,7 @@ const MeasuringVoltage = () => {
                 aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
-                    ? setModal(graphData?.length ? "restart" : "start")
+                    ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
@@ -438,18 +438,18 @@ const MeasuringVoltage = () => {
               handleSubmitProcess
               : handleStop
           }
-          message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment.`}
+          message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
           handleCancel = {handleCancelModal}
         />}
         {isOpen === "Voltage Sensor disconnected" && <SensorDisconnectModal 
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
-          message="Voltage Sensor isn't Connected!"
+          message={clientId === status?.leaderSelected ? "Voltage sensor is disconnected, please connect the temperature sensor to start the experiment again." : "Voltage sensor is disconnected."}
         />}
-        <RightArrow
+        {/* <RightArrow
           isSelected={capturePoint?.some((el: number) => el > 0) ? true : false}
           handleSubmit={handleSubmit}
-        />
+        /> */}
       </div>
     </>
   );

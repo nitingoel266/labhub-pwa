@@ -177,7 +177,7 @@ const TabCard = ({
             />
             </button>
         </div>
-        <div className={styles.CardTitleWrapperLeft}>
+        <div className={styles.CardTitleWrapperLeft} style={{marginBottom:20}}>
           <img
             src={TimeIcon}
             style={{ marginRight: 15, width: 20 }}
@@ -194,6 +194,7 @@ const TabCard = ({
             src={BlackShareIcon}
             // onClick={() => setIsOpen(!isOpen)}
             className={styles.FooterIcons}
+            height={20}
             alt="share icon"
           />
           </button>

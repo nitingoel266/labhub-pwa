@@ -1,5 +1,5 @@
 import {useAppMessage,applicationMessage} from "../../labhub/status";
-import {WhiteWarningIcon} from "../../images/index";
+// import {WhiteWarningIcon} from "../../images/index";
 import styles from '../../styles/Loader.module.css';
 
 
@@ -28,7 +28,7 @@ const ShowErrorModal = () => {
     >
         <div className={styles.TextContainer}>
                 <div className={styles.ErrorHeadertext} style={messageColor}>
-                    <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/>
+                    {/* <img src={WhiteWarningIcon} style={{width:20,marginRight:10}} alt="warning icon"/> */}
                     <h4>{messageType && getMessageType[messageType]}</h4>
                 </div>
                 <div className={styles.ErrorBodyWrapper}>

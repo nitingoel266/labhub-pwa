@@ -24,9 +24,9 @@ const MEASURE = "Measure";
 const HIGHLIGHT_BACKGROUND:any = {backgroundColor:"#9CD5CD"};
 
 const getDataRate:any = {"1 SEC":1, '5 SEC':5, "10 SEC":10,'30 SEC':30,"1 MIN":60, "10 MIN":600 ,'30 MIN': 1800 ,'1 HOUR': 3600,'USER':'user'};
-const getDataSample:any = {5:5,10:10,25:25,50:50,100:100,200:200,"CONT":'cont'};
+const getDataSample:any = {5:5,10:10,25:25,50:50,100:100,200:200,"Continuous":'cont'};
 const dataRateOption:any =['1 SEC','5 SEC','10 SEC','30 SEC','1 MIN','10 MIN','30 MIN','1 HOUR','USER'];
-const dataSampleOption:any = [5,10,25,50,100,200,'CONT'];
+const dataSampleOption:any = [5,10,25,50,100,200,'Continuous'];
 
 const getDescription = (item:string) => {
     let result

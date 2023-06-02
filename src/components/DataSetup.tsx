@@ -28,14 +28,14 @@ const DataSetup = () => {
                     rate = one;
                 }
             }
-            setDataSetup({dataRate:rate,dataSample:status?.setupData?.dataSample === 'cont' ? 'CONT' : status?.setupData?.dataSample})
+            setDataSetup({dataRate:rate,dataSample:status?.setupData?.dataSample === 'cont' ? 'Continuous' : status?.setupData?.dataSample})
         }
     },[status?.setupData?.dataRate,status?.setupData?.dataSample])
 
     const handleSubmit = () => {
         setupData({ dataRate:getDataRate[dataSetup.dataRate], dataSample: getDataSample[dataSetup.dataSample]})
         // setSelectedFunction(null)
-        toastMessage.next("Data successfully saved!")
+        toastMessage.next("Data configured successfully!")
         navigate(-1)
     }
     const handleDataSetup = (value:any) => {
@@ -80,7 +80,7 @@ const DataSetup = () => {
         </div>
         {isOpen === NO_OF_SAMPLES && isMobile && <IButtonComponent title={NO_OF_SAMPLES} description={getDescription(NO_OF_SAMPLES)} marginTop = {5}/>}
         <div aria-label={NO_OF_SAMPLES + "picker"} className={styles.DataRateWapper}>
-            <WheelPicker data={dataSampleOption.map((el:any,index:number) => ({id:`${index}`,value:el}))} selectedId={`${dataSampleOption.indexOf(dataSetup?.dataSample)}`} handleData={(value:any) => handleDataSetup({dataSample:value === 'CONT' ? value : Number(value)})}/>
+            <WheelPicker data={dataSampleOption.map((el:any,index:number) => ({id:`${index}`,value:el}))} selectedId={`${dataSampleOption.indexOf(dataSetup?.dataSample)}`} handleData={(value:any) => handleDataSetup({dataSample:value === 'Continuous' ? value : Number(value)})}/>
         </div>
         <RightArrow isSelected={(getDataRate[dataSetup.dataRate] !== status?.setupData?.dataRate || getDataSample[dataSetup.dataSample] !== status?.setupData?.dataSample) && isLeader ? true : false} handleSubmit = {handleSubmit}/>
         {!isMobile && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}

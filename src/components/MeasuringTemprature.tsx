@@ -1,5 +1,5 @@
 import styles from "../styles/measuringTemprature.module.css";
-import RightArrow from "./RightArrow";
+// import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed } from "../labhub/status";
 import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
@@ -39,14 +39,14 @@ const MeasuringTemprature = () => {
   const [maxTempValue,setMaxTempValue] = useState<number>(50)
   const [labels,setLabels] = useState<any>([]);
 
-  const handleSubmit = () => {
-    if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
-      if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
-        setModal("stop");
-      } else if (graphData.length > 0 && !isSaved)
-        setModal("Do you want to save Data?");
-    }else navigate("/function-selection");
-  };
+  // const handleSubmit = () => {
+  //   if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
+  //     if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
+  //       setModal("stop");
+  //     } else if (graphData.length > 0 && !isSaved)
+  //       setModal("Do you want to save Data?");
+  //   }else navigate("/function-selection");
+  // };
   const handleRestart = () => {
     setCheckForLog(1)
     setGraphData([]);
@@ -312,7 +312,6 @@ const MeasuringTemprature = () => {
                 color: tempratureUnit === "c" ? "#FFFFFF" : "#000000",
               }}
             >
-              <div style={{fontSize:14}}>C</div>
               <div
                 className={styles.TempratureDegreeIcon}
                 style={{
@@ -323,6 +322,7 @@ const MeasuringTemprature = () => {
               >
                 {" "}
               </div>
+              <div style={{fontSize:14}}>C</div>
             </button>
             <button
               aria-label="Degree farahenit button"
@@ -333,8 +333,7 @@ const MeasuringTemprature = () => {
                 color: tempratureUnit === "f" ? "#FFFFFF" : "#000000",
               }}
             >
-              <div style={{fontSize:14}}>F</div>
-              <div
+                <div
                 className={styles.TempratureDegreeIcon}
                 style={{
                   border: `1px solid ${
@@ -344,14 +343,15 @@ const MeasuringTemprature = () => {
               >
                 {" "}
               </div>
+              <div style={{fontSize:14}}>F</div>
             </button>
           </div>
         </div>
-        <div className={styles.SecondaryHeaderWrapper}>
+        {graphData?.length ? <div className={styles.SecondaryHeaderWrapper}>
           <div aria-label="Temperature value">Temperature Value : {tempratureUnit === 'f' && graphData[graphData.length - 1]?.temp ? ((9 / 5) * graphData[graphData.length - 1]?.temp + 32).toFixed(1) : graphData[graphData.length - 1]?.temp}</div>
-          {graphData?.length ? <div className={styles.DegreeStyle}> </div> : null}
-          {graphData?.length ? <div aria-label={"in degree "+ tempratureUnit.toUpperCase()}>{tempratureUnit.toUpperCase()}</div> : null}
-        </div>
+          <div className={styles.DegreeStyle}> </div>
+          <div aria-label={"in degree "+ tempratureUnit.toUpperCase()}>{tempratureUnit.toUpperCase()}</div>
+        </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
             <TemperatureGraph
@@ -370,7 +370,7 @@ const MeasuringTemprature = () => {
                 aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
-                    ? setModal(status?.operation === "measure_temperature" ? "restart" : "start")
+                    ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
@@ -413,7 +413,7 @@ const MeasuringTemprature = () => {
         </div>
         <div className={styles.FooterTextWrapper}>
           <div className={styles.FooterInnerTextWrapper}>
-            <div aria-label="title sub header">TITLE</div>
+            <div aria-label="File name sub header">File Name</div>
             <div className={styles.FooterText}>
               <input type="text" value={title} onChange={(e) =>setTitle(e.target.value)} style={{outline:"none",border:"none"}} />
               {/* <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div> */}
@@ -443,7 +443,7 @@ const MeasuringTemprature = () => {
                 aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
-                    ? setModal(status?.operation === "measure_temperature" ? "restart" : "start")
+                    ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
@@ -492,18 +492,18 @@ const MeasuringTemprature = () => {
                 handleSubmitProcess
               : handleStop
           }
-          message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment.`}
+          message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
           handleCancel = {handleCancelModal}
         />}
         {isOpen === "Temperature Sensor disconnected" && <SensorDisconnectModal 
            isOpen={isOpen ? true : false}
            setModal={(value) => handleSensorDisconnected(value)}
-           message="Temperature Sensor isn't Connected!"
+           message= {clientId === status?.leaderSelected ? "Temperature sensor is disconnected, please connect the temperature sensor to start the experiment again." : "Temperature sensor is disconnected."}
         />}
-        <RightArrow
+        {/* <RightArrow
           isSelected={capturePoint?.some((el: number) => el > 0) ? true : false}
           handleSubmit={handleSubmit}
-        />
+        /> */}
       </div>
     </>
   );

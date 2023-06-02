@@ -8,12 +8,12 @@ const Data_Rate = "Choose your desired data sampling rate: 1 s, 5 s, 10 s, 30 s,
 const Number_of_samples = "Choose the number of samples to take: 5, 10, 	25, 50, 100, 200, CONT (no set endpoint).";
 const Heater_Element = "This mode requires you to choose which sensors to use and to set sampling rate and other data collection parameters.";
 const Temperature_Probe = "This mode is currently contains no any parameters.";
-const Setpoint_Temperature = "....";
+const Setpoint_Temperature = "This step setpoint to the temperature.";
 const Measure_Absorbance = "This step measures the RGB absorption levels for a sample.";
 const Calibrate_Spectrophotometer = "This important initial step calibrates the spectrophotometer to whatever is in the reference cuvette.";
-const Calibrate = "......";
+const Calibrate = "This important initial step calibrates the spectrophotometer to whatever is in the reference cuvette.";
 const Test_Calibrate = "This step retests the reference cuvette to check that the RGB calibration was successful.";
-const Measure = "Measure Measure"
+const Measure = "This step measures the RGB absorption levels for a sample"
 
 const IButtonContent:any = {
     Manual_Mode,

@@ -38,11 +38,11 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
                 </div>
                 <div className={styles.BodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <p className={styles.BodyPrimaryText}>Selected Device does not have a leader. Press Yes to become a Leader</p>
+                        <p className={styles.BodyPrimaryText}>Selected Device does not have a Leader. Press Yes to become a Leader</p>
                         {/* <div className={styles.BodySecondaryText}>Press <span style={{fontWeight:500}}>Yes</span> to become a Leader</div> */}
                     </div>
                     <div className={styles.ButtonWrapper}>
-                        <button onClick={() => setModal(false)} className={styles.CancelButton}>Cancel</button>
+                        <button onClick={() => setModal(false)} className={styles.CancelButton}>No</button>
                         <button onClick={submitHandler} className={styles.YesButton}>Yes</button>
                     </div>
                 </div>

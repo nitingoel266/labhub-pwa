@@ -104,11 +104,12 @@ function App() {
       </main>
       <div className={styles.version}>
         {connected ? (
-          <span>Firmware version: {status?.deviceVersion || "NA"} (
-            {process.env.REACT_APP_ENV === 'prod' ? pkgVersion : (
+          <span>Firmware version: {status?.deviceVersion || "NA"} {process.env.REACT_APP_ENV !== 'prod' && "("}
+            {process.env.REACT_APP_ENV !== 'prod' ? /* pkgVersion : */  (
               <Link to='/test'>{pkgVersion}</Link>
-            )}
-          )</span>
+            ) : null}
+            {process.env.REACT_APP_ENV !== 'prod' && ")"}
+          </span>
         ) : (
           <span>App version: {pkgVersion}</span>
         )}

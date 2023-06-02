@@ -1,5 +1,5 @@
 import styles from "../styles/measuringTemprature.module.css";
-import RightArrow from "./RightArrow";
+// import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed } from "../labhub/status";
 import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
@@ -8,7 +8,7 @@ import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
 import {getVoltageLog} from "../labhub/actions-client";
 import {
-  getFileName,
+  getTitle,
   getDate,
   getTime,
   validateFileName,
@@ -27,6 +27,7 @@ const MeasuringVoltage = () => {
   const navigate = useNavigate();
   const [dataStream] = useDeviceDataFeed();
   const [dataSetup] = useState(status?.setupData);
+  const [title,setTitle] = useState<any>(getTitle("V", clientId,status));
   const [isOpen, setModal] = useState<string>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
@@ -34,15 +35,16 @@ const MeasuringVoltage = () => {
   const [checkForLog,setCheckForLog] = useState<any>(0)
 
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,voltage}
+  const [labels,setLabels] = useState<any>([]);
 
-  const handleSubmit = () => {
-    if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
-      if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
-        setModal("stop");
-      } else if (graphData.length > 0 && !isSaved)
-        setModal("Do you want to save Data?");
-    } else navigate("/function-selection");
-  };
+  // const handleSubmit = () => {
+  //   if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
+  //     if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
+  //       setModal("stop");
+  //     } else if (graphData.length > 0 && !isSaved)
+  //       setModal("Do you want to save Data?");
+  //   } else navigate("/function-selection");
+  // };
   const handleRestart = () => {
     setCheckForLog(1)
     setGraphData([]);
@@ -82,14 +84,15 @@ const MeasuringVoltage = () => {
       }
     }
     if(resultVoltage.length > 0){
-        let fileName = "V" + getFileName();
-        if (clientId === status?.leaderSelected) {
-        // for leader
-        fileName += "L";
-        } else if (clientId) {
-        fileName +=
-            "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
-        }
+        // let fileName = "V" + getFileName();
+        // if (clientId === status?.leaderSelected) {
+        // // for leader
+        // fileName += "L";
+        // } else if (clientId) {
+        // fileName +=
+        //     "M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+        // }
+        let fileName = title;
         let verifiedFileName = validateFileName(
         getStorageKeys(VOLTAGE_DATA),
         fileName
@@ -250,7 +253,34 @@ const MeasuringVoltage = () => {
       }else navigate("/function-selection")
     }
   },[status?.setupData,dataSetup,clientId,status?.leaderSelected,capturePoint,isSaved,navigate])
-  
+
+  useEffect(() => { // set x axis of graph
+    let maxTime = labels?.length > 0 ? labels[labels?.length -1] : 60;
+    if(graphData?.length === 0){
+      let rate = typeof status?.setupData?.dataRate === "number" ? status?.setupData?.dataRate : 1;
+        let initialLabels = []
+      for(let i=0;i<=(rate > 60 ? rate : 60);i=i+rate){
+        initialLabels.push(Number(i))
+      }
+      if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
+      setLabels(initialLabels)
+    }else if(graphData?.length > 0 && ((Number(graphData[graphData.length -1]?.time) / maxTime)*100) >= 80){
+      let rate = typeof status?.setupData?.dataRate === "number" ? status?.setupData?.dataRate : 1;
+      let initialLabels = [...labels]
+      for(let i= maxTime + rate ;i<=(Number(Number(Number(graphData[graphData.length -1]?.time) * 1.3).toFixed(0)));i=i+rate){
+        initialLabels.push(Number(i))
+      }
+      if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
+      setLabels(initialLabels)
+    }
+  },[status?.setupData?.dataRate,graphData,labels])
+
+  useEffect(() => { // verify filename is exist or not in storage
+    if(title && localStorage.getItem(`${VOLTAGE_DATA}_${title}`)){
+      toastMessage.next("File name already exists!")
+    }
+  },[title])
+
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
@@ -264,11 +294,11 @@ const MeasuringVoltage = () => {
           <div aria-label="measuring voltage header text" style={{ fontWeight: 500 }}>Measuring Voltage</div>
           <div> </div>
         </div>
-        <div className={styles.SecondaryHeaderWrapper}>
+        {graphData?.length ? <div className={styles.SecondaryHeaderWrapper}>
           <div aria-label="voltage value in volt">
-            Voltage Value : {graphData[graphData.length - 1]?.temp || 0}V
+            Voltage Value : {graphData[graphData.length - 1]?.temp + "V"}
           </div>
-        </div>
+        </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
             <TemperatureGraph
@@ -276,6 +306,7 @@ const MeasuringVoltage = () => {
               showPoint={status?.setupData?.dataRate === "user" ? false : true}
               capturePoint={capturePoint}
               title={"Voltage"}
+              labels={labels}
             />
           </div>
           {window.innerWidth > mobileWidth ? (
@@ -284,7 +315,7 @@ const MeasuringVoltage = () => {
                 aria-label="start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
-                    ? setModal(graphData?.length ? "restart" : "start")
+                    ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
@@ -327,9 +358,11 @@ const MeasuringVoltage = () => {
         </div>
         <div className={styles.FooterTextWrapper}>
           <div className={styles.FooterInnerTextWrapper}>
-            <div aria-label="title text">TITLE</div>
+            <div aria-label="file name text">File Name</div>
             <div className={styles.FooterText}>
-              <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
+              {/* <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
+               */}
+              <input type="text" value={title} onChange={(e) =>setTitle(e.target.value)} style={{outline:"none",border:"none"}} />
               <button
                aria-label="save button"
                 className={styles.SaveButton}
@@ -356,7 +389,7 @@ const MeasuringVoltage = () => {
                 aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
-                    ? setModal(graphData?.length ? "restart" : "start")
+                    ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
@@ -405,18 +438,18 @@ const MeasuringVoltage = () => {
               handleSubmitProcess
               : handleStop
           }
-          message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment.`}
+          message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
           handleCancel = {handleCancelModal}
         />}
         {isOpen === "Voltage Sensor disconnected" && <SensorDisconnectModal 
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
-          message="Voltage Sensor isn't Connected!"
+          message={clientId === status?.leaderSelected ? "Voltage sensor is disconnected, please connect the temperature sensor to start the experiment again." : "Voltage sensor is disconnected."}
         />}
-        <RightArrow
+        {/* <RightArrow
           isSelected={capturePoint?.some((el: number) => el > 0) ? true : false}
           handleSubmit={handleSubmit}
-        />
+        /> */}
       </div>
     </>
   );

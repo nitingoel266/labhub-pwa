@@ -6,14 +6,14 @@ import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
 import {mobileWidth,getDescription,CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
-import { calibrateRgb } from '../../labhub/actions';
-import {getClientId} from "../../labhub/utils";
-import { useDeviceStatus } from '../../labhub/status';
+// import { calibrateRgb } from '../../labhub/actions';
+// import {getClientId} from "../../labhub/utils";
+// import { useDeviceStatus } from '../../labhub/status';
 
 const InsertReferenceCuvette = () => {
-    const clientId = getClientId()
+    // const clientId = getClientId()
     const navigate = useNavigate();
-    const [status] = useDeviceStatus();
+    // const [status] = useDeviceStatus();
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
@@ -26,8 +26,8 @@ const InsertReferenceCuvette = () => {
 
     const handleSubmit = () => {
         if(selectedItem){
-            if(clientId === status?.leaderSelected)
-               calibrateRgb()
+            // if(clientId === status?.leaderSelected)
+            //    calibrateRgb()
             navigate("/spectrophotometer-calibration")
         }
 

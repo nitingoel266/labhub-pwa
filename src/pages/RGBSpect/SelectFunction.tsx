@@ -61,7 +61,7 @@ const SelectFunction = () => {
              </div>
             ))}
             </div>
-        {isOpen && <MemberDisconnect isOpen={isOpen === "measure before Calibrating" ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'measure before Calibrating' ? handleSubmit : handleSubmit} message={isOpen === "measure before Calibrating" ? "Are you sure you want to measure before Calibrating?" : `Do you want to ${isOpen} the experiment.`}/>}
+        {isOpen && <MemberDisconnect isOpen={isOpen === "measure before Calibrating" ? true : false} setModal = {(value) =>setModal(value)} handleDisconnect={isOpen === 'measure before Calibrating' ? handleSubmit : handleSubmit} message={isOpen === "measure before Calibrating" ? "Are you sure you want to proceed without calibrating?" : `Do you want to ${isOpen} the experiment.`}/>}
         <RightArrow isSelected={selectedItem ? true : false} handleSubmit={handleFunctions}/>
         {!isMobile && isOpen && <IButtonModal isOpen={isOpen && isOpen !== 'measure before Calibrating' ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>

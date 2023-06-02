@@ -70,7 +70,7 @@ const ScanDevices = () => {
             {connected && status?.leaderSelected && <RightArrow isSelected={!isConnected && status?.leaderSelected ? true : false} handleSubmit={handleRightArrow}/>}
             {isConnected && <img src={LoaderImage} style={{width:70}} alt="loader gif"/>}
         </div>
-        {isOpen && isOpen !== "Device isn't Connected!" && <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "resetConnection" ? resetConnection : handleDisconnectDevice} message={isOpen === "resetConnection" ? "Do you want to connect to another device?" : `Are you sure to Disconnect from <strong style="white-space: nowrap;">${status?.deviceName}</strong>!`}/>}
+        {isOpen && isOpen !== "Device isn't Connected!" && <MemberDisconnect isOpen={isOpen ? true : false} setModal={(value) => setModal(value)} handleDisconnect={isOpen === "resetConnection" ? resetConnection : handleDisconnectDevice} message={isOpen === "resetConnection" ? "Do you want to connect to another device?" : `Are you sure you want to disconnect from <strong style="white-space: nowrap;">${status?.deviceName}</strong>?`}/>}
     </div>
 }
 

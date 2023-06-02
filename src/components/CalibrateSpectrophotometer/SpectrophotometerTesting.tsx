@@ -45,7 +45,11 @@ const SpectrophotometerTesting = () => {
         startRgbExperiment();
         setTestCalibrate([]);
       }
-    } else setModal("measure now");
+    } else {
+      if(clientId === status?.leaderSelected)
+      setModal("measure now");
+      else navigate("/measure-absorbance");
+    }
   };
   const handleIModal = (title: string) => {
     if (isOpen === title) setModal("");

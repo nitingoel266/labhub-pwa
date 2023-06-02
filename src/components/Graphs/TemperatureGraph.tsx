@@ -26,18 +26,20 @@ ChartJS.register(
   zoomPlugin
 );
 type Props = {
-  data: { id: number; x: number; y: number }[];
+  data: { time: number; temp: number;}[];
   showPoint: boolean;
   capturePoint:any;
   title?:string;
   temperatureUnit ? :string;
+  maxTempValue ? : number;
+  labels ?: [];
 };
 
-const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,temperatureUnit='c'}: Props) => {
+const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,temperatureUnit='c',maxTempValue,labels}: Props) => {
   const [enableZoom, setEnableZoom] = useState<boolean>(true);
-
+  const yAxisScale =  title === "Voltage"  ? {min: -12,max: 12,stepSize:1} : {min:0,max:maxTempValue ? maxTempValue : 50};
   const chatData = {
-    labels: data.map((el: any) => el.time),
+    labels: labels ? labels : data.map((el: any) => el.time),
     datasets: [
       {
         label: title,
@@ -72,6 +74,7 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
         grid: {
           display: false,
         },
+        ...yAxisScale
       },
     },
     // maintainAspectRatio: false,

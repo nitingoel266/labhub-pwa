@@ -29,8 +29,10 @@ const SpectrophotometerCalibration = () => {
     const handleSubmit = () => {
         if(selectedItem){
             setSelectedItem("")
-            if(clientId === status?.leaderSelected)
-            calibrateRgb()
+            if(clientId === status?.leaderSelected){
+                setCalibrate(null)
+                calibrateRgb()
+            }
         }else navigate("/calibration-testing") 
 
     }
@@ -47,6 +49,7 @@ const SpectrophotometerCalibration = () => {
             setCalibrate(status?.rgbCalibrated)
         }
     },[status, status?.rgbCalibrated])
+
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
@@ -62,19 +65,19 @@ const SpectrophotometerCalibration = () => {
         <div className={styles.BodyWrapper}>
             <div aria-label='RED ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyRedBoll}>
-                    {calibrate !== null && <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
+                    {calibrate && <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Red</div>
             </div>
             <div aria-label='green ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyGreenBoll}>
-                    {calibrate !== null &&  <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
+                    {calibrate &&  <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Green</div>
             </div>
             <div aria-label='blue ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyBlueBoll}>
-                    {calibrate !== null && <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
+                    {calibrate && <img src={calibrate ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Blue</div>
             </div>

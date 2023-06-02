@@ -224,7 +224,7 @@ const MyRecordList = () => {
             />
           ))}
       </div>
-      {isEditOpen && <EditFileModal isOpen = {isEditOpen} setEditModal ={(value:any) => setEditModal(value)} EditFileName={EditFileName} />}
+      {isEditOpen && <EditFileModal isOpen = {isEditOpen} setEditModal ={(value:any) => setEditModal(value)} EditFileName={EditFileName} selectedButton = {selectedButton}/>}
       {isOpen && <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}

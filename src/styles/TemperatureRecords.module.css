@@ -12,6 +12,14 @@
     width: 200px;
     margin-right: 10px;
 }
+.TempratureDegreeIcon {
+    height: 2px;
+    width: 2px;
+    border-radius: 100px;
+    margin-left: 4px;
+    margin-bottom: 10px;
+    border: 1px solid #FFFFFF;
+}
 .ColumnHeader {
     background-color: #424C58;
     color: #FFFFFF;

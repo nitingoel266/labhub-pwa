@@ -468,7 +468,7 @@ const FirstHeader = ({
         </div>
       </div>
       <div className={styles.BatteryWapper} title={(status?.batteryLevel || 0)+"%"}>
-        <div style={{marginRight:5,color:"#FFFFFF",fontSize:14}}>75%</div>
+        <div style={{marginRight:5,color:"#FFFFFF",fontSize:14}}>{status?.batteryLevel || 0}%</div>
         <div className={styles.BatteryInnerWapper}>
           <div style={unFilledStyle}></div>
           <div style={filledStyle}></div>

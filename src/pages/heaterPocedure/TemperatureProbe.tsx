@@ -2,7 +2,7 @@ import styles from "../../styles/temperatureProbe.module.css";
 import {
   ExpandIcon,
   CollapsedIcon,
-  BlackIButtonIcon,
+  // BlackIButtonIcon,
   HeaterIcon,
   HeaterAnimation,
 } from "../../images/index";
@@ -90,10 +90,10 @@ const TemperatureProbe = () => {
       }
     }
   };
-  const handleIModal = (title: string) => {
-    if (isOpen === title) setModal("");
-    else setModal(title);
-  };
+  // const handleIModal = (title: string) => {
+  //   if (isOpen === title) setModal("");
+  //   else setModal(title);
+  // };
 
   const handleSensorDisconnected = (value:any) => {
     setModal(value)

@@ -1,7 +1,7 @@
 import {
   ExpandIcon,
   CollapsedIcon,
-  BlackIButtonIcon,
+  // BlackIButtonIcon,
   HeaterIcon,
   HeaterAnimation,
 } from "../../images/index";
@@ -89,10 +89,10 @@ const HeaterElement = () => {
       }
     }
   };
-  const handleIModal = (title: string) => {
-    if (isOpen === title) setModal("");
-    else setModal(title);
-  };
+  // const handleIModal = (title: string) => {
+  //   if (isOpen === title) setModal("");
+  //   else setModal(title);
+  // };
 
   const handleSensorDisconnected = (value:any) => {
     setModal(value)

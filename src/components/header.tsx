@@ -351,9 +351,9 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
     if(connected && !hasConnectionEstablished){
       setHasConnectionEstablished(true)
     }else if(!connected && hasConnectionEstablished){
-        applicationMessage.next({type:"warn",message:"The device has disconnected."})
+        applicationMessage.next({type:"info",message:`The device ${status?.deviceName} has disconnected.`})
     }
-  },[connected,hasConnectionEstablished]);
+  },[connected,hasConnectionEstablished,status?.deviceName]);
 
   // useEffect(() => { // setScreen name as a leader for sync for member
   //   if(clientId === status?.leaderSelected){
@@ -427,15 +427,15 @@ const FirstHeader = ({
   clientId,
   connected,
 }: FirstHeaderProps) => {
-  const filledStyle = {
-    flex: `${connected ? status?.batteryLevel : 0}%`,
-    backgroundColor: status?.batteryLevel > 10 ? "#79D179" : "	#FF0000",
-  };
-  const unFilledStyle = {
-    flex: `${connected ? 100 - status?.batteryLevel : 100}%`,
-    backgroundColor:
-      connected && status?.batteryLevel > 10 ? "#FFC0CB" : "#FFFFFF",
-  };
+  // const filledStyle = {
+  //   flex: `${connected ? status?.batteryLevel : 0}%`,
+  //   backgroundColor: status?.batteryLevel > 10 ? "#79D179" : "	#FF0000",
+  // };
+  // const unFilledStyle = {
+  //   flex: `${connected ? 100 - status?.batteryLevel : 100}%`,
+  //   backgroundColor:
+  //     connected && status?.batteryLevel > 10 ? "#FFC0CB" : "#FFFFFF",
+  // };
   return (
     <div className={styles.FistHeaderWrapper}>
       <div className={styles.FistHeaderSubWrapper}>
@@ -468,10 +468,11 @@ const FirstHeader = ({
         </div>
       </div>
       <div className={styles.BatteryWapper} title={(status?.batteryLevel || 0)+"%"}>
-        <div style={{marginRight:5,color:"#FFFFFF",fontSize:14}}>75%</div>
+        <div style={{marginRight:5,color:"#FFFFFF",fontSize:14}}>{status?.batteryLevel || 0}%</div>
         <div className={styles.BatteryInnerWapper}>
-          <div style={unFilledStyle}></div>
-          <div style={filledStyle}></div>
+          <div style={{backgroundColor:"#79D179",flex:1}}></div>
+          {/* <div style={unFilledStyle}></div>
+          <div style={filledStyle}></div> */}
           <img
             src={BatteryIcon}
             className={styles.BatteryIcon}
@@ -498,7 +499,7 @@ const SecondHeader = ({
   const location = useLocation();
   return (
     <div className={styles.SecondHeaderWrapper}>
-      <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={location?.pathname === "/scan-devices" ? () => {} : handleBack}>
+     {location?.pathname !== "/scan-devices" ? <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={location?.pathname === "/scan-devices" ? () => {} : handleBack}>
       <img
         src={BackIcon}
         style={{
@@ -508,7 +509,7 @@ const SecondHeader = ({
         }}
         alt="Back Icon"
       />
-      </button>
+      </button> : <div></div>}
       {!["/temperature-records", "/voltage-records", "/rgb-records"].includes(
         location?.pathname
       ) ? (

@@ -38,7 +38,7 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
                 </div>
                 <div className={styles.BodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <p className={styles.BodyPrimaryText}>Selected Device does not have a Leader. Press Yes to become a Leader</p>
+                        <p className={styles.BodyPrimaryText}>Selected Device does not have a leader. Press Yes to become a leader</p>
                         {/* <div className={styles.BodySecondaryText}>Press <span style={{fontWeight:500}}>Yes</span> to become a Leader</div> */}
                     </div>
                     <div className={styles.ButtonWrapper}>

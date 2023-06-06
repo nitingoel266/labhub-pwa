@@ -42,18 +42,33 @@ const getCharacteristicName = (characteristicUuid: number | string) => {
 
 export const getValueFromDataView = (val: DataView | ArrayBuffer, valueType: 'int8' | 'int16' | 'string' | 'buffer', byteOffset?: number) => {
   // In Chrome 50+, a DataView is returned instead of an ArrayBuffer.
-  const dataView = (val as DataView).buffer ? (val as DataView) : new DataView(val as ArrayBuffer);
+  let dataView: DataView;
+  let logMsg;
+  if ((val as DataView).buffer) {
+    dataView = val as DataView;
+    logMsg = `[getValueFromDataView] Already a DataView; byteLength: ${dataView.byteLength} [${valueType}] [${byteOffset}]`;
+  } else {
+    dataView = new DataView(val as ArrayBuffer);
+    logMsg = `[getValueFromDataView] Created DataView from ArrayBuffer; byteLength: ${dataView.byteLength} [${valueType}] [${byteOffset}]`;
+  }
 
   let value: number | string | ArrayBuffer;
-  if (valueType === 'int8') {
-    value = dataView.getUint8(byteOffset ?? 0);
-  } else if (valueType === 'int16') {
-    value = dataView.getUint16(byteOffset ?? 0, /*littleEndian=*/true);
-  } else if (valueType === 'string') {
-    value = decoder.decode(dataView);
-  } else {
-    value = dataView.buffer;
+
+  try {
+    if (valueType === 'int8') {
+      value = dataView.getUint8(byteOffset ?? 0);
+    } else if (valueType === 'int16') {
+      value = dataView.getUint16(byteOffset ?? 0, /*littleEndian=*/true);
+    } else if (valueType === 'string') {
+      value = decoder.decode(dataView);
+    } else {
+      value = dataView.buffer;
+    }  
+  } catch (e) {
+    Log.debug(logMsg);
+    throw e;
   }
+
   return value;
 };
 

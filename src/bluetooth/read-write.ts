@@ -23,6 +23,7 @@ export async function getCachedCharacteristic(
     const key = `${server.device.id}.${getShortHexCode(serviceId)}.${getShortHexCode(characteristicId)}`;
     const cachedValue = characteristicsCache.get(key);
     if (cachedValue) {
+      Log.debug(`getCachedCharacteristic(): cache hit! [${key}]`);
       return cachedValue;
     }
 
@@ -40,6 +41,8 @@ export async function getCachedCharacteristic(
 
     characteristic = await service.getCharacteristic(characteristicId);
     characteristicsCache.set(key, characteristic);
+
+    Log.debug(`getCachedCharacteristic(): cache miss. [${key}]`);
   } catch (e) {
     Log.error("[ERROR:getCachedCharacteristic]", e);
   }

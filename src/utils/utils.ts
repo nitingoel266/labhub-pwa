@@ -18,10 +18,11 @@ export const isLocalhost = Boolean(
     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
 
-export function timeoutPromise<T>(pr: Promise<any>, duration: number): Promise<T> {
+export function timeoutPromise<T>(pr: Promise<any>, duration: number, msg?: string): Promise<T> {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
-      reject('timeoutPromise(): Promise timed out!');
+      const timeoutMsg = msg ? `${msg} timeout` : 'Promise timed out';
+      reject(`[Timeout] ${timeoutMsg}!`);
     }, duration);
     pr.then(value => {
       clearTimeout(timeout);

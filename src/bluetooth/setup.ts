@@ -130,9 +130,10 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
       const timeout = setTimeout(() => {
         isTimedOut = true;
         Log.error('[ERROR:initSetup] bluetooth.getAvailability() timeout!');
-        if (!autoReconnect) applicationMessage.next('Bluetooth timeout!');
+        // if (!autoReconnect)
+        applicationMessage.next('Bluetooth timeout!');
         resolve(false);
-      }, 1000);
+      }, 10000);
       navigator.bluetooth.getAvailability().then(status => {
         clearTimeout(timeout);
         resolve(status);

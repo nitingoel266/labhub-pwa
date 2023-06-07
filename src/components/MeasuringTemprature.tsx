@@ -135,7 +135,8 @@ const MeasuringTemprature = () => {
     const getTemperatureData = async () =>{
     if (
       status?.sensorConnected === "temperature" &&
-      dataStream?.sensor /* &&
+      dataStream?.sensor && 
+      dataStream?.sensor?.temperature !== null/* &&
       clientId === status?.leaderSelected */
     ) {
       if(clientId !== status?.leaderSelected && dataStream?.sensor?.temperatureIndex === 0){

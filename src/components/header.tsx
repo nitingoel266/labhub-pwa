@@ -44,6 +44,9 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   const [hasConnectionEstablished,setHasConnectionEstablished] = useState(false);
   const [onClick, setOnClick] = useState("");
 
+  const [deviceName, setDeviceName] = useState("");
+
+
   const [screenName, setScreenName] = useState("");
 
   const handleBack = () => {
@@ -350,10 +353,12 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   useEffect(() => {
     if(connected && !hasConnectionEstablished){
       setHasConnectionEstablished(true)
+      if(status?.deviceName)
+      setDeviceName(status?.deviceName)
     }else if(!connected && hasConnectionEstablished){
-        applicationMessage.next({type:"info",message:`The device ${status?.deviceName} has disconnected.`})
+        applicationMessage.next({type:"info",message:`The ${deviceName} device has been disconnected.`})
     }
-  },[connected,hasConnectionEstablished,status?.deviceName]);
+  },[connected,hasConnectionEstablished,status?.deviceName,deviceName]);
 
   // useEffect(() => { // setScreen name as a leader for sync for member
   //   if(clientId === status?.leaderSelected){

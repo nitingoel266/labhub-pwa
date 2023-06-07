@@ -46,7 +46,7 @@ const EditFileModal = ({isOpen,setEditModal,EditFileName,selectedButton}:Props) 
                 </div>
                 <div className={styles.FooterWrapper}>
                     <button onClick={() => setEditModal("")} className={styles.CancelButton}>Cancel</button>
-                    <button onClick={() => EditFileName(isOpen,fileName)} className={styles.UpdateButton}>Update</button>
+                    <button onClick={() => EditFileName(isOpen,fileName)} className={styles.UpdateButton}>Rename</button>
                 </div>
             </div>
         </div>

@@ -195,7 +195,7 @@ const AbsorbanceMeasuring = () => {
       </div>
       <div className={styles.FooterTextWrapper}>
         <div className={styles.FooterInnerTextWrapper}>
-          <div aria-label="TITLE sub header">TITLE</div>
+          <div aria-label="TITLE sub header" style={{fontWeight:600}}>File Name</div>
           <div className={styles.FooterText}>
             <input type="text" value={title} onChange={(e) =>setTitle(e.target.value)} style={{outline:"none",border:"none"}} />
             {/* <div aria-label="file format T0918564122-1123-7T09185">T0918564122-1123-7T09185...</div> */}

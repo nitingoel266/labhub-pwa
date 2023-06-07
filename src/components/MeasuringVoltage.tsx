@@ -134,7 +134,8 @@ const MeasuringVoltage = () => {
     const getVoltageData = async () =>{
     if (
       status?.sensorConnected === "voltage" &&
-      dataStream?.sensor //&&
+      dataStream?.sensor && 
+      dataStream?.sensor?.voltage !== null//&&
       // clientId === status?.leaderSelected
     ) {
       if(clientId !== status?.leaderSelected && dataStream?.sensor?.voltageIndex === 0){

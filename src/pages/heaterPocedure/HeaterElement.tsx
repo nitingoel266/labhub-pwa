@@ -116,7 +116,7 @@ const HeaterElement = () => {
   }, [status?.setpointTemp]);
 
   useEffect(() => { // stop element experiment and show a modal that sensor disconnected and for go back
-    if(status?.heaterConnected !== "element"){
+    if(!status?.heaterConnected){
       if(status?.operation === "heater_control"){
         setIsStart(false);
         stopHeaterExperiment();
@@ -325,7 +325,7 @@ const HeaterElement = () => {
       {isOpen === "Heater Element disconnected" && <SensorDisconnectModal 
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
-          message= {status?.heaterConnected === "probe" ? "Temperature Probe is Connected!" : clientId === status?.leaderSelected ? "Heater is disconnected, please connect the heater to start the experiment again." : "Heater is disconnected!"}
+          message= {clientId === status?.leaderSelected ? "Heater is disconnected, please connect the heater to start the experiment again." : "Heater is disconnected!"}
       />}
       <RightArrow
         isSelected={

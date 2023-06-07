@@ -133,7 +133,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
         // if (!autoReconnect)
         applicationMessage.next('Bluetooth timeout!');
         resolve(false);
-      }, 10000);
+      }, 15000);
       navigator.bluetooth.getAvailability().then(status => {
         clearTimeout(timeout);
         resolve(status);
@@ -202,7 +202,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
 
         const timeout = setTimeout(() => {
           reject("Bluetooth connect timeout!");
-        }, 10000);
+        }, 15000);
         device.gatt
           .connect()
           .then((s) => {
@@ -261,7 +261,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
 
     // Read device info
     const pr1 = handleDeviceInfoService(server, DEVICE_INFO_SERVICE);
-    const status1 = await timeoutPromise<boolean>(pr1, 10000);
+    const status1 = await timeoutPromise<boolean>(pr1, 15000, 'Read device info');
     if (!status1) {
       throw new Error('Unable to request Device Info.');
     }

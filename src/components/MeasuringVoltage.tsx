@@ -255,11 +255,11 @@ const MeasuringVoltage = () => {
   },[status?.setupData,dataSetup,clientId,status?.leaderSelected,capturePoint,isSaved,navigate])
 
   useEffect(() => { // set x axis of graph
-    let maxTime = labels?.length > 0 ? labels[labels?.length -1] : 60;
+    let rate:any = typeof status?.setupData?.dataRate === "number" ? Number(status?.setupData?.dataRate) : 1;
+    let maxTime = labels?.length > 0 ? labels[labels?.length -1] : Number(rate * 60);
     if(graphData?.length === 0){
-      let rate = typeof status?.setupData?.dataRate === "number" ? status?.setupData?.dataRate : 1;
         let initialLabels = []
-      for(let i=0;i<=(rate > 60 ? rate : 60);i=i+rate){
+      for(let i=0;i<=(rate * 60);i=i+rate){
         initialLabels.push(Number(i))
       }
       if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
@@ -296,7 +296,7 @@ const MeasuringVoltage = () => {
         </div>
         {graphData?.length ? <div className={styles.SecondaryHeaderWrapper}>
           <div aria-label="voltage value in volt">
-            Voltage Value : {graphData[graphData.length - 1]?.temp + "V"}
+            Voltage Value : <span style={{fontWeight:600}}>{graphData[graphData.length - 1]?.temp + "V"}</span>
           </div>
         </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>
@@ -358,7 +358,7 @@ const MeasuringVoltage = () => {
         </div>
         <div className={styles.FooterTextWrapper}>
           <div className={styles.FooterInnerTextWrapper}>
-            <div aria-label="file name text">File Name</div>
+            <div aria-label="file name text" style={{fontWeight:600}}>File Name</div>
             <div className={styles.FooterText}>
               {/* <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div>
                */}

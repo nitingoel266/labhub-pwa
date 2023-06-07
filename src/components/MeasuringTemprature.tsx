@@ -257,19 +257,23 @@ const MeasuringTemprature = () => {
   },[status?.setupData,dataSetup,clientId,status?.leaderSelected,capturePoint,isSaved,navigate])
   
   useEffect(() => { // set y axis for the graph
-    if(graphData?.length > 0 && ((Number(graphData[graphData.length -1]?.temp) / maxTempValue)*100) >= 80){
+    let maxTempFromGraph = 0
+    for(let one of graphData){
+      if(Number(one.temp) > maxTempFromGraph) maxTempFromGraph = Number(one.temp)
+    }
+    if(graphData?.length > 0 && ((Number(maxTempFromGraph) / maxTempValue)*100) >= 80){
       let customMaxTempValue = Number(Number(maxTempValue * 1.3).toFixed(0));
       if(customMaxTempValue !== maxTempValue)
       setMaxTempValue(customMaxTempValue);
-    }
+    }else if(graphData?.length === 0 || graphData?.length === 1) setMaxTempValue(50)
   },[graphData,maxTempValue])
   
   useEffect(() => { // set x axis of graph
-    let maxTime = labels?.length > 0 ? labels[labels?.length -1] : 60;
-    if(graphData?.length === 0){
-      let rate = typeof status?.setupData?.dataRate === "number" ? status?.setupData?.dataRate : 1;
+    let rate = typeof status?.setupData?.dataRate === "number" ? Number(status?.setupData?.dataRate) : 1;
+    let maxTime:any = labels?.length > 0 ? labels[labels?.length -1] : Number(rate * 60);
+    if(graphData?.length === 0 || graphData?.length === 1){
         let initialLabels = []
-      for(let i=0;i<=(rate > 60 ? rate : 60);i=i+rate){
+      for(let i=0;i<=(rate * 60);i=i+rate){
         initialLabels.push(Number(i))
       }
       if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
@@ -348,9 +352,9 @@ const MeasuringTemprature = () => {
           </div>
         </div>
         {graphData?.length ? <div className={styles.SecondaryHeaderWrapper}>
-          <div aria-label="Temperature value">Temperature Value : {tempratureUnit === 'f' && graphData[graphData.length - 1]?.temp ? ((9 / 5) * graphData[graphData.length - 1]?.temp + 32).toFixed(1) : graphData[graphData.length - 1]?.temp}</div>
+          <div aria-label="Temperature value">Temperature Value : <span style={{fontWeight:600}}>{tempratureUnit === 'f' && graphData[graphData.length - 1]?.temp ? ((9 / 5) * graphData[graphData.length - 1]?.temp + 32).toFixed(1) : graphData[graphData.length - 1]?.temp}</span> </div>
           <div className={styles.DegreeStyle}> </div>
-          <div aria-label={"in degree "+ tempratureUnit.toUpperCase()}>{tempratureUnit.toUpperCase()}</div>
+          <div style={{fontWeight:600}} aria-label={"in degree "+ tempratureUnit.toUpperCase()}>{tempratureUnit.toUpperCase()}</div>
         </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
@@ -413,7 +417,7 @@ const MeasuringTemprature = () => {
         </div>
         <div className={styles.FooterTextWrapper}>
           <div className={styles.FooterInnerTextWrapper}>
-            <div aria-label="File name sub header">File Name</div>
+            <div aria-label="File name sub header" style={{fontWeight:600}}>File Name</div>
             <div className={styles.FooterText}>
               <input type="text" value={title} onChange={(e) =>setTitle(e.target.value)} style={{outline:"none",border:"none"}} />
               {/* <div aria-label="file format T101722-1334-M4">T101722-1334-M4</div> */}

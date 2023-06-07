@@ -36,14 +36,15 @@ type Props = {
 };
 
 const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,temperatureUnit='c',maxTempValue,labels}: Props) => {
+  const [graphData ,setGraphData] = useState<any>(data);
   const [enableZoom, setEnableZoom] = useState<boolean>(true);
-  const yAxisScale =  title === "Voltage"  ? {min: -12,max: 12,stepSize:1} : {min:0,max:maxTempValue ? maxTempValue : 50};
+  const yAxisScale =  title === "Voltage"  ? {min: -12,max: 12,stepSize:1} : {min:0,max:maxTempValue ? (temperatureUnit === "c" ? maxTempValue : Number(Number((9 / 5) * Number(maxTempValue) + 32).toFixed(0) )) : 50};
   const chatData = {
-    labels: labels ? labels : data.map((el: any) => el.time),
+    labels: labels ? labels : graphData.map((el: any) => el.time),
     datasets: [
       {
         label: title,
-        data: data.map((el: any) => temperatureUnit === 'f' ? ((9 / 5) * el.temp + 32).toFixed(1) : el.temp),
+        data: graphData.map((el: any) => temperatureUnit === 'f' ? ((9 / 5) * el.temp + 32).toFixed(1) : el.temp),
         tension: 0.4,
         showLine: showPoint ? true : false,
         borderWidth: 2,
@@ -112,6 +113,12 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
   const ResetZoom = () => {
     setEnableZoom(!enableZoom);
   };
+
+  React.useEffect(() => {
+    if(data && data.length){
+      setGraphData([...data])
+    }
+  },[data])
   return (
     <>
       <Line

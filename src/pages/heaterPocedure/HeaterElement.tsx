@@ -312,7 +312,7 @@ const HeaterElement = () => {
             </button>
           </div>
         </div>
-        <div aria-label="Power in watt" className={styles.HeaterElementText}>
+        <div aria-label="Power in watt" className={styles.HeaterElementText} style={{visibility:status?.operation === "heater_control" ? "visible" : "hidden"}}>
           Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(0)} W</span>
         </div>
       </div>

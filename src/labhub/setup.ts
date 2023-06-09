@@ -1,5 +1,6 @@
 import { Subscription } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import deepEqual from 'deep-equal';
 import { deviceConnected, deviceStatus, deviceStatusUpdate, deviceDataFeed, deviceDataFeedUpdate, clientChannelRequest, clientChannelResponse, connectionAttemptOngoing, applicationMessage } from './status';
 import { DeviceStatus, DeviceDataFeed, ClientChannelResponse } from '../types/common';
 import { TOPIC_DEVICE_STATUS, TOPIC_DEVICE_STATUS_UPDATE, TOPIC_DEVICE_DATA_FEED, TOPIC_DEVICE_DATA_FEED_UPDATE, TOPIC_CLIENT_CHANNEL } from '../utils/const';
@@ -12,10 +13,6 @@ let subs2: Subscription;
 let subs3: Subscription;
 
 let clientSubs1: Subscription;
-
-setInterval(() => {
-  deviceStatus.next(JSON.parse(JSON.stringify(deviceStatus.value)));
-}, 1000);
 
 export const initSetup = async (): Promise<boolean> => {
   const clientId = assertClientId();
@@ -38,7 +35,11 @@ export const initSetup = async (): Promise<boolean> => {
   });
 
   socket.on(TOPIC_DEVICE_STATUS, (value: DeviceStatus) => {
-    Log.debug('TOPIC_DEVICE_STATUS:', value);
+    const newValue = { ...value, batteryLevel: deviceStatus.value?.batteryLevel };
+    if (!deepEqual(newValue, deviceStatus.value, { strict: true })) {
+      Log.debug('TOPIC_DEVICE_STATUS:', value);
+    }
+
     deviceStatus.next(value);
   });
 

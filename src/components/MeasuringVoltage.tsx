@@ -1,7 +1,7 @@
 import styles from "../styles/measuringTemprature.module.css";
 // import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
-import { useDeviceStatus, useDeviceDataFeed } from "../labhub/status";
+import { useDeviceStatus, useDeviceDataFeed ,useDeviceConnected} from "../labhub/status";
 import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
 import {getClientId} from "../labhub/utils";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
@@ -23,6 +23,7 @@ import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
 
 const MeasuringVoltage = () => {
   const clientId = getClientId()
+  const [connected] = useDeviceConnected();
   const [status] = useDeviceStatus();
   const navigate = useNavigate();
   const [dataStream] = useDeviceDataFeed();
@@ -127,6 +128,12 @@ const MeasuringVoltage = () => {
 
   const handleSensorDisconnected = (value:any) => {
     setModal(value)
+    navigate("/sensors")
+  }
+
+  const handleSensorDisconnectedSaveData = () => {
+    handleSave()
+    setModal("")
     navigate("/sensors")
   }
 
@@ -442,10 +449,12 @@ const MeasuringVoltage = () => {
           message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
           handleCancel = {handleCancelModal}
         />}
-        {isOpen === "Voltage Sensor disconnected" && <SensorDisconnectModal 
+        {connected && isOpen === "Voltage Sensor disconnected" && <SensorDisconnectModal 
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
-          message={clientId === status?.leaderSelected ? "Voltage sensor is disconnected, please connect the temperature sensor to start the experiment again." : "Voltage sensor is disconnected."}
+          submitModal={() => handleSensorDisconnectedSaveData()}
+          message={clientId === status?.leaderSelected ? (capturePoint.some((e:any) => e > 0) && !isSaved ? "Voltage sensor is disconnected do you want to save data?, please connect the temperature sensor to start the experiment again." : "Voltage sensor is disconnected, please connect the temperature sensor to start the experiment again.") : (capturePoint.some((e:any) => e > 0) && !isSaved ? "Voltage sensor is disconnected do you want to save data?" : "Voltage sensor is disconnected.")}
+          checkForSave={capturePoint.some((e:any) => e > 0) && !isSaved ? true : false}
         />}
         {/* <RightArrow
           isSelected={capturePoint?.some((el: number) => el > 0) ? true : false}

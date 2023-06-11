@@ -97,6 +97,19 @@
     border: none;
     outline: none;
 }
+.YesSaveButton {
+    background-color: #9CD5CD;
+    padding: 8px;
+    border-radius: 5px;
+    /* margin-right: 10px; */
+    width:65px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
 
 @media (max-width:680px) {
     .TextContainer{

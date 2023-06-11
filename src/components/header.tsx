@@ -32,6 +32,7 @@ import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { GetScreenName} from "../utils/const";
+import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
 
 function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderProps) {
   const [status] = useDeviceStatus();
@@ -43,6 +44,9 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   const [isOpen, setModal] = useState("");
   const [hasConnectionEstablished,setHasConnectionEstablished] = useState(false);
   const [onClick, setOnClick] = useState("");
+
+  const [showDisconnectDeviceModal, setShowDisconnectDeviceModal] = useState<boolean>(true);
+
 
   const [deviceName, setDeviceName] = useState("");
 
@@ -502,13 +506,28 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       DownloadData({ data: location.state.data.selectedData, header });
     }
   };
+
+  const handleDisconnectedSaveData = () => {
+    if(handleSave)
+    handleSave()
+    setModal("")
+    setShowDisconnectDeviceModal(false)
+  }
+
+  const handleDisconnectedUnSaveData = () => {
+    setModal("")
+    navigate(-1)
+  }
+
   useEffect(() => {
     // if connection is refused or leader disconnect then scan devices screen
-    if ((!connected && location.pathname !== "/") || !status?.leaderSelected) {
+    if (!connected && !checkForSave && (location.pathname !== "/" || !status?.leaderSelected)) {
       if (!status?.leaderSelected) setScreenName("");
+      if(location?.pathname !== "/my-records" && location?.pathname !== "/temperature-records" && location?.pathname !== "/voltage-records" && location?.pathname !== "/rgb-records")
       navigate("/scan-devices");
     }
-  }, [connected, navigate, location?.pathname, status?.leaderSelected]);
+  }, [connected, navigate, location?.pathname, status?.leaderSelected,checkForSave]);
+
   useEffect(() => {
     // if leader selected and connection established the all members should be on mode selection screen
     if (
@@ -546,10 +565,15 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       setHasConnectionEstablished(true)
       if(status?.deviceName)
       setDeviceName(status?.deviceName)
+      setShowDisconnectDeviceModal(true)
     }else if(!connected && hasConnectionEstablished){
-        applicationMessage.next({type:"info",message:`The ${deviceName} device has been disconnected.`})
+        if(checkForSave){
+          setModal("device disconnect and save data")
+        }else if(showDisconnectDeviceModal){
+          applicationMessage.next({type:"info",message:`The ${deviceName} device has been disconnected.`})
+        }
     }
-  },[connected,hasConnectionEstablished,status?.deviceName,deviceName]);
+  },[connected,hasConnectionEstablished,status?.deviceName,deviceName,checkForSave,showDisconnectDeviceModal]);
 
   useEffect(() => {
     if(status?.operation !== null && status?.sensorConnected && checkForSave && (isOpen === "Stop Temperature Experiment" || isOpen === "Stop Voltage Experiment")){
@@ -594,7 +618,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         handleDownload={handleDownload}
         handleSync={handleSync}
       />
-      {isOpen && <MemberDisconnect
+      {isOpen && isOpen !== "device disconnect and save data" && <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={
@@ -629,6 +653,13 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         }
         handleCancel = {() => handleCancelModal()}
       />}
+       {isOpen === "device disconnect and save data" && <SensorDisconnectModal 
+           isOpen={isOpen ? true : false}
+           setModal={(value) => handleDisconnectedUnSaveData()}
+           submitModal={() => handleDisconnectedSaveData()}
+           message= {`The ${deviceName} device has been disconnected. do you want to save data?`}
+           checkForSave={checkForSave}
+        />}
     </div>
   );
 }
@@ -730,7 +761,7 @@ const SecondHeader = ({
         <div className={styles.FistHeaderSubWrapper}>
          {location.pathname !== "/my-records" && <button 
             style={{outline:"none",border:"none",backgroundColor:"inherit"}}
-            onClick={() => (connected ? handleMyRecord() : {})}
+            onClick={() => (handleMyRecord())}
           >
           <img
             src={MyRecordsIcon}
@@ -740,7 +771,7 @@ const SecondHeader = ({
             </button>}
          {location.pathname !== "/scan-devices" && <button
             style={{outline:"none",border:"none",backgroundColor:"inherit"}}
-            onClick={() => (connected ? handleConnectionManager() : {})}
+            onClick={() => (handleConnectionManager() )}
           >
           <img
             src={ShareIcon}

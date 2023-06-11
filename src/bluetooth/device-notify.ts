@@ -186,20 +186,20 @@ async function handleExperimentStatusChanged(event: any) {
 
     const leaderOperation: LeaderOperation = getOperation(operation);
 
+    const temperatureSensor = (sensor_attach & 0x1) === 0x1;
+    const voltageSensor = (sensor_attach & 0x2) === 0x2;
+    const heaterSensor = (sensor_attach & 0x4) === 0x4;
+
     let sensorConnected: SensorSelect = null;
-    if ((sensor_attach & 0x1) === 0x1) {
+    if (temperatureSensor) {
       sensorConnected = 'temperature';
-    } else if ((sensor_attach & 0x2) === 0x2) {
+    } else if (voltageSensor) {
       sensorConnected = 'voltage';
     }
     
     let heaterConnected: HeaterSelect = null;
-    if ((sensor_attach & 0x4) === 0x4) {
-      if ((sensor_attach & 0x1) === 0x1) {
-        heaterConnected = 'probe';
-      } else {
-        heaterConnected = 'element';
-      }
+    if (heaterSensor) {
+      heaterConnected = 'element';
     }
 
     const setupData: SetupData = {
@@ -352,7 +352,7 @@ async function handleExperimentStatusChanged(event: any) {
       if (heaterConnected === 'element' && leaderOperation === 'heater_control') {
         const power = data1 / 1000;
         heaterDataStream.element = [power];
-      } else if (heaterConnected === 'probe' && leaderOperation === 'heater_probe') {
+      } else if (heaterConnected === 'element' && sensorConnected === 'temperature' && leaderOperation === 'heater_probe') {
         const power = data1 / 1000;
         const probeTemp = data2x === null ? data2x : data2x;  // temperature is C, not C * 100
         heaterDataStream.probe = [power, probeTemp as any];

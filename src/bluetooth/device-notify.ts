@@ -265,79 +265,94 @@ async function handleExperimentStatusChanged(event: any) {
             Log.warn(`Missing temperatureIndex: ${current_sample - 1} [${prevSampleIndex}, ${current_sample}]`);
           }
 
-          // sensorDataStream.temperature = data3;  // temperature is C, not C * 100
+          const tempData = Math.round(data3 / 100);  // temperature is C * 100, not C
+
+          // sensorDataStream.temperature = tempData;
           // sensorDataStream.temperatureIndex = current_sample;
 
-          async function forceEmit(index: number) {
-            const lastValue = await getTemperatureValue(index);
-        
-            const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
-            sensorDataStreamPrev.temperature = lastValue;
-            sensorDataStreamPrev.temperatureIndex = index;
-            const deviceDataFeedPrev = {
-              sensor: sensorDataStreamPrev,
-              heater: null,
-              rgb: null,
-            };            
-            topicDeviceDataFeed.next(deviceDataFeedPrev);
-            await delay(100);
-          }
-
-          if (current_sample === 0) {
-            sensorDataStream = null;
-          } else if (current_sample === 1) {
-            const lastValue = await getTemperatureValue(current_sample - 1);
-
-            sensorDataStream.temperature = lastValue;
+          if (current_sample > 0) {
+            sensorDataStream.temperature = tempData;
             sensorDataStream.temperatureIndex = current_sample - 1;
-          } else if (current_sample === 2) {
-            await forceEmit(current_sample - 1);
-
-            sensorDataStream.temperature = data3;  // temperature is C, not C * 100
-            sensorDataStream.temperatureIndex = current_sample;
           } else {
-            sensorDataStream.temperature = data3;  // temperature is C, not C * 100
-            sensorDataStream.temperatureIndex = current_sample;
+            sensorDataStream = null;
           }
+
+          // async function forceEmit(index: number) {
+          //   const lastValue = await getTemperatureValue(index);
+        
+          //   const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
+          //   sensorDataStreamPrev.temperature = lastValue;
+          //   sensorDataStreamPrev.temperatureIndex = index;
+          //   const deviceDataFeedPrev = {
+          //     sensor: sensorDataStreamPrev,
+          //     heater: null,
+          //     rgb: null,
+          //   };            
+          //   topicDeviceDataFeed.next(deviceDataFeedPrev);
+          //   await delay(100);
+          // }
+
+          // if (current_sample === 0) {
+          //   sensorDataStream = null;
+          // } else if (current_sample === 1) {
+          //   const lastValue = await getTemperatureValue(current_sample - 1);
+
+          //   sensorDataStream.temperature = lastValue;
+          //   sensorDataStream.temperatureIndex = current_sample - 1;
+          // } else if (current_sample === 2) {
+          //   await forceEmit(current_sample - 1);
+
+          //   sensorDataStream.temperature = tempData;
+          //   sensorDataStream.temperatureIndex = current_sample;
+          // } else {
+          //   sensorDataStream.temperature = tempData;
+          //   sensorDataStream.temperatureIndex = current_sample;
+          // }
         } else if (sensorConnected === 'voltage' && leaderOperation === 'measure_voltage') {
           if (prevSampleIndex + 1 !== current_sample) {
             Log.warn(`Missing voltageIndex: ${current_sample - 1} [${prevSampleIndex}, ${current_sample}]`);
           }
 
-          // sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
-          // sensorDataStream.voltageIndex = current_sample;
+          const voltageData = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
 
-          async function forceEmit(index: number) {
-            const lastValue = await getVoltageValue(index);
-        
-            const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
-            sensorDataStreamPrev.voltage = lastValue;
-            sensorDataStreamPrev.voltageIndex = index;
-            const deviceDataFeedPrev = {
-              sensor: sensorDataStreamPrev,
-              heater: null,
-              rgb: null,
-            };            
-            topicDeviceDataFeed.next(deviceDataFeedPrev);
-            await delay(100);
-          }
-
-          if (current_sample === 0) {
-            sensorDataStream = null;
-          } else if (current_sample === 1) {
-            const lastValue = await getVoltageValue(current_sample - 1);
-
-            sensorDataStream.voltage = lastValue;
-            sensorDataStream.voltageIndex = current_sample - 1;
-          } else if (current_sample === 2) {
-            await forceEmit(current_sample - 1);
-
-            sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
-            sensorDataStream.voltageIndex = current_sample;
+          if (current_sample > 0) {
+            sensorDataStream.voltage = voltageData;
+            sensorDataStream.voltageIndex = current_sample - 1;  
           } else {
-            sensorDataStream.voltage = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
-            sensorDataStream.voltageIndex = current_sample;
+            sensorDataStream = null;
           }
+
+          // async function forceEmit(index: number) {
+          //   const lastValue = await getVoltageValue(index);
+        
+          //   const sensorDataStreamPrev = JSON.parse(JSON.stringify(sensorDataStream));
+          //   sensorDataStreamPrev.voltage = lastValue;
+          //   sensorDataStreamPrev.voltageIndex = index;
+          //   const deviceDataFeedPrev = {
+          //     sensor: sensorDataStreamPrev,
+          //     heater: null,
+          //     rgb: null,
+          //   };            
+          //   topicDeviceDataFeed.next(deviceDataFeedPrev);
+          //   await delay(100);
+          // }
+
+          // if (current_sample === 0) {
+          //   sensorDataStream = null;
+          // } else if (current_sample === 1) {
+          //   const lastValue = await getVoltageValue(current_sample - 1);
+
+          //   sensorDataStream.voltage = lastValue;
+          //   sensorDataStream.voltageIndex = current_sample - 1;
+          // } else if (current_sample === 2) {
+          //   await forceEmit(current_sample - 1);
+
+          //   sensorDataStream.voltage = voltageData;
+          //   sensorDataStream.voltageIndex = current_sample;
+          // } else {
+          //   sensorDataStream.voltage = voltageData;
+          //   sensorDataStream.voltageIndex = current_sample;
+          // }
         } else {
           sensorDataStream = null;
         }
@@ -359,7 +374,8 @@ async function handleExperimentStatusChanged(event: any) {
         heaterDataStream.element = [power];
       } else if (heaterConnected === 'probe' && leaderOperation === 'heater_probe') {
         const power = data1 / 1000;
-        const probeTemp = data2x === null ? data2x : data2x;  // temperature is C, not C * 100
+        let probeTemp = data2x === null ? data2x : data2x;  // temperature is C * 100, not C
+        if (probeTemp !== null) probeTemp = Math.round(probeTemp / 100);
         heaterDataStream.probe = [power, probeTemp as any];
       } else {
         heaterDataStream = null;

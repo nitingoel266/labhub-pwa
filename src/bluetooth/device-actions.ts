@@ -455,7 +455,13 @@ export const handleClientChannelRequest = async (server: BluetoothRemoteGATTServ
   };
   if (typeof temperatureIndex === 'number' && temperatureIndex >= 0 && deviceStatusValue.sensorConnected === 'temperature') {
     const temperatureLog = await getDataSeries(server, temperatureIndex);
-    clientChannelResp.temperatureLog = temperatureLog;
+    if (temperatureLog === null) {
+      clientChannelResp.temperatureLog = temperatureLog;
+    } else {
+      clientChannelResp.temperatureLog = temperatureLog.map(v => {
+        return Math.round(v / 100);
+      });
+    }
     if (temperatureLog) Log.debug('temperatureLog fetched for clientChannel Response:', temperatureLog);
   } else if (typeof voltageIndex === 'number' && voltageIndex >= 0 && deviceStatusValue.sensorConnected === 'voltage') {
     const voltageLog = await getDataSeries(server, voltageIndex);

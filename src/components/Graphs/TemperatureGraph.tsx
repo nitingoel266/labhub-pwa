@@ -117,6 +117,8 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
   React.useEffect(() => {
     if(data && data.length){
       setGraphData([...data])
+    }else {
+      setGraphData([])
     }
   },[data])
   return (

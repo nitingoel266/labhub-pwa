@@ -333,7 +333,7 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
   // (default) 20*C
   const heaterSetpointTempN = deviceStatusValue.setpointTemp || 20;
 
-  const { sensorExperiment, heaterExperiment, rgbExperiment } = updValue;
+  const { sensorExperiment, heaterExperiment, rgbExperiment, probe} = updValue;
 
   if (sensorExperiment !== undefined) {
     if (deviceStatusValue.sensorConnected === 'temperature') {
@@ -348,9 +348,9 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
       timerControlN = TimerControl.RUN;
     }
   } else if (heaterExperiment !== undefined) {
-    if (deviceStatusValue.heaterConnected === 'element') {
+    if (!probe) { // heater element experiment
       operationN = ControlOperation.OP_HEATER_MANUAL_CONTROL;
-    } else if (deviceStatusValue.heaterConnected === 'probe') {
+    } else { // probe experiment
       operationN = ControlOperation.OP_HEATER_AUTO_CONTROL;
     }
 
@@ -389,7 +389,7 @@ async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | nul
   let dataRate = data_rate;
 
   // TODO: Tempporary hack to handle device bug!
-  if (dataRate === 0) dataRate = 1;
+  // if (dataRate === 0) dataRate = 1;
 
   Log.debug('experimentControl:', experimentControl);
 

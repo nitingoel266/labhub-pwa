@@ -52,13 +52,13 @@ const TemperatureProbe = () => {
   };
   const handleStart = () => {
     setIsStart(true);
-    startHeaterExperiment();
+    startHeaterExperiment(true);
     setModal("");
   };
   const handleStop = () => {
     setIsStart(false);
     setModal("");
-    stopHeaterExperiment();
+    stopHeaterExperiment(true);
   };
   const handleSubmit = () => {
     changeSetpointTemp(temperature);
@@ -121,7 +121,7 @@ const TemperatureProbe = () => {
     if(status?.heaterConnected !== "probe"){
       if(status?.operation === 'heater_probe'){
         setIsStart(false);
-        stopHeaterExperiment();
+        stopHeaterExperiment(true);
       }
       setModal("Temperature probe disconnected")
     }else if(status?.heaterConnected === "probe"){
@@ -270,8 +270,8 @@ const TemperatureProbe = () => {
         Please make sure the probe is always in contact with the soution.
       </div>
       <div className={styles.HeaterElementWraper}>
-        <div aria-label={"temperatue is "+istemperature && Number(istemperature).toFixed(1)+"degree celcius"} className={styles.TemperatureWrapper} style={{visibility:status?.operation === 'heater_probe' ? "visible" : "hidden"}}>
-          <div>{istemperature && Number(istemperature).toFixed(0)}</div>
+        <div aria-label={"temperatue is "+istemperature && (Number(istemperature)).toFixed(0)+"degree celcius"} className={styles.TemperatureWrapper} style={{visibility:status?.operation === 'heater_probe' ? "visible" : "hidden"}}>
+          <div>{istemperature && (Number(istemperature)).toFixed(0)}</div>
           <div className={styles.TemperatureDegree}> </div>
           <div>C</div>
         </div>

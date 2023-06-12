@@ -122,7 +122,7 @@ const HeaterElement = () => {
         stopHeaterExperiment();
       }
       setModal("Heater Element disconnected")
-    }else if(status?.heaterConnected === "element"){
+    }else if(status?.heaterConnected){
       setModal("")
     }
   },[status?.heaterConnected,status?.operation])
@@ -280,14 +280,14 @@ const HeaterElement = () => {
               aria-label="start button"
               onClick={() =>
                 clientId === status?.leaderSelected &&
-                status?.heaterConnected === "element" &&
+                status?.heaterConnected &&
                 !isStart
                   ? setModal("start")
                   : {}
               }
               className={styles.Button}
               style={
-                isStart || status?.heaterConnected !== "element"
+                isStart || !status?.heaterConnected
                   ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
                   : extraStyle
               }

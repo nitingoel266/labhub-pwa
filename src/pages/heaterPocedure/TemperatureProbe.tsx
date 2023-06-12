@@ -270,8 +270,8 @@ const TemperatureProbe = () => {
         Please make sure the probe is always in contact with the soution.
       </div>
       <div className={styles.HeaterElementWraper}>
-        <div aria-label={"temperatue is "+istemperature && (Number(istemperature)/100).toFixed(0)+"degree celcius"} className={styles.TemperatureWrapper} style={{visibility:status?.operation === 'heater_probe' ? "visible" : "hidden"}}>
-          <div>{istemperature && (Number(istemperature)/100).toFixed(0)}</div>
+        <div aria-label={"temperatue is "+istemperature && (Number(istemperature)).toFixed(0)+"degree celcius"} className={styles.TemperatureWrapper} style={{visibility:status?.operation === 'heater_probe' ? "visible" : "hidden"}}>
+          <div>{istemperature && (Number(istemperature)).toFixed(0)}</div>
           <div className={styles.TemperatureDegree}> </div>
           <div>C</div>
         </div>

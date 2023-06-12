@@ -165,7 +165,7 @@ const MeasuringTemprature = () => {
                       ? 1
                       : status?.setupData?.dataRate
                   ),
-                temp: Number(Number(Number(tempLogData[one])/100).toFixed())
+                temp: tempLogData[one]
               });
               capturePoints.push(status?.setupData?.dataRate === "user" ? 0 : 2);
             }
@@ -184,7 +184,7 @@ const MeasuringTemprature = () => {
                   ? 1
                   : status?.setupData?.dataRate
               ),
-            temp: Number(Number(Number(dataStream?.sensor?.temperature)/100).toFixed()),
+            temp: dataStream?.sensor?.temperature,
           },
         ];
       });

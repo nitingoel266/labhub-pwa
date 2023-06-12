@@ -459,7 +459,7 @@ export const handleClientChannelRequest = async (server: BluetoothRemoteGATTServ
       clientChannelResp.temperatureLog = temperatureLog;
     } else {
       clientChannelResp.temperatureLog = temperatureLog.map(v => {
-        return Math.round(v / 100);
+        return Math.round(v / 100);  // temperature is C * 100, not C
       });
     }
     if (temperatureLog) Log.debug('temperatureLog fetched for clientChannel Response:', temperatureLog);

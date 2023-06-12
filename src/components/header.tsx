@@ -33,6 +33,7 @@ import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { GetScreenName} from "../utils/const";
 import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
+import {delay} from "../utils/utils";
 
 function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderProps) {
   const [status] = useDeviceStatus();
@@ -318,7 +319,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
     setModal("");
   };
 
-  const handleStopProcess = () => {
+  const handleStopProcess = async () => {
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
@@ -326,17 +327,25 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
     ) {
 
       if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){
-        stopHeaterExperiment();
-        if(setPointTemp)
-        changeSetpointTemp(setPointTemp)
+        if(setPointTemp){
+          changeSetpointTemp(setPointTemp)
+        }
+        await delay(1000);
+
         let value:any = onClick === "myRecord" ? "/my-records" : -1;
         if(onClick === "connectionManager")
           navigate("/scan-devices",{
             state: { screenName : "/scan-devices" },
           });
         else navigate(value)
+        if(location?.pathname === "/temperature-probe"){
+          stopHeaterExperiment(true);
+        } else stopHeaterExperiment()
+
       }else if(dataFeed.heater !== null){
-        stopHeaterExperiment();
+        if(location?.pathname === "/temperature-probe"){
+          stopHeaterExperiment(true);  
+        }else stopHeaterExperiment();
         let value:any = onClick === "myRecord" ? "/my-records" : -1;
         if(onClick === "connectionManager")
           navigate("/scan-devices",{
@@ -567,6 +576,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       setDeviceName(status?.deviceName)
       setShowDisconnectDeviceModal(true)
     }else if(!connected && hasConnectionEstablished){
+        setHasConnectionEstablished(false)
         if(checkForSave){
           setModal("device disconnect and save data")
         }else if(showDisconnectDeviceModal){

@@ -79,14 +79,14 @@ export const stopSensorExperiment = () => {
   deviceDataFeedUpdate.next({ sensorExperiment: false });
 };
 
-export const startHeaterExperiment = () => {
+export const startHeaterExperiment = (probe = false) => {
   if (getClientType() !== 'leader') return;
-  deviceDataFeedUpdate.next({ heaterExperiment: true });
+  deviceDataFeedUpdate.next({ heaterExperiment: true, probe });
 };
 
-export const stopHeaterExperiment = () => {
+export const stopHeaterExperiment = (probe = false) => {
   if (getClientType() !== 'leader') return;
-  deviceDataFeedUpdate.next({ heaterExperiment: false });
+  deviceDataFeedUpdate.next({ heaterExperiment: false, probe });
 };
 
 export const startRgbExperiment = () => {

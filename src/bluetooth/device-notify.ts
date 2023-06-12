@@ -11,6 +11,7 @@ import { delay, Log, roundTwoDec } from "../utils/utils";
 import { getCachedCharacteristic, readCharacteristicValue } from "./read-write";
 import { stopRgbExperiment } from "../labhub/actions";
 import { getTemperatureValue, getVoltageValue } from "../labhub/actions-client";
+import { deviceDataFeedUpdate } from "../labhub/status";
 
 let prevSampleIndex = -1;
 let prevLeaderOperation: LeaderOperation = null;
@@ -349,7 +350,7 @@ async function handleExperimentStatusChanged(event: any) {
         element: null,
         probe: null,
       };
-      if (heaterConnected === 'element' && leaderOperation === 'heater_control') {
+      if (!deviceDataFeedUpdate?.value?.probe && leaderOperation === 'heater_control') {
         const power = data1 / 1000;
         heaterDataStream.element = [power];
       } else if (heaterConnected === 'probe' && leaderOperation === 'heater_probe') {

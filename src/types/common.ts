@@ -74,6 +74,7 @@ export interface DeviceDataFeedUpdate {
   sensorExperiment?: boolean;
   heaterExperiment?: boolean;
   rgbExperiment?: boolean;
+  probe?: boolean;
 }
 
 export interface DeviceDataFeed {

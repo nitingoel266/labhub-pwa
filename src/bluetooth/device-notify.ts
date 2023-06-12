@@ -267,8 +267,15 @@ async function handleExperimentStatusChanged(event: any) {
 
           const tempData = Math.round(data3 / 100);  // temperature is C * 100, not C
 
-          sensorDataStream.temperature = tempData;
-          sensorDataStream.temperatureIndex = current_sample;
+          // sensorDataStream.temperature = tempData;
+          // sensorDataStream.temperatureIndex = current_sample;
+
+          if (current_sample > 0) {
+            sensorDataStream.temperature = tempData;
+            sensorDataStream.temperatureIndex = current_sample - 1;
+          } else {
+            sensorDataStream = null;
+          }
 
           // async function forceEmit(index: number) {
           //   const lastValue = await getTemperatureValue(index);
@@ -308,8 +315,12 @@ async function handleExperimentStatusChanged(event: any) {
 
           const voltageData = roundTwoDec(data3 / 1000 - 12);  // voltage is (V + 12) * 1000
 
-          sensorDataStream.voltage = voltageData;
-          sensorDataStream.voltageIndex = current_sample;
+          if (current_sample > 0) {
+            sensorDataStream.voltage = voltageData;
+            sensorDataStream.voltageIndex = current_sample - 1;  
+          } else {
+            sensorDataStream = null;
+          }
 
           // async function forceEmit(index: number) {
           //   const lastValue = await getVoltageValue(index);

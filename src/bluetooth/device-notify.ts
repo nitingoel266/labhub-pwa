@@ -199,7 +199,11 @@ async function handleExperimentStatusChanged(event: any) {
     
     let heaterConnected: HeaterSelect = null;
     if (heaterSensor) {
-      heaterConnected = 'element';
+      if (temperatureSensor) {
+        heaterConnected = 'probe';
+      } else {
+        heaterConnected = 'element';
+      }
     }
 
     const setupData: SetupData = {

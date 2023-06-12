@@ -356,7 +356,7 @@ async function handleExperimentStatusChanged(event: any) {
       if (heaterConnected === 'element' && leaderOperation === 'heater_control') {
         const power = data1 / 1000;
         heaterDataStream.element = [power];
-      } else if (heaterConnected === 'element' && sensorConnected === 'temperature' && leaderOperation === 'heater_probe') {
+      } else if (heaterConnected === 'probe' && leaderOperation === 'heater_probe') {
         const power = data1 / 1000;
         const probeTemp = data2x === null ? data2x : data2x;  // temperature is C, not C * 100
         heaterDataStream.probe = [power, probeTemp as any];

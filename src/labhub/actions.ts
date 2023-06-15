@@ -71,12 +71,17 @@ export const simulateRgb = (select: RgbFuncSelect) => {
 
 export const startSensorExperiment = () => {
   if (getClientType() !== 'leader') return;
-  deviceDataFeedUpdate.next({ sensorExperiment: true });
+  deviceDataFeedUpdate.next({ sensorExperiment: 1 });
+};
+
+export const restartSensorExperiment = () => {
+  if (getClientType() !== 'leader') return;
+  deviceDataFeedUpdate.next({ sensorExperiment: 2 });
 };
 
 export const stopSensorExperiment = () => {
   if (getClientType() !== 'leader') return;
-  deviceDataFeedUpdate.next({ sensorExperiment: false });
+  deviceDataFeedUpdate.next({ sensorExperiment: 0 });
 };
 
 export const startHeaterExperiment = (probe = false) => {

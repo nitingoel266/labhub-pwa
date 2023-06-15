@@ -398,7 +398,8 @@ async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | nul
 
   const b1 = getByteArray(dataRate, 2);
   const b2 = getByteArray(num_of_samples, 2);
-  const b3 = getByteArray(heater_temp_setpoint * 100, 2);
+  // const b3 = getByteArray(heater_temp_setpoint * 100, 2);
+  const b3 = getByteArray(heater_temp_setpoint, 2);
 
   let success = false;
   const controlStruct: ArrayBuffer | null = getArrayBuffer(a1, a2, b1, b2, b3);

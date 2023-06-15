@@ -342,10 +342,12 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
       operationN = ControlOperation.OP_MEASURE_VOLTAGE;
     }
 
-    if (sensorExperiment === false) {
+    if (sensorExperiment === 0) {
       timerControlN = TimerControl.STOP_RESET;
-    } else if (sensorExperiment === true) {
+    } else if (sensorExperiment === 1) {
       timerControlN = TimerControl.RUN;
+    } else if (sensorExperiment === 2) {
+      timerControlN = TimerControl.RESTART;
     }
   } else if (heaterExperiment !== undefined) {
     if (!probe) { // heater element experiment

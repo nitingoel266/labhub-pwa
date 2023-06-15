@@ -2,7 +2,7 @@ import styles from "../styles/measuringTemprature.module.css";
 // import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed ,useDeviceConnected} from "../labhub/status";
-import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
+import { startSensorExperiment,restartSensorExperiment, stopSensorExperiment } from "../labhub/actions";
 import {getClientId} from "../labhub/utils";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
@@ -51,6 +51,9 @@ const MeasuringVoltage = () => {
     setGraphData([]);
     setCapturePoint([]);
     // setIsStart(true);
+    if(isOpen === "restart"){
+      restartSensorExperiment()
+    }else
     startSensorExperiment();
     setModal("");
     setIsSaved(false);
@@ -322,13 +325,13 @@ const MeasuringVoltage = () => {
               <button
                 aria-label="start button"
                 onClick={() =>
-                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
+                  clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
                     ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "voltage"
+                  clientId !== status?.leaderSelected || status?.sensorConnected !== "voltage"
                     ? extraStyle
                     : {}
                 }
@@ -396,13 +399,13 @@ const MeasuringVoltage = () => {
               <button
                 aria-label="Start button"
                 onClick={() =>
-                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "voltage"
+                  clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
                     ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "voltage"
+                  clientId !== status?.leaderSelected || status?.sensorConnected !== "voltage"
                     ? extraStyle
                     : {}
                 }

@@ -2,7 +2,7 @@ import styles from "../styles/measuringTemprature.module.css";
 // import RightArrow from "./RightArrow";
 import { useEffect, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed,useDeviceConnected } from "../labhub/status";
-import { startSensorExperiment, stopSensorExperiment } from "../labhub/actions";
+import { startSensorExperiment, restartSensorExperiment, stopSensorExperiment } from "../labhub/actions";
 import {getClientId} from "../labhub/utils";
 import {getTemperatureLog} from "../labhub/actions-client";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
@@ -53,6 +53,9 @@ const MeasuringTemprature = () => {
     setGraphData([]);
     setCapturePoint([]);
     //setIsStart(true);
+    if(isOpen === "restart"){
+      restartSensorExperiment()
+    }else
     startSensorExperiment();
     setModal("");
     setIsSaved(false);
@@ -381,13 +384,13 @@ const MeasuringTemprature = () => {
               <button
                 aria-label="Start button"
                 onClick={() =>
-                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
+                  clientId === status?.leaderSelected && status?.sensorConnected === "temperature"
                     ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "temperature"
+                   clientId !== status?.leaderSelected || status?.sensorConnected !== "temperature"
                     ? extraStyle
                     : {}
                 }
@@ -454,13 +457,13 @@ const MeasuringTemprature = () => {
               <button
                 aria-label="Start button"
                 onClick={() =>
-                  clientId === status?.leaderSelected && !isStart && status?.sensorConnected === "temperature"
+                  clientId === status?.leaderSelected && status?.sensorConnected === "temperature"
                     ? setModal(isStart || graphData?.length ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
                 style={
-                  isStart || clientId !== status?.leaderSelected || status?.sensorConnected !== "temperature"
+                  clientId !== status?.leaderSelected || status?.sensorConnected !== "temperature"
                     ? extraStyle
                     : {}
                 }

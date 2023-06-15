@@ -212,7 +212,8 @@ async function handleExperimentStatusChanged(event: any) {
       dataSample: getDataSample(num_of_samples),
     };
 
-    const setpointTemp = heater_temp_setpoint / 100;
+    // const setpointTemp = heater_temp_setpoint / 100;
+    const setpointTemp = heater_temp_setpoint;
 
     // --------------------
 

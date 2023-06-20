@@ -75,57 +75,65 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) && clientId === status?.leaderSelected
     ) {
 
-      if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){
-        setModal(
-          location?.pathname === "/temperature-probe"
-            ? "Stop Temperature Probe Experiment and save Setpoint Temperature"
-            : "Stop Heater Experiment and save Setpoint Temperature"
-        );
-      }else if(dataFeed.heater !== null){
-        setModal(
-          location?.pathname === "/temperature-probe"
-            ? "Stop Temperature Probe Experiment"
-            : "Stop Heater Experiment"
-        );
-      }else if(setPointTemp !== status?.setpointTemp){
-        setModal("Do you want to save Setpoint Temperature?")
-      }
+      if(dataFeed.heater !== null) 
+      setModal(
+        location?.pathname === "/temperature-probe"
+          ? "Stop Temperature Probe Experiment"
+          : "Stop Heater Experiment"
+      );
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save set point Temperature?")
 
-
-      // if(dataFeed.heater !== null) // before
-      // setModal(
-      //   location?.pathname === "/temperature-probe"
-      //     ? "Stop Temperature Probe Experiment"
-      //     : "Stop Heater Experiment"
-      // );
-      // else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Setpoint Temperature?")
+      // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){ // before
+      //   setModal(
+      //     location?.pathname === "/temperature-probe"
+      //       ? "Stop Temperature Probe Experiment and save Setpoint Temperature"
+      //       : "Stop Heater Experiment and save Setpoint Temperature"
+      //   );
+      // }else if(dataFeed.heater !== null){
+      //   setModal(
+      //     location?.pathname === "/temperature-probe"
+      //       ? "Stop Temperature Probe Experiment"
+      //       : "Stop Heater Experiment"
+      //   );
+      // }else if(setPointTemp !== status?.setpointTemp){
+      //   setModal("Do you want to save set point Temperature?")
+      // }
+    
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
       ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
 
-      if(status?.operation !== null && status?.sensorConnected && checkForSave){
-        if(clientId === status?.leaderSelected)
-         setModal(
-          location?.pathname === "/temperature-sensor"
-            ? "Stop Temperature Experiment and save data"
-            : "Stop Voltage Experiment and save data"
-        );
-        else setModal("Do you want to save the experiment data?")
-      }else if(status?.operation !== null && status?.sensorConnected){
-        if(clientId === status?.leaderSelected)
-         setModal(
+       if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
+        setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
             : "Stop Voltage Experiment"
         );
-        else if(!checkForSave && clientId !== status?.leaderSelected){
-          navigate(-1)
-        }
-      }else if(checkForSave){
-        setModal("Do you want to save the experiment data?")
-      }
+      }else if(checkForSave) setModal("Do you want to save the experiment data?")
+
+      // if(status?.operation !== null && status?.sensorConnected && checkForSave){ // before
+      //   if(clientId === status?.leaderSelected)
+      //    setModal(
+      //     location?.pathname === "/temperature-sensor"
+      //       ? "Stop Temperature Experiment and save data"
+      //       : "Stop Voltage Experiment and save data"
+      //   );
+      //   else setModal("Do you want to save the experiment data?")
+      // }else if(status?.operation !== null && status?.sensorConnected){
+      //   if(clientId === status?.leaderSelected)
+      //    setModal(
+      //     location?.pathname === "/temperature-sensor"
+      //       ? "Stop Temperature Experiment"
+      //       : "Stop Voltage Experiment"
+      //   );
+      //   else if(!checkForSave && clientId !== status?.leaderSelected){
+      //     navigate(-1)
+      //   }
+      // }else if(checkForSave){
+      //   setModal("Do you want to save the experiment data?")
+      // }
 
       // if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){ // before
       //   setModal(
@@ -135,16 +143,21 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //   );
       // }else if(checkForSave) setModal("Do you want to save the experiment data?")
      
+    }else if(location?.pathname === "/measure-absorbance"){
+      if(checkForSave){
+        setModal("Do you want to save the experiment data?")
+      }else{
+        if(clientId === status?.leaderSelected){
+          simulateRgb(null)
+        }
+        navigate("/rgb-spect") 
+      }
     }else if(location?.pathname === "/rgb-spect") {
       navigate("/function-selection")
     }else if(location?.pathname === "/function-selection") {
       navigate("/mode-selection")
     }else if(location?.pathname === "/mode-selection") {
       navigate("/scan-devices")
-    }else if(location?.pathname === "/measure-absorbance"){
-      if(clientId === status?.leaderSelected)
-      simulateRgb(null)
-      navigate("/rgb-spect")
     }else if(location?.pathname === "/sensors"){
       navigate("/function-selection")
     }else if(location?.pathname === "/heater") {
@@ -165,21 +178,29 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) && clientId === status?.leaderSelected
     ) {
 
-      if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){
-        setModal(
-          location?.pathname === "/temperature-probe"
-            ? "Stop Temperature Probe Experiment and save Setpoint Temperature"
-            : "Stop Heater Experiment and save Setpoint Temperature"
-        );
-      }else if(dataFeed.heater !== null){
-        setModal(
-          location?.pathname === "/temperature-probe"
-            ? "Stop Temperature Probe Experiment"
-            : "Stop Heater Experiment"
-        );
-      }else if(setPointTemp !== status?.setpointTemp){
-        setModal("Do you want to save Setpoint Temperature?")
-      }
+      if(dataFeed.heater !== null) 
+      setModal(
+        location?.pathname === "/temperature-probe"
+          ? "Stop Temperature Probe Experiment"
+          : "Stop Heater Experiment"
+      );
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save set point Temperature?")
+
+      // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){ // before
+      //   setModal(
+      //     location?.pathname === "/temperature-probe"
+      //       ? "Stop Temperature Probe Experiment and save Setpoint Temperature"
+      //       : "Stop Heater Experiment and save Setpoint Temperature"
+      //   );
+      // }else if(dataFeed.heater !== null){
+      //   setModal(
+      //     location?.pathname === "/temperature-probe"
+      //       ? "Stop Temperature Probe Experiment"
+      //       : "Stop Heater Experiment"
+      //   );
+      // }else if(setPointTemp !== status?.setpointTemp){
+      //   setModal("Do you want to save set point Temperature?")
+      // }
 
 
       // if(dataFeed.heater !== null) // before
@@ -188,34 +209,42 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //     ? "Stop Temperature Probe Experiment"
       //     : "Stop Heater Experiment"
       // );
-      // else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Setpoint Temperature?")
+      // else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save set point Temperature?")
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
       ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
 
-      if(status?.operation !== null && status?.sensorConnected && checkForSave){
-        if(clientId === status?.leaderSelected)
-         setModal(
-          location?.pathname === "/temperature-sensor"
-            ? "Stop Temperature Experiment and save data"
-            : "Stop Voltage Experiment and save data"
-        );
-        else setModal("Do you want to save the experiment data?")
-      }else if(status?.operation !== null && status?.sensorConnected){
-        if(clientId === status?.leaderSelected)
-         setModal(
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
+        setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
             : "Stop Voltage Experiment"
         );
-        else if(!checkForSave && clientId !== status?.leaderSelected){
-          navigate("/my-records")
-        }
-      }else if(checkForSave){
-        setModal("Do you want to save the experiment data?")
-      }
+      }else if(checkForSave) setModal("Do you want to save the experiment data?")
+
+      // if(status?.operation !== null && status?.sensorConnected && checkForSave){
+      //   if(clientId === status?.leaderSelected)
+      //    setModal(
+      //     location?.pathname === "/temperature-sensor"
+      //       ? "Stop Temperature Experiment and save data"
+      //       : "Stop Voltage Experiment and save data"
+      //   );
+      //   else setModal("Do you want to save the experiment data?")
+      // }else if(status?.operation !== null && status?.sensorConnected){
+      //   if(clientId === status?.leaderSelected)
+      //    setModal(
+      //     location?.pathname === "/temperature-sensor"
+      //       ? "Stop Temperature Experiment"
+      //       : "Stop Voltage Experiment"
+      //   );
+      //   else if(!checkForSave && clientId !== status?.leaderSelected){
+      //     navigate("/my-records")
+      //   }
+      // }else if(checkForSave){
+      //   setModal("Do you want to save the experiment data?")
+      // }
 
 
       // if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
@@ -226,6 +255,15 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //   );
       // }else if(checkForSave) setModal("Do you want to save the experiment data?")
      
+    }else if(location?.pathname === "/measure-absorbance"){
+      if(checkForSave){
+        setModal("Do you want to save the experiment data?")
+      }else{
+        if(clientId === status?.leaderSelected){
+          simulateRgb(null)
+        }
+        navigate("/my-records") 
+      }
     }else {
       navigate("/my-records");
     }
@@ -238,21 +276,29 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) && clientId === status?.leaderSelected
     ) {
 
-      if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){
-        setModal(
-          location?.pathname === "/temperature-probe"
-            ? "Stop Temperature Probe Experiment and save Setpoint Temperature"
-            : "Stop Heater Experiment and save Setpoint Temperature"
-        );
-      }else if(dataFeed.heater !== null){
-        setModal(
-          location?.pathname === "/temperature-probe"
-            ? "Stop Temperature Probe Experiment"
-            : "Stop Heater Experiment"
-        );
-      }else if(setPointTemp !== status?.setpointTemp){
-        setModal("Do you want to save Setpoint Temperature?")
-      }
+      if(dataFeed.heater !== null) 
+      setModal(
+        location?.pathname === "/temperature-probe"
+          ? "Stop Temperature Probe Experiment"
+          : "Stop Heater Experiment"
+      );
+      else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save set point Temperature?")
+
+      // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){
+      //   setModal(
+      //     location?.pathname === "/temperature-probe"
+      //       ? "Stop Temperature Probe Experiment and save Setpoint Temperature"
+      //       : "Stop Heater Experiment and save Setpoint Temperature"
+      //   );
+      // }else if(dataFeed.heater !== null){
+      //   setModal(
+      //     location?.pathname === "/temperature-probe"
+      //       ? "Stop Temperature Probe Experiment"
+      //       : "Stop Heater Experiment"
+      //   );
+      // }else if(setPointTemp !== status?.setpointTemp){
+      //   setModal("Do you want to save set point Temperature?")
+      // }
 
       // if(dataFeed.heater !== null) // before
       // setModal(
@@ -260,36 +306,44 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //     ? "Stop Temperature Probe Experiment"
       //     : "Stop Heater Experiment"
       // );
-      // else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save Setpoint Temperature?")
+      // else if(setPointTemp !== status?.setpointTemp) setModal("Do you want to save set point Temperature?")
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
       ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
 
-      if(status?.operation !== null && status?.sensorConnected && checkForSave){
-        if(clientId === status?.leaderSelected)
-         setModal(
-          location?.pathname === "/temperature-sensor"
-            ? "Stop Temperature Experiment and save data"
-            : "Stop Voltage Experiment and save data"
-        );
-        else setModal("Do you want to save the experiment data?")
-      }else if(status?.operation !== null && status?.sensorConnected){
-        if(clientId === status?.leaderSelected)
-         setModal(
+      if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
+        setModal(
           location?.pathname === "/temperature-sensor"
             ? "Stop Temperature Experiment"
             : "Stop Voltage Experiment"
         );
-        else if(!checkForSave && clientId !== status?.leaderSelected){
-              navigate("/scan-devices",{
-                state: { screenName : "/scan-devices" },
-              });
-        }
-      }else if(checkForSave){
-        setModal("Do you want to save the experiment data?")
-      }
+      }else if(checkForSave) setModal("Do you want to save the experiment data?")
+
+      // if(status?.operation !== null && status?.sensorConnected && checkForSave){
+      //   if(clientId === status?.leaderSelected)
+      //    setModal(
+      //     location?.pathname === "/temperature-sensor"
+      //       ? "Stop Temperature Experiment and save data"
+      //       : "Stop Voltage Experiment and save data"
+      //   );
+      //   else setModal("Do you want to save the experiment data?")
+      // }else if(status?.operation !== null && status?.sensorConnected){
+      //   if(clientId === status?.leaderSelected)
+      //    setModal(
+      //     location?.pathname === "/temperature-sensor"
+      //       ? "Stop Temperature Experiment"
+      //       : "Stop Voltage Experiment"
+      //   );
+      //   else if(!checkForSave && clientId !== status?.leaderSelected){
+      //         navigate("/scan-devices",{
+      //           state: { screenName : "/scan-devices" },
+      //         });
+      //   }
+      // }else if(checkForSave){
+      //   setModal("Do you want to save the experiment data?")
+      // }
 
       // if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
       //   setModal(
@@ -299,6 +353,17 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //   );
       // }else if(checkForSave) setModal("Do you want to save the experiment data?")
      
+    }else if(location?.pathname === "/measure-absorbance"){
+      if(checkForSave){
+        setModal("Do you want to save the experiment data?")
+      }else{
+        if(clientId === status?.leaderSelected){
+          simulateRgb(null)
+        }
+        navigate("/scan-devices",{
+          state: { screenName : "/scan-devices" },
+        });
+      }
     }else {
       if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
       navigate("/scan-devices",{
@@ -325,99 +390,88 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   };
 
   const handleStopProcess = async () => {
+    setModal("");
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
         (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp)
     ) {
 
-      if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){
-        if(setPointTemp){
-          changeSetpointTemp(setPointTemp)
+        if(dataFeed.heater !== null){ 
+          if(location?.pathname === "/temperature-probe"){
+            stopHeaterExperiment(true);
+          } else stopHeaterExperiment()
+        if(setPointTemp && setPointTemp !== status?.setpointTemp){
+          setModal("Do you want to save set point Temperature?")
+        }else if(setPointTemp === status?.setpointTemp){
+          let value:any = onClick === "myRecord" ? "/my-records" : -1;
+          if(onClick === "connectionManager")
+            navigate("/scan-devices",{
+              state: { screenName : "/scan-devices" },
+            });
+          else navigate(value)
         }
-        await delay(1000);
-
-        let value:any = onClick === "myRecord" ? "/my-records" : -1;
-        if(onClick === "connectionManager")
-          navigate("/scan-devices",{
-            state: { screenName : "/scan-devices" },
-          });
-        else navigate(value)
-        if(location?.pathname === "/temperature-probe"){
-          stopHeaterExperiment(true);
-        } else stopHeaterExperiment()
-
-      }else if(dataFeed.heater !== null){
-        if(location?.pathname === "/temperature-probe"){
-          stopHeaterExperiment(true);  
-        }else stopHeaterExperiment();
-        let value:any = onClick === "myRecord" ? "/my-records" : -1;
-        if(onClick === "connectionManager")
-          navigate("/scan-devices",{
-            state: { screenName : "/scan-devices" },
-          });
-        else navigate(value)
-      }else if(setPointTemp !== status?.setpointTemp){
-        if(setPointTemp)
+      }
+      else if(setPointTemp && setPointTemp !== status?.setpointTemp) {
         changeSetpointTemp(setPointTemp)
         let value:any = onClick === "myRecord" ? "/my-records" : -1;
         if(onClick === "connectionManager")
-          navigate("/scan-devices",{
-            state: { screenName : "/scan-devices" },
-          });
-        else navigate(value)
+            navigate("/scan-devices",{
+              state: { screenName : "/scan-devices" },
+            });
+          else navigate(value)
       }
 
-      // if(dataFeed.heater !== null){ // before
-      //   stopHeaterExperiment();
-      //   if(setPointTemp === status?.setpointTemp){
-      //     let value:any = onClick === "myRecord" ? "/my-records" : -1;
-      //     if(onClick === "connectionManager")
-      //       navigate("/scan-devices",{
-      //         state: { screenName : "/scan-devices" },
-      //       });
-      //     else navigate(value)
+      // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){ // before
+      //   if(setPointTemp){
+      //     changeSetpointTemp(setPointTemp)
       //   }
-      // }
-      // else if(setPointTemp && setPointTemp !== status?.setpointTemp) {
+      //   await delay(1000);
+
+      //   let value:any = onClick === "myRecord" ? "/my-records" : -1;
+      //   if(onClick === "connectionManager")
+      //     navigate("/scan-devices",{
+      //       state: { screenName : "/scan-devices" },
+      //     });
+      //   else navigate(value)
+      //   if(location?.pathname === "/temperature-probe"){
+      //     stopHeaterExperiment(true);
+      //   } else stopHeaterExperiment()
+
+      // }else if(dataFeed.heater !== null){
+      //   if(location?.pathname === "/temperature-probe"){
+      //     stopHeaterExperiment(true);  
+      //   }else stopHeaterExperiment();
+      //   let value:any = onClick === "myRecord" ? "/my-records" : -1;
+      //   if(onClick === "connectionManager")
+      //     navigate("/scan-devices",{
+      //       state: { screenName : "/scan-devices" },
+      //     });
+      //   else navigate(value)
+      // }else if(setPointTemp !== status?.setpointTemp){
+      //   if(setPointTemp)
       //   changeSetpointTemp(setPointTemp)
       //   let value:any = onClick === "myRecord" ? "/my-records" : -1;
       //   if(onClick === "connectionManager")
-      //       navigate("/scan-devices",{
-      //         state: { screenName : "/scan-devices" },
-      //       });
-      //     else navigate(value)
+      //     navigate("/scan-devices",{
+      //       state: { screenName : "/scan-devices" },
+      //     });
+      //   else navigate(value)
       // }
+
+    
     } else if (
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") &&
       ((status?.operation !== null && status?.sensorConnected) || checkForSave)
     ) {
 
-      if(status?.operation !== null && status?.sensorConnected && checkForSave){
-        if(clientId === status?.leaderSelected)
-        stopSensorExperiment();
-        if(handleSave)
-        handleSave()
-        let value:any = onClick === "myRecord" ? "/my-records" : -1;
-        if(onClick === "connectionManager")
-            navigate("/scan-devices",{
-              state: { screenName : "/scan-devices" },
-            });
-        else if(onClick === "sync") handleSyncNavigate()
-        else navigate(value)
-      }else if(status?.operation !== null && status?.sensorConnected){
-        if(clientId === status?.leaderSelected)
-        stopSensorExperiment();
-        let value:any = onClick === "myRecord" ? "/my-records" : -1;
-        if(onClick === "connectionManager")
-            navigate("/scan-devices",{
-              state: { screenName : "/scan-devices" },
-            });
-        else if(onClick === "sync") handleSyncNavigate()
-        else navigate(value)
-      }else if(checkForSave){
-        if(handleSave)
+       if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
+         stopSensorExperiment();
+          if(checkForSave){
+            setModal("Do you want to save the experiment data?")
+          }
+       }else if(checkForSave && handleSave && isOpen === "Do you want to save the experiment data?") {
         handleSave()
         let value:any = onClick === "myRecord" ? "/my-records" : -1;
         if(onClick === "connectionManager")
@@ -428,10 +482,30 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         else navigate(value)
       }
 
-
-      // if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected) // before
+      // if(status?.operation !== null && status?.sensorConnected && checkForSave){ // before
+      //   if(clientId === status?.leaderSelected)
       //   stopSensorExperiment();
-      // else if(checkForSave && handleSave && isOpen === "Do you want to save the experiment data?") {
+      //   if(handleSave)
+      //   handleSave()
+      //   let value:any = onClick === "myRecord" ? "/my-records" : -1;
+      //   if(onClick === "connectionManager")
+      //       navigate("/scan-devices",{
+      //         state: { screenName : "/scan-devices" },
+      //       });
+      //   else if(onClick === "sync") handleSyncNavigate()
+      //   else navigate(value)
+      // }else if(status?.operation !== null && status?.sensorConnected){
+      //   if(clientId === status?.leaderSelected)
+      //   stopSensorExperiment();
+      //   let value:any = onClick === "myRecord" ? "/my-records" : -1;
+      //   if(onClick === "connectionManager")
+      //       navigate("/scan-devices",{
+      //         state: { screenName : "/scan-devices" },
+      //       });
+      //   else if(onClick === "sync") handleSyncNavigate()
+      //   else navigate(value)
+      // }else if(checkForSave){
+      //   if(handleSave)
       //   handleSave()
       //   let value:any = onClick === "myRecord" ? "/my-records" : -1;
       //   if(onClick === "connectionManager")
@@ -441,9 +515,28 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //   else if(onClick === "sync") handleSyncNavigate()
       //   else navigate(value)
       // }
+     
+    }else if(location?.pathname === "/measure-absorbance"){
+        if(checkForSave && handleSave){
+          handleSave()
+        }
+        if(clientId === status?.leaderSelected){
+          simulateRgb(null)
+        }
+        let value:any = onClick === "myRecord" ? "/my-records" : -1;
+        if(onClick === "connectionManager")
+            navigate("/scan-devices",{
+              state: { screenName : "/scan-devices" },
+            });
+        else if(onClick === "sync") handleSyncNavigate()
+        else {
+          if(location?.pathname === "/measure-absorbance" && onClick === "back"){
+            navigate("/rgb-spect") 
+          }else
+          navigate(value)
+        }
     } else navigate(-1);
 
-    setModal("");
   };
 
   const handleSyncNavigate = async () => {
@@ -467,26 +560,36 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
     setOnClick("sync")
     if (
       (location?.pathname === "/temperature-sensor" ||
-        location?.pathname === "/voltage-sensor") && checkForSave
+        location?.pathname === "/voltage-sensor" || location?.pathname === "/measure-absorbance") && checkForSave
     ) {
       if(checkForSave) setModal("Do you want to save the experiment data?")
     }else handleSyncNavigate()
   }
 
   const handleCancelModal = () => {
-    setModal("")
-    if(isOpen === "Do you want to save the experiment data?" || isOpen === "Do you want to save Setpoint Temperature?"){
+    if(isOpen === "Do you want to save the experiment data?" || isOpen === "Do you want to save set point Temperature?"){
+      if(location?.pathname === "/measure-absorbance"){
+        if(clientId === status?.leaderSelected){
+          simulateRgb(null)
+        }
+      }
       let value:any = onClick === "myRecord" ? "/my-records" :  -1;
       if(onClick === "connectionManager"){
-        if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
+        if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe" || location?.pathname === "/measure-absorbance")
           navigate("/scan-devices",{
             state: { screenName : "/scan-devices" },
           });
         else navigate("/scan-devices")
         setScreenName("/scan-devices");
       }else if(onClick === "sync") handleSyncNavigate()
-      else navigate(value)
+      else {
+        if(location?.pathname === "/measure-absorbance" && onClick === "back"){
+          navigate("/rgb-spect") 
+        }else
+        navigate(value)
+      }
     }
+    setModal("")
   }
 
   const handleDelete = () => {
@@ -595,15 +698,11 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   },[connected,hasConnectionEstablished,status?.deviceName,deviceName,checkForSave,showDisconnectDeviceModal]);
 
   useEffect(() => {
-    if(status?.operation !== null && status?.sensorConnected && checkForSave && (isOpen === "Stop Temperature Experiment" || isOpen === "Stop Voltage Experiment")){
-      setModal(
-        location?.pathname === "/temperature-sensor"
-          ? "Stop Temperature Experiment and save data"
-          : "Stop Voltage Experiment and save data"
-      );
-      
+    if(!status?.operation && status?.sensorConnected && checkForSave && (isOpen === "Stop Temperature Experiment" || isOpen === "Stop Voltage Experiment")){
+      setModal("Do you want to save the experiment data?");
     }
   },[checkForSave,status?.operation,status?.sensorConnected,isOpen,location?.pathname])
+
   // useEffect(() => { // setScreen name as a leader for sync for member
   //   if(clientId === status?.leaderSelected){
   //     if(location?.pathname){
@@ -648,14 +747,14 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       {isOpen && isOpen !== "device disconnect and save data" && <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}
-        handleDisconnect={
+        handleDisconnect={ // on press yes
           isOpen === "delete"
             ? handleDelete
             : isOpen === "Stop Heater Experiment" ||
               isOpen === "Stop Temperature Probe Experiment" ||
               isOpen === "Stop Heater Experiment and save Setpoint Temperature" ||
               isOpen === "Stop Temperature Probe Experiment and save Setpoint Temperature" ||
-              isOpen === "Do you want to save Setpoint Temperature?" ||
+              isOpen === "Do you want to save set point Temperature?" ||
               isOpen === "Do you want to save the experiment data?" || 
               isOpen === "Stop Temperature Experiment and save data" ||
               isOpen === "Stop Temperature Experiment" ||
@@ -675,10 +774,10 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
               isOpen === "Stop Temperature Experiment" ||
               isOpen === "Stop Voltage Experiment and save data" ||
               isOpen === "Stop Voltage Experiment"
-            ? `Are you sure to ${isOpen}?`
-            : (isOpen === "Do you want to save the experiment data?" || isOpen === "Do you want to save Setpoint Temperature?" ? isOpen :  "Are you sure to Disconnect!")
+            ? "Do you want to stop the experiment?" //`Are you sure to ${isOpen}?`
+            : (isOpen === "Do you want to save the experiment data?" || isOpen === "Do you want to save set point Temperature?" ? isOpen :  "Are you sure to Disconnect!")
         }
-        handleCancel = {() => handleCancelModal()}
+        handleCancel = {() => handleCancelModal()} // on press no
       />}
        {isOpen === "device disconnect and save data" && <SensorDisconnectModal 
            isOpen={isOpen ? true : false}

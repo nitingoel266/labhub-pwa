@@ -96,8 +96,8 @@ const OneCard = ({
 }: OneCardProps) => {
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const handleDownload = (item: any) => {
-    let header = ["Time ( Sec )", "Temperature ( C )"];
-    if (selectedButton === "voltage") header = ["Time ( Sec )", "Voltage (V)"];
+    let header = ["Time (Sec)", "Temperature (°C)"];
+    if (selectedButton === "voltage") header = ["Time (Sec)", "Voltage (V)"];
     else if (selectedButton === "rgb")
       header = ["Measurement No.", "RED", "GREEN", "BLUE"];
     DownloadData({ data: item, header });

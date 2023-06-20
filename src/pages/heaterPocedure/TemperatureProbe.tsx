@@ -96,8 +96,10 @@ const TemperatureProbe = () => {
   // };
 
   const handleSensorDisconnected = (value:any) => {
-    setModal(value)
-    navigate("/heater")
+    if(isOpen === "Heater disconnected"){
+      navigate("/heater")
+    }
+    setModal("")
   }
 
   useEffect(() => {
@@ -118,7 +120,13 @@ const TemperatureProbe = () => {
   }, [status?.setpointTemp]);
 
   useEffect(() => { // stop probe experiment and show a modal that sensor disconnected and for go back
-    if(status?.heaterConnected !== "probe"){
+    if(!status?.heaterConnected){
+      if(status?.operation === "heater_probe"){
+        setIsStart(false);
+        stopHeaterExperiment(true);
+      }
+      setModal("Heater disconnected")
+    }else if(status?.heaterConnected !== "probe"){
       if(status?.operation === 'heater_probe'){
         setIsStart(false);
         stopHeaterExperiment(true);
@@ -139,12 +147,12 @@ const TemperatureProbe = () => {
     <>
     <Header 
       setPointTemp={temperature} 
-      shouldCloseModal = {isOpen === "Temperature probe disconnected" ? true : false}
+      shouldCloseModal = {(isOpen === "Temperature probe disconnected" || isOpen === "Heater disconnected") ? true : false}
       />
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
       <div className={styles.HeaderTextWrapper}>
         <div style={{display:"flex",flexDirection:"row"}}>
-          <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{SETPOINT_TEMPERATURE} (</h4>
+          <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{"Set Point Temperature"} (</h4>
           <h4
            className={styles.TempratureDegreeIcon}  
            style={{
@@ -271,7 +279,7 @@ const TemperatureProbe = () => {
       </div>
       <div className={styles.HeaterElementWraper}>
         <div aria-label={"temperatue is "+istemperature && (Number(istemperature)).toFixed(0)+"degree celcius"} className={styles.TemperatureWrapper} style={{visibility:status?.operation === 'heater_probe' ? "visible" : "hidden"}}>
-          <div>{istemperature && (Number(istemperature)).toFixed(0)}</div>
+          <div>{istemperature && (Number(istemperature)).toFixed(1)}</div>
           <div className={styles.TemperatureDegree}> </div>
           <div>C</div>
         </div>
@@ -322,19 +330,19 @@ const TemperatureProbe = () => {
           </div>
         </div>
         <div aria-label={"power is"+power && Number(power).toFixed(2)+"watt"} className={styles.HeaterElementText} style={{visibility:status?.operation === 'heater_probe' ? "visible" : "hidden"}}>
-          Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(0)} W</span>
+          Power Value: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(0)} W</span>
         </div>
       </div>
-      {isOpen !== "Temperature probe disconnected" && isOpen && <MemberDisconnect
+      {isOpen !== "Temperature probe disconnected" && isOpen !== "Heater disconnected" && isOpen && <MemberDisconnect
         isOpen={isOpen !== SETPOINT_TEMPERATURE ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={isOpen === "start" ? handleStart : handleStop}
         message={`Do you want to ${isOpen} the experiment.`}
       />}
-     {isOpen === "Temperature probe disconnected" && <SensorDisconnectModal 
+     {(isOpen === "Temperature probe disconnected" || isOpen === "Heater disconnected") && <SensorDisconnectModal 
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
-          message="Please connect temperature probe to proceed."
+          message={isOpen === "Heater disconnected" ? (clientId === status?.leaderSelected ? "Heater is disconnected, please connect the heater to start the experiment again." : "Heater is disconnected!") : "Please connect temperature probe to proceed."}
       />}
       <RightArrow
         isSelected={

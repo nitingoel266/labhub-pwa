@@ -51,6 +51,9 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
 
   const [deviceName, setDeviceName] = useState("");
 
+  const [currentUrl,setCurrentUrl] = useState<string>('');
+  const [prevUrl,setPrevUrl] = useState<string>('');
+
 
   const [screenName, setScreenName] = useState("");
 
@@ -109,7 +112,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
             ? "Stop Temperature Experiment and save data"
             : "Stop Voltage Experiment and save data"
         );
-        else setModal("Do you want to save Data?")
+        else setModal("Do you want to save the experiment data?")
       }else if(status?.operation !== null && status?.sensorConnected){
         if(clientId === status?.leaderSelected)
          setModal(
@@ -121,7 +124,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
           navigate(-1)
         }
       }else if(checkForSave){
-        setModal("Do you want to save Data?")
+        setModal("Do you want to save the experiment data?")
       }
 
       // if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){ // before
@@ -130,7 +133,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //       ? "Stop Temperature Experiment"
       //       : "Stop Voltage Experiment"
       //   );
-      // }else if(checkForSave) setModal("Do you want to save Data?")
+      // }else if(checkForSave) setModal("Do you want to save the experiment data?")
      
     }else if(location?.pathname === "/rgb-spect") {
       navigate("/function-selection")
@@ -146,7 +149,9 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       navigate("/function-selection")
     }else if(location?.pathname === "/heater") {
       navigate("/function-selection")
-    } else navigate(-1);
+    } else {
+      navigate(-1);
+    }
   };
 
   const handleClick = (value: any) => {
@@ -197,7 +202,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
             ? "Stop Temperature Experiment and save data"
             : "Stop Voltage Experiment and save data"
         );
-        else setModal("Do you want to save Data?")
+        else setModal("Do you want to save the experiment data?")
       }else if(status?.operation !== null && status?.sensorConnected){
         if(clientId === status?.leaderSelected)
          setModal(
@@ -209,7 +214,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
           navigate("/my-records")
         }
       }else if(checkForSave){
-        setModal("Do you want to save Data?")
+        setModal("Do you want to save the experiment data?")
       }
 
 
@@ -219,7 +224,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //       ? "Stop Temperature Experiment"
       //       : "Stop Voltage Experiment"
       //   );
-      // }else if(checkForSave) setModal("Do you want to save Data?")
+      // }else if(checkForSave) setModal("Do you want to save the experiment data?")
      
     }else {
       navigate("/my-records");
@@ -269,7 +274,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
             ? "Stop Temperature Experiment and save data"
             : "Stop Voltage Experiment and save data"
         );
-        else setModal("Do you want to save Data?")
+        else setModal("Do you want to save the experiment data?")
       }else if(status?.operation !== null && status?.sensorConnected){
         if(clientId === status?.leaderSelected)
          setModal(
@@ -283,7 +288,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
               });
         }
       }else if(checkForSave){
-        setModal("Do you want to save Data?")
+        setModal("Do you want to save the experiment data?")
       }
 
       // if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected){
@@ -292,7 +297,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       //       ? "Stop Temperature Experiment"
       //       : "Stop Voltage Experiment"
       //   );
-      // }else if(checkForSave) setModal("Do you want to save Data?")
+      // }else if(checkForSave) setModal("Do you want to save the experiment data?")
      
     }else {
       if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
@@ -426,7 +431,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
 
       // if(status?.operation !== null && status?.sensorConnected && clientId === status?.leaderSelected) // before
       //   stopSensorExperiment();
-      // else if(checkForSave && handleSave && isOpen === "Do you want to save Data?") {
+      // else if(checkForSave && handleSave && isOpen === "Do you want to save the experiment data?") {
       //   handleSave()
       //   let value:any = onClick === "myRecord" ? "/my-records" : -1;
       //   if(onClick === "connectionManager")
@@ -464,13 +469,13 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       (location?.pathname === "/temperature-sensor" ||
         location?.pathname === "/voltage-sensor") && checkForSave
     ) {
-      if(checkForSave) setModal("Do you want to save Data?")
+      if(checkForSave) setModal("Do you want to save the experiment data?")
     }else handleSyncNavigate()
   }
 
   const handleCancelModal = () => {
     setModal("")
-    if(isOpen === "Do you want to save Data?" || isOpen === "Do you want to save Setpoint Temperature?"){
+    if(isOpen === "Do you want to save the experiment data?" || isOpen === "Do you want to save Setpoint Temperature?"){
       let value:any = onClick === "myRecord" ? "/my-records" :  -1;
       if(onClick === "connectionManager"){
         if(location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")
@@ -507,9 +512,9 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
       location.state.data.selectedButton &&
       location.state.data.selectedData
     ) {
-      let header = ["Time ( Sec )", "Temperature ( C )"];
+      let header = ["Time (Sec)", "Temperature (°C)"];
       if (location.state.data.selectedButton === "voltage")
-        header = ["Time ( Sec )", "Voltage (V)"];
+        header = ["Time (Sec)", "Voltage (V)"];
       else if (location.state.data.selectedButton === "rgb")
         header = ["Measurement No", "RED", "GREEN", "BLUE"];
       DownloadData({ data: location.state.data.selectedData, header });
@@ -525,6 +530,9 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
 
   const handleDisconnectedUnSaveData = () => {
     setModal("")
+    if(location?.pathname === "/measure-absorbance"){
+      navigate("/rgb-spect")
+    }else
     navigate(-1)
   }
 
@@ -532,8 +540,9 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
     // if connection is refused or leader disconnect then scan devices screen
     if (!connected && !checkForSave && (location.pathname !== "/" || !status?.leaderSelected)) {
       if (!status?.leaderSelected) setScreenName("");
-      if(location?.pathname !== "/my-records" && location?.pathname !== "/temperature-records" && location?.pathname !== "/voltage-records" && location?.pathname !== "/rgb-records")
-      navigate("/scan-devices");
+      if(location?.pathname !== "/my-records" && location?.pathname !== "/temperature-records" && location?.pathname !== "/voltage-records" && location?.pathname !== "/rgb-records" && location?.pathname !== "/scan-devices"){
+        navigate("/scan-devices");
+      }
     }
   }, [connected, navigate, location?.pathname, status?.leaderSelected,checkForSave]);
 
@@ -608,6 +617,13 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   //   }
   // },[clientId,status?.leaderSelected,location?.pathname])
 
+  useEffect(() => { // for back behaviour on scan page
+    if(location?.pathname !== currentUrl){
+      setPrevUrl(currentUrl)
+      setCurrentUrl(location?.pathname)
+    }
+  },[location?.pathname,currentUrl])
+
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (
     <div>
@@ -627,6 +643,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         handleConnectionManager={handleConnectionManager}
         handleDownload={handleDownload}
         handleSync={handleSync}
+        prevUrl={prevUrl}
       />
       {isOpen && isOpen !== "device disconnect and save data" && <MemberDisconnect
         isOpen={isOpen ? true : false}
@@ -639,7 +656,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
               isOpen === "Stop Heater Experiment and save Setpoint Temperature" ||
               isOpen === "Stop Temperature Probe Experiment and save Setpoint Temperature" ||
               isOpen === "Do you want to save Setpoint Temperature?" ||
-              isOpen === "Do you want to save Data?" || 
+              isOpen === "Do you want to save the experiment data?" || 
               isOpen === "Stop Temperature Experiment and save data" ||
               isOpen === "Stop Temperature Experiment" ||
               isOpen === "Stop Voltage Experiment and save data" || 
@@ -649,7 +666,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         }
         message={
           isOpen === "delete"
-            ? "Aye you sure you want to Delete?"
+            ? "Do you want to delete file?"
             : isOpen === "Stop Heater Experiment" ||
               isOpen === "Stop Temperature Probe Experiment" ||
               isOpen === "Stop Heater Experiment and save Setpoint Temperature" || 
@@ -659,7 +676,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
               isOpen === "Stop Voltage Experiment and save data" ||
               isOpen === "Stop Voltage Experiment"
             ? `Are you sure to ${isOpen}?`
-            : (isOpen === "Do you want to save Data?" || isOpen === "Do you want to save Setpoint Temperature?" ? isOpen :  "Are you sure to Disconnect!")
+            : (isOpen === "Do you want to save the experiment data?" || isOpen === "Do you want to save Setpoint Temperature?" ? isOpen :  "Are you sure to Disconnect!")
         }
         handleCancel = {() => handleCancelModal()}
       />}
@@ -722,7 +739,7 @@ const FirstHeader = ({
           </p>
         </div>
       </div>
-      <div className={styles.BatteryWapper} title={(status?.batteryLevel || 0)+"%"}>
+      {connected && <div className={styles.BatteryWapper} title={(status?.batteryLevel || 0)+"%"}>
         <div style={{marginRight:5,color:"#FFFFFF",fontSize:14}}>{status?.batteryLevel || 0}%</div>
         <div className={styles.BatteryInnerWapper}>
           <div style={{backgroundColor:"#79D179",flex:1}}></div>
@@ -735,7 +752,7 @@ const FirstHeader = ({
           />
         </div>
         <div className={styles.BatteryHandle}></div>
-      </div>
+      </div>}
     </div>
   );
 };
@@ -749,17 +766,18 @@ const SecondHeader = ({
   setModal,
   handleConnectionManager,
   handleDownload,
-  handleSync
+  handleSync,
+  prevUrl
 }: SecondHeaderprops) => {
   const location = useLocation();
   return (
     <div className={styles.SecondHeaderWrapper}>
-     {location?.pathname !== "/scan-devices" ? <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={location?.pathname === "/scan-devices" ? () => {} : handleBack}>
+     {(status?.leaderSelected || prevUrl) ? <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={() => (prevUrl || status?.leaderSelected) ? handleBack() : {}}>
       <img
         src={BackIcon}
         style={{
           cursor:
-            location?.pathname === "/scan-devices" ? "not-allowed" : "pointer",
+            (status?.leaderSelected || prevUrl) ? "pointer" : "not-allowed",
           width: 25,
         }}
         alt="Back Icon"
@@ -857,6 +875,7 @@ type SecondHeaderprops = {
   connected?: any;
   handleDownload: () => void;
   handleSync:() => void;
+  prevUrl:string;
 };
 
 export interface HeaderProps {

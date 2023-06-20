@@ -10,7 +10,7 @@ import {getVoltageLog} from "../labhub/actions-client";
 import {
   getTitle,
   getDate,
-  getTime,
+  // getTime,
   validateFileName,
   getStorageKeys,
   mobileWidth,
@@ -43,7 +43,7 @@ const MeasuringVoltage = () => {
   //     if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
   //       setModal("stop");
   //     } else if (graphData.length > 0 && !isSaved)
-  //       setModal("Do you want to save Data?");
+  //       setModal("Do you want to save the experiment data?");
   //   } else navigate("/function-selection");
   // };
   const handleRestart = () => {
@@ -104,7 +104,7 @@ const MeasuringVoltage = () => {
         let resultData = {
         name: verifiedFileName,
         date: getDate(),
-        time: getTime(),
+        time: `${title.slice(8,10)}:${title.slice(10,12)}`,  // getTime(),
         data: resultVoltage,
         };
         let storageVoltageData = JSON.stringify(resultData);
@@ -119,7 +119,7 @@ const MeasuringVoltage = () => {
   };
   const handleCancelModal = () => {
     setModal("");
-    if (isOpen === "Do you want to save Data?") {
+    if (isOpen === "Do you want to save the experiment data?") {
       navigate("/function-selection");
     }
   };
@@ -194,7 +194,9 @@ const MeasuringVoltage = () => {
         ...prevData,
         status?.setupData?.dataRate === "user" ? 0 : 2,
       ]);
-      setIsSaved(false);
+      if(status?.setupData?.dataRate !== "user"){
+        setIsSaved(false);
+      }
     } /* else if (clientId !== status?.leaderSelected && dataStream) {
       let logData = [],
         capturePoints: any = [];
@@ -260,17 +262,17 @@ const MeasuringVoltage = () => {
   useEffect(() => { // save data and go back only for member if leader change data setup and member is n measuring screen
     if(status?.setupData && JSON.stringify(status?.setupData) !== JSON.stringify(dataSetup) && clientId !== status?.leaderSelected){
       if(capturePoint?.some((el: number) => el > 0) && !isSaved){
-        setModal("Do you want to save Data?")
+        setModal("Do you want to save the experiment data?")
       }else navigate("/function-selection")
     }
   },[status?.setupData,dataSetup,clientId,status?.leaderSelected,capturePoint,isSaved,navigate])
 
   useEffect(() => { // set x axis of graph
     let rate:any = typeof status?.setupData?.dataRate === "number" ? Number(status?.setupData?.dataRate) : 1;
-    let maxTime = labels?.length > 0 ? labels[labels?.length -1] : Number(rate * 60);
+    let maxTime = labels?.length > 0 ? labels[labels?.length -1] : Number(rate * 9);
     if(graphData?.length === 0){
         let initialLabels = []
-      for(let i=0;i<=(rate * 60);i=i+rate){
+      for(let i=0;i<=(rate * 9);i=i+rate){
         initialLabels.push(Number(i))
       }
       if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
@@ -358,8 +360,8 @@ const MeasuringVoltage = () => {
                 <button
                   aria-label="capture button"
                   className={styles.CaptureButton}
-                  style={graphData?.length > 0 ? {} : extraStyle}
-                  onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
+                  style={capturePoint[capturePoint?.length - 1] <= 0 ? {} : extraStyle}
+                  onClick={() => (capturePoint[capturePoint?.length - 1] <= 0 ? handleCapture() : {})}
                 >
                   Capture
                 </button>
@@ -431,8 +433,8 @@ const MeasuringVoltage = () => {
               {status?.setupData?.dataRate === "user" && <button
                 aria-label="capture button"
                 className={styles.CaptureHorizontalButton}
-                style={graphData?.length > 0 ? {} : extraStyle}
-                onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
+                style={capturePoint[capturePoint?.length - 1] <= 0 ? {} : extraStyle}
+                onClick={() => (capturePoint[capturePoint?.length - 1] <= 0 ? handleCapture() : {})}
               >
                 Capture
               </button>}
@@ -445,11 +447,11 @@ const MeasuringVoltage = () => {
           handleDisconnect={
             isOpen === "restart" || isOpen === "start"
               ? handleRestart
-              : isOpen === "Do you want to save Data?" ? 
+              : isOpen === "Do you want to save the experiment data?" ? 
               handleSubmitProcess
               : handleStop
           }
-          message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
+          message={isOpen === "Do you want to save the experiment data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
           handleCancel = {handleCancelModal}
         />}
         {connected && isOpen === "Voltage Sensor disconnected" && <SensorDisconnectModal 

@@ -56,11 +56,12 @@
     display: flex;
     flex-direction: row;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
+    color: red;
     width: 70px;
 }
 .TemperatureDegree {
-    border: 2px solid #000000;
+    border: 2px solid red;
     border-radius: 100px;
     width:2px;
     height: 2px;
@@ -78,8 +79,8 @@
 }
 .HeaterElementText {
     font-weight: 500;
-    font-size: 14px;
-    width: 105px;
+    font-size: 13px;
+    width: 120px;
 }
 .HeaterElementSubWraper {
     display: flex;

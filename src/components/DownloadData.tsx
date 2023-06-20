@@ -20,7 +20,7 @@ const DownloadData = ({ data, header }: Props) => {
   // csv += data.name + '\n';
   if (data && data.data && data.data.length > 0) {
     for(let one of data.data){
-      if(header && header[1] === "Temperature ( C )"){
+      if(header && header[1] === "Temperature (°C)"){
         csv += one.time;
         csv += "," + one.temp;
       }else if(header && header[1] === "Voltage (V)"){

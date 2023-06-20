@@ -6,11 +6,11 @@ const TemperatureRecord = () => {
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.Wrapper}>
       {[
-        { key: "time", value: "Time ( Sec )" },
-        { key: "temp", value: "Temperature ( C )" },
+        { key: "time", value: "Time (Sec)" },
+        { key: "temp", value: "Temperature (C)" },
       ].map((el: any) => (
         <div key={el.key} className={styles.ColumnWrapper}>
-          <div className={styles.ColumnHeader}>{el.value === "Temperature ( C )" ? "Temperature ( " : el?.value} {el.value === "Temperature ( C )" && <span className={styles.TempratureDegreeIcon}>{" "}</span>} {el.value === "Temperature ( C )" && "C )"}</div>
+          <div className={styles.ColumnHeader}>{el.value === "Temperature (C)" ? "Temperature (" : el?.value} {el.value === "Temperature (C)" && <span className={styles.TempratureDegreeIcon}>{" "}</span>} {el.value === "Temperature (C)" && "C)"}</div>
           <div className={styles.ColumnBodyWrapper}>
             {state &&
               state.data &&

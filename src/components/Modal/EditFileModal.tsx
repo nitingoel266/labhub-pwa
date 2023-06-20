@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {CloseIcon} from "../../images/index"
+import {WhiteCrossIcon} from "../../images/index"
 import styles from "../../styles/EditFileModal.module.css";
 
 type Props = {
@@ -12,6 +12,20 @@ type Props = {
 const EditFileModal = ({isOpen,setEditModal,EditFileName,selectedButton}:Props) => {
     const inputRef:any = useRef(null);
     const [fileName,setFileName] = useState<string>(isOpen?.name)
+    const [checkForError,setCheckForError] = useState<boolean>(false)
+
+    const editHandler = () => {
+        if(localStorage.getItem(`${selectedButton}_data_${fileName}`)){
+            setCheckForError(true)
+        }else{
+            EditFileName(isOpen,fileName)
+        }
+    }
+
+    const changeHandler = (e:any) => {
+        setFileName(e.target.value)
+        setCheckForError(false)
+    }
 
     useEffect(() => { // to set focus for acessibility
         inputRef?.current?.focus()
@@ -34,19 +48,19 @@ const EditFileModal = ({isOpen,setEditModal,EditFileName,selectedButton}:Props) 
                         style={{border:"none",outline:"none",backgroundColor:"inherit"}}
                         onClick={() => setEditModal("")}
                     >
-                        <img src={CloseIcon} style={{width:15,cursor:"pointer"}} alt="close icon"/>
+                        <img src={WhiteCrossIcon} style={{width:18,marginTop:5,cursor:"pointer"}} alt="close icon"/>
                     </button>
                 </div>
                 {/* <div className={styles.FileText}>
                     <input className={styles.InputElement} value={isOpen?.name} disabled/>
                 </div> */}
                 <div className={styles.FileText}>
-                    <input ref={inputRef} type="text" value={fileName} onChange={e => setFileName(e.target.value)} className={styles.InputElement} placeholder="Enter new file name..." required />
-                    {localStorage.getItem(`${selectedButton}_data_${fileName}`) ? <div style={{color:"red",fontSize:12,marginTop:2}}>File name already exists!</div> : <div style={{height:15}}>{" "}</div>}
+                    <input ref={inputRef} type="text" value={fileName} onChange={e => changeHandler(e)} className={styles.InputElement} placeholder="Enter new file name..." required />
+                    {checkForError ? <div style={{color:"red",fontSize:12,marginTop:2}}>File name already exists!</div> : <div style={{height:15}}>{" "}</div>}
                 </div>
                 <div className={styles.FooterWrapper}>
                     <button onClick={() => setEditModal("")} className={styles.CancelButton}>Cancel</button>
-                    <button onClick={() => EditFileName(isOpen,fileName)} className={styles.UpdateButton}>Rename</button>
+                    <button onClick={editHandler} className={styles.UpdateButton}>Rename</button>
                 </div>
             </div>
         </div>

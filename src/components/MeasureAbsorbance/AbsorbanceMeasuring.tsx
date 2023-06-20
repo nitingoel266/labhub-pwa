@@ -13,7 +13,7 @@ import {
   validateFileName,
   getTitle,
   getDate,
-  getTime,
+  // getTime,
   getStorageKeys,
   toastMessage
 } from "../Constants";
@@ -22,6 +22,7 @@ import { startRgbExperiment, simulateRgb } from "../../labhub/actions";
 import { useDeviceDataFeed, useDeviceStatus } from "../../labhub/status";
 import {getClientId} from "../../labhub/utils";
 import { RGB_DATA } from "../../utils/const";
+import Header from "../header";
 
 const AbsorbanceMeasuring = () => {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ const AbsorbanceMeasuring = () => {
     let resultData = {
       name: verifiedFileName,
       date: getDate(),
-      time: getTime(),
+      time: `${title.slice(8,10)}:${title.slice(10,12)}`,  //getTime(),
       isCalibratedAndTested: status?.rgbCalibratedAndTested,
       data: resultRGB,
     };
@@ -146,6 +147,12 @@ const AbsorbanceMeasuring = () => {
   },[title])
 
   return (
+    <>
+      <Header
+        checkForSave={measure?.length > 0 && !isSaved ? true : false}
+        handleSave={handleSave}
+        // shouldCloseModal = {isOpen === "Temperature Sensor disconnected" ? true : false}
+      />
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
       {screenName === "cuvette-insertion" && <div aria-label="Please insert cuvette to measure absorbance of RGB light. header" className={styles.HeaderText}>Please insert cuvette to measure absorbance of RGB light.</div>}
       <div className={styles.ButtonWrapper} style={screenName === "cuvette-insertion" ? {marginTop:0} : {marginTop:66}}>
@@ -227,6 +234,7 @@ const AbsorbanceMeasuring = () => {
         />
       )}
     </div>
+    </>
   );
 };
 

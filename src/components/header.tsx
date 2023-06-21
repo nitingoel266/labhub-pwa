@@ -27,13 +27,14 @@ import {
   WhiteDeleteIcon,
 } from "../images/index";
 import { useNavigate, useLocation } from "react-router-dom";
-import {toastMessage} from "./Constants";
+import {getShareFile, mobileWidth, toastMessage} from "./Constants";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
 import { GetScreenName} from "../utils/const";
 import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
-import {delay} from "../utils/utils";
+import ShareModal from "./Modal/ShareModal";
+// import {delay} from "../utils/utils";
 
 function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderProps) {
   const [status] = useDeviceStatus();
@@ -592,6 +593,43 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
     setModal("")
   }
 
+  const handleShare = async (title?:string) => {
+    setModal("");
+    if(location &&
+      location.state &&
+      location.state.data &&
+      location.state.data.selectedButton &&
+      location.state.data.selectedData)
+      {
+        if(title){
+          // const file = getShareFile(location.state.data.selectedData, location.state.data.selectedButton)
+          console.log("??>>> WEb SHARE",title)
+        }else{
+          if (!navigator.canShare) {
+            console.log("Your browser doesn't support the Web Share API.")
+            return;
+          }
+          try {
+
+            const file = getShareFile(location.state.data.selectedData, location.state.data.selectedButton)
+
+            // console.log("???????? ",file)
+            let expType = (location.state.data.selectedButton.slice(0,1)).toLocaleUpperCase() + location.state.data.selectedButton.slice(1)
+            await navigator.share({
+              url:`${expType} Experiment data of ${location.state.data.selectedData?.name}`,
+              text: `${expType} data of ${location.state.data.selectedData?.name}`,
+              title: `${expType} Experiment Data`, // Email subject
+              files:[file]
+            });
+            console.log("data has been shared Successfully!")
+          } catch (error) {
+            console.error(error)
+          }
+          // console.log("share data",item)
+      }
+    }
+  };
+
   const handleDelete = () => {
     setModal("");
     if (
@@ -741,6 +779,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         setModal={(value) => setModal(value)}
         handleConnectionManager={handleConnectionManager}
         handleDownload={handleDownload}
+        handleShare={handleShare}
         handleSync={handleSync}
         prevUrl={prevUrl}
       />
@@ -865,18 +904,29 @@ const SecondHeader = ({
   setModal,
   handleConnectionManager,
   handleDownload,
+  handleShare,
   handleSync,
   prevUrl
 }: SecondHeaderprops) => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState<any>(null);
+  const handleSubmit = (title: string) => {
+    if (title) {
+      handleShare(title);
+      setIsOpen(null);
+    }
+  };
+  const isMobile = window.innerWidth <= mobileWidth ? true : false;
+
   return (
+    <>
     <div className={styles.SecondHeaderWrapper}>
-     {(status?.leaderSelected || prevUrl) ? <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={() => (prevUrl || status?.leaderSelected) ? handleBack() : {}}>
+     {(location?.pathname !== "/scan-devices" || prevUrl) ? <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={() => (prevUrl || location?.pathname !== "/scan-devices") ? handleBack() : {}}>
       <img
         src={BackIcon}
         style={{
           cursor:
-            (status?.leaderSelected || prevUrl) ? "pointer" : "not-allowed",
+            (location?.pathname !== "/scan-devices" || prevUrl) ? "pointer" : "not-allowed",
           width: 25,
         }}
         alt="Back Icon"
@@ -923,7 +973,7 @@ const SecondHeader = ({
         <div className={styles.FistHeaderSubWrapper}>
           <button
             style={{outline:"none",border:"none",backgroundColor:"inherit"}}
-
+            onClick={() => isMobile ? handleShare() : setIsOpen({selectedButton:location.state.data.selectedButton,data:location.state.data.selectedData})}
           >
           <img
             src={WhiteShareIcon}
@@ -954,6 +1004,14 @@ const SecondHeader = ({
         </div>
       )}
     </div>
+    {isOpen && (
+        <ShareModal
+          isOpen={isOpen}
+          setModal={(value: any) => setIsOpen(value)}
+          handleSubmit={handleSubmit}
+        />
+      )}
+    </>
   );
 };
 
@@ -973,6 +1031,7 @@ type SecondHeaderprops = {
   handleConnectionManager: () => void;
   connected?: any;
   handleDownload: () => void;
+  handleShare:(title?:string) => void;
   handleSync:() => void;
   prevUrl:string;
 };

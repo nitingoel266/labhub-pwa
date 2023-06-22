@@ -6,8 +6,8 @@ const VoltageRecord = () => {
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.Wrapper}>
       {[
-        { key: "time", value: "Time ( Sec )" },
-        { key: "voltage", value: "Voltage ( V )" },
+        { key: "time", value: "Time (Sec)" },
+        { key: "voltage", value: "Voltage (V)" },
       ].map((el: any) => (
         <div key={el.key} className={styles.ColumnWrapper}>
           <div className={styles.ColumnHeader}>{el.value}</div>

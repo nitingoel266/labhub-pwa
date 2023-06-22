@@ -46,7 +46,7 @@ function App() {
   const location = useLocation();
   const clientId = getClientId()
 
-  const showHeader = location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe" || location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" ? false : true
+  const showHeader = location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe" || location?.pathname === "/temperature-sensor" || location?.pathname === "/voltage-sensor" || location?.pathname === "/measure-absorbance" ? false : true
 
   const style = swStatus === undefined ? 'dotted' : swStatus === 'offline' ? 'solid' : swStatus === 'error' ? 'wavy' : '';
   const textDecoration = style ? `${style} underline`: '';

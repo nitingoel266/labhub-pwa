@@ -209,7 +209,7 @@ const MyRecordList = () => {
       </div>
       <div style={{ overflowY: "auto", height: window.innerHeight - 171 }}>
         {myRecords &&
-          myRecords[selectedButton] &&
+          myRecords[selectedButton] && myRecords[selectedButton].length ?
           myRecords[selectedButton].map((el: any) => (
             <MyRecordsCard
               key={el?.date}
@@ -222,14 +222,14 @@ const MyRecordList = () => {
               handleDeleteMobile={handleDeleteMobile}
               handleShare={handleShare}
             />
-          ))}
+          ))  : <div className={styles.EmplyRecords}>No record found!</div>}
       </div>
       {isEditOpen && <EditFileModal isOpen = {isEditOpen} setEditModal ={(value:any) => setEditModal(value)} EditFileName={EditFileName} selectedButton = {selectedButton}/>}
       {isOpen && <MemberDisconnect
         isOpen={isOpen ? true : false}
         setModal={(value) => setModal(value)}
         handleDisconnect={isOpen === "delete" ? handleDelete : handleEdit}
-        message={`Do you want to ${isOpen}.`}
+        message={isOpen === "edit" ? `Do you want to rename file name?` : `Do you want to ${isOpen} file?`}
       />}
       <RightArrow
         isSelected={selectedData ? true : false}

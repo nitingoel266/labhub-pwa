@@ -112,7 +112,7 @@ const validateFileName:any = (data:any,fileName:string,count=0) => {
 }
 
 const getDate = () => {
-    let date = `${getFormat(new Date().getMonth()+1)}-${getFormat(new Date().getDate())}-${new Date().getFullYear()}`;
+    let date = `${getFormat(new Date().getMonth()+1)}/${getFormat(new Date().getDate())}/${new Date().getFullYear()}`;
     return date;
 }
 const getTime = () => {

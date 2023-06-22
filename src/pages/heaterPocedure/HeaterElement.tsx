@@ -140,7 +140,7 @@ const HeaterElement = () => {
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
       <div className={styles.HeaderTextWrapper}>
         <div style={{display:"flex",flexDirection:"row"}}>
-          <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{SETPOINT_TEMPERATURE} (</h4>
+          <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{"Set Point Temperature"} (</h4>
           <h4
            className={styles.TempratureDegreeIcon}  
            style={{
@@ -313,7 +313,7 @@ const HeaterElement = () => {
           </div>
         </div>
         <div aria-label="Power in watt" className={styles.HeaterElementText} style={{visibility:status?.operation === "heater_control" ? "visible" : "hidden"}}>
-          Power: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(0)} W</span>
+          Power Value: <span style={{ color: "#DC2828" }}>{power && Number(power).toFixed(0)} W</span>
         </div>
       </div>
       {isOpen !== "Heater Element disconnected" && isOpen && <MemberDisconnect

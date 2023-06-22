@@ -9,7 +9,7 @@ import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import TemperatureGraph from "./Graphs/TemperatureGraph";
 import {
   getDate,
-  getTime,
+  // getTime,
   getTitle,
   validateFileName,
   getStorageKeys,
@@ -45,7 +45,7 @@ const MeasuringTemprature = () => {
   //     if (dataStream.sensor !== null && clientId === status?.leaderSelected) {
   //       setModal("stop");
   //     } else if (graphData.length > 0 && !isSaved)
-  //       setModal("Do you want to save Data?");
+  //       setModal("Do you want to save the experiment data?");
   //   }else navigate("/function-selection");
   // };
   const handleRestart = () => {
@@ -109,7 +109,7 @@ const MeasuringTemprature = () => {
         let resultData = {
         name: verifiedFileName,
         date: getDate(),
-        time: getTime(),
+        time: `${title.slice(8,10)}:${title.slice(10,12)}`, //getTime(),
         data: resultTemperature,
         };
         let storageTempData = JSON.stringify(resultData);
@@ -125,7 +125,7 @@ const MeasuringTemprature = () => {
 
   const handleCancelModal = () => {
     setModal("")
-    if(isOpen === "Do you want to save Data?"){
+    if(isOpen === "Do you want to save the experiment data?"){
         navigate("/function-selection")
     }
   }
@@ -195,7 +195,9 @@ const MeasuringTemprature = () => {
         ...prevData,
         status?.setupData?.dataRate === "user" ? 0 : 2,
       ]);
-      setIsSaved(false);
+      if(status?.setupData?.dataRate !== "user"){
+        setIsSaved(false);
+      }
     } /* else if (clientId !== status?.leaderSelected && dataStream) {
       // console.log("??>>>>>>>>>>>>>> ",getTemperatureLog(dataStream?.sensor?.temperatureIndex || 0) , "ind ",dataStream?.sensor?.temperatureIndex)
       let logData = [],
@@ -262,7 +264,7 @@ const MeasuringTemprature = () => {
   useEffect(() => { // save data and go back only for member if leader change data setup and member is n measuring screen
     if(status?.setupData && JSON.stringify(status?.setupData) !== JSON.stringify(dataSetup) && clientId !== status?.leaderSelected){
       if(capturePoint?.some((el: number) => el > 0) && !isSaved){
-        setModal("Do you want to save Data?")
+        setModal("Do you want to save the experiment data?")
       }else navigate("/function-selection")
     }
   },[status?.setupData,dataSetup,clientId,status?.leaderSelected,capturePoint,isSaved,navigate])
@@ -281,10 +283,10 @@ const MeasuringTemprature = () => {
   
   useEffect(() => { // set x axis of graph
     let rate = typeof status?.setupData?.dataRate === "number" ? Number(status?.setupData?.dataRate) : 1;
-    let maxTime:any = labels?.length > 0 ? labels[labels?.length -1] : Number(rate * 60);
+    let maxTime:any = labels?.length > 0 ? labels[labels?.length -1] : Number(rate * 9);
     if(graphData?.length === 0 || graphData?.length === 1){
         let initialLabels = []
-      for(let i=0;i<=(rate * 60);i=i+rate){
+      for(let i=0;i<=(rate * 9);i=i+rate){
         initialLabels.push(Number(i))
       }
       if(JSON.stringify(initialLabels) !== JSON.stringify(labels))
@@ -323,7 +325,7 @@ const MeasuringTemprature = () => {
               onClick={() => setTempratureUnit("c")}
               className={styles.TempratureDegree}
               style={{
-                backgroundColor: tempratureUnit === "c" ? "#424C58" : "#9CD5CD",
+                backgroundColor: tempratureUnit === "c" ? "#424C58" : "inherit", // "#9CD5CD",
                 color: tempratureUnit === "c" ? "#FFFFFF" : "#000000",
               }}
             >
@@ -344,7 +346,7 @@ const MeasuringTemprature = () => {
               onClick={() => setTempratureUnit("f")}
               className={styles.TempratureDegree}
               style={{
-                backgroundColor: tempratureUnit === "f" ? "#424C58" : "#9CD5CD",
+                backgroundColor: tempratureUnit === "f" ? "#424C58" : "inherit", // "#9CD5CD",
                 color: tempratureUnit === "f" ? "#FFFFFF" : "#000000",
               }}
             >
@@ -417,8 +419,8 @@ const MeasuringTemprature = () => {
                 <button
                   aria-label="Capture button"
                   className={styles.CaptureButton}
-                  style={graphData?.length > 0 ? {} : extraStyle}
-                  onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
+                  style={capturePoint[capturePoint?.length - 1] <= 0 ? {} : extraStyle}
+                  onClick={() => (capturePoint[capturePoint?.length - 1] <= 0 ? handleCapture() : {})}
                 >
                   Capture
                 </button>
@@ -489,8 +491,8 @@ const MeasuringTemprature = () => {
               {status?.setupData?.dataRate === "user" && <button
                 aria-label="Capture button"
                 className={styles.CaptureHorizontalButton}
-                style={graphData?.length > 0 ? {} : extraStyle}
-                onClick={() => (graphData?.length > 0 ? handleCapture() : {})}
+                style={capturePoint[capturePoint?.length - 1] <= 0 ? {} : extraStyle}
+                onClick={() => (capturePoint[capturePoint?.length - 1] <= 0 ? handleCapture() : {})}
               >
                 Capture
               </button>}
@@ -503,11 +505,11 @@ const MeasuringTemprature = () => {
           handleDisconnect={
             isOpen === "restart" || isOpen === "start"
               ? handleRestart
-              : isOpen === "Do you want to save Data?" ? 
+              : isOpen === "Do you want to save the experiment data?" ? 
                 handleSubmitProcess
               : handleStop
           }
-          message={isOpen === "Do you want to save Data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
+          message={isOpen === "Do you want to save the experiment data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
           handleCancel = {handleCancelModal}
         />}
         {connected && isOpen === "Temperature Sensor disconnected" && <SensorDisconnectModal 

@@ -458,7 +458,7 @@ const MeasuringVoltage = () => {
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
           submitModal={() => handleSensorDisconnectedSaveData()}
-          message={clientId === status?.leaderSelected ? (capturePoint.some((e:any) => e > 0) && !isSaved ? "Voltage sensor is disconnected do you want to save data?, please connect the temperature sensor to start the experiment again." : "Voltage sensor is disconnected, please connect the temperature sensor to start the experiment again.") : (capturePoint.some((e:any) => e > 0) && !isSaved ? "Voltage sensor is disconnected do you want to save data?" : "Voltage sensor is disconnected.")}
+          message={clientId === status?.leaderSelected ? (capturePoint.some((e:any) => e > 0) && !isSaved ? "Voltage sensor is disconnected do you want to save data? Please connect the temperature sensor to start the experiment again." : "Voltage sensor is disconnected, please connect the temperature sensor to start the experiment again.") : (capturePoint.some((e:any) => e > 0) && !isSaved ? "Voltage sensor is disconnected do you want to save data?" : "Voltage sensor is disconnected.")}
           checkForSave={capturePoint.some((e:any) => e > 0) && !isSaved ? true : false}
         />}
         {/* <RightArrow

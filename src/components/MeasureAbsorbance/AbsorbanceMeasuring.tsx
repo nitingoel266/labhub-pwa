@@ -18,7 +18,7 @@ import {
   toastMessage
 } from "../Constants";
 import IButtonComponent from "../IButtonComponent";
-import { startRgbExperiment, simulateRgb } from "../../labhub/actions";
+import { startRgbExperiment, simulateRgb, calibrateRgb } from "../../labhub/actions";
 import { useDeviceDataFeed, useDeviceStatus } from "../../labhub/status";
 import {getClientId} from "../../labhub/utils";
 import { RGB_DATA } from "../../utils/const";
@@ -139,6 +139,13 @@ const AbsorbanceMeasuring = () => {
         }
       }
   }, [dataStream?.rgb, measure, audio]);
+
+  useEffect(() => {
+    if(!status?.rgbConnected){
+      calibrateRgb()
+      simulateRgb('measure')
+    }
+  },[status?.rgbConnected])
 
   useEffect(() => { // verify filename is exist or not in storage
     if(title && localStorage.getItem(`${RGB_DATA}_${title}`)){

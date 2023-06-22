@@ -307,7 +307,6 @@ const MeasuringTemprature = () => {
       toastMessage.next("File name already exists!")
     }
   },[title])
-
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
@@ -516,7 +515,7 @@ const MeasuringTemprature = () => {
            isOpen={isOpen ? true : false}
            setModal={(value) => handleSensorDisconnected(value)}
            submitModal={() => handleSensorDisconnectedSaveData()}
-           message= {clientId === status?.leaderSelected ? (capturePoint.some((e:any) => e > 0) && !isSaved ? "Temperature sensor is disconnected do you want to save data?, please connect the temperature sensor to start the experiment again." : "Temperature sensor is disconnected, please connect the temperature sensor to start the experiment again.") : (capturePoint.some((e:any) => e > 0) && !isSaved ? "Temperature sensor is disconnected do you want to save data?" : "Temperature sensor is disconnected.")}
+           message= {clientId === status?.leaderSelected ? (capturePoint.some((e:any) => e > 0) && !isSaved ? "Temperature sensor is disconnected do you want to save data? Please connect the temperature sensor to start the experiment again." : "Temperature sensor is disconnected, please connect the temperature sensor to start the experiment again.") : (capturePoint.some((e:any) => e > 0) && !isSaved ? "Temperature sensor is disconnected do you want to save data?" : "Temperature sensor is disconnected.")}
            checkForSave={capturePoint.some((e:any) => e > 0) && !isSaved ? true : false}
         />}
         {/* <RightArrow

@@ -6,12 +6,12 @@ const VoltageRecord = () => {
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.Wrapper}>
       {[
-        { key: "time", value: "Time (Sec)" },
-        { key: "voltage", value: "Voltage (V)" },
+        {id:0, key: "time", value: "Time ( Sec )" },
+        {id:1, key: "voltage", value: "Voltage (V)" },
       ].map((el: any) => (
         <div key={el.key} className={styles.ColumnWrapper}>
-          <div className={styles.ColumnHeader}>{el.value}</div>
-          <div className={styles.ColumnBodyWrapper}>
+          <div className={styles.ColumnHeader} style={el?.id === 0 ? {borderTopLeftRadius: 5,borderRight:"1px solid #B6B5B5"} : {borderTopRightRadius:5}}>{el.value}</div>
+          <div className={styles.ColumnBodyWrapper} style={el?.id === 0 ? {borderTopLeftRadius: 5} : {borderTopRightRadius:5}}>
             {state &&
               state.data &&
               state.data.selectedData &&

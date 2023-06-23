@@ -111,7 +111,11 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
             ? "Stop Temperature Experiment"
             : "Stop Voltage Experiment"
         );
-      }else if(checkForSave) setModal("Do you want to save the experiment data?")
+      }else if(checkForSave) {
+        setModal("Do you want to save the experiment data?")
+      }else if(status?.operation !== null && status?.sensorConnected && clientId !== status?.leaderSelected){
+        navigate(-1)
+      }
 
       // if(status?.operation !== null && status?.sensorConnected && checkForSave){ // before
       //   if(clientId === status?.leaderSelected)
@@ -222,7 +226,11 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
             ? "Stop Temperature Experiment"
             : "Stop Voltage Experiment"
         );
-      }else if(checkForSave) setModal("Do you want to save the experiment data?")
+      }else if(checkForSave) {
+        setModal("Do you want to save the experiment data?")
+      }else if(status?.operation !== null && status?.sensorConnected && clientId !== status?.leaderSelected){
+        navigate("/my-records")
+      }
 
       // if(status?.operation !== null && status?.sensorConnected && checkForSave){
       //   if(clientId === status?.leaderSelected)
@@ -319,7 +327,13 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
             ? "Stop Temperature Experiment"
             : "Stop Voltage Experiment"
         );
-      }else if(checkForSave) setModal("Do you want to save the experiment data?")
+      }else if(checkForSave) {
+        setModal("Do you want to save the experiment data?")
+      }else if(status?.operation !== null && status?.sensorConnected && clientId !== status?.leaderSelected){
+        navigate("/scan-devices",{
+          state: { screenName : "/scan-devices" },
+        });
+      }
 
       // if(status?.operation !== null && status?.sensorConnected && checkForSave){
       //   if(clientId === status?.leaderSelected)

@@ -47,6 +47,12 @@ const q: queueAsPromised<Task> = fastq.promise(asyncWorker, 1);
 
 initGattMap();
 
+/**
+ * handleDeviceStatusUpdate :- update values for device status
+ * handleDeviceDataFeedUpdate :- update feed values for temperature,voltage and rgb
+ * handleClientChannelRequest :- get the log values for graphs and screen number
+ * @param arg :- values to be update of status, datafeed
+ */
 async function asyncWorker(arg: Task): Promise<void> {
   if (arg.id === 1) {
     await handleDeviceStatusUpdate(server, arg.value);
@@ -64,11 +70,13 @@ function resetValues() {
 }
 
 export const initSetup = async () => {
-  serverPrev = server;
+
+  // bluetooth device and leader properties
+  serverPrev = server; 
   leaderIdCharacteristicPrev = leaderIdCharacteristic;
   experimentStatusCharacteristicPrev = experimentStatusCharacteristic;
 
-  resetValues();
+  resetValues(); // clear previous data of bluetooth device
 
   if (serverPrev) {
     Log.debug("Cleaning up previous bluetooth connection..");
@@ -107,6 +115,12 @@ export const initSetup = async () => {
   return status;
 };
 
+/**
+ * 
+ * @param bluetoothDevice :- data of previously connected bluetooth device
+ * @param autoReconnect  :- for reconnection to the current BLE device if disconnected.
+ * @returns :- return type is boolean to clear the local Characteristics cache
+ */
 async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = false): Promise<boolean> {
   if (connectionAttemptOngoing.value) {
     Log.error("[ERROR:initSetup] Another connection attempt ongoing! Please wait..");
@@ -126,7 +140,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     }
 
     let isTimedOut = false;
-    let status = await new Promise<boolean>((resolve, reject) => {
+    let status = await new Promise<boolean>((resolve, reject) => { // check for the bluetooth device avality
       const timeout = setTimeout(() => {
         isTimedOut = true;
         Log.error('[ERROR:initSetup] bluetooth.getAvailability() timeout!');
@@ -161,10 +175,10 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     // const serviceId = 'battery_service';  // name
 
     let device: BluetoothDevice;
-    if (bluetoothDevice) {
+    if (bluetoothDevice) { // if BLE device is already connected then use it
       device = bluetoothDevice;
     } else {
-      const devicePr = navigator.bluetooth.requestDevice({
+      const devicePr = navigator.bluetooth.requestDevice({ // request for BLE device to connect
         // acceptAllDevices: true,
         filters: [
           {
@@ -193,7 +207,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     }
     Log.debug("device.connected[1]", device.gatt.connected);
 
-    if (!device.gatt.connected) {
+    if (!device.gatt.connected) { // try to connect to BLE device if not exist
       server = await new Promise((resolve, reject) => {
         if (!device.gatt) {
           reject("Bluetooth GATT Server not found! [2]");
@@ -260,6 +274,9 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     // ------------------------
 
     // Read device info
+    /**
+     * Read the connected BLE device info like serial nu, name.
+     */
     const pr1 = handleDeviceInfoService(server, DEVICE_INFO_SERVICE);
     const status1 = await timeoutPromise<boolean>(pr1, 15000, 'Read device info');
     if (!status1) {
@@ -267,7 +284,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     }
 
     let clientId;
-    if (REUSE_CLIENTID_ONCONNREUSE) {
+    if (REUSE_CLIENTID_ONCONNREUSE) { // create member client ID
       const connectionReuse = !!server && !!serverPrev && serverPrev.device.id === server.device.id && server.connected;
       clientId = await requestClientId(server, connectionReuse);
     } else {
@@ -288,7 +305,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     Log.debug('[NODE_ENV]:', process.env.NODE_ENV);
     Log.debug('[REACT_APP_ENV]:', process.env.REACT_APP_ENV);
 
-    if (server && deviceConnected.value !== server.connected) {
+    if (server && deviceConnected.value !== server.connected) { // update the device values
       deviceConnected.next(server.connected);
     }
   } catch (e) {
@@ -297,7 +314,7 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
     retValue = false;
 
     try {
-      if (server) {
+      if (server) { // if not connected to the device and bluetooth gatt Characteristics available then disconnect it 
         await uninitSetup();
       }
     } catch (e) {
@@ -310,6 +327,11 @@ async function initSetupBase(bluetoothDevice?: BluetoothDevice, autoReconnect = 
   return retValue;
 };
 
+/**
+ * 
+ * @param event get bluetooth Characteristics values
+ * @returns return type is null
+ */
 async function onDisconnected(event?: any) {
   let reconnectServer: BluetoothRemoteGATTServer | null = null;
   let gattServer: BluetoothRemoteGATTServer | null = null;
@@ -408,6 +430,7 @@ async function onDisconnected(event?: any) {
   }
 }
 
+//when we disconnect from scan page
 export const uninitSetup = async () => {
   if (server?.connected) {
     // Optional here, since disconnecting the bluetooth connection will anyways disconnect the client.

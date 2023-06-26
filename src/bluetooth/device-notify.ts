@@ -16,6 +16,11 @@ import { deviceDataFeedUpdate } from "../labhub/status";
 let prevSampleIndex = -1;
 let prevLeaderOperation: LeaderOperation = null;
 
+/**
+ * 
+ * @param server  :- get BLE Device characteristics and manage characteristics when changes
+ * @returns :- return characteristics of the BLE device by BluetoothRemoteGATTService
+ */
 export async function setupLeaderIdNotify(server: BluetoothRemoteGATTServer | null) {
   const serviceId = LABHUB_SERVICE;
   const characteristicId = LEADER_ID_CHAR;
@@ -40,6 +45,7 @@ export async function setupLeaderIdNotify(server: BluetoothRemoteGATTServer | nu
   return characteristic;
 }
 
+// remove leader_notify values
 export async function cleanupLeaderIdNotify(characteristic: BluetoothRemoteGATTCharacteristic | null) {  
   try {
     if (characteristic) {
@@ -58,6 +64,12 @@ export async function cleanupLeaderIdNotify(characteristic: BluetoothRemoteGATTC
   characteristic = null;
 }
 
+/**
+ * 
+ * @param leaderId :- leaderId
+ * @param manual 
+ * @returns  :- return new leader id after creation 
+ */
 function handleLeaderIdChangedBase(leaderId: string, manual = false) {
   // NOTE: Though the condition is put here, it cannot be fully trusted because of possible race conditions
   // So, proper handling has been done in the conditions for if-else block below
@@ -92,6 +104,7 @@ function handleLeaderIdChangedBase(leaderId: string, manual = false) {
   }
 }
 
+// manage the leader id when leader gets changed
 function handleLeaderIdChanged(event: any) {
   const dataView = event.target.value;
   const leaderIdn = getValueFromDataView(dataView, 'int16') as number;
@@ -115,6 +128,11 @@ export const requestLeaderId = async (server: BluetoothRemoteGATTServer | null) 
 
 // -------------------
 
+/**
+ * notify when any experiment is starts of stop 
+ * @param server  :- characterstic values of the BLE device
+ * @returns :- return characterstic fron cached(previoisly saved)
+ */
 export async function setupExperimentStatusNotify(server: BluetoothRemoteGATTServer | null) {
   const serviceId = LABHUB_SERVICE;
   const characteristicId = EXPERIMENT_STATUS_CHAR;
@@ -139,6 +157,7 @@ export async function setupExperimentStatusNotify(server: BluetoothRemoteGATTSer
   return characteristic;
 }
 
+// remove event listner for the experiment status either it is stop or start
 export async function cleanupExperimentStatusNotify(characteristic: BluetoothRemoteGATTCharacteristic | null) {
   try {
     if (characteristic) {
@@ -157,37 +176,43 @@ export async function cleanupExperimentStatusNotify(characteristic: BluetoothRem
   characteristic = null;
 }
 
+/**
+ * get the values for the desive status and experiment status,values and populate them to the locale state variables
+ * @param event characterstic provided by the BLE device for experiments and changes
+ */
 async function handleExperimentStatusChanged(event: any) {
-  const dataView = event.target.value;
+  const dataView = event.target.value; // characterstic values in binary format
+
+  // getValueFromDataView :- extract values for the status and experiment from binary bytes and store them in state
   const experimentStatusBuffer = getValueFromDataView(dataView, 'buffer') as ArrayBuffer;
 
   if (experimentStatusBuffer && experimentStatusBuffer.byteLength === 20) {
     const statusDataView = new DataView(experimentStatusBuffer);
 
-    const timer_control = getValueFromDataView(statusDataView, 'int8', 0) as number;
-    const operation = getValueFromDataView(statusDataView, 'int8', 1) as number;
-    const data_type = getValueFromDataView(statusDataView, 'int8', 2) as number;
+    const timer_control = getValueFromDataView(statusDataView, 'int8', 0) as number; // get 0 git value for data timer
+    const operation = getValueFromDataView(statusDataView, 'int8', 1) as number; // get 1 bit value for operations
+    const data_type = getValueFromDataView(statusDataView, 'int8', 2) as number; // get 2 bit value for data tpe
     // const status_fault = getValueFromDataView(statusDataView, 'int8', 3) as number;
-    const battery_level = getValueFromDataView(statusDataView, 'int8', 4) as number;
-    const sensor_attach = getValueFromDataView(statusDataView, 'int8', 5) as number;
+    const battery_level = getValueFromDataView(statusDataView, 'int8', 4) as number; // get 4th bit valuefor battery percentage
+    const sensor_attach = getValueFromDataView(statusDataView, 'int8', 5) as number; // get 5thbit value for sensor verifaction
 
-    const data_rate = getValueFromDataView(statusDataView, 'int16', 6) as number;
+    const data_rate = getValueFromDataView(statusDataView, 'int16', 6) as number; // get 2 bit values for data rate
     const num_of_samples = getValueFromDataView(statusDataView, 'int16', 8) as number;
     const current_sample = getValueFromDataView(statusDataView, 'int16', 10) as number;
     const heater_temp_setpoint = getValueFromDataView(statusDataView, 'int16', 12) as number;
 
     // const data = getValueFromDataView(statusDataView, 'buffer', 14) as ArrayBuffer;
-    const data1 = getValueFromDataView(statusDataView, 'int16', 14) as number;
-    const data2 = getValueFromDataView(statusDataView, 'int16', 16) as number;
-    const data3 = getValueFromDataView(statusDataView, 'int16', 18) as number;
+    const data1 = getValueFromDataView(statusDataView, 'int16', 14) as number; // get 2 bit values for the heater, rgb
+    const data2 = getValueFromDataView(statusDataView, 'int16', 16) as number; // get 2 bit value for rgb second value
+    const data3 = getValueFromDataView(statusDataView, 'int16', 18) as number; // get 2 bit value for rgb third value
 
-    const data1x = (data1 & 0xffff) === 0xffff ? null : data1;
+    const data1x = (data1 & 0xffff) === 0xffff ? null : data1; // check weather value is abailable for data1 or it is 1111(in binary means no value) means null for rgb values
     const data2x = (data2 & 0xffff) === 0xffff ? null : data2;
     const data3x = (data3 & 0xffff) === 0xffff ? null : data3;
 
-    const leaderOperation: LeaderOperation = getOperation(operation);
+    const leaderOperation: LeaderOperation = getOperation(operation); // identify which operation weare going to perform
 
-    const temperatureSensor = (sensor_attach & 0x1) === 0x1;
+    const temperatureSensor = (sensor_attach & 0x1) === 0x1; // identify temperature sensor is connected or not(if one byte value is 1 or 0)
     const voltageSensor = (sensor_attach & 0x2) === 0x2;
     const heaterSensor = (sensor_attach & 0x4) === 0x4;
 
@@ -207,7 +232,7 @@ async function handleExperimentStatusChanged(event: any) {
       }
     }
 
-    const setupData: SetupData = {
+    const setupData: SetupData = { // set thedata setup values from characterstics
       dataRate: getDataRate(data_rate),
       dataSample: getDataSample(num_of_samples),
     };
@@ -217,7 +242,7 @@ async function handleExperimentStatusChanged(event: any) {
 
     // --------------------
 
-    const deviceStatusValue: DeviceStatus = getDeviceStatusValue();
+    const deviceStatusValue: DeviceStatus = getDeviceStatusValue(); // get initial device status
 
     deviceStatusValue.batteryLevel = battery_level;  // 0-100 (0-100%)
 
@@ -417,12 +442,12 @@ async function handleExperimentStatusChanged(event: any) {
 
     deviceStatusValue.rgbCalibratedAndTested = rgbCalibratedAndTested;
 
-    topicDeviceStatus.next(deviceStatusValue);
+    topicDeviceStatus.next(deviceStatusValue); // update the device status value to local state var 
 
     Log.debug('handleExperimentStatusChanged:', !!deviceDataFeed, data1, data2, data3, '#', data_type, operation, timer_control, current_sample);
 
     if (deviceDataFeed) {
-      topicDeviceDataFeed.next(deviceDataFeed);
+      topicDeviceDataFeed.next(deviceDataFeed); //update the device feed values to local state var
     } else {
       // Log.error('handleExperimentStatusChanged: Unhandled value!', deviceDataFeed);
     }

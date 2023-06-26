@@ -6,14 +6,14 @@ const RGBRecord = () => {
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.Wrapper}>
       {[
-        { key: 1, value: "Measuement No" },
-        { key: 2, value: "RED" },
-        { key: 3, value: "GREEN" },
-        { key: 4, value: "BLUE" },
+        {id:0, key: 1, value: "Measuement No" },
+        {id:1, key: 2, value: "RED" },
+        {id:2, key: 3, value: "GREEN" },
+        {id:3, key: 4, value: "BLUE" },
       ].map((el:any) => (
         <div key={el.key} className={styles.ColumnWrapper}>
-          <div className={styles.ColumnHeader}>{el.value}</div>
-          <div className={styles.ColumnBodyWrapper}>
+          <div className={styles.ColumnHeader} style={el?.id === 0 ? {borderTopLeftRadius: 5,borderTopRightRadius:5,borderRight:"1px solid #B6B5B5"} : el?.id === 3 ? {borderTopRightRadius:5,borderTopLeftRadius:5} : {borderRight:"1px solid #B6B5B5",borderTopRightRadius:5,borderTopLeftRadius:5}}>{el.value}</div>
+          <div className={styles.ColumnBodyWrapper} style={el?.id === 0 ? {borderTopLeftRadius: 5} : el?.id === 3 ? {borderTopRightRadius:5} : {}}>
             {state &&
               state.data &&
               state.data.selectedData &&

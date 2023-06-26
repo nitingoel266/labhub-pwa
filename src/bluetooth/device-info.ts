@@ -93,8 +93,11 @@ export async function handleDeviceInfoService(
   
     // Initialize device status value
     const deviceStatusValue = getDeviceStatusValue(true);
+
+    Log.debug("device.name:", server.device.name);
+    Log.debug("deviceName:", deviceName);
   
-    if (deviceName) deviceStatusValue.deviceName = deviceName;
+    deviceStatusValue.deviceName = server.device.name || deviceName || 'LabHub Device';
     if (deviceVersion) deviceStatusValue.deviceVersion = deviceVersion;
     if (deviceSerial) deviceStatusValue.deviceSerial = deviceSerial;
     if (deviceManufacturer) deviceStatusValue.deviceManufacturer = deviceManufacturer;

@@ -4,14 +4,8 @@
 
 Before starting the deployment process, please ensure to take the latest code from the `main` branch of the repo:
 
-`git clone -b main --single-branch git@github.com:abraj-dew/labhub_pwa.git`  
-`cd labhub_pwa && git checkout main`  
-`git pull origin main`  
-
-**NOTE:**  
-While cloning the repository using above command, if you want to use HTTPS (instead of SSH), you can use the following command:  
-`git clone -b main --single-branch https://github.com/abraj-dew/labhub_pwa.git`  
-However, while using this method, your normal GitHub password will not work and you will need to [create](https://github.com/settings/tokens/new) a new personal aceess token (PAT) on your GitHub account.  
+`git clone -b main --single-branch https://gitlab.dewsolutions.in/ft/labhub-pwa.git`  
+`cd labhub-pwa && git checkout main`  
 
 ## Deployment process
 Go to the root directory of the project and run the following command:  

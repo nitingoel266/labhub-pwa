@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import styles from "../../styles/MyRecordsCard.module.css";
 
 type Props = {
@@ -8,6 +9,12 @@ type Props = {
 
 const MoreSelectionModal = ({ setModal, isOpen, handleSubmit }: Props) => {
 
+  const renameFileRef:any = useRef(null)
+
+
+  useEffect(() => { // to set focus for acessibility
+    renameFileRef?.current?.focus()
+  },[])
 
   return (
     <div style={{ position: "absolute", zIndex: 1 }}>
@@ -28,7 +35,7 @@ const MoreSelectionModal = ({ setModal, isOpen, handleSubmit }: Props) => {
       >
         <div className={styles.MoreModalWrapper}>
           {[
-            { title: "Rename File"},
+            { title: "Rename File",ref:renameFileRef},
             { title: "Download" },
             { title: "Share" },
             { title: "Delete" },
@@ -39,6 +46,8 @@ const MoreSelectionModal = ({ setModal, isOpen, handleSubmit }: Props) => {
               key={el?.title}
             >
                 <button
+                ref={el?.ref}
+                aria-label={el?.title}
                 style={{border:"none",outline:"none",backgroundColor:"inherit",width:'90%'}}
                 >
                 {el?.title}

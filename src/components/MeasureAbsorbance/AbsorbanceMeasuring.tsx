@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/AbsorbanceMeasuring.module.css";
 import sound from "../../assets/sound/beep-sound.mp3";
 import IButtonModal from "../Modal/IButtonModal";
@@ -39,6 +39,8 @@ const AbsorbanceMeasuring = () => {
   const [measuredValue, setMeasuredValue] = useState<any>([]); //{Measuement No,RED,GREEN,BLUE}
   const [isOpen, setModal] = useState("");
   const [screenName,setScreenName] = useState<string>("cuvette-insertion"); // measure-absorbance
+
+  const measureRef:any = useRef(null);
 
   const clickHandler = (item: string) => {
     if (selectedItem && selectedItem === item) setSelectedItem("");
@@ -153,6 +155,10 @@ const AbsorbanceMeasuring = () => {
     }
   },[title])
 
+  useEffect(() => { // to set focus for acessibility
+    measureRef?.current?.focus()
+  },[])
+
   return (
     <>
       <Header
@@ -161,8 +167,8 @@ const AbsorbanceMeasuring = () => {
         // shouldCloseModal = {isOpen === "Temperature Sensor disconnected" ? true : false}
       />
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
-      {screenName === "cuvette-insertion" && <div aria-label="Please insert cuvette to measure absorbance of RGB light. header" className={styles.HeaderText}>Please insert cuvette to measure absorbance of RGB light.</div>}
-      <div className={styles.ButtonWrapper} style={screenName === "cuvette-insertion" ? {marginTop:0} : {marginTop:66}}>
+      {screenName === "cuvette-insertion" && <div className={styles.HeaderText}><button aria-label="Please insert cuvette to measure absorbance of RGB light." style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={measureRef} >Please insert cuvette to measure absorbance of RGB light.</button></div>}
+      <div className={styles.ButtonWrapper} style={screenName === "cuvette-insertion" ? {marginTop:0} : {marginTop:70}}>
         <div
           className={styles.Button}
           style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}

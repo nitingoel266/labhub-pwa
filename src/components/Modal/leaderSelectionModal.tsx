@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { joinAsLeader} from '../../labhub/actions';
 import styles from "../../styles/leaderSelectionModal.module.css";
 
@@ -8,11 +9,19 @@ type Props= {
 }
 
 const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
+    
+    const leaderSelectionRef:any = useRef(null);
+
+
     const submitHandler = () => {
         joinAsLeader()
         setModal(false)
         // navigate("/mode-selection")
     }
+
+    useEffect(() => { // to set focus for acessibility
+        leaderSelectionRef?.current?.focus()
+      },[])
 
     return (
         <div>
@@ -38,7 +47,7 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
                 </div>
                 <div className={styles.BodyWrapper}>
                     <div className={styles.Bodytext}>
-                        <p className={styles.BodyPrimaryText}>Selected Device does not have a leader. Press Yes to become a leader</p>
+                        <p className={styles.BodyPrimaryText}><button ref={leaderSelectionRef} style={{outline:"none",border:"none",fontSize:16,lineHeight: 1.5,marginBottom:5}}>Selected Device does not have a leader. Press Yes to become a leader</button></p>
                         {/* <div className={styles.BodySecondaryText}>Press <span style={{fontWeight:500}}>Yes</span> to become a Leader</div> */}
                     </div>
                     <div className={styles.ButtonWrapper}>

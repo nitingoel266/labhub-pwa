@@ -1,6 +1,6 @@
 import {EmailShareButton,EmailIcon,WhatsappIcon,WhatsappShareButton,FacebookIcon,FacebookShareButton,LinkedinShareButton,LinkedinIcon,TwitterShareButton,TwitterIcon} from "react-share"
 import styles from '../../styles/ShareModal.module.css';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getShareRawFileData } from "../Constants";
 
 type Props = {
@@ -13,6 +13,8 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
     const [file,setFile] = useState<any>()
     const [title,setTitle] = useState<any>()
 
+  const shareEmailRef:any = useRef(null)
+
     useEffect(() => {
         if(isOpen && isOpen?.selectedButton && isOpen?.data){
             const fileData = getShareRawFileData(isOpen?.data,isOpen?.selectedButton);
@@ -21,6 +23,10 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
             setTitle(titleData)
         }
     },[isOpen])
+
+    useEffect(() => { // to set focus for acessibility
+        shareEmailRef?.current?.focus()
+      },[])
 
     return <div style={{position:"absolute",zIndex:1}}>
     {isOpen &&
@@ -34,6 +40,8 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
             <div className={styles.ModalWrapper}>
                 <div className={styles.HeaderText}>Share link to</div>
                 <button 
+                ref={shareEmailRef}
+                aria-label={"Email"}
                 className={styles.OneRow}
                 >
                 <EmailShareButton
@@ -50,6 +58,7 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
                 </button>
                 <button 
                 className={styles.OneRow} 
+                aria-label={"Whats app"}
                 >
                 <WhatsappShareButton
                      url = {file}
@@ -64,6 +73,7 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
                 </button>
                 <button 
                 className={styles.OneRow} 
+                aria-label={"Facebook"}
                 >
                 <FacebookShareButton
                      url = {file}
@@ -79,6 +89,7 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
                 </FacebookShareButton>
                 </button>
                 <button 
+                aria-label={"Linked In"}
                 className={styles.OneRow} 
                 >
                 <LinkedinShareButton
@@ -95,6 +106,7 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
                 </LinkedinShareButton>
                 </button>
                 <button 
+                aria-label={"Twitter"}
                 className={styles.OneRow} 
                 >
                 <TwitterShareButton

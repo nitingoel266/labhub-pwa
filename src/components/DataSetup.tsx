@@ -2,7 +2,7 @@ import styles from '../styles/dataSetup.module.css';
 import {useDeviceStatus} from "../labhub/status";
 import {setupData} from "../labhub/actions";
 import {getClientId} from "../labhub/utils";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RightArrow from './RightArrow';
 import {BlackIButtonIcon} from "../images/index"
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,8 @@ const DataSetup = () => {
     const [dataSetup,setDataSetup] = useState<any>({dataRate:dataRateOption[0],dataSample:dataSampleOption[0]});
     const isLeader = clientId === status?.leaderSelected ? true : false;
     
+    const setupRef:any = useRef(null);
+
     useEffect(() => {
         if(status?.setupData?.dataRate){
             let rate;
@@ -52,8 +54,13 @@ const DataSetup = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
+
+    useEffect(() => { // to set focus for acessibility
+        setupRef?.current?.focus()
+      },[])
+
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.DataSetupWrapper}>
-        <h4 aria-label='Setup header' style={{fontWeight:500}}>Setup</h4>
+        <h4 style={{fontWeight:500}}><button aria-label="Setup" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={setupRef} >Setup</button></h4>
         <div className={styles.RateMeasureRightSide}>
             <div aria-label={DATA_RATE + "title"} >{DATA_RATE}</div>
             <button

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import MyRecordsCard from "../../components/MyRecordsCard";
@@ -16,6 +16,8 @@ const MyRecordList = () => {
   const [selectedButton, setSelectedButton] = useState<string>("temperature"); // temperature , voltage ,rgb
   const [actionItem, setActionItem] = useState<any>(); // contain one data that will change by the action
   const [myRecords, setMyRecords] = useState<any>();
+
+  const tempButtonRef:any = useRef(null);
 
   const handleSubmit = () => {
     navigate(`/${selectedButton}-records`, {
@@ -143,10 +145,16 @@ const MyRecordList = () => {
     };
     setMyRecords(resultData);
   }, []);
+
+  useEffect(() => { // to set focus for acessibility
+    tempButtonRef?.current?.focus()
+  },[])
+
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.myRecordWrapper}>
       <div className={styles.myRecordButtonWrapper}>
         <button
+          ref={tempButtonRef}
           aria-label="temperature button"
           onClick={() => setSelectedButton("temperature")}
           className={styles.myRecordButton}

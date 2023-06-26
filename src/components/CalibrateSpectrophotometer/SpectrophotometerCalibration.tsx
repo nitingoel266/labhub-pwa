@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from '../../styles/SpectrophotometerCalibration.module.css';
 import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
@@ -19,6 +19,8 @@ const SpectrophotometerCalibration = () => {
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [calibrate,setCalibrate] = useState<any>(null)
     const [isOpen,setModal] = useState("");
+
+    const calibrateRef:any = useRef(null)
 
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
@@ -50,15 +52,19 @@ const SpectrophotometerCalibration = () => {
         }
     },[status, status?.rgbCalibrated])
 
+    useEffect(() => { // to set focus for acessibility
+        calibrateRef?.current?.focus()
+      },[])
+
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <button aria-label={CALIBRATE +"button"} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <button ref={calibrateRef} aria-label={CALIBRATE +getDescription(CALIBRATE)} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                     <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{CALIBRATE}</p>
                  </button>
-                 <button aria-label={CALIBRATE + " i button"} onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt="i button"/>
-                 </button>
+                 </div>
              </div>
         </div>
         {isOpen === CALIBRATE && isMobile && <IButtonComponent title={CALIBRATE} description={getDescription(CALIBRATE)}/>}

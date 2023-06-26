@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {DataSetupIcon,IButtonIcon,RGBSpectIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
@@ -18,6 +18,9 @@ const SelectFunction = () => {
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
+
+    const selectFuncRef:any = useRef(null);
+
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
         setSelectedItem("")
@@ -43,19 +46,24 @@ const SelectFunction = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }   
+
+    useEffect(() => { // to set focus for acessibility
+        selectFuncRef?.current?.focus()
+      },[])
+
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{position:"relative"}}>
-        <h4 aria-label="select function header" className={styles.HeaderText}>Select Function</h4>
+        <h4 className={styles.HeaderText}><button aria-label="Select Function" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={selectFuncRef} >Select Function</button></h4>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:CALIBRATE_SPECTROPHOTOMETER},{icon:RGBSpectIcon,title:MEASURE_ABSORBANCE}].map((el:any) => (
                 <div className={styles.ButtonSubWrapper} key={el.title}>
               <div className={styles.Button} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:240} : {maxWidth:240}}>
-                 <button aria-label={el?.title + "button"} ref={el?.ref} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:235} : {maxWidth:235}}>
+                 <button aria-label={el?.title + getDescription(el?.title)} ref={el?.ref} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:235} : {maxWidth:235}}>
                      <img src={el.icon} style={{height:35,marginLeft:10}} alt={el.title + "i icon"}/>
                      <p style={{marginLeft:8,marginRight:2,fontSize:14,fontWeight:500}}>{el.title}</p>
                  </button>
-                 <button aria-label={el?.title + "i button"} onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt={el.title + "i icon"}/>
-                 </button>
+                 </div>
              </div>
              {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
              </div>

@@ -6,7 +6,7 @@ import {
   HeaterIcon,
   HeaterAnimation,
 } from "../../images/index";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import RightArrow from "../../components/RightArrow";
 import { useDeviceStatus, useDeviceDataFeed } from "../../labhub/status";
@@ -43,6 +43,8 @@ const TemperatureProbe = () => {
   const [temperatureShouldBe, setTemperatureShouldBe] = useState<number>(0);
   const [power, setPower] = useState<number>(0);
   const [istemperature, setisTemperature] = useState<number>(0);
+
+  const setPointTempRef:any = useRef(null)
 
   const handleTemperature = (title: string) => {
     if (title === "sub" && temperature > 25)
@@ -137,7 +139,9 @@ const TemperatureProbe = () => {
     }
   },[status?.heaterConnected,status?.operation])
 
-
+  useEffect(() => { // to set focus for acessibility
+    setPointTempRef?.current?.focus()
+  },[])
 
   const extraStyle =
     clientId !== status?.leaderSelected
@@ -152,7 +156,7 @@ const TemperatureProbe = () => {
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
       <div className={styles.HeaderTextWrapper}>
         <div style={{display:"flex",flexDirection:"row"}}>
-          <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{"Set Point Temperature"} (</h4>
+          <h4 ><button aria-label="Set Point Temperature degree C" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={setPointTempRef} >Set Point Temperature</button>(</h4>
           <h4
            className={styles.TempratureDegreeIcon}  
            style={{

@@ -1,6 +1,6 @@
 import styles from "../styles/measuringTemprature.module.css";
 // import RightArrow from "./RightArrow";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed,useDeviceConnected } from "../labhub/status";
 import { startSensorExperiment, restartSensorExperiment, stopSensorExperiment } from "../labhub/actions";
 import {getClientId} from "../labhub/utils";
@@ -39,6 +39,8 @@ const MeasuringTemprature = () => {
   const [checkForLog,setCheckForLog] = useState<any>(0)
   const [maxTempValue,setMaxTempValue] = useState<number>(50)
   const [labels,setLabels] = useState<any>([]);
+
+  const measuringTempRef:any = useRef(null);
 
   // const handleSubmit = () => {
   //   if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
@@ -307,6 +309,11 @@ const MeasuringTemprature = () => {
       toastMessage.next("File name already exists!")
     }
   },[title])
+
+  useEffect(() => { // to set focus for acessibility
+    measuringTempRef?.current?.focus()
+  },[])
+
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
@@ -317,7 +324,7 @@ const MeasuringTemprature = () => {
       />
       <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>
-          <h4 aria-label="Measuring temperture header text" style={{ fontWeight: 500 }}>Measuring Temperature</h4>
+          <h4 style={{ fontWeight: 500 }}><button aria-label="Measuring Temperature" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={measuringTempRef} >Measuring Temperature</button></h4>
           <div className={styles.HeaderRightWrapper}>
             <button
               aria-label="Degree Celcius button"

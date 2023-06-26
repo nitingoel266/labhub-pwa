@@ -134,7 +134,7 @@ const AbsorbanceMeasuring = () => {
       ) {
         audio.play();
         setMeasure(dataStream?.rgb?.measure || []);
-        if(dataStream?.rgb?.measure.some((e:any) => e > 0.2 || e < -0.2)){
+        if(dataStream?.rgb?.measure.some((e:any) => e > 0.5 || e < -0.5)){
           toastMessage.next("Values are out of range!")
         }
       }

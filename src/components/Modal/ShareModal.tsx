@@ -1,10 +1,7 @@
 import {EmailShareButton,EmailIcon,WhatsappIcon,WhatsappShareButton,FacebookIcon,FacebookShareButton,LinkedinShareButton,LinkedinIcon,TwitterShareButton,TwitterIcon} from "react-share"
-// import {ShareSocial} from "react-share-social"
-
-// import { EmailIcon, WhatsappIcon, FacebookIcon, LinkedInIcon, TwitterIcon} from "../../images/index";
 import styles from '../../styles/ShareModal.module.css';
 import { useEffect, useState } from "react";
-import { getShareFile } from "../Constants";
+import { getShareRawFileData } from "../Constants";
 
 type Props = {
     setModal:(value:any) =>void;
@@ -18,7 +15,7 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
 
     useEffect(() => {
         if(isOpen && isOpen?.selectedButton && isOpen?.data){
-            const fileData = getShareFile(isOpen?.data,isOpen?.selectedButton);
+            const fileData = getShareRawFileData(isOpen?.data,isOpen?.selectedButton);
             let titleData = (isOpen?.selectedButton.slice(0,1)).toLocaleUpperCase() + isOpen?.selectedButton.slice(1)
             setFile(fileData)
             setTitle(titleData)
@@ -36,20 +33,13 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
         >
             <div className={styles.ModalWrapper}>
                 <div className={styles.HeaderText}>Share link to</div>
-                {/* {[{title:"Email",icon:EmailIcon},{title:"WhatsApp",icon:WhatsappIcon},{title:"Facebook",icon:FacebookIcon},{title:"LinkedIn",icon:LinkedInIcon},{title:"Twitter",icon:TwitterIcon}].map(el => <div className={styles.OneRow} onClick={() => handleSubmit(el.title)} key={el?.title}>
-                    <img src={el?.icon} style={{width:25,marginRight:20}} alt={el.title}/>
-                    <div>{el?.title}</div>
-                </div>)} */}
                 <button 
                 className={styles.OneRow}
                 >
                 <EmailShareButton
                     url = {`${title} Experiment data of ${isOpen?.data?.name}`}
                     subject={`${title} Experiment Data`}
-                    body="adsfghfsaf"
-                    // onClick={handleEmailOnClick}
-                    // onAbort={() => console.log("ABORT")}
-                    // onShareWindowClose={() => console.log("??? CLOSE")}
+                    body={file}
                 >
                     <div className={styles.OneRowData} onClick={() => setModal(null)}>
                         <EmailIcon className={styles.IconStyle}/>
@@ -62,8 +52,8 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
                 className={styles.OneRow} 
                 >
                 <WhatsappShareButton
-                     url = {file}//{`${title} Experiment data of ${isOpen?.data?.name}`}
-                     title={`${title} Experiment Data`}
+                     url = {file}
+                     title={`${title} Experiment data of ${isOpen?.data?.name} ${"\n"} ${"\n"}`}
                 >
                     <div className={styles.OneRowData} onClick={() => setModal(null)}>
                         <WhatsappIcon className={styles.IconStyle} round={true}/>
@@ -76,8 +66,8 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
                 className={styles.OneRow} 
                 >
                 <FacebookShareButton
-                     url = {file}//{`${title} Experiment data of ${isOpen?.data?.name}`}
-                     quote={`${title} Experiment Data`}
+                     url = {file}
+                     quote={`${title} Experiment data of ${isOpen?.data?.name} ${"\n"} ${"\n"}`}
                      hashtag={`#${title} Experiment data of ${isOpen?.data?.name}`}
 
                 >
@@ -92,8 +82,8 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
                 className={styles.OneRow} 
                 >
                 <LinkedinShareButton
-                     url = {file}//{`${title} Experiment data of ${isOpen?.data?.name}`}
-                     title={`${title} Experiment Data`}
+                     url = {file}
+                     title={`${title} Experiment data of ${isOpen?.data?.name} ${"\n"} ${"\n"}`}
                     //  description={""}
 
                 >
@@ -108,8 +98,8 @@ const ShareModal = ({setModal,isOpen,handleSubmit}:Props) => {
                 className={styles.OneRow} 
                 >
                 <TwitterShareButton
-                     url = {file}//{`${title} Experiment data of ${isOpen?.data?.name}`}
-                     title={`${title} Experiment Data`}
+                     url = {file}
+                     title={`${title} Experiment data of ${isOpen?.data?.name} ${"\n"} ${"\n"}`}
                     //  via=""
                     // hashtags={[]}
 

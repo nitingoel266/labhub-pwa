@@ -1,6 +1,6 @@
 import styles from "../styles/measuringTemprature.module.css";
 // import RightArrow from "./RightArrow";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDeviceStatus, useDeviceDataFeed ,useDeviceConnected} from "../labhub/status";
 import { startSensorExperiment,restartSensorExperiment, stopSensorExperiment } from "../labhub/actions";
 import {getClientId} from "../labhub/utils";
@@ -37,6 +37,8 @@ const MeasuringVoltage = () => {
 
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,voltage}
   const [labels,setLabels] = useState<any>([]);
+
+  const measuringVoltageRef:any = useRef(null)
 
   // const handleSubmit = () => {
   //   if (dataStream.sensor !== null || (graphData.length > 0 && !isSaved)) {
@@ -294,6 +296,10 @@ const MeasuringVoltage = () => {
     }
   },[title])
 
+  useEffect(() => { // to set focus for acessibility
+    measuringVoltageRef?.current?.focus()
+  },[])
+
   const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
   return (
     <>
@@ -304,7 +310,7 @@ const MeasuringVoltage = () => {
       />
       <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>
-          <div aria-label="measuring voltage header text" style={{ fontWeight: 500 }}>Measuring Voltage</div>
+        <h4 style={{ fontWeight: 500 }}><button aria-label="Measuring Voltage" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={measuringVoltageRef} >Measuring Voltage</button></h4>
           <div> </div>
         </div>
         {graphData?.length ? <div className={styles.SecondaryHeaderWrapper}>

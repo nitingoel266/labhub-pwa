@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MemberDisconnect from "../../components/Modal/MemberDisconnectModal";
 import MyRecordsCard from "../../components/MyRecordsCard";
 import RightArrow from "../../components/RightArrow";
 import { TEMPERATURE_DATA, VOLTAGE_DATA, RGB_DATA } from "../../utils/const";
-import {getStorageData,validateFileName,getStorageKeys,getShortedData,toastMessage} from "../../components/Constants";
+import {getStorageData,validateFileName,getStorageKeys,getShortedData,toastMessage, getShareFile} from "../../components/Constants";
 import styles from "../../styles/myRecordList.module.css";
 import EditFileModal from "../../components/Modal/EditFileModal";
 
@@ -16,6 +16,8 @@ const MyRecordList = () => {
   const [selectedButton, setSelectedButton] = useState<string>("temperature"); // temperature , voltage ,rgb
   const [actionItem, setActionItem] = useState<any>(); // contain one data that will change by the action
   const [myRecords, setMyRecords] = useState<any>();
+
+  const tempButtonRef:any = useRef(null);
 
   const handleSubmit = () => {
     navigate(`/${selectedButton}-records`, {
@@ -81,58 +83,34 @@ const MyRecordList = () => {
   }
   const handleShare = async (item: any, title?: string) => {
     if(item){
-      if (!navigator.canShare) {
-        console.log("Your browser doesn't support the Web Share API.")
-        return;
-      }
-      try {
-        let header:any = ["Time ( Sec )", "Temperature ( C )"];
-        if (selectedButton === "voltage") header = ["Time ( Sec )", "Voltage (V)"];
-        else if (selectedButton === "rgb")
-          header = ["Measurement No.", "RED", "GREEN", "BLUE"];
-        
-        let csv:any = "";
-        if(header && header[2] === "GREEN" && item?.isCalibratedAndTested){
-          csv += "Calibrated and Tested";
-          csv += "\n";
+      if(title){
+        try {
+          // const file = getShareFile(item,selectedButton);
+          console.log("??>>> WEb SHARE",title)
+
+        }catch (error) {
+          console.error(error)
         }
-        if (header) {
-          for (let one of header) {
-            csv += one + ",";
-          }
-          csv += "\n";
+      }else{
+        if (!navigator.canShare) {
+          console.log("Your browser doesn't support the Web Share API.")
+          return;
         }
-        // csv += data.name + '\n';
-        if (item && item.data && item.data.length > 0) {
-          for(let one of item.data){
-            if(header && header[1] === "Temperature ( C )"){
-              csv += one.time;
-              csv += "," + one.temp;
-            }else if(header && header[1] === "Voltage (V)"){
-              csv += one.time;
-              csv += "," + one.voltage;
-            }else if(header && header[2] === "GREEN"){
-              csv += one["Measuement No"];
-              csv += "," + one['RED'];
-              csv += "," + one['GREEN'];
-              csv += "," + one['BLUE'];
-      
-            }
-            csv += "\n";
-          }
+        try {
+
+          const file = getShareFile(item,selectedButton);
+          // console.log("???????? ",file)
+          let expType = (selectedButton.slice(0,1)).toLocaleUpperCase() + selectedButton.slice(1)
+          await navigator.share({
+            url:`${expType} Experiment data of ${item.name}`,
+            text: `${expType} data of ${item?.name}`,
+            title: `${expType} Experiment Data`, // Email subject
+            files:[file]
+          });
+          console.log("data has been shared Successfully!")
+        } catch (error) {
+          console.error(error)
         }
-        const file = new File([csv], `${item?.name}.csv`,{type:"text/csv"});
-        // console.log("???????? ",file)
-        let expType = (selectedButton.slice(0,1)).toLocaleUpperCase() + selectedButton.slice(1)
-        await navigator.share({
-          url:`${expType} Experiment data of ${item.name}`,
-          text: `${expType} data of ${item?.name}`,
-          title: `${expType} Experiment Data`, // Email subject
-          files:[file]
-        });
-        console.log("data has been shared Successfully!")
-      } catch (error) {
-        console.error(error)
       }
       // console.log("share data",item)
     }
@@ -167,10 +145,16 @@ const MyRecordList = () => {
     };
     setMyRecords(resultData);
   }, []);
+
+  useEffect(() => { // to set focus for acessibility
+    tempButtonRef?.current?.focus()
+  },[])
+
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.myRecordWrapper}>
       <div className={styles.myRecordButtonWrapper}>
         <button
+          ref={tempButtonRef}
           aria-label="temperature button"
           onClick={() => setSelectedButton("temperature")}
           className={styles.myRecordButton}

@@ -195,8 +195,8 @@
     width: 40px;
     font-size: 11px;
     cursor: pointer;
-    border:none;
     outline: none;
+    border:1px solid #424C58;
 }
 .TempratureDegreeIcon {
     height: 2px;

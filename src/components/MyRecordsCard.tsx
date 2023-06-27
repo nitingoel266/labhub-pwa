@@ -13,7 +13,7 @@ import DownloadData from "./DownloadData";
 import { mobileWidth } from "../components/Constants";
 import MoreSelectionModal from "./Modal/MoreSelectionModal";
 import { useState } from "react";
-// import ShareModal from "./Modal/ShareModal";
+import ShareModal from "./Modal/ShareModal";
 
 type Props = {
   data: any;
@@ -138,13 +138,13 @@ const TabCard = ({
   handleDownload,
   handleShare,
 }: TabCardProps) => {
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const handleSubmit = (title: string) => { // not in use
-  //   if (title) {
-  //     handleShare(data, title);
-  //     setIsOpen(!isOpen);
-  //   }
-  // };
+  const [isOpen, setIsOpen] = useState<any>(null);
+  const handleSubmit = (title: string) => {
+    if (title) {
+      handleShare(data, title);
+      setIsOpen(null);
+    }
+  };
   return (
     <>
       <button
@@ -188,7 +188,8 @@ const TabCard = ({
         <div className={styles.FooterWrapper}>
           <button
             style={{border:"none",outline:"none",backgroundColor:"inherit"}}
-            onClick = {() => handleShare(data)}
+            // onClick = {() => handleShare(data)}
+            onClick={() => setIsOpen({selectedButton,data})}
           >
           <img
             src={BlackShareIcon}
@@ -220,13 +221,13 @@ const TabCard = ({
             </button>
         </div>
       </button>
-      {/* {isOpen && (
+      {isOpen && (
         <ShareModal
           isOpen={isOpen}
-          setModal={(value: boolean) => setIsOpen(value)}
+          setModal={(value: any) => setIsOpen(value)}
           handleSubmit={handleSubmit}
         />
-      )} */}
+      )}
     </>
   );
 };

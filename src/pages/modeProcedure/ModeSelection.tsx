@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {DataSetupIcon,IButtonIcon,SensorIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
@@ -13,6 +13,10 @@ const ModeSelection = () => {
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState<string>("");
+
+    const selectModeRef:any = useRef(null);
+
+
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
         setSelectedItem("")
@@ -33,19 +37,23 @@ const ModeSelection = () => {
         else setModal(title)
     }
 
+    useEffect(() => { // to set focus for acessibility
+        selectModeRef?.current?.focus()
+      },[])
+
     return <div style={{position:"relative"}} role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
-        <h4 className={styles.HeaderText} aria-label="Select mode header">Select Mode</h4>
+        <h4 className={styles.HeaderText}><button aria-label="Select mode" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={selectModeRef} >Select Mode</button></h4>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:MANUAL_MODE},{icon:SensorIcon,title:PRESET_MODE}].map((el:any) => (
                 <div className={styles.ButtonSubWrapper} key={el.title}>
                 <div className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                    <button aria-label={el.title + "button"} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                    <button aria-label={el.title + getDescription(el?.title)} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                         <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
                         <p style={{marginLeft:10,fontSize:16,fontWeight:500}}>{el.title}</p>
                     </button>
-                    <button aria-label={el.title + "i button"} onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
+                    <div onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
                         <img src={IButtonIcon} style={{width:20}} alt={el.title + "i icon"}/>
-                    </button>
+                    </div>
                 </div>
                 {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
                 </div>

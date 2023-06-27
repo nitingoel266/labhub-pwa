@@ -24,26 +24,46 @@
     border-radius: 5px;
     /* height: 120px; */
     background-color: #FFFFFF;
-    padding:10px;
+    /* padding:10px; */
 }
 .HeaderText {
-    font-size: 13px;
+    font-size: 14px;
     color: #424C58;
     margin-bottom: 10px;
-    margin-top: 5px;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 .OneRow {
-    margin-bottom: 10px;
+    margin-bottom: 2px;
     color: #424C58;
     font-size: 13px;
     display: flex;
     flex-direction: row;
     align-items: center;
     cursor: pointer;
+    outline: none;
+    border: none;
+    background-color: inherit;
+}
+
+.OneRowData {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    width: 225px;
 }
 
 .OneRow:hover {
     background-color: #E4E4E4;
+}
+
+.IconStyle {
+    width:20px;
+    height:20px;
+    margin-right:10px;
 }
 
 @media (max-width:414px) {

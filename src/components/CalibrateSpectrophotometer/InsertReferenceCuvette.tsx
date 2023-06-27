@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from '../../styles/InsertReferenceCuvette.module.css';
 import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
@@ -18,6 +18,8 @@ const InsertReferenceCuvette = () => {
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
 
+    const insertCuvetteRef:any = useRef(null)
+
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
         setSelectedItem("")
@@ -36,16 +38,21 @@ const InsertReferenceCuvette = () => {
         if(isOpen === title) setModal("")
         else setModal(title)
     }
+
+    useEffect(() => { // to set focus for acessibility
+        insertCuvetteRef?.current?.focus()
+      },[])
+      
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
-        <h4 aria-label="Please Insert Reference Cuvette and press calibrate header" className={styles.HeaderText}>Please Insert Reference Cuvette and press calibrate</h4>
+        <h4 className={styles.HeaderText}><button aria-label="Please Insert Reference Cuvette and press calibrate" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={insertCuvetteRef} >Please Insert Reference Cuvette and press calibrate</button></h4>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <button aria-label={CALIBRATE + "button"} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <button aria-label={CALIBRATE + getDescription(CALIBRATE)} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                     <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{CALIBRATE}</p>
                  </button>
-                 <button aria-label={CALIBRATE + "i button"} onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt="i icon"/>
-                 </button>
+                 </div>
              </div>
         </div>
         {isOpen === CALIBRATE && isMobile && <IButtonComponent title={CALIBRATE} description={getDescription(CALIBRATE)}/>}

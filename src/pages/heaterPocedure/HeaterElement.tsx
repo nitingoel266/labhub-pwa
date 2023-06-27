@@ -5,7 +5,7 @@ import {
   HeaterIcon,
   HeaterAnimation,
 } from "../../images/index";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/heaterElement.module.css";
 import IButtonModal from "../../components/Modal/IButtonModal";
 import RightArrow from "../../components/RightArrow";
@@ -42,6 +42,8 @@ const HeaterElement = () => {
   const [temperature, setTemperature] = useState<number>(25); //20-150
   const [temperatureShouldBe, setTemperatureShouldBe] = useState<number>(0);
   const [power, setPower] = useState<number>(0);
+
+  const setPointTempRef:any = useRef(null);
 
   const handleTemperature = (title: string) => {
     if (title === "sub" && temperature > 25)
@@ -127,6 +129,10 @@ const HeaterElement = () => {
     }
   },[status?.heaterConnected,status?.operation])
 
+  useEffect(() => { // to set focus for acessibility
+    setPointTempRef?.current?.focus()
+  },[])
+
   const extraStyle =
     clientId !== status?.leaderSelected
       ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
@@ -140,7 +146,7 @@ const HeaterElement = () => {
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
       <div className={styles.HeaderTextWrapper}>
         <div style={{display:"flex",flexDirection:"row"}}>
-          <h4 aria-label={SETPOINT_TEMPERATURE + " header"}>{"Set Point Temperature"} (</h4>
+          <h4><button aria-label="Set Point Temperature degree C" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={setPointTempRef} >Set Point Temperature</button>(</h4>
           <h4
            className={styles.TempratureDegreeIcon}  
            style={{

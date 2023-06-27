@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/SpectrophotometerCalibration.module.css";
 import sound from "../../assets/sound/beep-sound.mp3";
 import IButtonModal from "../Modal/IButtonModal";
@@ -30,6 +30,8 @@ const SpectrophotometerTesting = () => {
     dataStream?.rgb?.calibrateTest || []
   );
   const [isOpen, setModal] = useState("");
+
+  const calibrateRef:any = useRef(null);
 
   const clickHandler = (item: string) => {
     if (selectedItem && selectedItem === item) setSelectedItem("");
@@ -77,6 +79,10 @@ const SpectrophotometerTesting = () => {
       }
   }, [dataStream?.rgb, audio, testCalibrate]);
 
+  useEffect(() => { // to set focus for acessibility
+    calibrateRef?.current?.focus()
+  },[])
+
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" >
       <div className={styles.ButtonWrapper}>
@@ -85,20 +91,20 @@ const SpectrophotometerTesting = () => {
           style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
         >
           <button
-            aria-label={TEST_CALIBRATE}
+            ref={calibrateRef}
+            aria-label={TEST_CALIBRATE + getDescription(TEST_CALIBRATE)}
             onClick={() => clickHandler(TEST_CALIBRATE)}
             className={styles.SubButton}
             style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
           >
             <p style={{ marginLeft: 10 ,fontSize:15,fontWeight:500}}>{TEST_CALIBRATE}</p>
           </button>
-          <button
-            aria-label={TEST_CALIBRATE + "i button"}
+          <div
             onClick={() => handleIModal(TEST_CALIBRATE)}
             className={styles.IButtonWrapper}
           >
             <img src={IButtonIcon} style={{ width: 20 }} alt="i icon" />
-          </button>
+          </div>
         </div>
       </div>
       {isOpen === TEST_CALIBRATE && isMobile && (

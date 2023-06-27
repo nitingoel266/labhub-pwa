@@ -5,7 +5,7 @@ import {initSetup,uninitSetup} from "../../labhub/init-setup";
 import RightArrow from '../../components/RightArrow';
 import { useNavigate } from 'react-router-dom';
 import MemberDisconnect from '../../components/Modal/MemberDisconnectModal';
-import {  useState } from 'react';
+import {  useEffect, useRef, useState } from 'react';
 import { installClickHandler, updateServiceWorker } from '../../pwaSetup';
 
 const ScanDevices = () => {
@@ -16,6 +16,9 @@ const ScanDevices = () => {
     const [installPromotion] = usePwaInstallPromotion();
     const [updatePending] = useSwPendingUpdate();
     const [isOpen,setModal] = useState("")
+
+    const scanButtonRef:any = useRef(null);
+
 
 
     const handleRightArrow = () => {
@@ -44,6 +47,10 @@ const ScanDevices = () => {
     setModal("")
   }
 
+  useEffect(() => { // to set focus for acessibility
+    scanButtonRef?.current?.focus()
+  },[])
+
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc"> 
         <div className={styles.ExtraButtonWrapper}>
             {installPromotion && <button aria-label={"Add to home screen Button"} className={styles.ExtraButton} onClick={installClickHandler}>
@@ -59,7 +66,7 @@ const ScanDevices = () => {
             <div className={styles.LabHubStickerWrapper}>
             <img src={LabHubSticker} style={{width:'100%'}} alt="labhub images"/>
             </div>
-           {!isConnected && <button aria-label={"Scan Device Button"} className={styles.ScanDeviceButton} style={connected ? {} : {backgroundColor:"#FFFFFF",boxShadow:"0px 1px 2px 1px #B6B5B5"}} onClick={() => connected ? setModal("resetConnection") : handleSubmit()}>
+           {!isConnected && <button ref={scanButtonRef} aria-label={"Scan Device Button"} className={styles.ScanDeviceButton} style={connected ? {} : {backgroundColor:"#FFFFFF",boxShadow:"0px 1px 2px 1px #B6B5B5"}} onClick={() => connected ? setModal("resetConnection") : handleSubmit()}>
                 <img src={connected ? BluetoothIcon : BlackBluetoothIcon} className={styles.BluetoothIconWrapper} alt="bluetoothIcon"/>
                 <div className={styles.ScanDeviceText} style={connected ? {} :{color:"#424C58"}}>Scan Devices</div>
             </button>}

@@ -64,7 +64,7 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
       },
     ],
   };
-  const options = {
+  const options:any = {
     scales: {
       x: {
         grid: {
@@ -78,31 +78,25 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
         ...yAxisScale
       },
     },
-    // maintainAspectRatio: false,
-    // responsive: true,
-    // elements: {
-    //   point: {
-    //     radius: 0,
-    //   },
-    //   line: {
-    //     borderWidth: 1.5,
-    //   },
-    // },
+    // animation:false, // if you want to stop anumation when draw thae graph
     plugins: {
       zoom: {
         zoom: {
           wheel: {
             enabled: enableZoom, // SET SCROOL ZOOM TO TRUE
+            // mode:"x",
+            speed:0.01
           },
-          // pinch: {
-          //   enabled: true
-          // },
-          // speed: 100,
+          drag :{
+            enabled:enableZoom,
+            speed:0.01,
+            // mode:"x",
+          },
+          mode:'x'
         },
         pan: {
           enabled: true,
-          // mode: 'xy',
-          // speed: 100,
+          mode: "x",
         },
       },
       legend:{

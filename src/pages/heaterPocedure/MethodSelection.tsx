@@ -1,6 +1,6 @@
 
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {DataSetupIcon,IButtonIcon,TemperatureProbeIcon} from "../../images/index";
 import styles from '../../styles/functionSelection.module.css';
 import RightArrow from "../../components/RightArrow";
@@ -17,6 +17,8 @@ const MethodSelection = () => {
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     const [isOpen,setModal] = useState("");
+
+    const controlMethodRef:any = useRef(null);
 
     const clickHandler = (item:string) => {
         if(selectedItem && selectedItem === item)
@@ -56,20 +58,23 @@ const MethodSelection = () => {
         }
       },[status?.heaterConnected,status?.operation])
 
+      useEffect(() => { // to set focus for acessibility
+        controlMethodRef?.current?.focus()
+      },[])
     
     return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{position:"relative"}}>
-            <h4 aria-label="control method header" className={styles.HeaderText} style={{marginBottom:25,marginTop:40}}>Control Method</h4>
+            <h4 className={styles.HeaderText} style={{marginBottom:25,marginTop:40}}><button aria-label="Control Method" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={controlMethodRef} >Control Method</button></h4>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:HEATER_ELEMENT},{icon:TemperatureProbeIcon,title:TEMPERATURE_PROBE}].map((el:any) => (
                 <div className={styles.ButtonSubWrapper} key={el.title}>
               <div className={styles.Button} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:235} : {maxWidth:235}}>
-                 <button aria-label={el.title + "button"} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <button aria-label={el.title + getDescription(el?.title)} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                      <img src={el.icon} style={{height:35,marginLeft:10}} alt={el.title + "icon"}/>
                      <p style={{ marginLeft: 10,fontSize:14,fontWeight:500,marginRight:8 }}>{el.title}</p>
                  </button>
-                 <button aria-label={el.title + "i button"} onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
+                 <div onClick={() => handleIModal(el.title)} className={styles.IButtonWrapper}>
                      <img src={IButtonIcon} style={{width:20}} alt={el.title + "i icon"}/>
-                 </button>
+                 </div>
              </div>
              {isOpen === el.title && isMobile && <IButtonComponent title={el.title} description={getDescription(el?.title)}/>}
                 </div>

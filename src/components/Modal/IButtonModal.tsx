@@ -1,5 +1,6 @@
 import styles from "../../styles/IButtonModal.module.css";
 import {CloseIcon} from "../../images/index";
+import { useEffect, useRef } from "react";
 
 type Props= {
     isOpen:boolean;
@@ -9,6 +10,12 @@ type Props= {
 }
 
 const IButtonModal = ({setModal,isOpen,title,description} : Props)=> {
+
+  const closeButtonRef:any = useRef(null)
+
+  useEffect(() => { // to set focus for acessibility
+    closeButtonRef?.current?.focus()
+  },[])
 
     return (
         <div className={styles.IButtonWrapper}>
@@ -31,6 +38,8 @@ const IButtonModal = ({setModal,isOpen,title,description} : Props)=> {
                 <div className={styles.IButtonHeader}>
                     <div>Note:</div>
                     <button
+                        aria-label = {description}
+                        ref={closeButtonRef}
                         style={{border:"none",outline:"none",backgroundColor:"inherit"}}
                         onClick={() => setModal("")}
                     >

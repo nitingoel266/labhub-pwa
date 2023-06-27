@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DataIcon,
   IButtonIcon,
@@ -26,6 +26,9 @@ const FunctionSelection = () => {
   const [selectedItem, setSelectedItem] = useState<any>("");
   const [isOpen, setModal] = useState("");
   const navigate = useNavigate();
+
+  const selectFunctionRef:any = useRef(null)
+
   const clickHandler = (item: string) => {
     if (selectedItem && selectedItem === item) setSelectedItem("");
     else setSelectedItem(item);
@@ -39,9 +42,14 @@ const FunctionSelection = () => {
     if (isOpen === title) setModal("");
     else setModal(title);
   };
+
+  useEffect(() => { // to set focus for acessibility
+    selectFunctionRef?.current?.focus()
+  },[])
+
   return (
     <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
-      <h4 aria-label="Select Function header" className={styles.HeaderText}>Select Function</h4>
+      <h4 className={styles.HeaderText}><button aria-label="Select Function" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={selectFunctionRef} >Select Function</button></h4>
       {[
         [
           { icon: DataIcon, title: DATA_SETUP},
@@ -60,7 +68,7 @@ const FunctionSelection = () => {
                 style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
               >
                 <button
-                  aria-label={el?.title + "button"}
+                  aria-label={el?.title + getDescription(el?.title)}
                   onClick={() => clickHandler(el.title)}
                   className={styles.SubButton}
                   style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
@@ -72,13 +80,13 @@ const FunctionSelection = () => {
                   />
                   <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{el.title}</p>
                 </button>
-                <button
-                  aria-label={el?.title + "i button"}
+                <div
+                  // aria-label={el?.title + "i button"}
                   onClick={() => handleIModal(el.title)}
                   className={styles.IButtonWrapper}
                 >
                   <img src={IButtonIcon} style={{ width: 20 }} alt={el.title + "i icon"} />
-                </button>
+                </div>
               </div>
               {isOpen === el.title && isMobile && (
                 <IButtonComponent

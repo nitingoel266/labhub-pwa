@@ -129,7 +129,7 @@ export const requestLeaderId = async (server: BluetoothRemoteGATTServer | null) 
 // -------------------
 
 /**
- * notify when any experiment is starts of stop 
+ * notify when any experiment is start or stop 
  * @param server  :- characterstic values of the BLE device
  * @returns :- return characterstic fron cached(previoisly saved)
  */
@@ -177,7 +177,7 @@ export async function cleanupExperimentStatusNotify(characteristic: BluetoothRem
 }
 
 /**
- * get the values for the desive status and experiment status,values and populate them to the locale state variables
+ * get the values for the device status and experiment status, values and populate them to the locale state variables
  * @param event characterstic provided by the BLE device for experiments and changes
  */
 async function handleExperimentStatusChanged(event: any) {
@@ -212,7 +212,7 @@ async function handleExperimentStatusChanged(event: any) {
 
     const leaderOperation: LeaderOperation = getOperation(operation); // identify which operation weare going to perform
 
-    const temperatureSensor = (sensor_attach & 0x1) === 0x1; // identify temperature sensor is connected or not(if one byte value is 1 or 0)
+    const temperatureSensor = (sensor_attach & 0x1) === 0x1; // identify temperature sensor is connected or not (if one byte value is 1 or 0)
     const voltageSensor = (sensor_attach & 0x2) === 0x2;
     const heaterSensor = (sensor_attach & 0x4) === 0x4;
 
@@ -232,7 +232,7 @@ async function handleExperimentStatusChanged(event: any) {
       }
     }
 
-    const setupData: SetupData = { // set thedata setup values from characterstics
+    const setupData: SetupData = { // set the data setup values from characterstics
       dataRate: getDataRate(data_rate),
       dataSample: getDataSample(num_of_samples),
     };

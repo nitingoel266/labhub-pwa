@@ -52,7 +52,7 @@ export function removeMember(membersList: string[], clientId: string) {
 }
 
 /**
- * Add member id when it going to connect to BLE Device
+ * Add member id when it is going to connect to BLE Device
  * @param membersList list of client id's connected by BLE device
  * @param clientId current client id that trying to connect to device
  */
@@ -151,7 +151,7 @@ export const resetClient = (softReset = false) => {
   }
 };
 
-// notify the BLE device when we try to change status,update value,start/stop experiment with help of dispatchExperimentControl
+// notify the BLE device when we try to change status, update value, start/stop experiment with help of dispatchExperimentControl
 export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer | null, updValue: DeviceStatusUpdate | null) => {
   if (!deviceStatus.value) return;
 
@@ -325,7 +325,7 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
   }
 };
 
-// notify the BLE device when we try to run the experment like start/stop/restart so that it will provide experiment feed with help of dispatchExperimentControl
+// notify the BLE device when we try to run the experiment like start/stop/restart so that it will provide experiment feed with help of dispatchExperimentControl
 export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServer | null, updValue: DeviceDataFeedUpdate | null) => {
   if (!deviceStatus.value) return;
 
@@ -406,7 +406,7 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
   await dispatchExperimentControl(server, experimentControl);
 };
 
-// dispatch all the status and operation to the BLE device
+// dispatch all the status and operations to the BLE device
 async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | null, experimentControl: ExperimentControl) {
   const { timer_control, operation, data_rate, num_of_samples, heater_temp_setpoint } = experimentControl;
   let dataRate = data_rate;
@@ -466,7 +466,7 @@ async function dispatchLeaderStatus(server: BluetoothRemoteGATTServer | null, le
  * get the experiment(graph) log data or members that joins later
  * @param server  BLE charasctistic values
  * @param reqValue index number for logdata
- * @returns return the experiment log data upto index number
+ * @returns return the experiment log data upto provided index number
  */
 export const handleClientChannelRequest = async (server: BluetoothRemoteGATTServer | null, reqValue: ClientChannelRequest | null) => {
   if (!deviceStatus.value) return;
@@ -588,7 +588,7 @@ async function getDataSeriesPartial(server: BluetoothRemoteGATTServer | null, st
   return null;
 };
 
-// get the leader screen number to sync for member screens
+// get the leader screen number to sync for members screen
 async function getLeaderScreen(server: BluetoothRemoteGATTServer | null): Promise<number | null> {
   const screenNumber = await readCharacteristicValue<number>(server, LABHUB_SERVICE, LEADER_STATUS_CHAR, 'int16');
   if (screenNumber === undefined) {

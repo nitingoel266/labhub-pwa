@@ -13,6 +13,11 @@ import { Log } from "../utils/utils";
 
 let reusedClientId = false;
 
+/**
+ * 
+ * @param init differentiate b/w initial values or updated values which one should we return 
+ * @returns device values
+ */
 export function getDeviceStatusValue(init = false): DeviceStatus {
   if (init) {
     if (deviceStatus.value) {
@@ -27,6 +32,12 @@ export function getDeviceStatusValue(init = false): DeviceStatus {
   }
 }
 
+/**
+ * remove client(member) id when it will disconnect from BLE device
+ * @param membersList connected members to BLE device
+ * @param clientId current connected device id
+ * @returns 
+ */
 export function removeMember(membersList: string[], clientId: string) {
   if (membersList.includes(clientId as string)) {
     const idx = membersList.indexOf(clientId as string);
@@ -40,6 +51,11 @@ export function removeMember(membersList: string[], clientId: string) {
   }
 }
 
+/**
+ * Add member id when it is going to connect to BLE Device
+ * @param membersList list of client id's connected by BLE device
+ * @param clientId current client id that trying to connect to device
+ */
 function addMember(membersList: string[], clientId: string) {
   if (!membersList.includes(clientId as string)) {
     membersList.push(clientId);
@@ -48,6 +64,7 @@ function addMember(membersList: string[], clientId: string) {
   }
 }
   
+// request for new client ID
 export const requestClientId = async (server: BluetoothRemoteGATTServer, connectionReuse = false) => {
   reusedClientId = false;
 
@@ -100,6 +117,7 @@ export const requestClientId = async (server: BluetoothRemoteGATTServer, connect
   return clientId;
 }
 
+// handle client id when it get's disconnected
 export const disconnectClient = async (server: BluetoothRemoteGATTServer) => {
   const clientId = getClientId();
   if (clientId) {
@@ -133,6 +151,7 @@ export const resetClient = (softReset = false) => {
   }
 };
 
+// notify the BLE device when we try to change status, update value, start/stop experiment with help of dispatchExperimentControl
 export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer | null, updValue: DeviceStatusUpdate | null) => {
   if (!deviceStatus.value) return;
 
@@ -306,6 +325,7 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
   }
 };
 
+// notify the BLE device when we try to run the experiment like start/stop/restart so that it will provide experiment feed with help of dispatchExperimentControl
 export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServer | null, updValue: DeviceDataFeedUpdate | null) => {
   if (!deviceStatus.value) return;
 
@@ -386,6 +406,7 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
   await dispatchExperimentControl(server, experimentControl);
 };
 
+// dispatch all the status and operations to the BLE device
 async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | null, experimentControl: ExperimentControl) {
   const { timer_control, operation, data_rate, num_of_samples, heater_temp_setpoint } = experimentControl;
   let dataRate = data_rate;
@@ -422,6 +443,7 @@ async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | nul
   }
 }
 
+// update the leader navigation(screen numbers) in to the labhub device for members sync
 async function dispatchLeaderStatus(server: BluetoothRemoteGATTServer | null, leaderStatus: LeaderStatus) {
   const { screen_number } = leaderStatus;
 
@@ -440,6 +462,12 @@ async function dispatchLeaderStatus(server: BluetoothRemoteGATTServer | null, le
   }
 }
 
+/**
+ * get the experiment(graph) log data or members that joins later
+ * @param server  BLE charasctistic values
+ * @param reqValue index number for logdata
+ * @returns return the experiment log data upto provided index number
+ */
 export const handleClientChannelRequest = async (server: BluetoothRemoteGATTServer | null, reqValue: ClientChannelRequest | null) => {
   if (!deviceStatus.value) return;
 
@@ -479,6 +507,7 @@ export const handleClientChannelRequest = async (server: BluetoothRemoteGATTServ
   clientChannelResponse.next(clientChannelResp);
 };
 
+// get the series data(log data) for the temp/voltage experiments
 async function getDataSeries(server: BluetoothRemoteGATTServer | null, count: number) {
   const reqCount = Math.ceil(count / 10);
   let dataArray: (number | null)[] = [];
@@ -504,6 +533,7 @@ async function getDataSeries(server: BluetoothRemoteGATTServer | null, count: nu
   return dataArray as number[];
 }
 
+// help getting the log data for temp/voltage experinents with getDataSeries
 async function getDataSeriesPartial(server: BluetoothRemoteGATTServer | null, startIndex: number) {
   const a1 = getByteArray(startIndex, 2);
   const a2 = getByteArray(null, 2, 10);
@@ -558,6 +588,7 @@ async function getDataSeriesPartial(server: BluetoothRemoteGATTServer | null, st
   return null;
 };
 
+// get the leader screen number to sync for members screen
 async function getLeaderScreen(server: BluetoothRemoteGATTServer | null): Promise<number | null> {
   const screenNumber = await readCharacteristicValue<number>(server, LABHUB_SERVICE, LEADER_STATUS_CHAR, 'int16');
   if (screenNumber === undefined) {

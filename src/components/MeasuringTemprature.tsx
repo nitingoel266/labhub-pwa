@@ -148,8 +148,7 @@ const MeasuringTemprature = () => {
     if (
       status?.sensorConnected === "temperature" &&
       dataStream?.sensor && 
-      dataStream?.sensor?.temperature !== null && 
-      dataStream?.sensor?.temperature > 0/* &&
+      dataStream?.sensor?.temperature !== null/* &&
       clientId === status?.leaderSelected */
     ) {
       if(clientId !== status?.leaderSelected && dataStream?.sensor?.temperatureIndex === 0){

@@ -84,6 +84,18 @@ const getShareFile = (item:any,selectedButton:string) => {
       header = ["Measurement No.", "RED", "GREEN", "BLUE"];
     
     let csv:any = "";
+    if(item?.date){
+      csv += `${getDayName(new Date(item.date).getDay())}, ${getMonthName(new Date(item.date).getMonth())} ${new Date(item.date).getDate()} ${new Date(item.date).getFullYear()}`;
+      csv += "\n";
+    }
+    if(item?.time){
+      csv += `${item?.time}`;
+      csv += "\n";
+    }
+    if(item?.name){
+      csv += `${item?.name}`;
+      csv += "\n";
+    }
     if(header && header[2] === "GREEN" && item?.isCalibratedAndTested){
       csv += "Calibrated and Tested";
       csv += "\n";
@@ -127,6 +139,18 @@ const getShareRawFileData = (item:any,selectedButton:string) => {
     header = ["Measurement No.", "RED", "GREEN", "BLUE"];
   
   let csv:any = "";
+  if(item?.date){
+    csv += `${getDayName(new Date(item.date).getDay())}, ${getMonthName(new Date(item.date).getMonth())} ${new Date(item.date).getDate()} ${new Date(item.date).getFullYear()}`;
+    csv += "\n";
+  }
+  if(item?.time){
+    csv += `${item?.time}`;
+    csv += "\n";
+  }
+  if(item?.name){
+    csv += `${item?.name}`;
+    csv += "\n";
+  }
   if(header && header[2] === "GREEN" && item?.isCalibratedAndTested){
     csv += "Calibrated and Tested";
     csv += "\n";
@@ -239,6 +263,18 @@ const useToastMessage = () => {
     }
 }
 
+const getDayName = (index:number) => {
+  const dayJson:any = {1:"Monday",2:"Tuesday",3:"Wednesday",4:"Thursday",5:"Friday",6:"Saturday",7:"Sunday"};
+  if(index)
+  return dayJson[index]
+}
+
+const getMonthName = (index:number) => {
+  const dayJson:any = {0:"January",1:"February",2:"March",3:"April",4:"May",5:"June",6:"July",7:"August",8:"September",9:"October",10:"November",11:"December"};
+  if(index)
+  return dayJson[index]
+}
+
 export interface ToastInfo {
     timmer?:number;
     message: string;
@@ -287,5 +323,8 @@ export {
     toastMessage,
 
     getShareFile,
-    getShareRawFileData
+    getShareRawFileData,
+
+    getDayName,
+    getMonthName
 }

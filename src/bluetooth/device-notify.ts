@@ -401,7 +401,7 @@ async function handleExperimentStatusChanged(event: any) {
       } else if (heaterConnected === 'probe' && leaderOperation === 'heater_probe') {
         const power = data1 / 1000;
         let probeTemp = data2x === null ? data2x : data2x;  // temperature is C * 100, not C
-        if (probeTemp !== null) probeTemp = Math.round(probeTemp / 100);
+        if (probeTemp !== null) probeTemp = Number((probeTemp / 100).toFixed(1));
         heaterDataStream.probe = [power, probeTemp as any];
       } else {
         heaterDataStream = null;
@@ -425,7 +425,13 @@ async function handleExperimentStatusChanged(event: any) {
         }
       } else if (leaderOperation === 'rgb_measure') {
         rgbCalibratedAndTested = deviceStatusValue.rgbCalibratedAndTested;  // let it be unchanged
-        rgbDataStream.measure = [data1x, data2x, data3x];
+        const data1xUpdatedValue = data1x !== null ? Number(Number((Number(data1x) - 500)/100).toFixed(1)) : data1x;
+        const data2xUpdatedValue = data2x !== null ? Number(Number((Number(data2x) - 500)/100).toFixed(1)) : data2x;
+        const data3xUpdatedValue = data3x !== null ? Number(Number((Number(data3x) - 500)/100).toFixed(1)) : data3x;
+
+        // rgbDataStream.measure = [data1x, data2x, data3x];// previous values
+        rgbDataStream.measure = [data1xUpdatedValue, data2xUpdatedValue, data3xUpdatedValue]; // updated one on 27th-jun-23
+
         if (data1x !== null && data2x !== null && data3x !== null) {
           stopRgbExperiment();
         }

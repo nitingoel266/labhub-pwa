@@ -1,9 +1,38 @@
 .Wrapper {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    margin-top: 25px;
+}
+.SubWrapper {
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-top: 25px;
+}
+.HeaterTextWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width:390px;
+    color: #424C58;
+    font-size: 18px;
+}
+.HeaterAbsorbanceWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width:800px;
+    color: #FFFFFF;
+    font-size: 18px;
+    background-color:#424C58;
+    margin-bottom:5px;
+    padding-top:10px;
+    padding-bottom:10px;
+    border-radius: 5px;
 }
 .ColumnWrapper {
     display: flex;

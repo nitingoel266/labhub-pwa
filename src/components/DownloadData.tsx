@@ -1,4 +1,5 @@
 import {toastMessage} from "../components/Constants";
+import {getDayName,getMonthName} from "./Constants";
 
 type Props = {
   header?: any;
@@ -7,8 +8,24 @@ type Props = {
 
 const DownloadData = ({ data, header }: Props) => {
   var csv: any = "";
+  if(data?.date){
+    csv += `${getDayName(new Date(data.date).getDay())} ${getMonthName(new Date(data.date).getMonth())} ${new Date(data.date).getDate()} ${new Date(data.date).getFullYear()}`;
+    // csv += "\n";
+  }
+  if(data?.time){
+    csv += `, ${data?.time}`;
+    csv += "\n";
+  }
+  if(data?.name){
+    csv += `${data?.name}`;
+    csv += "\n";
+    if(!data?.isCalibratedAndTested){
+      csv += "\n";
+    }
+  }
   if(header && header[2] === "GREEN" && data?.isCalibratedAndTested){
     csv += "Calibrated and Tested";
+    csv += "\n";
     csv += "\n";
   }
   if (header) {

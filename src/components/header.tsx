@@ -485,6 +485,13 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
          stopSensorExperiment();
           if(checkForSave){
             setModal("Do you want to save the experiment data?")
+          }else{
+            let value:any = onClick === "myRecord" ? "/my-records" : -1;
+            if(onClick === "connectionManager")
+                navigate("/scan-devices",{
+                  state: { screenName : "/scan-devices" },
+                });
+              else navigate(value)
           }
        }else if(checkForSave && handleSave && isOpen === "Do you want to save the experiment data?") {
         handleSave()

@@ -192,7 +192,7 @@ async function handleExperimentStatusChanged(event: any) {
     const timer_control = getValueFromDataView(statusDataView, 'int8', 0) as number; // get 0 git value for data timer
     const operation = getValueFromDataView(statusDataView, 'int8', 1) as number; // get 1 bit value for operations
     const data_type = getValueFromDataView(statusDataView, 'int8', 2) as number; // get 2 bit value for data tpe
-    // const status_fault = getValueFromDataView(statusDataView, 'int8', 3) as number;
+    const status_fault = getValueFromDataView(statusDataView, 'int8', 3) as number; // get 3 bit value for battery charging status
     const battery_level = getValueFromDataView(statusDataView, 'int8', 4) as number; // get 4th bit valuefor battery percentage
     const sensor_attach = getValueFromDataView(statusDataView, 'int8', 5) as number; // get 5thbit value for sensor verifaction
 
@@ -212,6 +212,10 @@ async function handleExperimentStatusChanged(event: any) {
 
     const leaderOperation: LeaderOperation = getOperation(operation); // identify which operation weare going to perform
 
+    // const timmerRun = (status_fault & 0x1) === 0x1;
+    const charging = (status_fault & 0x2) === 0x2; // identify battery charging status by second bit
+    // const chargeFault = (status_fault & 0x4) === 0x4;
+    Log.debug("Battery Charging Status ",charging,status_fault)
     const temperatureSensor = (sensor_attach & 0x1) === 0x1; // identify temperature sensor is connected or not (if one byte value is 1 or 0)
     const voltageSensor = (sensor_attach & 0x2) === 0x2;
     const heaterSensor = (sensor_attach & 0x4) === 0x4;

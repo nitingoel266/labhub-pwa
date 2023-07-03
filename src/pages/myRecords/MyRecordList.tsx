@@ -151,7 +151,7 @@ const MyRecordList = () => {
   },[])
 
   return (
-    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.myRecordWrapper}>
+    <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ className={styles.myRecordWrapper}>
       <div className={styles.myRecordButtonWrapper}>
         <button
           ref={tempButtonRef}

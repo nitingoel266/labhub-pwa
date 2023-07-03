@@ -2,7 +2,8 @@ import {
   useDeviceStatus,
   useDeviceConnected,
   useDeviceDataFeed,
-  applicationMessage
+  applicationMessage,
+  warningMessage
 } from "../labhub/status";
 import {
   resetLeader,
@@ -27,7 +28,7 @@ import {
   WhiteDeleteIcon,
 } from "../images/index";
 import { useNavigate, useLocation } from "react-router-dom";
-import {getShareFile, mobileWidth, toastMessage} from "./Constants";
+import {getShareFile, mobileWidth, toastMessage, currentURL, previousURL, useCurrentUrl, usePreviousUrl} from "./Constants";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
 import DownloadData from "./DownloadData";
@@ -43,6 +44,10 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   const clientId = getClientId()
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [currentURI] = useCurrentUrl();
+  const [previousURI] = usePreviousUrl();
+
   const [isOpen, setModal] = useState("");
   const [hasConnectionEstablished,setHasConnectionEstablished] = useState(false);
   const [onClick, setOnClick] = useState("");
@@ -51,10 +56,6 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
 
 
   const [deviceName, setDeviceName] = useState("");
-
-  const [currentUrl,setCurrentUrl] = useState<string>('');
-  const [prevUrl,setPrevUrl] = useState<string>('');
-
 
   const [screenName, setScreenName] = useState("");
 
@@ -751,7 +752,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         if(checkForSave){
           setModal("device disconnect and save data")
         }else if(showDisconnectDeviceModal){
-          applicationMessage.next({type:"info",message:`The ${deviceName} device has been disconnected.`})
+          warningMessage.next({type:"warn",message:`The ${deviceName} device has been disconnected.`})
         }
     }
   },[connected,hasConnectionEstablished,status?.deviceName,deviceName,checkForSave,showDisconnectDeviceModal]);
@@ -776,11 +777,11 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
   // },[clientId,status?.leaderSelected,location?.pathname])
 
   useEffect(() => { // for back behaviour on scan page
-    if(location?.pathname !== currentUrl){
-      setPrevUrl(currentUrl)
-      setCurrentUrl(location?.pathname)
+    if(location?.pathname !== currentURI){
+      previousURL.next(currentURI)
+      currentURL.next(location?.pathname)
     }
-  },[location?.pathname,currentUrl])
+  },[location?.pathname,currentURI])
 
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (
@@ -802,7 +803,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
         handleDownload={handleDownload}
         handleShare={handleShare}
         handleSync={handleSync}
-        prevUrl={prevUrl}
+        previousURI={previousURI}
       />
       {isOpen && isOpen !== "device disconnect and save data" && <MemberDisconnect
         isOpen={isOpen ? true : false}
@@ -843,7 +844,7 @@ function Header({setPointTemp,checkForSave,handleSave,shouldCloseModal}: HeaderP
            isOpen={isOpen ? true : false}
            setModal={(value) => handleDisconnectedUnSaveData()}
            submitModal={() => handleDisconnectedSaveData()}
-           message= {`The ${deviceName} device has been disconnected. do you want to save data?`}
+           message= {`You have been disconnected from the device. do you want to save the experiment data?`}
            checkForSave={checkForSave}
         />}
     </div>
@@ -927,7 +928,7 @@ const SecondHeader = ({
   handleDownload,
   handleShare,
   handleSync,
-  prevUrl
+  previousURI
 }: SecondHeaderprops) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState<any>(null);
@@ -942,12 +943,12 @@ const SecondHeader = ({
   return (
     <>
     <div className={styles.SecondHeaderWrapper}>
-     {(location?.pathname !== "/scan-devices" || prevUrl) ? <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={() => (prevUrl || location?.pathname !== "/scan-devices") ? handleBack() : {}}>
+     {(location?.pathname !== "/scan-devices" || previousURI) ? <button style={{outline:"none",border:"none",backgroundColor:"inherit"}} onClick={() => (previousURI || location?.pathname !== "/scan-devices") ? handleBack() : {}}>
       <img
         src={BackIcon}
         style={{
           cursor:
-            (location?.pathname !== "/scan-devices" || prevUrl) ? "pointer" : "not-allowed",
+            (location?.pathname !== "/scan-devices" || previousURI) ? "pointer" : "not-allowed",
           width: 25,
         }}
         alt="Back Icon"
@@ -1054,7 +1055,7 @@ type SecondHeaderprops = {
   handleDownload: () => void;
   handleShare:(title?:string) => void;
   handleSync:() => void;
-  prevUrl:string;
+  previousURI:string | null;
 };
 
 export interface HeaderProps {

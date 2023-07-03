@@ -48,7 +48,7 @@ const FunctionSelection = () => {
   },[])
 
   return (
-    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
+    <div /*role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ style={{ position: "relative" }}>
       <h4 className={styles.HeaderText}><button aria-label="Select Function" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={selectFunctionRef} >Select Function</button></h4>
       {[
         [
@@ -68,7 +68,7 @@ const FunctionSelection = () => {
                 style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
               >
                 <button
-                  aria-label={el?.title + getDescription(el?.title)}
+                  aria-label={`${el?.title} ${getDescription(el?.title)}`}
                   onClick={() => clickHandler(el.title)}
                   className={styles.SubButton}
                   style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}

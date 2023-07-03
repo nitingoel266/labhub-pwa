@@ -126,15 +126,21 @@ const MeasuringTemprature = () => {
   };
 
   const handleCancelModal = () => {
-    setModal("")
     if(isOpen === "Do you want to save the experiment data?"){
-        navigate("/function-selection")
+      navigate("/function-selection")
+    }else if(isOpen === "Sensor disconnected Do you want to save the experiment data?"){
+      navigate("/sensors")
     }
+    setModal("")
   }
 
   const handleSensorDisconnected = (value:any) => {
-    setModal(value)
-    navigate("/sensors")
+    if(capturePoint.some((e:any) => e > 0) && !isSaved){
+      setModal("Sensor disconnected Do you want to save the experiment data?")
+    }else{
+      setModal(value)
+      navigate("/sensors")
+    }
   }
 
   const handleSensorDisconnectedSaveData = () => {
@@ -322,7 +328,7 @@ const MeasuringTemprature = () => {
         handleSave={handleSave}
         shouldCloseModal = {isOpen === "Temperature Sensor disconnected" ? true : false}
       />
-      <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.TopWrapper}>
+      <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ className={styles.TopWrapper}>
         <div className={styles.HeaderWrapper}>
           <h4 style={{ fontWeight: 500 }}><button aria-label="Measuring Temperature" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={measuringTempRef} >Measuring Temperature</button></h4>
           <div className={styles.HeaderRightWrapper}>
@@ -513,17 +519,17 @@ const MeasuringTemprature = () => {
               ? handleRestart
               : isOpen === "Do you want to save the experiment data?" ? 
                 handleSubmitProcess
-              : handleStop
+              : (isOpen === "Sensor disconnected Do you want to save the experiment data?" ? handleSensorDisconnectedSaveData : handleStop)
           }
-          message={isOpen === "Do you want to save the experiment data?" ? isOpen : `Do you want to ${isOpen} the experiment?`}
+          message={(isOpen === "Do you want to save the experiment data?" || isOpen === "Sensor disconnected Do you want to save the experiment data?") ? isOpen : `Do you want to ${isOpen} the experiment?`}
           handleCancel = {handleCancelModal}
         />}
         {connected && isOpen === "Temperature Sensor disconnected" && <SensorDisconnectModal 
            isOpen={isOpen ? true : false}
            setModal={(value) => handleSensorDisconnected(value)}
            submitModal={() => handleSensorDisconnectedSaveData()}
-           message= {clientId === status?.leaderSelected ? (capturePoint.some((e:any) => e > 0) && !isSaved ? "Temperature sensor is disconnected do you want to save data? Please connect the temperature sensor to start the experiment again." : "Temperature sensor is disconnected, please connect the temperature sensor to start the experiment again.") : (capturePoint.some((e:any) => e > 0) && !isSaved ? "Temperature sensor is disconnected do you want to save data?" : "Temperature sensor is disconnected.")}
-           checkForSave={capturePoint.some((e:any) => e > 0) && !isSaved ? true : false}
+           message= {clientId === status?.leaderSelected ? "Temperature sensor is disconnected, please connect the temperature sensor to start the experiment again." : "Temperature sensor is disconnected."}
+          //  checkForSave={capturePoint.some((e:any) => e > 0) && !isSaved ? true : false}
         />}
         {/* <RightArrow
           isSelected={capturePoint?.some((el: number) => el > 0) ? true : false}

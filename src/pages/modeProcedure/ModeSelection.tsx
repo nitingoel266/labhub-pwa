@@ -41,13 +41,13 @@ const ModeSelection = () => {
         selectModeRef?.current?.focus()
       },[])
 
-    return <div style={{position:"relative"}} role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+    return <div style={{position:"relative"}} /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */>
         <h4 className={styles.HeaderText}><button aria-label="Select mode" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={selectModeRef} >Select Mode</button></h4>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:MANUAL_MODE},{icon:SensorIcon,title:PRESET_MODE}].map((el:any) => (
                 <div className={styles.ButtonSubWrapper} key={el.title}>
                 <div className={styles.Button} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                    <button aria-label={el.title + getDescription(el?.title)} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                    <button aria-label={`${el.title} ${getDescription(el?.title)}`} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                         <img src={el.icon} style={{height:35}} alt={el.title + "icon"}/>
                         <p style={{marginLeft:10,fontSize:16,fontWeight:500}}>{el.title}</p>
                     </button>

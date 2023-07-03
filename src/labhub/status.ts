@@ -9,6 +9,7 @@ export const clientChannelRequest = new BehaviorSubject<ClientChannelRequest | n
 
 export const connectionAttemptOngoing = new BehaviorSubject<boolean>(false);
 export const applicationMessage = new BehaviorSubject<string | AppMessageInfo | null>(null);
+export const warningMessage = new BehaviorSubject<string | AppMessageInfo | null>(null);
 export const pwaInstallPromotion = new BehaviorSubject<boolean>(false);
 export const swInstallStatus = new BehaviorSubject<'success' | 'error' | 'offline' | null | undefined>(undefined);
 export const swPendingUpdate = new BehaviorSubject<boolean>(false);
@@ -70,6 +71,17 @@ export const useAppMessage = () => {
 
   return [value];
 };
+
+export const useWarnModal = () => {
+  const [value, setValue] = useState<AppMessageInfo | null>(() => assertAppMessage(warningMessage.value));
+
+  useEffect(() => {
+    const subs = warningMessage.subscribe((value) => setValue(assertAppMessage(value)));
+    return () => subs.unsubscribe();
+  }, []);
+
+  return [value];
+}
 
 function assertAppMessage(value: string | AppMessageInfo | null) {
   if (typeof value === 'string') {

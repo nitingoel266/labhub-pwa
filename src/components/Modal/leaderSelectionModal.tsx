@@ -38,7 +38,7 @@ const LeadeSelectionModal = ({setModal,isOpen} : Props)=> {
         opacity: isOpen ? 1 : 0,
         transform: isOpen ? "translateY(0)" : "translateY(-100vh)"
         }}
-        role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
+        // role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
         >
             <div className={styles.TextContainer}>
                 <div className={styles.Headertext}>

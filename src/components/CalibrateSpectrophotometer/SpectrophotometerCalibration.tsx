@@ -56,10 +56,10 @@ const SpectrophotometerCalibration = () => {
         calibrateRef?.current?.focus()
       },[])
 
-    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <button ref={calibrateRef} aria-label={CALIBRATE +getDescription(CALIBRATE)} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <button ref={calibrateRef} aria-label={`${CALIBRATE} ${getDescription(CALIBRATE)}`} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                     <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{CALIBRATE}</p>
                  </button>
                  <div onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>

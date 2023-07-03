@@ -51,7 +51,7 @@ const ScanDevices = () => {
     scanButtonRef?.current?.focus()
   },[])
 
-    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc"> 
+    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */> 
         <div className={styles.ExtraButtonWrapper}>
             {installPromotion && <button aria-label={"Add to home screen Button"} className={styles.ExtraButton} onClick={installClickHandler}>
                 <img src={DownloadIcon} style={{width:18,marginRight:8}} alt="add to home icon"/>

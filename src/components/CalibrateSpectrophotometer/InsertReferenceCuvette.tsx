@@ -43,11 +43,11 @@ const InsertReferenceCuvette = () => {
         insertCuvetteRef?.current?.focus()
       },[])
       
-    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */>
         <h4 className={styles.HeaderText}><button aria-label="Please Insert Reference Cuvette and press calibrate" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={insertCuvetteRef} >Please Insert Reference Cuvette and press calibrate</button></h4>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <button aria-label={CALIBRATE + getDescription(CALIBRATE)} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <button aria-label={`${CALIBRATE} ${getDescription(CALIBRATE)}`} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                     <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{CALIBRATE}</p>
                  </button>
                  <div onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>

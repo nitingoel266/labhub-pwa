@@ -31,7 +31,7 @@ const IButtonModal = ({setModal,isOpen,title,description} : Props)=> {
             opacity: isOpen ? 1 : 0,
             transform: isOpen ? "translateY(0)" : "translateY(100vh)",
         }}
-        role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
+        // role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
 
         >
             <div className={styles.IButtonTextContainer}>

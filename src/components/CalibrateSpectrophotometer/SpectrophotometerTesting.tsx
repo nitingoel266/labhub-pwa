@@ -84,7 +84,7 @@ const SpectrophotometerTesting = () => {
   },[])
 
   return (
-    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" >
+    <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ >
       <div className={styles.ButtonWrapper}>
         <div
           className={styles.Button}
@@ -92,7 +92,7 @@ const SpectrophotometerTesting = () => {
         >
           <button
             ref={calibrateRef}
-            aria-label={TEST_CALIBRATE + getDescription(TEST_CALIBRATE)}
+            aria-label={`${TEST_CALIBRATE} ${getDescription(TEST_CALIBRATE)}`}
             onClick={() => clickHandler(TEST_CALIBRATE)}
             className={styles.SubButton}
             style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}

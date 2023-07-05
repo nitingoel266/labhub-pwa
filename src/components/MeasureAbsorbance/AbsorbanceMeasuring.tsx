@@ -166,7 +166,7 @@ const AbsorbanceMeasuring = () => {
         handleSave={handleSave}
         // shouldCloseModal = {isOpen === "Temperature Sensor disconnected" ? true : false}
       />
-    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc">
+    <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */>
       {screenName === "cuvette-insertion" && <div className={styles.HeaderText}><button aria-label="Please insert cuvette to measure absorbance of RGB light." style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={measureRef} >Please insert cuvette to measure absorbance of RGB light.</button></div>}
       <div className={styles.ButtonWrapper} style={screenName === "cuvette-insertion" ? {marginTop:0} : {marginTop:70}}>
         <div
@@ -174,20 +174,20 @@ const AbsorbanceMeasuring = () => {
           style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
         >
           <button
-            aria-label={MEASURE + "button"}
+            aria-label={`${MEASURE} ${getDescription(MEASURE)}`}
             onClick={() => clickHandler(MEASURE)}
             className={styles.SubButton}
             style={MEASURE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
           >
             <p style={{ marginLeft: 10 ,fontSize:15,fontWeight:500}}>{MEASURE}</p>
           </button>
-          <button
-            aria-label={MEASURE + " i button"}
+          <div
+            // aria-label={MEASURE + " i button"}
             onClick={() => handleIModal(MEASURE)}
             className={styles.IButtonWrapper}
           >
             <img src={IButtonIcon} style={{ width: 20 }} alt="i icon" />
-          </button>
+          </div>
         </div>
       </div>
       {isOpen === MEASURE && isMobile && (

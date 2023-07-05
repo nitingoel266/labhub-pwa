@@ -30,9 +30,9 @@ const SensorDisconnectModal = ({message = "Sensor has been disconnected!",isOpen
                         <div dangerouslySetInnerHTML={{__html:message}}/>
                         {/* <div>{errorMessage}</div> */}
                     </div>
-                    <div className={styles.ErrorButtonWrapper} style={checkForSave ? {justifyContent:"flex-end"} : {}}>
+                    <div className={styles.ErrorButtonWrapper} style={checkForSave ? {justifyContent:"flex-end"} : {justifyContent:"flex-end",marginRight:3}}>
                         {/* <div onClick={() => setErrorMessage(null)} className={styles.CancelButton}>No</div> */}
-                        <button onClick={setModal} className={styles.DismissButton}>{checkForSave ? "No" : "Ok"}</button>
+                        <button onClick={setModal} className={styles.DismissButton} style ={checkForSave ? {} : {backgroundColor :"#424C58",color:"#FFFFFF"}}>{checkForSave ? "No" : "OK"}</button>
                         {checkForSave ? <button onClick={submitModal} className={styles.YesSaveButton} style={{marginLeft:10,marginRight:10}} >Yes</button> : null}
                     </div>
                 </div>

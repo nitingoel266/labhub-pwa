@@ -153,7 +153,7 @@ const TemperatureProbe = () => {
       setPointTemp={temperature} 
       shouldCloseModal = {(isOpen === "Temperature probe disconnected" || isOpen === "Heater disconnected") ? true : false}
       />
-    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
+    <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ style={{ position: "relative" }}>
       <div className={styles.HeaderTextWrapper}>
         <div style={{display:"flex",flexDirection:"row"}}>
           <h4 ><button aria-label="Set Point Temperature degree C" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={setPointTempRef} >Set Point Temperature</button>(</h4>
@@ -276,7 +276,7 @@ const TemperatureProbe = () => {
       )}
       <div className={styles.HeaderTextWrapper}>
         <div aria-label="control method sub header">Control Method</div>
-        <div aria-label="temperature probe sub header">TEMPRATURE PROBE</div>
+        <div aria-label="temperature probe sub header">Temperature Probe</div>
       </div>
       <div aria-label="Please make sure the probe is always in contact with the soution text" className={styles.HeaderSubTextWrapper}>
         Please make sure the probe is always in contact with the soution.

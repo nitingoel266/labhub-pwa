@@ -143,7 +143,7 @@ const HeaterElement = () => {
       setPointTemp={temperature} 
       shouldCloseModal = {isOpen === "Heater Element disconnected" ? true : false}
       />
-    <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{ position: "relative" }}>
+    <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ style={{ position: "relative" }}>
       <div className={styles.HeaderTextWrapper}>
         <div style={{display:"flex",flexDirection:"row"}}>
           <h4><button aria-label="Set Point Temperature degree C" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={setPointTempRef} >Set Point Temperature</button>(</h4>

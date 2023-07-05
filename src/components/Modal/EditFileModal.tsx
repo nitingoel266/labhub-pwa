@@ -39,7 +39,7 @@ const EditFileModal = ({isOpen,setEditModal,EditFileName,selectedButton}:Props) 
         />}
         <div
         className={styles.TopSecondWrapper}
-        role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
+        // role="alertdialog" aria-modal="true" aria-labelledby="dialog_label" aria-describedby="dialog_desc"
         >
             <div className={styles.TextContainer}>
                 <div className={styles.HeaderWrapper}>

@@ -263,6 +263,32 @@ const useToastMessage = () => {
     }
 }
 
+const currentURL = new BehaviorSubject<string | null>(null);
+
+const useCurrentUrl = () => {
+    const [value, setValue] = useState<string | null>(currentURL.value);
+  
+    useEffect(() => {
+      const subs = currentURL.subscribe((value) => setValue(value));
+      return () => subs.unsubscribe();
+    }, []);
+  
+    return [value];
+  };
+
+const previousURL = new BehaviorSubject<string | null>(null);
+
+const usePreviousUrl = () => {
+    const [value, setValue] = useState<string | null>(previousURL.value);
+  
+    useEffect(() => {
+      const subs = previousURL.subscribe((value) => setValue(value));
+      return () => subs.unsubscribe();
+    }, []);
+  
+    return [value];
+  };
+
 const getDayName = (index:number) => {
   const dayJson:any = {1:"Monday",2:"Tuesday",3:"Wednesday",4:"Thursday",5:"Friday",6:"Saturday",7:"Sunday"};
   if(index)
@@ -321,6 +347,11 @@ export {
 
     useToastMessage,
     toastMessage,
+
+    usePreviousUrl,
+    previousURL,
+    useCurrentUrl,
+    currentURL,
 
     getShareFile,
     getShareRawFileData,

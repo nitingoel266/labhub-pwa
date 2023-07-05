@@ -50,14 +50,13 @@ const SelectFunction = () => {
     useEffect(() => { // to set focus for acessibility
         selectFuncRef?.current?.focus()
       },[])
-
-    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{position:"relative"}}>
+    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ style={{position:"relative"}}>
         <h4 className={styles.HeaderText}><button aria-label="Select Function" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={selectFuncRef} >Select Function</button></h4>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:CALIBRATE_SPECTROPHOTOMETER},{icon:RGBSpectIcon,title:MEASURE_ABSORBANCE}].map((el:any) => (
                 <div className={styles.ButtonSubWrapper} key={el.title}>
               <div className={styles.Button} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:240} : {maxWidth:240}}>
-                 <button aria-label={el?.title + getDescription(el?.title)} ref={el?.ref} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:235} : {maxWidth:235}}>
+                 <button aria-label={`${el?.title} ${getDescription(el?.title)}`} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:235} : {maxWidth:235}}>
                      <img src={el.icon} style={{height:35,marginLeft:10}} alt={el.title + "i icon"}/>
                      <p style={{marginLeft:8,marginRight:2,fontSize:14,fontWeight:500}}>{el.title}</p>
                  </button>

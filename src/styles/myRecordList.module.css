@@ -6,6 +6,7 @@
     flex-direction: row;
     align-items: center;
     margin-bottom: 8px;
+    flex:1;
 }
 .myRecordButton {
     background-color: #FFFFFF;
@@ -13,7 +14,7 @@
     font-weight: 500;
     border-radius: 5px;
     height: 45px;
-    width: 200px;
+    /* width: 200px; */
     min-width: 80px;
     text-align: center;
     cursor: pointer;
@@ -26,6 +27,7 @@
     box-shadow: 0px 3px #B6B5B5;
     border:none;
     outline: none;
+    flex:1;
 }
 
 .EmplyRecords {

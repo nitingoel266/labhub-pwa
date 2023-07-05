@@ -59,7 +59,7 @@ const DataSetup = () => {
         setupRef?.current?.focus()
       },[])
 
-    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" className={styles.DataSetupWrapper}>
+    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ className={styles.DataSetupWrapper}>
         <h4 style={{fontWeight:500}}><button aria-label="Setup" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={setupRef} >Setup</button></h4>
         <div className={styles.RateMeasureRightSide}>
             <div aria-label={DATA_RATE + "title"} >{DATA_RATE}</div>

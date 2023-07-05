@@ -269,8 +269,8 @@ export const handleDeviceStatusUpdate = async (server: BluetoothRemoteGATTServer
         // (default) 0=continuous:
         let dataSampleN = getDataSampleN(deviceStatusValue.setupData.dataSample || 'cont');
 
-        // (default) 25*C
-        let heaterSetpointTempN = deviceStatusValue.setpointTemp || 25;
+        // (default) 20*C
+        let heaterSetpointTempN = deviceStatusValue.setpointTemp || 20;
 
         if (key === 'resetAll') {
           Log.debug('resetAll dispatched by leader');
@@ -350,8 +350,8 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
   // (default) 0=continuous:
   const dataSampleN = getDataSampleN(deviceStatusValue.setupData.dataSample || 'cont');
 
-  // (default) 25*C
-  const heaterSetpointTempN = deviceStatusValue.setpointTemp || 25;
+  // (default) 20*C
+  const heaterSetpointTempN = deviceStatusValue.setpointTemp || 20;
 
   const { sensorExperiment, heaterExperiment, rgbExperiment, probe} = updValue;
 

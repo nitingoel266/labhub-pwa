@@ -37,6 +37,7 @@ import AbsorbanceMeasuring from './components/MeasureAbsorbance/AbsorbanceMeasur
 import ShowErrorModal from './components/Modal/ShowErrorModal';
 import pkg from '../package.json';
 import Toast from './components/Modal/Toast';
+import WarningModal from './components/Modal/WarningModal';
 
 function App() {
   const [status] = useDeviceStatus();
@@ -117,6 +118,7 @@ function App() {
       <LeaderDisconnect />
       {/* <Loader /> */}
       <ShowErrorModal />
+      <WarningModal />
       <Toast />
     </div>
   );

@@ -62,13 +62,13 @@ const MethodSelection = () => {
         controlMethodRef?.current?.focus()
       },[])
     
-    return <div role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" style={{position:"relative"}}>
+    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ style={{position:"relative"}}>
             <h4 className={styles.HeaderText} style={{marginBottom:25,marginTop:40}}><button aria-label="Control Method" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={controlMethodRef} >Control Method</button></h4>
         <div className={styles.ButtonWrapper}>
             {[{icon:DataSetupIcon,title:HEATER_ELEMENT},{icon:TemperatureProbeIcon,title:TEMPERATURE_PROBE}].map((el:any) => (
                 <div className={styles.ButtonSubWrapper} key={el.title}>
               <div className={styles.Button} style={el.title === selectedItem ? {...HIGHLIGHT_BACKGROUND,maxWidth:235} : {maxWidth:235}}>
-                 <button aria-label={el.title + getDescription(el?.title)} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <button aria-label={`${el.title} ${getDescription(el?.title)}`} onClick={() => clickHandler(el.title)} className={styles.SubButton} style={el.title === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                      <img src={el.icon} style={{height:35,marginLeft:10}} alt={el.title + "icon"}/>
                      <p style={{ marginLeft: 10,fontSize:14,fontWeight:500,marginRight:8 }}>{el.title}</p>
                  </button>

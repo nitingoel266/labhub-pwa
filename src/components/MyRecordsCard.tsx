@@ -188,8 +188,8 @@ const TabCard = ({
         <div className={styles.FooterWrapper}>
           <button
             style={{border:"none",outline:"none",backgroundColor:"inherit"}}
-            // onClick = {() => handleShare(data)}
-            onClick={() => setIsOpen({selectedButton,data})}
+            onClick = {() => handleShare(data)}
+            // onClick={() => setIsOpen({selectedButton,data})} // when open modal for share in web
           >
           <img
             src={BlackShareIcon}

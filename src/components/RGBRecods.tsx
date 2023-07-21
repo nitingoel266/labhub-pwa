@@ -1,8 +1,12 @@
 import { useLocation } from "react-router-dom";
 import styles from "../styles/TemperatureRecords.module.css";
 import {getDayName,getMonthName} from "./Constants"
+import { useDeviceStatus } from "../labhub/status";
 
 const RGBRecord = () => {
+
+  const [status] = useDeviceStatus();
+  
   const { state } = useLocation() || {};
 
   const date:any = state?.data?.selectedData?.date ? (`${getDayName(new Date(state.data.selectedData.date).getDay())}, ${getMonthName(new Date(state.data.selectedData.date).getMonth())} ${new Date(state.data.selectedData.date).getDate()} ${new Date(state.data.selectedData.date).getFullYear()}`) : ""
@@ -13,7 +17,7 @@ const RGBRecord = () => {
         <div>{state?.data?.selectedData?.time}</div>
       </div>
       <div className={styles.HeaterTextWrapper} style={{marginBottom:8,width:790}}>
-        <div>{state?.data?.selectedData?.name}</div>
+        <div>{status?.deviceName}</div>
         <div>{" "}</div>
       </div>
       <div className={styles.HeaterTextWrapper} style={{marginBottom:25,width:790}}>

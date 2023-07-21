@@ -400,7 +400,7 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
     operation: operationN,        
     data_rate: dataRateN,
     num_of_samples: dataSampleN,
-    heater_temp_setpoint: heaterSetpointTempN,
+    heater_temp_setpoint: heaterSetpointTempN, 
   };
 
   await dispatchExperimentControl(server, experimentControl);
@@ -421,8 +421,8 @@ async function dispatchExperimentControl(server: BluetoothRemoteGATTServer | nul
 
   const b1 = getByteArray(dataRate, 2);
   const b2 = getByteArray(num_of_samples, 2);
-  // const b3 = getByteArray(heater_temp_setpoint * 100, 2);
-  const b3 = getByteArray(heater_temp_setpoint, 2);
+  const b3 = getByteArray(heater_temp_setpoint * 100, 2);
+  // const b3 = getByteArray(heater_temp_setpoint, 2); // changed on 21-07-23
 
   let success = false;
   const controlStruct: ArrayBuffer | null = getArrayBuffer(a1, a2, b1, b2, b3);

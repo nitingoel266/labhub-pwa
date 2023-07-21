@@ -424,7 +424,7 @@ async function onDisconnected(event?: any) {
     // Fix the above issue
     if (!DISABLE_RELOAD && !isManualDisconnect) {
       setTimeout(() => {
-        window.location.reload();
+        // window.location.reload(); // we lost the data of experiment so commented this and load in header.tsx after save data
       }, 1000);
     }
   }

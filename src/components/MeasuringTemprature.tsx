@@ -263,11 +263,12 @@ const MeasuringTemprature = () => {
       if(status?.operation === "measure_temperature"){
         stopSensorExperiment();
       }
+      if(connected)
       setModal("Temperature Sensor disconnected")
     }else if(status?.sensorConnected === "temperature"){
       setModal("")
     }
-  },[status?.sensorConnected,status?.operation])
+  },[status?.sensorConnected,status?.operation,connected])
 
   useEffect(() => { // save data and go back only for member if leader change data setup and member is n measuring screen
     if(status?.setupData && JSON.stringify(status?.setupData) !== JSON.stringify(dataSetup) && clientId !== status?.leaderSelected){
@@ -521,7 +522,7 @@ const MeasuringTemprature = () => {
                 handleSubmitProcess
               : (isOpen === "Sensor disconnected Do you want to save the experiment data?" ? handleSensorDisconnectedSaveData : handleStop)
           }
-          message={(isOpen === "Do you want to save the experiment data?" || isOpen === "Sensor disconnected Do you want to save the experiment data?") ? isOpen : `Do you want to ${isOpen} the experiment?`}
+          message={isOpen === "Do you want to save the experiment data?"  ? isOpen : isOpen === "Sensor disconnected Do you want to save the experiment data?" ? "Do you want to save the experiment data?" : `Do you want to ${isOpen} the experiment?`}
           handleCancel = {handleCancelModal}
         />}
         {connected && isOpen === "Temperature Sensor disconnected" && <SensorDisconnectModal 

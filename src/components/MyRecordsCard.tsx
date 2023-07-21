@@ -14,6 +14,7 @@ import { mobileWidth } from "../components/Constants";
 import MoreSelectionModal from "./Modal/MoreSelectionModal";
 import { useState } from "react";
 import ShareModal from "./Modal/ShareModal";
+import { useDeviceStatus } from "../labhub/status";
 
 type Props = {
   data: any;
@@ -94,13 +95,15 @@ const OneCard = ({
   handleDeleteMobile,
   handleShare,
 }: OneCardProps) => {
+  const [status] = useDeviceStatus();
+
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const handleDownload = (item: any) => {
     let header = ["Time (Sec)", "Temperature (°C)"];
     if (selectedButton === "voltage") header = ["Time (Sec)", "Voltage (V)"];
     else if (selectedButton === "rgb")
       header = ["Measurement No.", "RED", "GREEN", "BLUE"];
-    DownloadData({ data: item, header });
+    DownloadData({ data: item, header ,deviceName:status?.deviceName});
   };
   return isMobile ? (
     <MobileCard

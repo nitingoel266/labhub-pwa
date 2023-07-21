@@ -740,7 +740,7 @@ function Header({
         header = ["Time (Sec)", "Voltage (V)"];
       else if (location.state.data.selectedButton === "rgb")
         header = ["Measurement No", "RED", "GREEN", "BLUE"];
-      DownloadData({ data: location.state.data.selectedData, header });
+      DownloadData({ data: location.state.data.selectedData, header ,deviceName:status?.deviceName});
     }
   };
 
@@ -748,6 +748,8 @@ function Header({
     if (handleSave) handleSave();
     setModal("");
     setShowDisconnectDeviceModal(false);
+    navigate("/scan-devices")
+    window.location.reload()
   };
 
   const handleDisconnectedUnSaveData = () => {
@@ -755,6 +757,8 @@ function Header({
     if (location?.pathname === "/measure-absorbance") {
       navigate("/rgb-spect");
     } else navigate(-1);
+    navigate("/scan-devices")
+    window.location.reload()
   };
 
   useEffect(() => {
@@ -950,8 +954,8 @@ function Header({
       {isOpen === "device disconnect and save data" && (
         <SensorDisconnectModal
           isOpen={isOpen ? true : false}
-          setModal={(value) => handleDisconnectedUnSaveData()}
-          submitModal={() => handleDisconnectedSaveData()}
+          setModal={(value) => handleDisconnectedUnSaveData()} // no
+          submitModal={() => handleDisconnectedSaveData()} // yes
           message={`You have been disconnected from the device. do you want to save the experiment data?`}
           checkForSave={checkForSave}
         />

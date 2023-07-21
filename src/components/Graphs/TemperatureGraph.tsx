@@ -101,7 +101,7 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
             console.log("hammer", event);
             console.log("zoom point", point);
             console.log("chart zoom level ",chart.getZoomLevel())
-            if(event?.type === "wheel" && event?.wheelDelta < 0){
+            if(event?.type === "wheel" && event?.wheelDelta < 0){ 
               return true
             }
             return chart.getZoomLevel() <= 13;

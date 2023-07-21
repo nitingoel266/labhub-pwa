@@ -11,6 +11,9 @@ const WarningModal = () => {
     const getMessageType = {"warn":"Warning","info":"Information","error":"Error Message"}
     
     const setErrorMessage = (value:any) => {
+        if(errorMessage?.includes("device has been disconnected")){
+            window.location.reload() // to reset all values
+        }
         warningMessage.next(value)
     }
     const handleResetConnection = () => {

@@ -4,9 +4,11 @@ import {getDayName,getMonthName} from "./Constants";
 type Props = {
   header?: any;
   data: any;
+  deviceName:string | undefined | "";
 };
 
-const DownloadData = ({ data, header }: Props) => {
+const DownloadData = ({ data, header ,deviceName}: Props) => {
+
   var csv: any = "";
   if(data?.date){
     csv += `${getDayName(new Date(data.date).getDay())} ${getMonthName(new Date(data.date).getMonth())} ${new Date(data.date).getDate()} ${new Date(data.date).getFullYear()}`;
@@ -17,8 +19,10 @@ const DownloadData = ({ data, header }: Props) => {
     csv += "\n";
   }
   if(data?.name){
-    csv += `${data?.name}`;
-    csv += "\n";
+    if(deviceName){
+      csv += `${deviceName}`;
+      csv += "\n";
+    }
     if(!data?.isCalibratedAndTested){
       csv += "\n";
     }

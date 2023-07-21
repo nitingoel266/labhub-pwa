@@ -240,9 +240,11 @@ async function handleExperimentStatusChanged(event: any) {
       dataRate: getDataRate(data_rate),
       dataSample: getDataSample(num_of_samples),
     };
+    
+    // const setpointTemp = heater_temp_setpoint; // changed on 21-07-23
 
-    // const setpointTemp = heater_temp_setpoint / 100;
-    const setpointTemp = heater_temp_setpoint;
+    const setpointTemp = heater_temp_setpoint / 100;
+    
 
     // --------------------
 
@@ -343,7 +345,9 @@ async function handleExperimentStatusChanged(event: any) {
             Log.warn(`Missing voltageIndex: ${current_sample - 1} [${prevSampleIndex}, ${current_sample}]`);
           }
 
-          const voltageData = Number(Number(data3 / 1000 - 12).toFixed(3));  // voltage is (V + 12) * 1000
+          // const voltageData = Number(Number(data3 / 1000 - 12).toFixed(3));  // voltage is (V + 12) * 1000
+
+          const voltageData = Number(Number((data3 - 1200)/100).toFixed(3));  // changed on 21-07-23
 
           if (current_sample > 0) {
             sensorDataStream.voltage = voltageData;

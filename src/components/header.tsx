@@ -65,8 +65,6 @@ function Header({
 
   const [pathHistory] = useUrlPathsHistory();
 
-  const [pushUrlNotAllowed,setPushUrlNotAllowed] = useState<boolean>(false);
-
   const [isOpen, setModal] = useState("");
   const [hasConnectionEstablished, setHasConnectionEstablished] =
     useState(false);
@@ -82,7 +80,6 @@ function Header({
   const handleBack = () => {
     setOnClick("back");
     if(!connected){ // to not show back icon on scan when not connected
-      setPushUrlNotAllowed(true)
       if(pathHistory?.length)
       urlPathsHistory.next([...pathHistory.slice(0,pathHistory.length -1)])
     }
@@ -751,7 +748,7 @@ function Header({
         header = ["Time (Sec)", "Voltage (V)"];
       else if (location.state.data.selectedButton === "rgb")
         header = ["Measurement No", "RED", "GREEN", "BLUE"];
-      DownloadData({ data: location.state.data.selectedData, header ,deviceName:status?.deviceName});
+      DownloadData({ data: location.state.data.selectedData, header});
     }
   };
 
@@ -898,14 +895,15 @@ function Header({
   useEffect(() => {
     if(connected && pathHistory?.length !== 0){
       urlPathsHistory.next([])
-    }else if(!connected && pathHistory[pathHistory.length -1] !== location?.pathname && !pushUrlNotAllowed){
+    }else if(!connected && pathHistory[pathHistory.length -1] !== location?.pathname){
       if(pathHistory.length === 0 && location?.pathname  === "/scan-devices")
       {
         // we do not push initial scan-devices route
-      }else
-      urlPathsHistory.next([...pathHistory,location?.pathname])
+      }else if(onClick !== "back"){
+        urlPathsHistory.next([...pathHistory,location?.pathname])
+      }
     }
-  },[location?.pathname,connected,pathHistory,pushUrlNotAllowed])
+  },[location?.pathname,connected,pathHistory,onClick])
 
 
   // console.log("??>>> connected and status",connected,"status :- ",status)

@@ -15,6 +15,7 @@ import {
   getStorageKeys,
   mobileWidth,
   toastMessage,
+  getDeviceClientName
 } from "./Constants";
 import { TEMPERATURE_DATA } from "../utils/const";
 import Header from "./header";
@@ -112,6 +113,7 @@ const MeasuringTemprature = () => {
         name: verifiedFileName,
         date: getDate(),
         time: `${title.slice(8,10)}:${title.slice(10,12)}`, //getTime(),
+        deviceWithClientName:getDeviceClientName(clientId,status),
         data: resultTemperature,
         };
         let storageTempData = JSON.stringify(resultData);

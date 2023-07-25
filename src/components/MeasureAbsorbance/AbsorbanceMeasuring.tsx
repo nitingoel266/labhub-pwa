@@ -15,7 +15,8 @@ import {
   getDate,
   // getTime,
   getStorageKeys,
-  toastMessage
+  toastMessage,
+  getDeviceClientName
 } from "../Constants";
 import IButtonComponent from "../IButtonComponent";
 import { startRgbExperiment, simulateRgb, calibrateRgb } from "../../labhub/actions";
@@ -115,6 +116,7 @@ const AbsorbanceMeasuring = () => {
       name: verifiedFileName,
       date: getDate(),
       time: `${title.slice(8,10)}:${title.slice(10,12)}`,  //getTime(),
+      deviceWithClientName:getDeviceClientName(clientId,status),
       isCalibratedAndTested: status?.rgbCalibratedAndTested,
       data: resultRGB,
     };

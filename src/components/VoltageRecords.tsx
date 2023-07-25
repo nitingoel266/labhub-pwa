@@ -1,12 +1,9 @@
 import { useLocation } from "react-router-dom";
 import styles from "../styles/TemperatureRecords.module.css";
 import {getDayName,getMonthName} from "./Constants"
-import { useDeviceStatus } from "../labhub/status";
 
 
 const VoltageRecord = () => {
-
-  const [status] = useDeviceStatus();
 
   const { state } = useLocation() || {};
 
@@ -19,7 +16,7 @@ const VoltageRecord = () => {
         <div>{state?.data?.selectedData?.time}</div>
       </div>
       <div className={styles.HeaterTextWrapper} style={{marginBottom:25}}>
-        <div>{status?.deviceName}</div>
+        <div>{state?.data?.selectedData?.deviceWithClientName}</div>
         <div>{" "}</div>
       </div>
       <div className={styles.SubWrapper}>
@@ -35,7 +32,7 @@ const VoltageRecord = () => {
               state.data.selectedData &&
               state.data.selectedData.data.map((item: any) => (
                 <div key={item.time} className={styles.ColumnBody}>
-                  {el.key && item[el.key]}
+                  {el.key && el.key === "time" ? item[el.key] : (item[el.key] === '0' ? "0.00" : `${item[el.key] >= 0 ? "+" : ""} ${Number(item[el.key]).toFixed(2)}`)}
                 </div>
               ))}
           </div>

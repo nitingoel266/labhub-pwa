@@ -14,7 +14,8 @@ import {
   validateFileName,
   getStorageKeys,
   mobileWidth,
-  toastMessage
+  toastMessage,
+  getDeviceClientName
 } from "./Constants";
 import { VOLTAGE_DATA } from "../utils/const";
 import Header from "./header";
@@ -107,6 +108,7 @@ const MeasuringVoltage = () => {
         name: verifiedFileName,
         date: getDate(),
         time: `${title.slice(8,10)}:${title.slice(10,12)}`,  // getTime(),
+        deviceWithClientName:getDeviceClientName(clientId,status),
         data: resultVoltage,
         };
         let storageVoltageData = JSON.stringify(resultData);

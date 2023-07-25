@@ -1,11 +1,8 @@
 import { useLocation } from "react-router-dom";
 import styles from "../styles/TemperatureRecords.module.css";
 import {getDayName,getMonthName} from "./Constants"
-import { useDeviceStatus } from "../labhub/status";
 
 const TemperatureRecord = () => {
-
-  const [status] = useDeviceStatus();
 
   const { state } = useLocation() || {};
 
@@ -17,7 +14,7 @@ const TemperatureRecord = () => {
         <div>{state?.data?.selectedData?.time}</div>
       </div>
       <div className={styles.HeaterTextWrapper} style={{marginBottom:25}}>
-        <div>{status?.deviceName}</div>
+        <div>{state?.data?.selectedData?.deviceWithClientName}</div>
         <div>{" "}</div>
       </div>
       <div className={styles.SubWrapper}>

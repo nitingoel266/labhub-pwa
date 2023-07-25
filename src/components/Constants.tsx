@@ -66,6 +66,18 @@ const getTitle = (Prefix:any, clientId:any,status:any) => {
     return fileName
 }
 
+const getDeviceClientName = (clientId:any,status:any) => {
+  let name = status?.deviceName;
+  if (clientId === status?.leaderSelected) {
+    // for leader
+    name += "-L";
+    } else if (clientId) {
+    name +=
+        "-M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+    }
+  return name
+}
+
 const getStorageData = (title:string)=> {
     let result = [];
     for (var key in localStorage){
@@ -349,6 +361,7 @@ export {
     getDescription,
     getFileName,
     getTitle,
+    getDeviceClientName,
     getDate,
     getTime,
     validateFileName,

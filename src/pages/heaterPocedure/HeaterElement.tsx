@@ -39,15 +39,15 @@ const HeaterElement = () => {
   const [isOpen, setModal] = useState("");
   const [isStart, setIsStart] = useState<boolean>(false);
   const [eventIs,setEventIs] = useState<any>(null);
-  const [temperature, setTemperature] = useState<number>(25); //20-150
+  const [temperature, setTemperature] = useState<number>(20); //20-150
   const [temperatureShouldBe, setTemperatureShouldBe] = useState<number>(0);
   const [power, setPower] = useState<number>(0);
 
   const setPointTempRef:any = useRef(null);
 
   const handleTemperature = (title: string) => {
-    if (title === "sub" && temperature > 25)
-      setTemperature((temp) => (temp > 25 ? temp - 1 : temp));
+    if (title === "sub" && temperature > 20)
+      setTemperature((temp) => (temp > 20 ? temp - 1 : temp));
     if (title === "add" && temperature < 150)
       setTemperature((temp) => (temp < 150 ? temp + 1 : temp));
   };

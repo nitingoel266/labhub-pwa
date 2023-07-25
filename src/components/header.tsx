@@ -36,6 +36,8 @@ import {
   previousURL,
   useCurrentUrl,
   usePreviousUrl,
+  urlPathsHistory,
+  useUrlPathsHistory
 } from "./Constants";
 import MemberDisconnect from "./Modal/MemberDisconnectModal";
 import { useEffect, useState } from "react";
@@ -61,6 +63,10 @@ function Header({
   const [currentURI] = useCurrentUrl();
   const [previousURI] = usePreviousUrl();
 
+  const [pathHistory] = useUrlPathsHistory();
+
+  const [pushUrlNotAllowed,setPushUrlNotAllowed] = useState<boolean>(false);
+
   const [isOpen, setModal] = useState("");
   const [hasConnectionEstablished, setHasConnectionEstablished] =
     useState(false);
@@ -75,6 +81,11 @@ function Header({
 
   const handleBack = () => {
     setOnClick("back");
+    if(!connected){ // to not show back icon on scan when not connected
+      setPushUrlNotAllowed(true)
+      if(pathHistory?.length)
+      urlPathsHistory.next([...pathHistory.slice(0,pathHistory.length -1)])
+    }
     if (location?.pathname === "/mode-selection")
       setScreenName("/scan-devices");
     else setScreenName("");
@@ -884,6 +895,19 @@ function Header({
     }
   }, [location?.pathname, currentURI]);
 
+  useEffect(() => {
+    if(connected && pathHistory?.length !== 0){
+      urlPathsHistory.next([])
+    }else if(!connected && pathHistory[pathHistory.length -1] !== location?.pathname && !pushUrlNotAllowed){
+      if(pathHistory.length === 0 && location?.pathname  === "/scan-devices")
+      {
+        // we do not push initial scan-devices route
+      }else
+      urlPathsHistory.next([...pathHistory,location?.pathname])
+    }
+  },[location?.pathname,connected,pathHistory,pushUrlNotAllowed])
+
+
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (
     <div>
@@ -905,6 +929,7 @@ function Header({
         handleShare={handleShare}
         handleSync={handleSync}
         previousURI={previousURI}
+        pathHistory={pathHistory}
       />
       {isOpen && isOpen !== "device disconnect and save data" && (
         <MemberDisconnect
@@ -1049,6 +1074,7 @@ const SecondHeader = ({
   handleShare,
   handleSync,
   previousURI,
+  pathHistory
 }: SecondHeaderprops) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState<any>(null);
@@ -1063,7 +1089,7 @@ const SecondHeader = ({
   return (
     <>
       <div className={styles.SecondHeaderWrapper}>
-        {location?.pathname !== "/scan-devices" || previousURI ? (
+        {location?.pathname !== "/scan-devices" || ((previousURI && connected) || (!connected && pathHistory?.length)) ? (
           <button
             style={{
               outline: "none",
@@ -1235,6 +1261,7 @@ type SecondHeaderprops = {
   handleShare: (title?: string) => void;
   handleSync: () => void;
   previousURI: string | null;
+  pathHistory:string[];
 };
 
 export interface HeaderProps {

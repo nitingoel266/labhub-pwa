@@ -289,6 +289,19 @@ const usePreviousUrl = () => {
     return [value];
   };
 
+const urlPathsHistory = new BehaviorSubject<string[]>([]);
+
+const useUrlPathsHistory = () => {
+      const [value, setValue] = useState<string[]>(urlPathsHistory.value);
+    
+      useEffect(() => {
+        const subs = urlPathsHistory.subscribe((value) => setValue(value));
+        return () => subs.unsubscribe();
+      }, []);
+    
+      return [value];
+  };
+
 const getDayName = (index:number) => {
   const dayJson:any = {1:"Monday",2:"Tuesday",3:"Wednesday",4:"Thursday",5:"Friday",6:"Saturday",7:"Sunday"};
   if(index)
@@ -352,6 +365,9 @@ export {
     previousURL,
     useCurrentUrl,
     currentURL,
+
+    useUrlPathsHistory,
+    urlPathsHistory,
 
     getShareFile,
     getShareRawFileData,

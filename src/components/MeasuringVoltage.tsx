@@ -21,6 +21,7 @@ import { VOLTAGE_DATA } from "../utils/const";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
 import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
+import AppexCharts from "./Graphs/AppexChart";
 
 const MeasuringVoltage = () => {
   const clientId = getClientId()
@@ -329,6 +330,13 @@ const MeasuringVoltage = () => {
         </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
+            {/* <AppexCharts 
+              data={graphData}
+              showPoint={status?.setupData?.dataRate === "user" ? false : true}
+              capturePoint={capturePoint}
+              title={"Voltage"}
+              labels={labels}
+            /> */}
             <TemperatureGraph
               data={graphData}
               showPoint={status?.setupData?.dataRate === "user" ? false : true}

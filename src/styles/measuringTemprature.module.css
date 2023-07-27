@@ -210,7 +210,8 @@
 
 @media (min-width:580px) {
     .GraphStyle {
-        width: 400px;
+        width: 550px;
+        height:250px;
     }
     .FooterInnerTextWrapper {
         width: 420px;

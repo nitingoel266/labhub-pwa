@@ -13,7 +13,7 @@ type Props= {
 const MemberDisconnect = ({message="Are you sure to Disconnect!",setModal,isOpen,handleDisconnect,handleCancel} : Props)=> {
  
     return (
-        <div style={{position:"absolute",zIndex:1}}>
+        <div style={{position:"absolute",zIndex:100}}>
         {isOpen &&
         <div
         className={styles.TopWrapper}

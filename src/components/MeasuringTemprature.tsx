@@ -21,6 +21,7 @@ import { TEMPERATURE_DATA } from "../utils/const";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
 import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
+import AppexCharts from "./Graphs/AppexChart";
 
 const MeasuringTemprature = () => {
   const clientId = getClientId()
@@ -386,7 +387,7 @@ const MeasuringTemprature = () => {
         </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
-            <TemperatureGraph
+          <AppexCharts 
               data={graphData}
               showPoint={status?.setupData?.dataRate === "user" ? false : true}
               capturePoint={capturePoint}
@@ -394,7 +395,16 @@ const MeasuringTemprature = () => {
               temperatureUnit = {tempratureUnit}
               maxTempValue ={maxTempValue}
               labels={labels}
-            />
+          />
+            {/* <TemperatureGraph
+              data={graphData}
+              showPoint={status?.setupData?.dataRate === "user" ? false : true}
+              capturePoint={capturePoint}
+              title={"Temperature"}
+              temperatureUnit = {tempratureUnit}
+              maxTempValue ={maxTempValue}
+              labels={labels}
+            /> */}
           </div>
           {window.innerWidth > mobileWidth ? (
             <div className={styles.ButtonWrapper}>

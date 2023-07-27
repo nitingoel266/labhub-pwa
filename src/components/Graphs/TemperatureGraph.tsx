@@ -92,9 +92,14 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
             speed:0.01,
             // mode:"x",
           },
+          pinch :{
+            enabled:enableZoom,
+            speed:0.01,
+            // mode:"x",
+          },
           mode:'x',
           limits:{
-            y: {min: 0, max: 1000},
+            y: {min: 0, max: 100},
             x: {min: 0, max:100 }
           },
           onZoomStart: ({chart,event,point}:any) => {

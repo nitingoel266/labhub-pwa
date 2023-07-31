@@ -24,6 +24,8 @@ import { useDeviceDataFeed, useDeviceStatus } from "../../labhub/status";
 import {getClientId} from "../../labhub/utils";
 import { RGB_DATA } from "../../utils/const";
 import Header from "../header";
+import {delay} from "../../utils/utils";
+
 
 const AbsorbanceMeasuring = () => {
   const navigate = useNavigate();
@@ -36,7 +38,7 @@ const AbsorbanceMeasuring = () => {
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [selectedItem, setSelectedItem] = useState<any>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
-  const [measure, setMeasure] = useState<any>(dataStream?.rgb?.measure || []);
+  const [measure, setMeasure] = useState<any>([]);
   const [measuredValue, setMeasuredValue] = useState<any>([]); //{Measuement No,RED,GREEN,BLUE}
   const [isOpen, setModal] = useState("");
   const [screenName,setScreenName] = useState<string>("cuvette-insertion"); // measure-absorbance
@@ -130,19 +132,34 @@ const AbsorbanceMeasuring = () => {
     else setModal(title);
   };
   useEffect(() => {
+
+    const getData = async() => {
       if (
         dataStream?.rgb &&
         dataStream?.rgb?.measure &&
-        dataStream?.rgb?.measure.some((e: any) => e) &&
-        JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure)
+        dataStream?.rgb?.measure.some((e: any) => e !== null) /* &&
+        JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure) */
       ) {
-        audio.play();
-        setMeasure(dataStream?.rgb?.measure || []);
+        for(let i = 0;i<3;i++){
+          audio.play();
+          setMeasure((prevdata:[]) => {
+              if(dataStream?.rgb?.measure && dataStream?.rgb?.measure[i] !== null)
+              return [...prevdata,dataStream?.rgb?.measure[i]]
+              else return [...prevdata]
+          });
+          if(i<2)
+          await delay(1000)
+      }
+
+        // audio.play();
+        // setMeasure(dataStream?.rgb?.measure || []);
         if(dataStream?.rgb?.measure.some((e:any) => e > 0.5 || e < -0.5)){
           toastMessage.next("Values are out of range!")
         }
       }
-  }, [dataStream?.rgb, measure, audio]);
+    }
+    getData()
+  }, [dataStream?.rgb, audio]);
 
   useEffect(() => {
     if(!status?.rgbConnected){

@@ -427,7 +427,13 @@ async function handleExperimentStatusChanged(event: any) {
       };
       if (leaderOperation === 'rgb_calibrate') {
         rgbCalibratedAndTested = true;
-        rgbDataStream.calibrateTest = [data1x, data2x, data3x];
+        const data1xUpdatedValue = data1x !== null ? Number(Number((Number(data1x) - 500)/100).toFixed(1)) : data1x;
+        const data2xUpdatedValue = data2x !== null ? Number(Number((Number(data2x) - 500)/100).toFixed(1)) : data2x;
+        const data3xUpdatedValue = data3x !== null ? Number(Number((Number(data3x) - 500)/100).toFixed(1)) : data3x;
+        // rgbDataStream.calibrateTest = [data1x, data2x, data3x];
+        
+        rgbDataStream.calibrateTest = [data1xUpdatedValue, data2xUpdatedValue, data3xUpdatedValue];
+
         if (data1x !== null && data2x !== null && data3x !== null) {
           stopRgbExperiment();
         }

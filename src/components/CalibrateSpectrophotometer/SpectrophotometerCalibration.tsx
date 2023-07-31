@@ -11,6 +11,7 @@ import { useDeviceDataFeed, useDeviceStatus } from '../../labhub/status';
 import {  startRgbExperiment, simulateRgb } from "../../labhub/actions";
 
 import {getClientId} from "../../labhub/utils";
+import {delay} from "../../utils/utils";
 import sound from "../../assets/sound/beep-sound.mp3";
 
 
@@ -26,9 +27,7 @@ const SpectrophotometerCalibration = () => {
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
     const [selectedItem,setSelectedItem] = useState<any>("")
     // const [calibrate,setCalibrate] = useState<any>(null)
-    const [testCalibrate, setTestCalibrate] = useState<any>(
-        dataStream?.rgb?.calibrateTest || []
-      );
+    const [testCalibrate, setTestCalibrate] = useState<any>([]);
     const [isOpen,setModal] = useState("");
 
     const calibrateRef:any = useRef(null)
@@ -69,21 +68,35 @@ const SpectrophotometerCalibration = () => {
     // },[status, status?.rgbCalibrated])
 
     useEffect(() => {
+
+        const getData =  async() =>{
         if (
           dataStream?.rgb &&
           dataStream?.rgb?.calibrateTest &&
-          dataStream?.rgb?.calibrateTest.some((e: any) => e) &&
+          dataStream?.rgb?.calibrateTest.some((e: any) => e !== null) /* &&
           JSON.stringify(dataStream?.rgb?.calibrateTest) !==
-          JSON.stringify(testCalibrate)
+          JSON.stringify(testCalibrate) */
         ) {
-          audio.play();
-          setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
+            for(let i = 0;i<3;i++){
+                audio.play();
+                setTestCalibrate((prevdata:[]) => {
+                    if(dataStream?.rgb?.calibrateTest && dataStream?.rgb?.calibrateTest[i] !== null)
+                    return [...prevdata,dataStream?.rgb?.calibrateTest[i]]
+                    else return [...prevdata]
+                });
+                if(i<2)
+                await delay(1000)
+            }
+            // audio.play();
+            // setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
+        //  getData(dataStream?.rgb?.calibrateTest)
         //   if(dataStream?.rgb?.calibrateTest.some((e:any) => e > 0.2 || e < -0.2)){
         //     toastMessage.next("Values are out of range!")
         //   }
         }
-    }, [dataStream?.rgb, audio, testCalibrate]);
-  
+        }
+        getData()
+    }, [dataStream?.rgb, audio]);
 
     useEffect(() => { // to set focus for acessibility
         calibrateRef?.current?.focus()
@@ -104,25 +117,25 @@ const SpectrophotometerCalibration = () => {
         <div className={styles.BodyWrapper}>
             <div aria-label='RED ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyRedBoll}>
-                    {testCalibrate[0] && <img src={testCalibrate[0] ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
+                    {testCalibrate?.length >=1 && <img src={testCalibrate[0] !== null ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Red</div>
             </div>
             <div aria-label='green ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyGreenBoll}>
-                    {testCalibrate[1] &&  <img src={testCalibrate[1] ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
+                    {testCalibrate?.length >= 2 &&  <img src={testCalibrate[1] !== null ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Green</div>
             </div>
             <div aria-label='blue ball' className={styles.BodyBollWrapper}>
                 <div className={styles.BodyBlueBoll}>
-                    {testCalibrate[2] && <img src={testCalibrate[2] ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
+                    {testCalibrate?.length >= 3 && <img src={testCalibrate[2] !== null ? WhiteTickIcon : WhiteCrossIcon} style={{width:25}} alt="tick icon"/>}
                 </div>
                 <div className={styles.BodyText}>Blue</div>
             </div>
         </div>
         <div className={styles.FooterText}>Spectrophotometer calibrated successfully. You can test calibration now.</div>
-        <RightArrow isSelected={testCalibrate[0] || selectedItem ? true : false} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={testCalibrate?.length === 3 || selectedItem ? true : false} handleSubmit={handleSubmit}/>
         {!isMobile && isOpen && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }

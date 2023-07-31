@@ -33,6 +33,7 @@ const MeasuringTemprature = () => {
   const [isOpen, setModal] = useState<string>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
+  const [sensorDisconnectCheckForSave , setSensorDisconnectCheckForSave] = useState<boolean>(false);
   const [capturePoint, setCapturePoint] = useState<any>([]);
   
   const [title,setTitle] = useState<any>(getTitle("T", clientId,status));
@@ -265,11 +266,19 @@ const MeasuringTemprature = () => {
     if(status?.sensorConnected !== "temperature"){
       if(status?.operation === "measure_temperature"){
         stopSensorExperiment();
+        setSensorDisconnectCheckForSave(true)
+        if(connected)
+        setModal("Temperature Sensor disconnected")
+      }else if(!sensorDisconnectCheckForSave){
+        if(connected)
+        handleSensorDisconnected(null)
       }
-      if(connected)
-      setModal("Temperature Sensor disconnected")
+      // if(connected)
+      // setModal("Temperature Sensor disconnected")
+      
     }else if(status?.sensorConnected === "temperature"){
       setModal("")
+      setSensorDisconnectCheckForSave(false)
     }
   },[status?.sensorConnected,status?.operation,connected])
 
@@ -395,6 +404,7 @@ const MeasuringTemprature = () => {
               temperatureUnit = {tempratureUnit}
               maxTempValue ={maxTempValue}
               labels={labels}
+              isRunning = {status?.operation === "measure_temperature" ? true : false}
           />
             {/* <TemperatureGraph
               data={graphData}

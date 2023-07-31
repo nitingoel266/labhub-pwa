@@ -17,6 +17,8 @@ import MemberDisconnect from "../Modal/MemberDisconnectModal";
 import { startRgbExperiment, simulateRgb } from "../../labhub/actions";
 import { useDeviceDataFeed, useDeviceStatus } from "../../labhub/status";
 import { getClientId } from "../../labhub/utils";
+import {delay} from "../../utils/utils";
+
 
 const SpectrophotometerTesting = () => {
   const navigate = useNavigate();
@@ -26,9 +28,7 @@ const SpectrophotometerTesting = () => {
   const [dataStream] = useDeviceDataFeed();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [selectedItem, setSelectedItem] = useState<any>("");
-  const [testCalibrate, setTestCalibrate] = useState<any>(
-    dataStream?.rgb?.calibrateTest || []
-  );
+  const [testCalibrate, setTestCalibrate] = useState<any>([]);
   const [isOpen, setModal] = useState("");
 
   const calibrateRef:any = useRef(null);
@@ -64,20 +64,36 @@ const SpectrophotometerTesting = () => {
   };
 
   useEffect(() => {
+
+    const getData =  async() =>{
       if (
         dataStream?.rgb &&
         dataStream?.rgb?.calibrateTest &&
-        dataStream?.rgb?.calibrateTest.some((e: any) => e) &&
+        dataStream?.rgb?.calibrateTest.some((e: any) => e !== null) /* &&
         JSON.stringify(dataStream?.rgb?.calibrateTest) !==
-        JSON.stringify(testCalibrate)
+        JSON.stringify(testCalibrate) */
       ) {
-        audio.play();
-        setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
+
+        for(let i = 0;i<3;i++){
+          audio.play();
+          setTestCalibrate((prevdata:[]) => {
+              if(dataStream?.rgb?.calibrateTest && dataStream?.rgb?.calibrateTest[i] !== null)
+              return [...prevdata,dataStream?.rgb?.calibrateTest[i]]
+              else return [...prevdata]
+          });
+          if(i<2)
+          await delay(1000)
+      }
+
+        // audio.play();
+        // setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
         if(dataStream?.rgb?.calibrateTest.some((e:any) => e > 0.2 || e < -0.2)){
           toastMessage.next("Values are out of range!")
         }
       }
-  }, [dataStream?.rgb, audio, testCalibrate]);
+    }
+    getData()
+  }, [dataStream?.rgb, audio]);
 
   useEffect(() => { // to set focus for acessibility
     calibrateRef?.current?.focus()
@@ -115,15 +131,15 @@ const SpectrophotometerTesting = () => {
       )}
       <div className={styles.BodyWrapper}>
         <div aria-label={"red light value is "+testCalibrate[0]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyRedBoll}>{testCalibrate[0]}</div>
+          <div className={styles.BodyRedBoll}>{`${testCalibrate?.length >=1 ? testCalibrate[0] : ""}`}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
         <div aria-label={"green light value is"+testCalibrate[1]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyGreenBoll}>{testCalibrate[1]}</div>
+          <div className={styles.BodyGreenBoll}>{`${testCalibrate?.length >=2 ? testCalibrate[1] : ""}`}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
         <div aria-label={"blue light value is"+testCalibrate[2]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyBlueBoll}>{testCalibrate[2]}</div>
+          <div className={styles.BodyBlueBoll}>{`${testCalibrate?.length >=3 ? testCalibrate[2] : ""}`}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>
@@ -141,7 +157,7 @@ const SpectrophotometerTesting = () => {
         handleDisconnect={handleMeasure}
         message={`Do you want to ${isOpen}?`}
       />}
-      <RightArrow isSelected={true} handleSubmit={handleSubmit} />
+      <RightArrow isSelected={testCalibrate?.length === 3 || selectedItem ? true : false} handleSubmit={handleSubmit} />
       {!isMobile && isOpen && (
         <IButtonModal
           isOpen={isOpen === TEST_CALIBRATE ? true : false}

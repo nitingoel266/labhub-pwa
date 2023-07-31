@@ -78,9 +78,9 @@ const SpectrophotometerCalibration = () => {
         ) {
           audio.play();
           setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
-          if(dataStream?.rgb?.calibrateTest.some((e:any) => e > 0.2 || e < -0.2)){
-            toastMessage.next("Values are out of range!")
-          }
+        //   if(dataStream?.rgb?.calibrateTest.some((e:any) => e > 0.2 || e < -0.2)){
+        //     toastMessage.next("Values are out of range!")
+        //   }
         }
     }, [dataStream?.rgb, audio, testCalibrate]);
   

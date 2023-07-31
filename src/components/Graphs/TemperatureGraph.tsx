@@ -46,7 +46,7 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
         label: title,
         data: graphData.map((el: any) => temperatureUnit === 'f' ? ((9 / 5) * el.temp + 32).toFixed(1) : el.temp),
         tension: 0.4,
-        showLine: showPoint ? true : false,
+        showLine: true, //showPoint ? true : false,
         borderWidth: 2,
         borderColor: "#A8D8D1",
         fill: true,

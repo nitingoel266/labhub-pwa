@@ -10,7 +10,7 @@ type Props= {
 }
 
 const SensorDisconnectModal = ({message = "Sensor has been disconnected!",isOpen,setModal,submitModal,checkForSave} : Props) => {
-    return <div style={{position:"absolute",zIndex:1}}>
+    return <div style={{position:"absolute",zIndex:100}}>
     {isOpen &&
     <div
     className={styles.TopWrapper}

@@ -111,7 +111,7 @@ const AppexCharts = React.memo(
 
           //   },
           toolbar: {
-            autoSelected: "zoom",
+            autoSelected:"pan",// "zoom",
             tools: {
               download: false, // hide download options
             },
@@ -203,6 +203,7 @@ const AppexCharts = React.memo(
         },
         yaxis: {
           ...yAxisScale,
+          decimalsInFloat:0, // to show how many values will show in decimal
           // max:24,
           // min:-26
         },

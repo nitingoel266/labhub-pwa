@@ -36,6 +36,7 @@ const MeasuringVoltage = () => {
   const [isStart, setIsStart] = useState<boolean>(false);
   const [capturePoint, setCapturePoint] = useState<any>([]);
   const [checkForLog,setCheckForLog] = useState<any>(0)
+  const [sensorDisconnectCheckForSave , setSensorDisconnectCheckForSave] = useState<boolean>(false);
 
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,voltage}
   const [labels,setLabels] = useState<any>([]);
@@ -263,11 +264,18 @@ const MeasuringVoltage = () => {
     if(status?.sensorConnected !== "voltage"){
       if(status?.operation === "measure_voltage"){
         stopSensorExperiment();
+        setSensorDisconnectCheckForSave(true)
+        if(connected)
+        setModal("Voltage Sensor disconnected")
+      }else if(!sensorDisconnectCheckForSave){
+        if(connected)
+        handleSensorDisconnected(null)
       }
-      if(connected)
-      setModal("Voltage Sensor disconnected")
+      // if(connected)
+      // setModal("Voltage Sensor disconnected")
     }else if(status?.sensorConnected === "voltage"){
       setModal("")
+      setSensorDisconnectCheckForSave(false)
     }
   },[status?.sensorConnected,status?.operation,connected])
 

@@ -72,8 +72,9 @@ const getDeviceClientName = (clientId:any,status:any) => {
     // for leader
     name += "-L";
     } else if (clientId) {
-    name +=
-        "-M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+    // name +=
+    //     "-M" + Number(Number(status?.membersJoined.indexOf(clientId)) + 1);
+    name +="-M";
     }
   return name
 }

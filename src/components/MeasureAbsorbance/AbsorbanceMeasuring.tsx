@@ -20,7 +20,7 @@ import {
   showLoader
 } from "../Constants";
 import IButtonComponent from "../IButtonComponent";
-import { startRgbExperiment, simulateRgb, calibrateRgb } from "../../labhub/actions";
+import { startRgbExperiment, simulateRgb, calibrateRgb, stopRgbExperiment } from "../../labhub/actions";
 import { useDeviceDataFeed, useDeviceStatus } from "../../labhub/status";
 import {getClientId} from "../../labhub/utils";
 import { RGB_DATA } from "../../utils/const";
@@ -40,6 +40,7 @@ const AbsorbanceMeasuring = () => {
   const [selectedItem, setSelectedItem] = useState<any>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [measure, setMeasure] = useState<any>([]);
+  const [measureInitial, setMeasureInitial] = useState<any>([]);
   const [measuredValue, setMeasuredValue] = useState<any>([]); //{Measuement No,RED,GREEN,BLUE}
   const [isOpen, setModal] = useState("");
   const [screenName,setScreenName] = useState<string>("cuvette-insertion"); // measure-absorbance
@@ -51,13 +52,15 @@ const AbsorbanceMeasuring = () => {
     else setSelectedItem(item);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedItem) {
       navigate("/measure-absorbance");
       if(screenName === "cuvette-insertion"){
         setScreenName("measure-absorbance")
       }
       if (clientId === status?.leaderSelected) {
+        stopRgbExperiment()
+        await delay(1000)
         startRgbExperiment();
         showLoader.next(true)
         setMeasuredValue((prevState: any) => {
@@ -81,11 +84,12 @@ const AbsorbanceMeasuring = () => {
           }
           
         });
+        setMeasureInitial([])
+        setMeasure([]) // remove values when getting new
+        setIsSaved(false);
       }
 
-      setMeasure([]) // remove values when getting new
       setSelectedItem("");
-      setIsSaved(false);
     } else {
       if (clientId === status?.leaderSelected) simulateRgb(null);
 
@@ -133,37 +137,72 @@ const AbsorbanceMeasuring = () => {
     if (isOpen === title) setModal("");
     else setModal(title);
   };
+
+  useEffect(() => {
+    const setData = async() => {
+      // showLoader.next(true)
+        if(measureInitial?.length === 3){
+            for(let i = 0;i<measureInitial?.length;i++){
+                audio.play();
+                setMeasure((prevdata:[]) => {
+                    if(prevdata?.length < 3){
+                        if(measureInitial[i] !== null)
+                        return [...prevdata,measureInitial[i]]
+                        else return [...prevdata]
+                    }
+                });
+                if(i<2)
+                await delay(1000)
+            }
+            if(measureInitial.some((e:any) => e > 0.2 || e < -0.2)){
+              toastMessage.next("Values are out of range!")
+            }
+            showLoader.next(false)
+        }else {
+          setMeasure([])
+        }
+    }
+    setData()
+},[measureInitial])
+
   useEffect(() => {
 
     const getData = async() => {
       if (
         dataStream?.rgb?.measure &&
         dataStream?.rgb?.measure.some((e: any) => e !== null) &&
-        measure?.length === 0 &&
-        JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure)
+        measureInitial?.length === 0 &&
+        JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measureInitial)
       ) {
         showLoader.next(true)
-        for(let i = 0;i<3;i++){
-          audio.play();
-          setMeasure((prevdata:[]) => {
-              if(dataStream?.rgb?.measure && dataStream?.rgb?.measure[i] !== null)
-              return [...prevdata,dataStream?.rgb?.measure[i]]
-              else return [...prevdata]
-          });
-          if(i<2)
-          await delay(1000)
-      }
-       showLoader.next(false)
+        setMeasureInitial([...dataStream?.rgb?.measure])
+      //   for(let i = 0;i<3;i++){
+      //     audio.play();
+      //     setMeasure((prevdata:[]) => {
+      //         if(dataStream?.rgb?.measure && dataStream?.rgb?.measure[i] !== null)
+      //         return [...prevdata,dataStream?.rgb?.measure[i]]
+      //         else return [...prevdata]
+      //     });
+      //     if(i<2)
+      //     await delay(1000)
+      // }
+      //  showLoader.next(false)
 
         // audio.play();
         // setMeasure(dataStream?.rgb?.measure || []);
-        if(dataStream?.rgb?.measure.some((e:any) => e > 0.5 || e < -0.5)){
-          toastMessage.next("Values are out of range!")
-        }
+        // if(dataStream?.rgb?.measure.some((e:any) => e > 0.5 || e < -0.5)){
+        //   toastMessage.next("Values are out of range!")
+        // }
       }
     }
     getData()
-  }, [dataStream?.rgb?.measure, audio]);
+  }, [dataStream?.rgb?.measure]);
+
+  useEffect(() => {
+    if(status?.operation !== "rgb_measure"){
+      setMeasureInitial([])
+    }
+  },[status?.operation]) 
 
   useEffect(() => {
     if(!status?.rgbConnected){

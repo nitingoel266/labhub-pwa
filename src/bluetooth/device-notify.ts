@@ -12,9 +12,13 @@ import { getCachedCharacteristic, readCharacteristicValue } from "./read-write";
 // import { stopRgbExperiment } from "../labhub/actions";
 // import { getTemperatureValue, getVoltageValue } from "../labhub/actions-client";
 import { deviceDataFeedUpdate } from "../labhub/status";
+import { currentHeaterElementValue, prevHeaterElementValue, useCurrentHeaterElementValue } from "../components/Constants";
 
 let prevSampleIndex = -1;
 let prevLeaderOperation: LeaderOperation = null;
+
+let prevElementTemp:any = -1;
+let currentElementTemp:any = -1;
 
 /**
  * 
@@ -419,11 +423,21 @@ async function handleExperimentStatusChanged(event: any) {
         const power = data1 / 1000;
         let elementTemp = data2x === null ? data2x : data2x;  // temperature is C * 100, not C
         if (elementTemp !== null) elementTemp = Number((elementTemp / 100).toFixed(1));
+        prevElementTemp = currentElementTemp;
+        currentElementTemp = elementTemp;
+        prevHeaterElementValue.next(prevElementTemp);
+        currentHeaterElementValue.next(currentElementTemp)
         heaterDataStream.element = [power,elementTemp as any];
       } else if (heaterConnected === 'probe' && leaderOperation === 'heater_probe') {
         const power = data1 / 1000;
         let probeTemp = data2x === null ? data2x : data2x;  // temperature is C * 100, not C
         if (probeTemp !== null) probeTemp = Number((probeTemp / 100).toFixed(1));
+
+        prevElementTemp = currentElementTemp;
+        currentElementTemp = probeTemp;
+        prevHeaterElementValue.next(prevElementTemp);
+        currentHeaterElementValue.next(currentElementTemp)
+
         heaterDataStream.probe = [power, probeTemp as any];
       } else {
         heaterDataStream = null;
@@ -491,6 +505,13 @@ async function handleExperimentStatusChanged(event: any) {
     deviceStatusValue.rgbCalibratedAndTested = rgbCalibratedAndTested;
 
     topicDeviceStatus.next(deviceStatusValue); // update the device status value to local state var 
+
+    if(deviceDataFeed?.heater === null){
+      prevElementTemp = -1;
+      currentElementTemp = -1;
+      prevHeaterElementValue.next(prevElementTemp);
+      currentHeaterElementValue.next(currentElementTemp)
+    }
 
     Log.debug('handleExperimentStatusChanged:', !!deviceDataFeed, data1, data2, data3, '#', data_type, operation, timer_control, current_sample);
 

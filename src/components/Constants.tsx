@@ -340,6 +340,32 @@ const getMonthName = (index:number) => {
   return dayJson[index]
 }
 
+const prevHeaterElementValue = new BehaviorSubject<number | null>(-1);
+
+const usePrevHeaterElementValue = () => {
+    const [value, setValue] = useState<number | null>(prevHeaterElementValue.value);
+  
+    useEffect(() => {
+      const subs = prevHeaterElementValue.subscribe((value) => setValue(value));
+      return () => subs.unsubscribe();
+    }, []);
+  
+    return [value];
+  };
+
+  const currentHeaterElementValue = new BehaviorSubject<number | null>(-1);
+
+const useCurrentHeaterElementValue = () => {
+    const [value, setValue] = useState<number | null>(currentHeaterElementValue.value);
+  
+    useEffect(() => {
+      const subs = currentHeaterElementValue.subscribe((value) => setValue(value));
+      return () => subs.unsubscribe();
+    }, []);
+  
+    return [value];
+  };
+
 export interface ToastInfo {
     timmer?:number;
     message: string;
@@ -403,5 +429,11 @@ export {
     getShareRawFileData,
 
     getDayName,
-    getMonthName
+    getMonthName,
+
+    currentHeaterElementValue,
+    useCurrentHeaterElementValue,
+    prevHeaterElementValue,
+    usePrevHeaterElementValue
+
 }

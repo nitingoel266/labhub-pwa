@@ -27,7 +27,9 @@ import {
   validateFileName,
   getStorageKeys,
   getDate,
-  getDeviceClientName
+  getDeviceClientName,
+  usePrevHeaterElementValue,
+  useCurrentHeaterElementValue,
 } from "../../components/Constants";
 import IButtonComponent from "../../components/IButtonComponent";
 import Header from "../../components/header";
@@ -46,6 +48,10 @@ const TemperatureProbe = () => {
   const isDeviceTouchable = useIsTouchDeviceDetect();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [dataStream] = useDeviceDataFeed();
+
+  const [heaterElementPrevTemp] = usePrevHeaterElementValue()
+  const [heaterElementCurrentTemp] = useCurrentHeaterElementValue()
+
   const [isOpen, setModal] = useState("");
   const [isStart, setIsStart] = useState<boolean>(false);
   const [eventIs,setEventIs] = useState<any>(null);
@@ -284,6 +290,10 @@ const TemperatureProbe = () => {
         dataStream?.heater?.probe[1] !== null &&
         status?.operation === "heater_probe"
       ) {
+        if(clientId !== status?.leaderSelected && heaterElementPrevTemp === -1 && heaterElementCurrentTemp !== -1){
+          setGraphData([]);
+          setCapturePoint([]);
+        }
         // setGraphData((prevData: any) => {
         //   return [
         //     ...prevData,

@@ -28,7 +28,9 @@ import {
   validateFileName,
   getStorageKeys,
   getDate,
-  getDeviceClientName
+  getDeviceClientName,
+  usePrevHeaterElementValue,
+  useCurrentHeaterElementValue,
 } from "../../components/Constants";
 import Header from "../../components/header";
 import { useNavigate } from "react-router-dom";
@@ -46,6 +48,10 @@ const HeaterElement = () => {
   const isDeviceTouchable =  useIsTouchDeviceDetect();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [dataStream] = useDeviceDataFeed();
+
+  const [heaterElementPrevTemp] = usePrevHeaterElementValue()
+  const [heaterElementCurrentTemp] = useCurrentHeaterElementValue()
+
   const [isOpen, setModal] = useState("");
   const [isStart, setIsStart] = useState<boolean>(false);
   const [eventIs,setEventIs] = useState<any>(null);
@@ -254,6 +260,10 @@ const HeaterElement = () => {
       dataStream?.heater?.element[1] !== null &&
       status?.operation === "heater_control"
     ) {
+      if(clientId !== status?.leaderSelected && heaterElementPrevTemp === -1 && heaterElementCurrentTemp !== -1){
+        setGraphData([]);
+        setCapturePoint([]);
+      }
       // setGraphData((prevData: any) => {
       //   return [
       //     ...prevData,
@@ -302,6 +312,8 @@ const HeaterElement = () => {
     status?.heaterConnected,
   ]);
 
+  // console.log(">>>>> status in heater",status?.heaterConnected,status?.operation,connected)
+
   useEffect(() => { // set y axis for the graph
     let maxTempFromGraph = 0
     for(let one of graphData){
@@ -345,7 +357,7 @@ const HeaterElement = () => {
   },[title])
 
 
-  // console.log("??>>>> status ",status,dataStream?.heater?.element,graphData)
+  // console.log(">>>>>> status in heater  ",status,dataStream)
   // const extraStyle = // prev
   //   clientId !== status?.leaderSelected
   //     ? { backgroundColor: "#989DA3", cursor: "not-allowed" }

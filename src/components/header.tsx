@@ -78,6 +78,8 @@ function Header({
 
   const [screenName, setScreenName] = useState("");
 
+
+
   const handleBack = () => {
     setOnClick("back");
     if(!connected){ // to not show back icon on scan when not connected
@@ -97,17 +99,26 @@ function Header({
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
-      (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) &&
-      clientId === status?.leaderSelected
+      (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp || checkForSave)
     ) {
-      if (dataFeed.heater !== null)
+      if(clientId === status?.leaderSelected){
+        if (dataFeed.heater !== null)
         setModal(
           location?.pathname === "/temperature-probe"
             ? "Stop Temperature Probe Experiment"
             : "Stop Heater Experiment"
         );
-      else if (setPointTemp !== status?.setpointTemp)
+        else if(checkForSave){
+          setModal("Do you want to save the experiment data?");
+        }else if (setPointTemp !== status?.setpointTemp)
         setModal("Do you want to save set point Temperature?");
+      }else {
+        if(checkForSave){
+          setModal("Do you want to save the experiment data?");
+        }else if (setPointTemp !== status?.setpointTemp)
+        setModal("Do you want to save set point Temperature?");
+      }
+    
 
       // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){ // before
       //   setModal(
@@ -211,18 +222,27 @@ function Header({
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
-      (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) &&
-      clientId === status?.leaderSelected
+      (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp || checkForSave)
     ) {
-      if (dataFeed.heater !== null)
+
+      if(clientId === status?.leaderSelected){
+        if (dataFeed.heater !== null)
         setModal(
           location?.pathname === "/temperature-probe"
             ? "Stop Temperature Probe Experiment"
             : "Stop Heater Experiment"
         );
-      else if (setPointTemp !== status?.setpointTemp)
+        else if(checkForSave){
+          setModal("Do you want to save the experiment data?");
+        }else if (setPointTemp !== status?.setpointTemp)
         setModal("Do you want to save set point Temperature?");
-
+      }else {
+        if(checkForSave){
+          setModal("Do you want to save the experiment data?");
+        }else if (setPointTemp !== status?.setpointTemp)
+        setModal("Do you want to save set point Temperature?");
+      }
+     
       // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){ // before
       //   setModal(
       //     location?.pathname === "/temperature-probe"
@@ -319,17 +339,26 @@ function Header({
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
-      (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp) &&
-      clientId === status?.leaderSelected
+      (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp || checkForSave)
     ) {
-      if (dataFeed.heater !== null)
+
+      if(clientId === status?.leaderSelected){
+        if (dataFeed.heater !== null)
         setModal(
           location?.pathname === "/temperature-probe"
             ? "Stop Temperature Probe Experiment"
             : "Stop Heater Experiment"
         );
-      else if (setPointTemp !== status?.setpointTemp)
+        else if(checkForSave){
+          setModal("Do you want to save the experiment data?");
+        }else if (setPointTemp !== status?.setpointTemp)
         setModal("Do you want to save set point Temperature?");
+      }else {
+        if(checkForSave){
+          setModal("Do you want to save the experiment data?");
+        }else if (setPointTemp !== status?.setpointTemp)
+        setModal("Do you want to save set point Temperature?");
+      }
 
       // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){
       //   setModal(
@@ -457,13 +486,15 @@ function Header({
     if (
       (location?.pathname === "/heater-element" ||
         location?.pathname === "/temperature-probe") &&
-      (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp)
+      (dataFeed.heater !== null || setPointTemp !== status?.setpointTemp || checkForSave)
     ) {
-      if (dataFeed.heater !== null) {
+      if (dataFeed.heater !== null && clientId === status?.leaderSelected) {
         if (location?.pathname === "/temperature-probe") {
           stopHeaterExperiment(true);
         } else stopHeaterExperiment();
-        if (setPointTemp && setPointTemp !== status?.setpointTemp) {
+        if(checkForSave){
+          setModal("Do you want to save the experiment data?");
+        }else if (setPointTemp && setPointTemp !== status?.setpointTemp) {
           setModal("Do you want to save set point Temperature?");
         } else if (setPointTemp === status?.setpointTemp) {
           let value: any = onClick === "myRecord" ? "/my-records" : -1;
@@ -473,7 +504,24 @@ function Header({
             });
           else navigate(value);
         }
-      } else if (setPointTemp && setPointTemp !== status?.setpointTemp) {
+      } else if(
+        checkForSave &&
+        handleSave &&
+        isOpen === "Do you want to save the experiment data?"
+        ){
+          handleSave();
+          if(setPointTemp !== status?.setpointTemp){
+            setModal("Do you want to save set point Temperature?");
+          }else{
+            let value: any = onClick === "myRecord" ? "/my-records" : -1;
+            if (onClick === "connectionManager")
+              navigate("/scan-devices", {
+                state: { screenName: "/scan-devices" },
+              });
+            else if (onClick === "sync") handleSyncNavigate();
+            else navigate(value);
+          }
+      }else if (setPointTemp && setPointTemp !== status?.setpointTemp) {
         changeSetpointTemp(setPointTemp);
         let value: any = onClick === "myRecord" ? "/my-records" : -1;
         if (onClick === "connectionManager")
@@ -638,44 +686,53 @@ function Header({
       checkForSave
     ) {
       if (checkForSave) setModal("Do you want to save the experiment data?");
+    } else if((location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe") && checkForSave){
+        if(checkForSave)
+          setModal("Do you want to save the experiment data?");
     } else handleSyncNavigate();
   };
 
   const handleCancelModal = () => {
+    setModal("");
     if (
       isOpen === "Do you want to save the experiment data?" ||
       isOpen === "Do you want to save set point Temperature?"
     ) {
-      if (location?.pathname === "/measure-absorbance") {
-        if (clientId === status?.leaderSelected) {
-          simulateRgb(null);
+      if(isOpen === "Do you want to save the experiment data?" && setPointTemp !== status?.setpointTemp && (location?.pathname === "/heater-element" || location?.pathname === "/temperature-probe")){
+        setModal("Do you want to save set point Temperature?")
+      }else{
+        if (location?.pathname === "/measure-absorbance") {
+          if (clientId === status?.leaderSelected) {
+            simulateRgb(null);
+          }
+        }
+        let value: any = onClick === "myRecord" ? "/my-records" : -1;
+        if (onClick === "connectionManager") {
+          if (
+            location?.pathname === "/temperature-sensor" ||
+            location?.pathname === "/voltage-sensor" ||
+            location?.pathname === "/heater-element" ||
+            location?.pathname === "/temperature-probe" ||
+            location?.pathname === "/measure-absorbance"
+          )
+            navigate("/scan-devices", {
+              state: { screenName: "/scan-devices" },
+            });
+          else navigate("/scan-devices");
+          setScreenName("/scan-devices");
+        } else if (onClick === "sync") handleSyncNavigate();
+        else {
+          if (
+            location?.pathname === "/measure-absorbance" &&
+            onClick === "back"
+          ) {
+            navigate("/rgb-spect");
+          } else navigate(value);
         }
       }
-      let value: any = onClick === "myRecord" ? "/my-records" : -1;
-      if (onClick === "connectionManager") {
-        if (
-          location?.pathname === "/temperature-sensor" ||
-          location?.pathname === "/voltage-sensor" ||
-          location?.pathname === "/heater-element" ||
-          location?.pathname === "/temperature-probe" ||
-          location?.pathname === "/measure-absorbance"
-        )
-          navigate("/scan-devices", {
-            state: { screenName: "/scan-devices" },
-          });
-        else navigate("/scan-devices");
-        setScreenName("/scan-devices");
-      } else if (onClick === "sync") handleSyncNavigate();
-      else {
-        if (
-          location?.pathname === "/measure-absorbance" &&
-          onClick === "back"
-        ) {
-          navigate("/rgb-spect");
-        } else navigate(value);
-      }
+     
     }
-    setModal("");
+    // setModal("");
   };
 
   const handleShare = async (title?: string) => {
@@ -854,7 +911,7 @@ function Header({
     showDisconnectDeviceModal,
   ]);
 
-  useEffect(() => {
+  useEffect(() => { // if experiment is stop and we opened modal to stop experiment then message will change to save data from stop experiment
     if (
       !status?.operation &&
       status?.sensorConnected &&
@@ -893,7 +950,7 @@ function Header({
     }
   }, [location?.pathname, currentURI]);
 
-  useEffect(() => {
+  useEffect(() => { // back icon show or not on initial page
     if(connected && pathHistory?.length !== 0){
       urlPathsHistory.next([])
     }else if(!connected && pathHistory[pathHistory.length -1] !== location?.pathname){
@@ -906,7 +963,7 @@ function Header({
     }
   },[location?.pathname,connected,pathHistory,onClick])
 
-  useEffect(() => {
+  useEffect(() => { // stop rgb experiements when we go out it's section
     let rgbPaths = ["/spectrophotometer-calibration","/calibration-testing","/spectrophotometer-testing","/measure-absorbance"]
     if(location?.pathname && !rgbPaths.includes(location?.pathname)){
       if(status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test" || status?.operation === "rgb_measure"){

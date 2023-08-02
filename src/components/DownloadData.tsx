@@ -26,6 +26,11 @@ const DownloadData = ({ data, header}: Props) => {
       csv += "\n";
     }
   }
+  if(data?.storedBy){
+    csv += `${data?.storedBy}`;
+    csv += "\n";
+  }
+
   if(header && header[2] === "GREEN" && data?.isCalibratedAndTested){
     csv += "Calibrated and Tested";
     csv += "\n";

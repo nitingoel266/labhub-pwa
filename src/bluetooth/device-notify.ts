@@ -7,10 +7,10 @@ import { getDeviceStatusValue, isReusedClientId, removeMember } from "./device-a
 import { topicDeviceDataFeed, topicDeviceStatus } from "./topics";
 import { DeviceDataFeed, DeviceStatus, HeaterSelect, LeaderOperation, SensorSelect, SetupData, SensorDataStream, HeaterDataStream, RgbDataStream } from "../types/common";
 import { ExperimentDataType, TimerControl } from "./device-types";
-import { delay, Log, roundTwoDec } from "../utils/utils";
+import { Log } from "../utils/utils";
 import { getCachedCharacteristic, readCharacteristicValue } from "./read-write";
-import { stopRgbExperiment } from "../labhub/actions";
-import { getTemperatureValue, getVoltageValue } from "../labhub/actions-client";
+// import { stopRgbExperiment } from "../labhub/actions";
+// import { getTemperatureValue, getVoltageValue } from "../labhub/actions-client";
 import { deviceDataFeedUpdate } from "../labhub/status";
 
 let prevSampleIndex = -1;
@@ -417,7 +417,9 @@ async function handleExperimentStatusChanged(event: any) {
       };
       if (!deviceDataFeedUpdate?.value?.probe && leaderOperation === 'heater_control') {
         const power = data1 / 1000;
-        heaterDataStream.element = [power];
+        let elementTemp = data2x === null ? data2x : data2x;  // temperature is C * 100, not C
+        if (elementTemp !== null) elementTemp = Number((elementTemp / 100).toFixed(1));
+        heaterDataStream.element = [power,elementTemp as any];
       } else if (heaterConnected === 'probe' && leaderOperation === 'heater_probe') {
         const power = data1 / 1000;
         let probeTemp = data2x === null ? data2x : data2x;  // temperature is C * 100, not C

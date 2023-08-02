@@ -107,7 +107,8 @@ const SpectrophotometerCalibration = () => {
           dataStream?.rgb?.calibrate.some((e: any) => e !== null) &&
           JSON.stringify(dataStream?.rgb?.calibrate) !==
           JSON.stringify(testCalibrateInitial)) || status?.rgbCalibratedFromDevice) &&
-          testCalibrateInitial?.length === 0 
+          testCalibrateInitial?.length === 0 &&
+          (status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test")
         ) {
             if(dataStream?.rgb?.calibrate)
             setTestCalibrateInitial([...dataStream?.rgb?.calibrate])
@@ -144,7 +145,7 @@ const SpectrophotometerCalibration = () => {
     useEffect(() => {
         if(testCalibrate?.length === 3 ){
             showLoader.next(false)
-        }else{
+        }else if(status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test"){
             showLoader.next(true)
         }
     },[testCalibrate,status?.rgbCalibratedFromDevice])
@@ -182,7 +183,7 @@ const SpectrophotometerCalibration = () => {
             </div>
         </div>
         <div className={styles.FooterText}>Spectrophotometer calibrated successfully. You can test calibration now.</div>
-        <RightArrow isSelected={((status?.rgbCalibratedFromDevice) || testCalibrate?.length === 3) || selectedItem ? true : false} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={((status?.rgbCalibratedFromDevice && (status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test")) || testCalibrate?.length === 3) || selectedItem ? true : false} handleSubmit={handleSubmit}/>
         {!isMobile && isOpen && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }

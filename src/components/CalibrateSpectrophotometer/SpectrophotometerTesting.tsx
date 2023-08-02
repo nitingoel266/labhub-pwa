@@ -15,7 +15,7 @@ import {
 } from "../Constants";
 import IButtonComponent from "../IButtonComponent";
 import MemberDisconnect from "../Modal/MemberDisconnectModal";
-import { startRgbExperiment, simulateRgb } from "../../labhub/actions";
+import { startRgbExperiment, simulateRgb, stopRgbExperiment } from "../../labhub/actions";
 import { useDeviceDataFeed, useDeviceStatus } from "../../labhub/status";
 import { getClientId } from "../../labhub/utils";
 import {delay} from "../../utils/utils";
@@ -42,10 +42,12 @@ const SpectrophotometerTesting = () => {
     else setSelectedItem(item);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     if (selectedItem) {
       setSelectedItem("");
       if (clientId === status?.leaderSelected) {
+        stopRgbExperiment()
+        await delay(1000)
         if (status?.rgbConnected !== "calibrate_test")
           simulateRgb("calibrate_test");
         startRgbExperiment();
@@ -102,9 +104,9 @@ const SpectrophotometerTesting = () => {
       if (
         dataStream?.rgb?.calibrateTest &&
         dataStream?.rgb?.calibrateTest.some((e: any) => e !== null) &&
-        testCalibrate?.length === 0 &&
+        testCalibrateInitial?.length === 0 &&
         JSON.stringify(dataStream?.rgb?.calibrateTest) !==
-        JSON.stringify(testCalibrate)
+        JSON.stringify(testCalibrateInitial)
       ) {
         showLoader.next(true)
         setTestCalibrateInitial([...dataStream?.rgb?.calibrateTest])
@@ -131,6 +133,11 @@ const SpectrophotometerTesting = () => {
     getData()
   }, [dataStream?.rgb?.calibrateTest]);
 
+  useEffect(() => {
+    if(status?.operation !== "rgb_calibrate_test"){
+      setTestCalibrateInitial([])
+    }
+  },[status?.operation])
 
   useEffect(() => { // to set focus for acessibility
     calibrateRef?.current?.focus()

@@ -276,6 +276,19 @@ const useToastMessage = () => {
     }
 }
 
+const showLoader = new BehaviorSubject<boolean>(false);
+
+const useShowLoader = () => {
+    const [value, setValue] = useState<boolean>(showLoader.value);
+  
+    useEffect(() => {
+      const subs = showLoader.subscribe((value) => setValue(value));
+      return () => subs.unsubscribe();
+    }, []);
+  
+    return [value];
+  };
+
 const currentURL = new BehaviorSubject<string | null>(null);
 
 const useCurrentUrl = () => {
@@ -374,6 +387,9 @@ export {
 
     useToastMessage,
     toastMessage,
+
+    showLoader,
+    useShowLoader,
 
     usePreviousUrl,
     previousURL,

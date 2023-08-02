@@ -4,11 +4,12 @@ import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
 import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
-import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND} from "../Constants";
+import {mobileWidth,getDescription,TEST_CALIBRATE,HIGHLIGHT_BACKGROUND, showLoader} from "../Constants";
 import IButtonComponent from '../IButtonComponent';
 import {simulateRgb, startRgbExperiment} from "../../labhub/actions";
 import {getClientId} from "../../labhub/utils";
 import { useDeviceStatus } from '../../labhub/status';
+import {delay} from "../../utils/utils";
 
 const CalibrationTesting = () => {
     const navigate = useNavigate();
@@ -26,13 +27,16 @@ const CalibrationTesting = () => {
         else setSelectedItem(item)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if(selectedItem){
             if(clientId === status?.leaderSelected){
+                if(status?.rgbConnected !== "calibrate_test")
                 simulateRgb('calibrate_test')
                 startRgbExperiment()
             }
+            await delay(1000)
             navigate("/spectrophotometer-testing")
+            showLoader.next(true)
         }
 
     }

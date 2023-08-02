@@ -18,6 +18,18 @@
     /* transition: all 0.3s ease-out; */
 
 }
+.loaderWrapper {
+    top: 180px;
+    top:40%;
+    /* left: 5%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    /* transition: all 0.3s ease-out; */
+
+}
 
 .TextContainer {
     width: 300px;

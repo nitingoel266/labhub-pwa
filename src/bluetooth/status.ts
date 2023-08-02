@@ -37,4 +37,7 @@ export const initialDeviceStatus: DeviceStatus = {
   rgbConnected: null,
   operationPrev: null,
   operation: null,
+  chargerConnected:false,
+  rgbCalibratedFromDevice:false,
+  rgbCalTestedFromDevice:false,
 };

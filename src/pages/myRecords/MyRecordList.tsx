@@ -184,14 +184,14 @@ const MyRecordList = () => {
           className={styles.myRecordButton}
           style={
             selectedButton === "rgb"
-              ? { color: "#FFFFFF", backgroundColor: "#424C58" }
-              : {}
+              ? { color: "#FFFFFF", backgroundColor: "#424C58" ,marginRight:0}
+              : {marginRight:0}
           }
         >
           RGB
         </button>
       </div>
-      <div style={{ overflowY: "auto", height: window.innerHeight - 171 }}>
+      <div style={{ overflowY: "auto", height: window.innerHeight - 190 }}>
         {myRecords &&
           myRecords[selectedButton] && myRecords[selectedButton].length ?
           myRecords[selectedButton].map((el: any) => (

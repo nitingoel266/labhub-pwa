@@ -39,7 +39,7 @@ const SelectFunction = () => {
 
     }
     const handleFunctions = () => {
-        if(selectedItem === MEASURE_ABSORBANCE && status?.operation !== "rgb_calibrate" && !status?.rgbCalibratedAndTested) setModal("measure before Calibrating")
+        if(selectedItem === MEASURE_ABSORBANCE &&  !status?.rgbCalTestedFromDevice) setModal("measure before Calibrating")
         else handleSubmit()
     }
     const handleIModal = (title:string) => {

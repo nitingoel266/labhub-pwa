@@ -12,6 +12,7 @@ import {
   changeSetpointTemp,
   // setScreenNumber,
   simulateRgb,
+  stopRgbExperiment
 } from "../labhub/actions";
 import { getClientId } from "../labhub/utils";
 import { getScreenNumber } from "../labhub/actions-client";
@@ -905,6 +906,14 @@ function Header({
     }
   },[location?.pathname,connected,pathHistory,onClick])
 
+  useEffect(() => {
+    let rgbPaths = ["/spectrophotometer-calibration","/calibration-testing","/spectrophotometer-testing","/measure-absorbance"]
+    if(location?.pathname && !rgbPaths.includes(location?.pathname)){
+      if(status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test" || status?.operation === "rgb_measure"){
+        stopRgbExperiment()
+      }
+    }
+  },[location?.pathname,status?.operation])
 
   // console.log("??>>> connected and status",connected,"status :- ",status)
   return (
@@ -1047,11 +1056,11 @@ const FirstHeader = ({
             <div style={{ backgroundColor: "#79D179", flex: 1 }}></div>
             {/* <div style={unFilledStyle}></div>
           <div style={filledStyle}></div> */}
-            <img
+           {status?.chargerConnected ? <img
               src={BatteryIcon}
               className={styles.BatteryIcon}
               alt="battery Icon"
-            />
+            /> : null}
           </div>
           <div className={styles.BatteryHandle}></div>
         </div>

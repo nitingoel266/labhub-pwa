@@ -333,7 +333,7 @@ const MeasuringVoltage = () => {
         </div>
         {graphData?.length ? <div className={styles.SecondaryHeaderWrapper}>
           <div aria-label="voltage value in volt">
-            Voltage Value : <span style={{fontWeight:600}}>{graphData[graphData.length - 1]?.temp + "V"}</span>
+            Voltage Value : <span style={{fontWeight:600}}>{graphData[graphData.length - 1]?.temp > 0 ? "+" : ""}{(graphData[graphData.length - 1]?.temp ? (graphData[graphData.length - 1]?.temp).toFixed(2) : "+0.00") + "V"}</span>
           </div>
         </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>
@@ -359,7 +359,7 @@ const MeasuringVoltage = () => {
                 aria-label="start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
-                    ? setModal(isStart || graphData?.length ? "restart" : "start")
+                    ? setModal(isStart ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
@@ -369,7 +369,7 @@ const MeasuringVoltage = () => {
                     : {}
                 }
               >
-                {isStart || graphData?.length ? "Restart" : "Start"}
+                {isStart ? "Restart" : "Start"}
               </button>
               <button
                 aria-label="stop button"
@@ -400,7 +400,7 @@ const MeasuringVoltage = () => {
             </div>
           ) : null}
         </div>
-        <div className={styles.FooterTextWrapper}>
+        <div className={styles.FooterTextWrapper} style={window?.innerWidth >= 580 ? {marginTop:40}:{}}>
           <div className={styles.FooterInnerTextWrapper}>
             <div aria-label="file name text" style={{fontWeight:600}}>File Name</div>
             <div className={styles.FooterText}>
@@ -433,7 +433,7 @@ const MeasuringVoltage = () => {
                 aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && status?.sensorConnected === "voltage"
-                    ? setModal(isStart || graphData?.length ? "restart" : "start")
+                    ? setModal(isStart ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
@@ -443,7 +443,7 @@ const MeasuringVoltage = () => {
                     : {}
                 }
               >
-                {isStart || graphData?.length ? "Restart" : "Start"}
+                {isStart ? "Restart" : "Start"}
               </button>
               <button
                 aria-label="stop button"

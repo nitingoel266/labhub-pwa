@@ -159,6 +159,8 @@ function TestPage(props: TestPageProps) {
       <br /><br />
       <button onClick={() => calibrateRgb()} disabled={!isLeader || status?.rgbConnected !== null || status.rgbCalibrated}>Calibrate spectrophotometer</button>
       <br /><br />
+      <button onClick={() => simulateRgb('calibrate')} disabled={!isLeader || status?.rgbConnected !== null || !status.rgbCalibrated}>calibration</button>
+      <br />
       <button onClick={() => simulateRgb('calibrate_test')} disabled={!isLeader || status?.rgbConnected !== null || !status.rgbCalibrated}>Test calibration</button>
       <br />
       <button onClick={() => simulateRgb('measure')} disabled={!isLeader || status?.rgbConnected !== null || !status.rgbCalibrated}>Measure absorbance (RGB)</button>

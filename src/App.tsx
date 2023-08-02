@@ -33,11 +33,11 @@ import CalibrationTesting from './components/CalibrateSpectrophotometer/Calibrat
 import SpectrophotometerCalibration from './components/CalibrateSpectrophotometer/SpectrophotometerCalibration';
 import SpectrophotometerTesting from './components/CalibrateSpectrophotometer/SpectrophotometerTesting';
 import AbsorbanceMeasuring from './components/MeasureAbsorbance/AbsorbanceMeasuring';
-// import Loader from './components/Modal/Loader';
 import ShowErrorModal from './components/Modal/ShowErrorModal';
 import pkg from '../package.json';
 import Toast from './components/Modal/Toast';
 import WarningModal from './components/Modal/WarningModal';
+import Loader from './components/Modal/Loader';
 
 function App() {
   const [status] = useDeviceStatus();
@@ -116,7 +116,7 @@ function App() {
         )}
       </div>
       <LeaderDisconnect />
-      {/* <Loader /> */}
+      <Loader />
       <ShowErrorModal />
       <WarningModal />
       <Toast />

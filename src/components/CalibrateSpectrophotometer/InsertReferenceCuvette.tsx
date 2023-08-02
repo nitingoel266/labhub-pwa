@@ -32,7 +32,7 @@ const InsertReferenceCuvette = () => {
             //    calibrateRgb()
 
             if(clientId === status?.leaderSelected){
-                simulateRgb('calibrate_test')
+                simulateRgb('calibrate')
                 startRgbExperiment()
             }
             navigate("/spectrophotometer-calibration")

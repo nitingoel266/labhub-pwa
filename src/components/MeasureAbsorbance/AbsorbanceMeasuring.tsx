@@ -202,7 +202,7 @@ const AbsorbanceMeasuring = () => {
     if(status?.operation !== "rgb_measure"){
       setMeasureInitial([])
     }
-  },[status?.operation])
+  },[status?.operation]) 
 
   useEffect(() => {
     if(!status?.rgbConnected){

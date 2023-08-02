@@ -117,6 +117,9 @@ function Header({
           setModal("Do you want to save the experiment data?");
         }else if (setPointTemp !== status?.setpointTemp)
         setModal("Do you want to save set point Temperature?");
+        else {
+          navigate(-1)
+        }
       }
     
 
@@ -241,6 +244,9 @@ function Header({
           setModal("Do you want to save the experiment data?");
         }else if (setPointTemp !== status?.setpointTemp)
         setModal("Do you want to save set point Temperature?");
+        else{
+        navigate("/my-records");
+        }
       }
      
       // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){ // before
@@ -358,6 +364,11 @@ function Header({
           setModal("Do you want to save the experiment data?");
         }else if (setPointTemp !== status?.setpointTemp)
         setModal("Do you want to save set point Temperature?");
+        else {
+          navigate("/scan-devices", {
+            state: { screenName: "/scan-devices" },
+          });
+        }
       }
 
       // if(dataFeed.heater !== null && setPointTemp !== status?.setpointTemp){

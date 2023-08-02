@@ -8,7 +8,7 @@ import {mobileWidth,getDescription,CALIBRATE,HIGHLIGHT_BACKGROUND,toastMessage, 
 import {WhiteTickIcon,WhiteCrossIcon} from "../../images/index";
 import IButtonComponent from '../IButtonComponent';
 import { useDeviceDataFeed, useDeviceStatus } from '../../labhub/status';
-import {  startRgbExperiment, simulateRgb } from "../../labhub/actions";
+import {  startRgbExperiment, simulateRgb, stopRgbExperiment } from "../../labhub/actions";
 
 import {getClientId} from "../../labhub/utils";
 import {delay} from "../../utils/utils";
@@ -42,13 +42,15 @@ const SpectrophotometerCalibration = () => {
         else setSelectedItem(item)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async() => {
         if(selectedItem){
             setSelectedItem("")
             if(clientId === status?.leaderSelected){
                 // setCalibrate(null)
                 // calibrateRgb()
-
+                stopRgbExperiment()
+                await delay(1000)
+                
                 if (status?.rgbConnected !== "calibrate")
                     simulateRgb("calibrate");
                 startRgbExperiment();
@@ -141,6 +143,12 @@ const SpectrophotometerCalibration = () => {
     useEffect(() => { // to set focus for acessibility
         calibrateRef?.current?.focus()
       },[])
+
+      useEffect(() => {
+        if(status?.operation !== "rgb_calibrate" && status?.operation !== "rgb_calibrate_test"){
+          setTestCalibrateInitial([])
+        }
+      },[status?.operation])
 
     useEffect(() => {
         if(testCalibrate?.length === 3 ){

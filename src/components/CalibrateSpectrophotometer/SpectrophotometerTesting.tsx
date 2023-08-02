@@ -73,7 +73,7 @@ const SpectrophotometerTesting = () => {
 
   useEffect(() => {
     const setData = async() => {
-      showLoader.next(true)
+      // showLoader.next(true)
         if(testCalibrateInitial?.length === 3){
             for(let i = 0;i<testCalibrateInitial?.length;i++){
                 audio.play();

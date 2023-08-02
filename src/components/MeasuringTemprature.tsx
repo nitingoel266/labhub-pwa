@@ -422,7 +422,7 @@ const MeasuringTemprature = () => {
                 aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && status?.sensorConnected === "temperature"
-                    ? setModal(isStart || graphData?.length ? "restart" : "start")
+                    ? setModal(isStart ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartButton}
@@ -432,7 +432,7 @@ const MeasuringTemprature = () => {
                     : {}
                 }
               >
-                {isStart || graphData?.length ? "Restart" : "Start"}
+                {isStart ? "Restart" : "Start"}
               </button>
               <button
                 aria-label="stop button"
@@ -495,7 +495,7 @@ const MeasuringTemprature = () => {
                 aria-label="Start button"
                 onClick={() =>
                   clientId === status?.leaderSelected && status?.sensorConnected === "temperature"
-                    ? setModal(isStart || graphData?.length ? "restart" : "start")
+                    ? setModal(isStart ? "restart" : "start")
                     : {}
                 }
                 className={styles.RestartHorizontalButton}
@@ -505,7 +505,7 @@ const MeasuringTemprature = () => {
                     : {}
                 }
               >
-                {isStart || graphData?.length ? "Restart" : "Start"}
+                {isStart ? "Restart" : "Start"}
               </button>
               <button
                 aria-label="stop button"

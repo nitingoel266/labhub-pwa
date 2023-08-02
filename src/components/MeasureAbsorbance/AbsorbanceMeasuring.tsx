@@ -16,7 +16,8 @@ import {
   // getTime,
   getStorageKeys,
   toastMessage,
-  getDeviceClientName
+  getDeviceClientName,
+  showLoader
 } from "../Constants";
 import IButtonComponent from "../IButtonComponent";
 import { startRgbExperiment, simulateRgb, calibrateRgb } from "../../labhub/actions";
@@ -58,8 +59,9 @@ const AbsorbanceMeasuring = () => {
       }
       if (clientId === status?.leaderSelected) {
         startRgbExperiment();
+        showLoader.next(true)
         setMeasuredValue((prevState: any) => {
-          if(measure && measure[2]){
+          if(measure && measure.length > 0){
             return prevState ? [
               ...prevState,
               {
@@ -119,7 +121,7 @@ const AbsorbanceMeasuring = () => {
       date: getDate(),
       time: `${title.slice(8,10)}:${title.slice(10,12)}`,  //getTime(),
       deviceWithClientName:getDeviceClientName(clientId,status),
-      isCalibratedAndTested: status?.rgbCalibratedAndTested,
+      isCalibratedAndTested: status?.rgbCalTestedFromDevice,
       data: resultRGB,
     };
     let storageRGBData = JSON.stringify(resultData);
@@ -135,11 +137,12 @@ const AbsorbanceMeasuring = () => {
 
     const getData = async() => {
       if (
-        dataStream?.rgb &&
         dataStream?.rgb?.measure &&
-        dataStream?.rgb?.measure.some((e: any) => e !== null) /* &&
-        JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure) */
+        dataStream?.rgb?.measure.some((e: any) => e !== null) &&
+        measure?.length === 0 &&
+        JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measure)
       ) {
+        showLoader.next(true)
         for(let i = 0;i<3;i++){
           audio.play();
           setMeasure((prevdata:[]) => {
@@ -150,6 +153,7 @@ const AbsorbanceMeasuring = () => {
           if(i<2)
           await delay(1000)
       }
+       showLoader.next(false)
 
         // audio.play();
         // setMeasure(dataStream?.rgb?.measure || []);
@@ -159,7 +163,7 @@ const AbsorbanceMeasuring = () => {
       }
     }
     getData()
-  }, [dataStream?.rgb, audio]);
+  }, [dataStream?.rgb?.measure, audio]);
 
   useEffect(() => {
     if(!status?.rgbConnected){
@@ -217,15 +221,15 @@ const AbsorbanceMeasuring = () => {
       )}
       <div className={styles.BodyWrapper}>
         <div aria-label={"red light value is"+measure[0]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#D08080"} : {}}>{measure[0]}</div>
+          <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#D08080"} : {}}>{measure?.length >=1 && measure[0] > 0 ? "+" : ""}{measure?.length >=1 ? (measure[0] ? Number(measure[0]).toFixed(2) : "+0.00") : ""}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
         <div aria-label={"green light value is"+measure[1]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#7BAA81"} : {}}>{measure[1]}</div>
+          <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#7BAA81"} : {}}>{measure?.length >=2 && measure[1] > 0 ? "+" : ""}{measure?.length >=2 ? (measure[1] ? Number(measure[1]).toFixed(2) : "+0.00"):""}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
         <div aria-label={"blue light value is"+measure[2]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#8AA3BB"} : {}}>{measure[2]}</div>
+          <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#8AA3BB"} : {}}>{measure?.length >=3 && measure[2] > 0 ? "+" : ""}{measure?.length >=3 ? (measure[2] ? Number(measure[2]).toFixed(2) : "+0.00"):""}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>

@@ -382,8 +382,10 @@ export const handleDeviceDataFeedUpdate = async (server: BluetoothRemoteGATTServ
       timerControlN = TimerControl.RUN;
     }
   } else if (rgbExperiment !== undefined) {
-    if (deviceStatusValue.rgbConnected === 'calibrate_test') {
+    if(deviceStatusValue.rgbConnected === "calibrate") {
       operationN = ControlOperation.OP_RGB_CALIBRATE;
+    }else if (deviceStatusValue.rgbConnected === 'calibrate_test') {
+      operationN = ControlOperation.OP_RGB_CAL_TEST;
     } else if (deviceStatusValue.rgbConnected === 'measure') {
       operationN = ControlOperation.OP_RGB_MEASURE;
     }

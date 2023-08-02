@@ -64,6 +64,8 @@ export function getOperationN(operation: LeaderOperation): ControlOperation {
       return ControlOperation.OP_HEATER_AUTO_CONTROL;
     case 'rgb_calibrate':
       return ControlOperation.OP_RGB_CALIBRATE;
+    case 'rgb_calibrate_test':
+        return ControlOperation.OP_RGB_CAL_TEST;
     case 'rgb_measure':
       return ControlOperation.OP_RGB_MEASURE;
     default:
@@ -86,6 +88,8 @@ export function getOperation(operationN: ControlOperation): LeaderOperation {
       return 'heater_probe';
     case ControlOperation.OP_RGB_CALIBRATE:
       return 'rgb_calibrate';
+    case ControlOperation.OP_RGB_CAL_TEST:
+      return 'rgb_calibrate_test';
     case ControlOperation.OP_RGB_MEASURE:
       return 'rgb_measure';
     default:

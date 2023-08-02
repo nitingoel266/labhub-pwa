@@ -2,7 +2,7 @@ export type ClientType = 'leader' | 'member' | null;
 
 export type SensorSelect = 'temperature' | 'voltage' | null;
 export type HeaterSelect = 'element' | 'probe' | null;
-export type RgbFuncSelect = 'calibrate_test' | 'measure' | null;
+export type RgbFuncSelect = 'calibrate' | 'calibrate_test' | 'measure' | null;
 
 export interface SetupData {
   dataRate: 1 | 5 | 10 | 30 | 60 | 600 | 1800 | 3600 | 'user';
@@ -15,6 +15,7 @@ export type LeaderOperation = null
   | 'heater_control'
   | 'heater_probe'
   | 'rgb_calibrate'
+  | 'rgb_calibrate_test'
   | 'rgb_measure';
 
 export interface DeviceStatus {
@@ -35,6 +36,9 @@ export interface DeviceStatus {
   // screenNumber: number | null;
   operationPrev: LeaderOperation;
   operation: LeaderOperation;
+  chargerConnected:boolean;
+  rgbCalibratedFromDevice:boolean;
+  rgbCalTestedFromDevice:boolean;
   // temperatureLog: number[];
   // voltageLog: number[];
 }
@@ -66,6 +70,7 @@ export interface HeaterDataStream {
 }
 
 export interface RgbDataStream {
+  calibrate: [number | null, number | null, number | null] | null;   // [r, g, b]
   calibrateTest: [number | null, number | null, number | null] | null;   // [r, g, b]
   measure: [number | null, number | null, number | null] | null;         // [r, g, b]
 }

@@ -10,7 +10,8 @@ import {
   getDescription,
   TEST_CALIBRATE,
   HIGHLIGHT_BACKGROUND,
-  toastMessage
+  toastMessage,
+  showLoader
 } from "../Constants";
 import IButtonComponent from "../IButtonComponent";
 import MemberDisconnect from "../Modal/MemberDisconnectModal";
@@ -29,7 +30,10 @@ const SpectrophotometerTesting = () => {
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [selectedItem, setSelectedItem] = useState<any>("");
   const [testCalibrate, setTestCalibrate] = useState<any>([]);
+  const [testCalibrateInitial, setTestCalibrateInitial] = useState<any>([]);
+
   const [isOpen, setModal] = useState("");
+
 
   const calibrateRef:any = useRef(null);
 
@@ -45,7 +49,9 @@ const SpectrophotometerTesting = () => {
         if (status?.rgbConnected !== "calibrate_test")
           simulateRgb("calibrate_test");
         startRgbExperiment();
+        showLoader.next(true)
         setTestCalibrate([]);
+        setTestCalibrateInitial([]);
       }
     } else {
       if(clientId === status?.leaderSelected)
@@ -64,36 +70,67 @@ const SpectrophotometerTesting = () => {
   };
 
   useEffect(() => {
+    const setData = async() => {
+      showLoader.next(true)
+        if(testCalibrateInitial?.length === 3){
+            for(let i = 0;i<testCalibrateInitial?.length;i++){
+                audio.play();
+                setTestCalibrate((prevdata:[]) => {
+                    if(prevdata?.length < 3){
+                        if(testCalibrateInitial[i] !== null)
+                        return [...prevdata,testCalibrateInitial[i]]
+                        else return [...prevdata]
+                    }
+                });
+                if(i<2)
+                await delay(1000)
+            }
+            if(testCalibrateInitial.some((e:any) => e > 0.2 || e < -0.2)){
+              toastMessage.next("Values are out of range!")
+            }
+            showLoader.next(false)
+        }else {
+            setTestCalibrate([])
+        }
+    }
+    setData()
+},[testCalibrateInitial])
+
+  useEffect(() => {
 
     const getData =  async() =>{
       if (
-        dataStream?.rgb &&
         dataStream?.rgb?.calibrateTest &&
-        dataStream?.rgb?.calibrateTest.some((e: any) => e !== null) /* &&
+        dataStream?.rgb?.calibrateTest.some((e: any) => e !== null) &&
+        testCalibrate?.length === 0 &&
         JSON.stringify(dataStream?.rgb?.calibrateTest) !==
-        JSON.stringify(testCalibrate) */
+        JSON.stringify(testCalibrate)
       ) {
+        showLoader.next(true)
+        setTestCalibrateInitial([...dataStream?.rgb?.calibrateTest])
 
-        for(let i = 0;i<3;i++){
-          audio.play();
-          setTestCalibrate((prevdata:[]) => {
-              if(dataStream?.rgb?.calibrateTest && dataStream?.rgb?.calibrateTest[i] !== null)
-              return [...prevdata,dataStream?.rgb?.calibrateTest[i]]
-              else return [...prevdata]
-          });
-          if(i<2)
-          await delay(1000)
-      }
-
-        // audio.play();
-        // setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
-        if(dataStream?.rgb?.calibrateTest.some((e:any) => e > 0.2 || e < -0.2)){
-          toastMessage.next("Values are out of range!")
-        }
+      //   for(let i = 0;i<3;i++){
+      //     audio.play();
+      //     setTestCalibrate((prevdata:[]) => {
+      //         if(dataStream?.rgb?.calibrateTest && dataStream?.rgb?.calibrateTest[i] !== null)
+      //         return [...prevdata,dataStream?.rgb?.calibrateTest[i]]
+      //         else return [...prevdata]
+      //     });
+      //     if(i<2)
+      //     await delay(1000)
+      // }
+      
+      //  showLoader.next(false)
+      //   // audio.play();
+      //   // setTestCalibrate(dataStream?.rgb?.calibrateTest || []);
+      //   if(dataStream?.rgb?.calibrateTest.some((e:any) => e > 0.2 || e < -0.2)){
+      //     toastMessage.next("Values are out of range!")
+      //   }
       }
     }
     getData()
-  }, [dataStream?.rgb, audio]);
+  }, [dataStream?.rgb?.calibrateTest]);
+
 
   useEffect(() => { // to set focus for acessibility
     calibrateRef?.current?.focus()
@@ -131,15 +168,15 @@ const SpectrophotometerTesting = () => {
       )}
       <div className={styles.BodyWrapper}>
         <div aria-label={"red light value is "+testCalibrate[0]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyRedBoll}>{`${testCalibrate?.length >=1 ? testCalibrate[0] : ""}`}</div>
+          <div className={styles.BodyRedBoll}>{testCalibrate?.length >=1 && testCalibrate[0] >= 0 ? "+" : ""}{`${(testCalibrate?.length >=1) ? (testCalibrate[0] ? Number(testCalibrate[0]).toFixed(2) : "0.00" ) : ""}`}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
         <div aria-label={"green light value is"+testCalibrate[1]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyGreenBoll}>{`${testCalibrate?.length >=2 ? testCalibrate[1] : ""}`}</div>
+          <div className={styles.BodyGreenBoll}>{testCalibrate?.length >=2 && testCalibrate[1] >= 0 ? "+" : ""}{`${(testCalibrate?.length >=2) ? (testCalibrate[1] ? Number(testCalibrate[1]).toFixed(2) : "0.00") : ""}`}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
         <div aria-label={"blue light value is"+testCalibrate[2]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyBlueBoll}>{`${testCalibrate?.length >=3 ? testCalibrate[2] : ""}`}</div>
+          <div className={styles.BodyBlueBoll}>{testCalibrate?.length >=3 && testCalibrate[2] >= 0 ? "+" : ""}{`${(testCalibrate?.length >=3) ? (testCalibrate[2] ? Number(testCalibrate[2]).toFixed(2) : "0.00") : ""}`}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>

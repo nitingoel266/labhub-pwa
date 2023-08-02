@@ -215,7 +215,11 @@ async function handleExperimentStatusChanged(event: any) {
     // const timmerRun = (status_fault & 0x1) === 0x1;
     const charging = (status_fault & 0x2) === 0x2; // identify battery charging status by second bit
     // const chargeFault = (status_fault & 0x4) === 0x4;
-    Log.debug("Battery Charging Status ",charging,status_fault)
+    const chargerConnected = (status_fault & 0x8) === 0x8;
+    const rgbCalibratedFromDevice = (status_fault & 0x10) === 0x10;
+    const rgbCalTestedFromDevice = (status_fault & 0x30) === 0x30;
+
+    Log.debug("Battery Charging Status ",charging,chargerConnected,rgbCalibratedFromDevice,rgbCalTestedFromDevice)
     const temperatureSensor = (sensor_attach & 0x1) === 0x1; // identify temperature sensor is connected or not (if one byte value is 1 or 0)
     const voltageSensor = (sensor_attach & 0x2) === 0x2;
     const heaterSensor = (sensor_attach & 0x4) === 0x4;
@@ -251,6 +255,14 @@ async function handleExperimentStatusChanged(event: any) {
     const deviceStatusValue: DeviceStatus = getDeviceStatusValue(); // get initial device status
 
     deviceStatusValue.batteryLevel = battery_level;  // 0-100 (0-100%)
+
+    deviceStatusValue.chargerConnected = chargerConnected;  // true or false
+
+    deviceStatusValue.rgbCalibratedFromDevice = rgbCalibratedFromDevice;  // true or false for calibrate
+
+    deviceStatusValue.rgbCalTestedFromDevice = rgbCalTestedFromDevice;  // true or false for calibrate and test
+
+
 
     deviceStatusValue.sensorConnected = sensorConnected;
     deviceStatusValue.heaterConnected = heaterConnected;
@@ -422,32 +434,46 @@ async function handleExperimentStatusChanged(event: any) {
       };
     } else if (dataType === ExperimentDataType.RGB) {
       let rgbDataStream: RgbDataStream | null = {
+        calibrate: null,
         calibrateTest: null,
         measure: null,
       };
       if (leaderOperation === 'rgb_calibrate') {
         rgbCalibratedAndTested = true;
-        const data1xUpdatedValue = data1x !== null ? Number(Number((Number(data1x) - 500)/100).toFixed(1)) : data1x;
-        const data2xUpdatedValue = data2x !== null ? Number(Number((Number(data2x) - 500)/100).toFixed(1)) : data2x;
-        const data3xUpdatedValue = data3x !== null ? Number(Number((Number(data3x) - 500)/100).toFixed(1)) : data3x;
+        const data1xUpdatedValue = data1x !== null ? Number(Number((Number(data1x) - 500)/100).toFixed(2)) : data1x;
+        const data2xUpdatedValue = data2x !== null ? Number(Number((Number(data2x) - 500)/100).toFixed(2)) : data2x;
+        const data3xUpdatedValue = data3x !== null ? Number(Number((Number(data3x) - 500)/100).toFixed(2)) : data3x;
+        // rgbDataStream.calibrate = [data1x, data2x, data3x];
+        
+        rgbDataStream.calibrate = [data1xUpdatedValue, data2xUpdatedValue, data3xUpdatedValue];
+
+        if (data1x !== null && data2x !== null && data3x !== null) {
+          // stopRgbExperiment();
+        }
+      } else if (leaderOperation === 'rgb_calibrate_test') {
+        rgbCalibratedAndTested = true;
+        const data1xUpdatedValue = data1x !== null ? Number(Number((Number(data1x) - 500)/100).toFixed(2)) : data1x;
+        const data2xUpdatedValue = data2x !== null ? Number(Number((Number(data2x) - 500)/100).toFixed(2)) : data2x;
+        const data3xUpdatedValue = data3x !== null ? Number(Number((Number(data3x) - 500)/100).toFixed(2)) : data3x;
         // rgbDataStream.calibrateTest = [data1x, data2x, data3x];
         
         rgbDataStream.calibrateTest = [data1xUpdatedValue, data2xUpdatedValue, data3xUpdatedValue];
 
         if (data1x !== null && data2x !== null && data3x !== null) {
-          stopRgbExperiment();
+          // stopRgbExperiment();
         }
-      } else if (leaderOperation === 'rgb_measure') {
+      }
+      else if (leaderOperation === 'rgb_measure') {
         rgbCalibratedAndTested = deviceStatusValue.rgbCalibratedAndTested;  // let it be unchanged
-        const data1xUpdatedValue = data1x !== null ? Number(Number((Number(data1x) - 500)/100).toFixed(1)) : data1x;
-        const data2xUpdatedValue = data2x !== null ? Number(Number((Number(data2x) - 500)/100).toFixed(1)) : data2x;
-        const data3xUpdatedValue = data3x !== null ? Number(Number((Number(data3x) - 500)/100).toFixed(1)) : data3x;
+        const data1xUpdatedValue = data1x !== null ? Number(Number((Number(data1x) - 500)/100).toFixed(2)) : data1x;
+        const data2xUpdatedValue = data2x !== null ? Number(Number((Number(data2x) - 500)/100).toFixed(2)) : data2x;
+        const data3xUpdatedValue = data3x !== null ? Number(Number((Number(data3x) - 500)/100).toFixed(2)) : data3x;
 
         // rgbDataStream.measure = [data1x, data2x, data3x];// previous values
         rgbDataStream.measure = [data1xUpdatedValue, data2xUpdatedValue, data3xUpdatedValue]; // updated one on 27th-jun-23
 
         if (data1x !== null && data2x !== null && data3x !== null) {
-          stopRgbExperiment();
+          // stopRgbExperiment();
         }
       } else {
         rgbDataStream = null;

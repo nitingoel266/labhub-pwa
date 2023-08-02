@@ -8,6 +8,7 @@ export enum ControlOperation {
   OP_RGB_CALIBRATE,
   OP_RGB_MEASURE,
   OP_RAW_MEASURE,  // unused
+  OP_RGB_CAL_TEST,
   NUM_OPS  /* NUM_OPS = 9 */
 }
 

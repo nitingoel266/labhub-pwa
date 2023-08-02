@@ -62,7 +62,7 @@ export const getVoltageLog = async (voltageIndex: number) => {
 
   let voltageLog = null;
   if (channelResp?.voltageLog) {
-    voltageLog = channelResp.voltageLog.map(v => roundTwoDec(v / 1000 - 12));
+    voltageLog = channelResp.voltageLog.map(v => Number(Number((v - 1200)/100).toFixed(3)));
   }
   return voltageLog;
 };

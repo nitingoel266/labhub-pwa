@@ -132,10 +132,10 @@ const AppexCharts = React.memo(
               return opts?.w?.globals?.colors[1][opts?.dataPointIndex] > 0
                 ? val
                 : undefined;
-            } else return val;
+            } else return "0" // val;
           },
           style: {
-            fontSize: "9px",
+            fontSize: "5px", // "9px"
             fontFamily: "Helvetica, Arial, sans-serif",
             fontWeight: "bold",
             colors: ["#424C58"], // background color for labels
@@ -143,10 +143,10 @@ const AppexCharts = React.memo(
           },
           background: {
             enabled: true,
-            foreColor: "#FFFFFF", // color for labels
+            foreColor:"#424C58", // "#FFFFFF", // color for labels
             backColor: "#424C58",
-            padding: 1,
-            borderRadius: 50,
+            padding: 2, // 1
+            borderRadius: 4, // 50
             borderWidth: 1,
             borderColor: "none",
             opacity: 0.9,
@@ -210,7 +210,7 @@ const AppexCharts = React.memo(
         grid: {
           show: false, // to hilde background horizontial lines
           padding:{
-            left:10, // add padding from left(y-axis) 
+            left:15, // add padding from left(y-axis) 
           }
         },
         //   colors: ["#008FFB"],

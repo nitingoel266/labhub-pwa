@@ -59,34 +59,34 @@ const AppexCharts = React.memo(
           id: "ig",
           group: "social",
           type: "area",
-          height: 200,
-          width: 150,
+        //   height: 200,
+        //   width: 150,
           // tension: 0.4,
           stacked: false,
-          // zoom: {
-          //     enabled: true,
-          //     type: "xy",
-          //     autoScaleYaxis: true, // now working fory axis :- https://github.com/apexcharts/apexcharts.js/issues/1260
-          //     // zoomedArea: {
-          //     //   fill: {
-          //     //     color: "#90CAF9",
-          //     //     opacity: 0.4,
-          //     //   },
-          //     //   stroke: {
-          //     //     color: "#0D47A1",
-          //     //     opacity: 0.4,
-          //     //     width: 1,
-          //     //   },
-          //     // },
-          //   },
+        //   zoom: {
+        //       enabled: true,
+        //       type: "x",
+        //       autoScaleYaxis: true, // now working fory axis :- https://github.com/apexcharts/apexcharts.js/issues/1260
+        //       // zoomedArea: {
+        //       //   fill: {
+        //       //     color: "#90CAF9",
+        //       //     opacity: 0.4,
+        //       //   },
+        //       //   stroke: {
+        //       //     color: "#0D47A1",
+        //       //     opacity: 0.4,
+        //       //     width: 1,
+        //       //   },
+        //       // },
+        //     },
             events: {
 
               beforeZoom: function(chartContext:any, axis:any) {
                   console.log("in the before zoom :- ",chartContext, axis)
                   return {
                     xaxis: {
-                      min: axis?.xaxis?.min > 0 ? axis?.xaxis?.max - axis?.xaxis?.min > 1 ? axis?.xaxis?.min : chartContext?.minX : 0,
-                      max: axis?.xaxis?.max > labels[labels?.length-1] ? labels[labels?.length-1] : axis?.xaxis?.max - axis?.xaxis?.min > 1 ? axis?.xaxis?.max : chartContext?.maxX
+                      min: axis?.xaxis?.min > 0 ? axis?.xaxis?.max - axis?.xaxis?.min > 4 ? axis?.xaxis?.min : chartContext?.minX : 0,
+                      max: axis?.xaxis?.max > labels[labels?.length-1] ? labels[labels?.length-1] : axis?.xaxis?.max - axis?.xaxis?.min > 4 ? axis?.xaxis?.max : chartContext?.maxX
                     }
                   }
               }

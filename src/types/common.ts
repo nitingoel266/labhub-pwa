@@ -65,7 +65,7 @@ export interface SensorDataStream {
 }
 
 export interface HeaterDataStream {
-  element: [number] | null;       // [power]
+  element: [number, number] | null;       // [power]
   probe: [number, number] | null; // [power, probe_temperature]
 }
 

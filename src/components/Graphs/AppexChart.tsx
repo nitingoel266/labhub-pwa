@@ -239,7 +239,7 @@ const AppexCharts = React.memo(
           options={state.optionsSmall}
           series={state.seriesSmall}
           type="area"
-          height={window.innerWidth > 580 ? 250 : 200}
+          height={window.innerWidth > 580 ? (title === "Temperature " ? 210 : 250) : 200}
           width={window.innerWidth > 580 ? 500 : 250}
         />
       </div>

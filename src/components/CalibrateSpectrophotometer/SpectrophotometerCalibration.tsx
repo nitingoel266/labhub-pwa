@@ -83,7 +83,9 @@ const SpectrophotometerCalibration = () => {
         const setData = async() => {
             if(testCalibrateInitial?.length === 3){
                 for(let i = 0;i<testCalibrateInitial?.length;i++){
+                  if (clientId === status?.leaderSelected) {
                     audio.play();
+                  }
                     setTestCalibrate((prevdata:[]) => {
                         if(prevdata?.length < 3){
                             if(testCalibrateInitial[i] !== null)
@@ -91,8 +93,9 @@ const SpectrophotometerCalibration = () => {
                             else return [...prevdata]
                         }
                     });
-                    if(i<2)
-                    await delay(1000)
+                    if (clientId === status?.leaderSelected && i<2) {
+                        await delay(1000)
+                    }
                 }
             }else {
                 setTestCalibrate([])
@@ -154,7 +157,9 @@ const SpectrophotometerCalibration = () => {
         if(testCalibrate?.length === 3 ){
             showLoader.next(false)
         }else if(status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test"){
+              if (clientId === status?.leaderSelected) {
             showLoader.next(true)
+              }
         }
     },[testCalibrate,status?.rgbCalibratedFromDevice])
    

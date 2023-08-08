@@ -143,7 +143,7 @@ const AbsorbanceMeasuring = () => {
       // showLoader.next(true)
         if(measureInitial?.length === 3){
             for(let i = 0;i<measureInitial?.length;i++){
-                audio.play();
+                // audio.play();
                 setMeasure((prevdata:[]) => {
                     if(prevdata?.length < 3){
                         if(measureInitial[i] !== null)
@@ -151,13 +151,15 @@ const AbsorbanceMeasuring = () => {
                         else return [...prevdata]
                     }
                 });
-                if(i<2)
-                await delay(1000)
+                // if(i<2)
+                // await delay(1000)
             }
-            if(measureInitial.some((e:any) => e > 0.2 || e < -0.2)){
-              toastMessage.next("Values are out of range!")
-            }
+            // if(measureInitial.some((e:any) => e > 0.2 || e < -0.2)){
+            //   toastMessage.next("Values are out of range!")
+            // }
+          if (clientId === status?.leaderSelected) {
             showLoader.next(false)
+          }
         }else {
           setMeasure([])
         }
@@ -174,7 +176,9 @@ const AbsorbanceMeasuring = () => {
         measureInitial?.length === 0 &&
         JSON.stringify(dataStream?.rgb?.measure) !== JSON.stringify(measureInitial)
       ) {
+      if (clientId === status?.leaderSelected) {
         showLoader.next(true)
+      }
         setMeasureInitial([...dataStream?.rgb?.measure])
       //   for(let i = 0;i<3;i++){
       //     audio.play();
@@ -198,7 +202,7 @@ const AbsorbanceMeasuring = () => {
     getData()
   }, [dataStream?.rgb?.measure]);
 
-  useEffect(() => {
+  useEffect(() => { //to reset member values when you want again values
     if(status?.operation !== "rgb_measure"){
       setMeasureInitial([])
     }
@@ -260,15 +264,15 @@ const AbsorbanceMeasuring = () => {
       )}
       <div className={styles.BodyWrapper}>
         <div aria-label={"red light value is"+measure[0]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#D08080"} : {}}>{measure?.length >=1 && measure[0] > 0 ? "+" : ""}{measure?.length >=1 ? (measure[0] ? Number(measure[0]).toFixed(2) : "+0.00") : ""}</div>
+          <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#D08080"} : {}}>{measure?.length >=1 && measure[0] > 0 ? "+" : ""}{measure?.length >=1 ? (measure[0] ? Number(measure[0]).toFixed(2) : "0.0") : ""}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
         <div aria-label={"green light value is"+measure[1]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#7BAA81"} : {}}>{measure?.length >=2 && measure[1] > 0 ? "+" : ""}{measure?.length >=2 ? (measure[1] ? Number(measure[1]).toFixed(2) : "+0.00"):""}</div>
+          <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#7BAA81"} : {}}>{measure?.length >=2 && measure[1] > 0 ? "+" : ""}{measure?.length >=2 ? (measure[1] ? Number(measure[1]).toFixed(2) : "0.0"):""}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
         <div aria-label={"blue light value is"+measure[2]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#8AA3BB"} : {}}>{measure?.length >=3 && measure[2] > 0 ? "+" : ""}{measure?.length >=3 ? (measure[2] ? Number(measure[2]).toFixed(2) : "+0.00"):""}</div>
+          <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#8AA3BB"} : {}}>{measure?.length >=3 && measure[2] > 0 ? "+" : ""}{measure?.length >=3 ? (measure[2] ? Number(measure[2]).toFixed(2) : "0.0"):""}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>

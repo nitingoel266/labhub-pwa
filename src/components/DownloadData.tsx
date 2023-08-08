@@ -37,7 +37,11 @@ const DownloadData = ({ data, header}: Props) => {
     csv += "\n";
   }
   if (header) {
-    for (let one of header) {
+    let updateHeader = [...header]
+    if(header[1] === "Temperature (°C)" && data?.storedBy){
+      updateHeader.splice(1,0,"Set Point (°C)","Power (W)")
+    }
+    for (let one of updateHeader) {
       csv += one + ",";
     }
     csv += "\n";
@@ -47,6 +51,10 @@ const DownloadData = ({ data, header}: Props) => {
     for(let one of data.data){
       if(header && header[1] === "Temperature (°C)"){
         csv += one.time;
+        if(data?.storedBy){
+          csv += "," + one.setPoint;
+          csv += "," + one.power;
+        }
         csv += "," + one.temp;
       }else if(header && header[1] === "Voltage (V)"){
         csv += one.time;

@@ -104,16 +104,21 @@ function App() {
         </Routes>
       </main>
       <div className={styles.version}>
-        {connected ? (
-          <span>Firmware version: {status?.deviceVersion || "NA"} {process.env.REACT_APP_ENV !== 'prod' && "("}
-            {process.env.REACT_APP_ENV !== 'prod' ? /* pkgVersion : */  (
+        {/* {connected ? (
+          <div>Firmware version: {status?.deviceVersion || "NA"} {process.env.REACT_APP_ENV !== 'prod' && "("}
+            {process.env.REACT_APP_ENV !== 'prod' ? /* pkgVersion : *|/  (
               <Link to='/test'>{pkgVersion}</Link>
             ) : null}
             {process.env.REACT_APP_ENV !== 'prod' && ")"}
-          </span>
+          </div>
         ) : (
-          <span>App version: {pkgVersion}</span>
-        )}
+          <div>App version: {pkgVersion}</div>
+        )} */}
+        {!connected ? <div>App version: {pkgVersion}</div> : null}
+        {!connected ? <div>{""}</div> : null }
+
+        {connected ? <div>Firmware version: {status?.deviceVersion || "NA"}</div> : null}
+        {connected ? <div>Package version: {process.env.REACT_APP_ENV !== 'prod' ? <Link to='/test'>{pkgVersion}</Link> : pkgVersion}</div> : null}
       </div>
       <LeaderDisconnect />
       <Loader />

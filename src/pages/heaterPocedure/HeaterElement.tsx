@@ -492,7 +492,7 @@ const HeaterElement = () => {
 
       <div className={styles.HeaderTextWrapper}>
         <div aria-label="control method sub header">Control Method</div>
-        <div aria-label="heater element sub header">HEATER ELEMENT</div>
+        <div aria-label="heater element sub header">Heater Element</div>
       </div>
       <div className={styles.HeaterElementWraper}>
         <div className={styles.HeaterElementSubWraper}>

@@ -78,7 +78,7 @@ const SpectrophotometerTesting = () => {
       }
         if(testCalibrateInitial?.length === 3){
             for(let i = 0;i<testCalibrateInitial?.length;i++){
-                audio.play();
+                // audio.play();
                 setTestCalibrate((prevdata:[]) => {
                     if(prevdata?.length < 3){
                         if(testCalibrateInitial[i] !== null)
@@ -86,13 +86,15 @@ const SpectrophotometerTesting = () => {
                         else return [...prevdata]
                     }
                 });
-                if(i<2)
-                await delay(1000)
+                // if(i<2)
+                // await delay(1000)
             }
             if(testCalibrateInitial.some((e:any) => e > 0.2 || e < -0.2)){
               toastMessage.next("Values are out of range!")
             }
+          if (clientId === status?.leaderSelected) {
             showLoader.next(false)
+          }
         }else {
             setTestCalibrate([])
         }
@@ -110,7 +112,9 @@ const SpectrophotometerTesting = () => {
         JSON.stringify(dataStream?.rgb?.calibrateTest) !==
         JSON.stringify(testCalibrateInitial)
       ) {
+      if (clientId === status?.leaderSelected) {
         showLoader.next(true)
+      }
         setTestCalibrateInitial([...dataStream?.rgb?.calibrateTest])
 
       //   for(let i = 0;i<3;i++){
@@ -177,15 +181,15 @@ const SpectrophotometerTesting = () => {
       )}
       <div className={styles.BodyWrapper}>
         <div aria-label={"red light value is "+testCalibrate[0]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyRedBoll}>{testCalibrate?.length >=1 && testCalibrate[0] >= 0 ? "+" : ""}{`${(testCalibrate?.length >=1) ? (testCalibrate[0] ? Number(testCalibrate[0]).toFixed(2) : "0.00" ) : ""}`}</div>
+          <div className={styles.BodyRedBoll}>{testCalibrate?.length >=1 && testCalibrate[0] > 0 ? "+" : ""}{`${(testCalibrate?.length >=1) ? (testCalibrate[0] ? Number(testCalibrate[0]).toFixed(2) : "0.0" ) : ""}`}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
         <div aria-label={"green light value is"+testCalibrate[1]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyGreenBoll}>{testCalibrate?.length >=2 && testCalibrate[1] >= 0 ? "+" : ""}{`${(testCalibrate?.length >=2) ? (testCalibrate[1] ? Number(testCalibrate[1]).toFixed(2) : "0.00") : ""}`}</div>
+          <div className={styles.BodyGreenBoll}>{testCalibrate?.length >=2 && testCalibrate[1] > 0 ? "+" : ""}{`${(testCalibrate?.length >=2) ? (testCalibrate[1] ? Number(testCalibrate[1]).toFixed(2) : "0.0") : ""}`}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
         <div aria-label={"blue light value is"+testCalibrate[2]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyBlueBoll}>{testCalibrate?.length >=3 && testCalibrate[2] >= 0 ? "+" : ""}{`${(testCalibrate?.length >=3) ? (testCalibrate[2] ? Number(testCalibrate[2]).toFixed(2) : "0.00") : ""}`}</div>
+          <div className={styles.BodyBlueBoll}>{testCalibrate?.length >=3 && testCalibrate[2] > 0 ? "+" : ""}{`${(testCalibrate?.length >=3) ? (testCalibrate[2] ? Number(testCalibrate[2]).toFixed(2) : "0.0") : ""}`}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>

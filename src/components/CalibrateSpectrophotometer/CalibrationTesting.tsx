@@ -34,7 +34,7 @@ const CalibrationTesting = () => {
                 simulateRgb('calibrate_test')
                 startRgbExperiment()
             }
-            await delay(1000)
+            // await delay(1000)
             navigate("/spectrophotometer-testing")
             if(clientId === status?.leaderSelected)
             showLoader.next(true)

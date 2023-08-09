@@ -333,7 +333,7 @@ const MeasuringVoltage = () => {
         </div>
         {graphData?.length ? <div className={styles.SecondaryHeaderWrapper}>
           <div aria-label="voltage value in volt">
-            Voltage Value : <span style={{fontWeight:600}}>{graphData[graphData.length - 1]?.temp > 0 ? "+" : ""}{(graphData[graphData.length - 1]?.temp ? (graphData[graphData.length - 1]?.temp).toFixed(2) : "+0.00") + "V"}</span>
+            Voltage Value : <span style={{fontWeight:600}}>{graphData[graphData.length - 1]?.temp > 0 ? "+" : ""}{(graphData[graphData.length - 1]?.temp ? (graphData[graphData.length - 1]?.temp).toFixed(2) : "0.0") + "V"}</span>
           </div>
         </div> : <div style={{height:36}}>{}</div>}
         <div className={styles.TextBody}>

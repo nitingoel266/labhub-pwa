@@ -264,15 +264,15 @@ const AbsorbanceMeasuring = () => {
       )}
       <div className={styles.BodyWrapper}>
         <div aria-label={"red light value is"+measure[0]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#D08080"} : {}}>{measure?.length >=1 && measure[0] > 0 ? "+" : ""}{measure?.length >=1 ? (measure[0] ? Number(measure[0]).toFixed(2) : "0.0") : ""}</div>
+          <div className={styles.BodyRedBoll} style={screenName === "cuvette-insertion" && clientId === status?.leaderSelected ? {backgroundColor:"#D08080"} : {}}>{measure?.length >=1 && measure[0] > 0 ? "+" : ""}{measure?.length >=1 ? (measure[0] ? Number(measure[0]).toFixed(2) : "0.0") : ""}</div>
           <div className={styles.BodyText}>Red</div>
         </div>
         <div aria-label={"green light value is"+measure[1]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#7BAA81"} : {}}>{measure?.length >=2 && measure[1] > 0 ? "+" : ""}{measure?.length >=2 ? (measure[1] ? Number(measure[1]).toFixed(2) : "0.0"):""}</div>
+          <div className={styles.BodyGreenBoll} style={screenName === "cuvette-insertion" && clientId === status?.leaderSelected ? {backgroundColor:"#7BAA81"} : {}}>{measure?.length >=2 && measure[1] > 0 ? "+" : ""}{measure?.length >=2 ? (measure[1] ? Number(measure[1]).toFixed(2) : "0.0"):""}</div>
           <div className={styles.BodyText}>Green</div>
         </div>
         <div aria-label={"blue light value is"+measure[2]} className={styles.BodyBollWrapper}>
-          <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" ? {backgroundColor:"#8AA3BB"} : {}}>{measure?.length >=3 && measure[2] > 0 ? "+" : ""}{measure?.length >=3 ? (measure[2] ? Number(measure[2]).toFixed(2) : "0.0"):""}</div>
+          <div className={styles.BodyBlueBoll} style={screenName === "cuvette-insertion" && clientId === status?.leaderSelected ? {backgroundColor:"#8AA3BB"} : {}}>{measure?.length >=3 && measure[2] > 0 ? "+" : ""}{measure?.length >=3 ? (measure[2] ? Number(measure[2]).toFixed(2) : "0.0"):""}</div>
           <div className={styles.BodyText}>Blue</div>
         </div>
       </div>

@@ -118,7 +118,7 @@ function App() {
         {!connected ? <div>{""}</div> : null }
 
         {connected ? <div>Firmware version: {status?.deviceVersion || "NA"}</div> : null}
-        {connected ? <div>Package version: {process.env.REACT_APP_ENV !== 'prod' ? <Link to='/test'>{pkgVersion}</Link> : pkgVersion}</div> : null}
+        {connected ? <div>App version: {process.env.REACT_APP_ENV !== 'prod' ? <Link to='/test'>{pkgVersion}</Link> : pkgVersion}</div> : null}
       </div>
       <LeaderDisconnect />
       <Loader />

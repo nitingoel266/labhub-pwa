@@ -61,9 +61,9 @@ const DownloadData = ({ data, header}: Props) => {
         csv += "," + one.voltage;
       }else if(header && header[2] === "GREEN"){
         csv += one["Measuement No"];
-        csv += "," + one['RED'];
-        csv += "," + one['GREEN'];
-        csv += "," + one['BLUE'];
+        csv += "," + (one['RED'] === 0 ? "0.0" :  one['RED']);
+        csv += "," + (one['GREEN'] === 0 ? "0.0" :  one['GREEN']);
+        csv += "," + (one['BLUE'] === 0 ? "0.0" :  one['BLUE']);
 
       }
       csv += "\n";

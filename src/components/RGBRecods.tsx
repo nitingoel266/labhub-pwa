@@ -40,7 +40,7 @@ const RGBRecord = () => {
               state.data.selectedData.data.map((item: any) => (
                 <div key={item['Measuement No']} className={styles.ColumnBody}>
                   {/* {el.value && item[el.value]} */}
-                  {el.key && el.key === 1 ? item[el.value] : (item[el.value] === 0 ? "+0.00" : `${item[el.value] >= 0 ? "+" : ""} ${Number(item[el.value]).toFixed(2)}`)}
+                  {el.key && el.key === 1 ? item[el.value] : (item[el.value] === 0 ? "0.0" : `${item[el.value] >= 0 ? "+" : ""} ${Number(item[el.value]).toFixed(2)}`)}
 
                 </div>
               ))}

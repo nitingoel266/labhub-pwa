@@ -250,8 +250,8 @@
         margin: 10px 200px 0px 200px;
     }
     .GraphStyle {
-        width: 550px;
-        height:200px;
+        width: 600px;
+        /* height:200px; */
     }
     .ButtonForGraphWrapper {
         margin-left: 20px;

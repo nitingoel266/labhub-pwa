@@ -37,6 +37,7 @@ import SensorDisconnectModal from "../../components/Modal/SensorDisconnectModal"
 import { useNavigate } from "react-router-dom";
 import AppexCharts from "../../components/Graphs/AppexChart";
 import { TEMPERATURE_DATA } from "../../utils/const";
+import HighChart from "../../components/Graphs/HighChart";
 
 
 let temperatureTimmer: any;
@@ -583,7 +584,15 @@ const TemperatureProbe = () => {
 
       <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
-          <AppexCharts 
+          <HighChart 
+            data={graphData}
+            capturePoint={capturePoint}
+            showPoint={status?.setupData?.dataRate === "user" ? false : true}
+            title={"Temperature"}
+            maxTempValue ={maxTempValue}
+            dataRate = {status?.setupData?.dataRate === "user" ? 1 : status?.setupData?.dataRate}
+            />
+          {/* <AppexCharts 
               data={graphData}
               showPoint={true}
               capturePoint={capturePoint}
@@ -592,7 +601,7 @@ const TemperatureProbe = () => {
               maxTempValue ={maxTempValue}
               labels= {labels}
               isRunning = {false} // {status?.operation === "measure_temperature" ? true : false}
-          />
+          /> */}
             {/* <TemperatureGraph
               data={graphData}
               showPoint={status?.setupData?.dataRate === "user" ? false : true}

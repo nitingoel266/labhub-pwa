@@ -17,7 +17,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-   margin-top: 20px;
+   margin-top: 10px;
    font-size: 14px;
 }
 .TextBody {
@@ -28,7 +28,7 @@
     margin-top: 10px;
 }
 .GraphStyle {
-    margin-top: 20px;
+    /* margin-top: 10px; */
     width: 250px;
     /* height: 300px; */
 }
@@ -45,6 +45,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 .ButtonHorizontalInnerWrapper {
     width: 250px;
@@ -140,7 +141,8 @@
 .FooterTextWrapper {
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    /* margin-top: 10px; */
+    margin-bottom: 10px;
     align-items: center;
 }
 .FooterInnerTextWrapper {
@@ -210,8 +212,8 @@
 
 @media (min-width:580px) {
     .GraphStyle {
-        width: 550px;
-        height:250px;
+        width: 600px;
+        /* height:380px; */
     }
     .FooterInnerTextWrapper {
         width: 420px;

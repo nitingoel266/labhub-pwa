@@ -22,6 +22,7 @@ import Header from "./header";
 import { useNavigate } from "react-router-dom";
 import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
 import AppexCharts from "./Graphs/AppexChart";
+import HighChart from "./Graphs/HighChart";
 
 const MeasuringTemprature = () => {
   const clientId = getClientId()
@@ -393,10 +394,19 @@ const MeasuringTemprature = () => {
           <div aria-label="Temperature value">Temperature Value : <span style={{fontWeight:600}}>{tempratureUnit === 'f' && graphData[graphData.length - 1]?.temp ? ((9 / 5) * graphData[graphData.length - 1]?.temp + 32).toFixed(1) : graphData[graphData.length - 1]?.temp}</span> </div>
           <div className={styles.DegreeStyle}> </div>
           <div style={{fontWeight:600}} aria-label={"in degree "+ tempratureUnit.toUpperCase()}>{tempratureUnit.toUpperCase()}</div>
-        </div> : <div style={{height:36}}>{}</div>}
+        </div> : <div style={{height:26}}>{}</div>}
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
-          <AppexCharts 
+          <HighChart 
+            data={graphData}
+            capturePoint={capturePoint}
+            showPoint={status?.setupData?.dataRate === "user" ? false : true}
+            title={"Temperature"}
+            temperatureUnit = {tempratureUnit}
+            maxTempValue ={maxTempValue}
+            dataRate = {status?.setupData?.dataRate === "user" ? 1 : status?.setupData?.dataRate}
+            />
+          {/* <AppexCharts 
               data={graphData}
               showPoint={status?.setupData?.dataRate === "user" ? false : true}
               capturePoint={capturePoint}
@@ -405,7 +415,7 @@ const MeasuringTemprature = () => {
               maxTempValue ={maxTempValue}
               labels={labels}
               isRunning = {status?.operation === "measure_temperature" ? true : false}
-          />
+          /> */}
             {/* <TemperatureGraph
               data={graphData}
               showPoint={status?.setupData?.dataRate === "user" ? false : true}

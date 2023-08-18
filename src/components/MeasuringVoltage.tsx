@@ -22,6 +22,7 @@ import Header from "./header";
 import { useNavigate } from "react-router-dom";
 import SensorDisconnectModal from "./Modal/SensorDisconnectModal";
 import AppexCharts from "./Graphs/AppexChart";
+import HighChart from "./Graphs/HighChart";
 
 const MeasuringVoltage = () => {
   const clientId = getClientId()
@@ -335,9 +336,17 @@ const MeasuringVoltage = () => {
           <div aria-label="voltage value in volt">
             Voltage Value : <span style={{fontWeight:600}}>{graphData[graphData.length - 1]?.temp > 0 ? "+" : ""}{(graphData[graphData.length - 1]?.temp ? (graphData[graphData.length - 1]?.temp).toFixed(2) : "0.0") + "V"}</span>
           </div>
-        </div> : <div style={{height:36}}>{}</div>}
+        </div> : <div style={{height:26}}>{}</div>}
         <div className={styles.TextBody}>
           <div className={styles.GraphStyle}>
+          <HighChart 
+            data={graphData}
+            capturePoint={capturePoint}
+            showPoint={status?.setupData?.dataRate === "user" ? false : true}
+            title={"Voltage"}
+            maxTempValue ={12}
+            dataRate = {status?.setupData?.dataRate === "user" ? 1 : status?.setupData?.dataRate}
+            />
             {/* <AppexCharts 
               data={graphData}
               showPoint={status?.setupData?.dataRate === "user" ? false : true}
@@ -345,13 +354,13 @@ const MeasuringVoltage = () => {
               title={"Voltage"}
               labels={labels}
             /> */}
-            <TemperatureGraph
+            {/* <TemperatureGraph
               data={graphData}
               showPoint={status?.setupData?.dataRate === "user" ? false : true}
               capturePoint={capturePoint}
               title={"Voltage"}
               labels={labels}
-            />
+            /> */}
           </div>
           {window.innerWidth > mobileWidth ? (
             <div className={styles.ButtonWrapper}>
@@ -400,7 +409,7 @@ const MeasuringVoltage = () => {
             </div>
           ) : null}
         </div>
-        <div className={styles.FooterTextWrapper} style={window?.innerWidth >= 580 ? {marginTop:40}:{}}>
+        <div className={styles.FooterTextWrapper} style={window?.innerWidth >= 580 ? {marginTop:0}:{}}>
           <div className={styles.FooterInnerTextWrapper}>
             <div aria-label="file name text" style={{fontWeight:600}}>File Name</div>
             <div className={styles.FooterText}>

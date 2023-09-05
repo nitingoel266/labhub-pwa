@@ -30,7 +30,7 @@ const SpectrophotometerCalibration = () => {
     const [testCalibrate, setTestCalibrate] = useState<any>([]);
 
     const [testCalibrateInitial, setTestCalibrateInitial] = useState<any>([]);
-
+    const [message,setMessage] = useState<String>("");
     
     const [isOpen,setModal] = useState("");
 
@@ -113,7 +113,7 @@ const SpectrophotometerCalibration = () => {
           JSON.stringify(dataStream?.rgb?.calibrate) !==
           JSON.stringify(testCalibrateInitial)) || status?.rgbCalibratedFromDevice) &&
           testCalibrateInitial?.length === 0 &&
-          (status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test")
+          (status?.operation === "rgb_calibrate" )
         ) {
             if(dataStream?.rgb?.calibrate)
             setTestCalibrateInitial([...dataStream?.rgb?.calibrate])
@@ -156,13 +156,14 @@ const SpectrophotometerCalibration = () => {
     useEffect(() => {
         if(testCalibrate?.length === 3 ){
             showLoader.next(false)
-        }else if(status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test"){
+            setMessage("Spectrophotometer calibrated successfully. You can test calibration now.")
+        }else if(status?.operation === "rgb_calibrate"){
               if (clientId === status?.leaderSelected) {
             showLoader.next(true)
               }
         }
     },[testCalibrate,status?.rgbCalibratedFromDevice])
-   
+
    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
@@ -195,7 +196,7 @@ const SpectrophotometerCalibration = () => {
                 <div className={styles.BodyText}>Blue</div>
             </div>
         </div>
-        <div className={styles.FooterText}>Spectrophotometer calibrated successfully. You can test calibration now.</div>
+        <div className={styles.FooterText}>{message}</div>
         <RightArrow isSelected={((status?.rgbCalibratedFromDevice && (status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test")) || testCalibrate?.length === 3) || selectedItem ? true : false} handleSubmit={handleSubmit}/>
         {!isMobile && isOpen && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>

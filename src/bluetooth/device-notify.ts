@@ -312,8 +312,7 @@ async function handleExperimentStatusChanged(event: any) {
           if (prevSampleIndex + 1 !== current_sample) {
             Log.warn(`Missing temperatureIndex: ${current_sample - 1} [${prevSampleIndex}, ${current_sample}]`);
           }
-
-          const tempData = Number(Number(data3 / 100).toFixed(2));  // temperature is C * 100, not C
+          const tempData = Number(Number(data3 / 100).toFixed(1));  // temperature is C * 100, not C
 
           // sensorDataStream.temperature = tempData;
           // sensorDataStream.temperatureIndex = current_sample;
@@ -363,7 +362,7 @@ async function handleExperimentStatusChanged(event: any) {
 
           // const voltageData = Number(Number(data3 / 1000 - 12).toFixed(3));  // voltage is (V + 12) * 1000
 
-          const voltageData = Number(Number((data3 - 1200)/100).toFixed(3));  // changed on 21-07-23
+          const voltageData = Number(Number((data3 - 1200)/100).toFixed(1));  // changed on 21-07-23
 
           if (current_sample > 0) {
             sensorDataStream.voltage = voltageData;

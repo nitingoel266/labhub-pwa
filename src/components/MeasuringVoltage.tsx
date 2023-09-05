@@ -351,6 +351,8 @@ const MeasuringVoltage = () => {
               capturePoint={capturePoint}
               title={"Voltage"}
               labels={labels}
+              xAxisTitle="Time(sec)"
+              yAxisTitle="Voltage (V)"
             />
           </div>
           {window.innerWidth > mobileWidth ? (

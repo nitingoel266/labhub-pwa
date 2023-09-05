@@ -1121,6 +1121,7 @@ const FirstHeader = ({
             {status?.batteryLevel || 0}%
           </div>
           <div className={styles.BatteryInnerWapper}>
+          <div style={{ backgroundColor: "white", width:`${100-status?.batteryLevel}%` }}></div>
             <div style={{ backgroundColor: "#79D179", flex: 1 }}></div>
             {/* <div style={unFilledStyle}></div>
           <div style={filledStyle}></div> */}

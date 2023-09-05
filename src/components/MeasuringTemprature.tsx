@@ -405,6 +405,8 @@ const MeasuringTemprature = () => {
               maxTempValue ={maxTempValue}
               labels={labels}
               isRunning = {status?.operation === "measure_temperature" ? true : false}
+              xAxisTitle="Time(sec)"
+              yAxisTitle={tempratureUnit==='c'?"Temperature (oC)" : "Temperature (oF)" }
           />
             {/* <TemperatureGraph
               data={graphData}

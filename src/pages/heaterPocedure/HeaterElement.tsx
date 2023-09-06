@@ -58,7 +58,7 @@ const HeaterElement = () => {
   const [temperature, setTemperature] = useState<number>(20); //20-150
   const [temperatureShouldBe, setTemperatureShouldBe] = useState<number>(0);
   const [power, setPower] = useState<number>(0);
-
+  const [isTemperature, setisTemperature] = useState<number>(0);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [capturePoint, setCapturePoint] = useState<any>([]);
   const [title,setTitle] = useState<any>(getTitle("HE", clientId,status));
@@ -158,6 +158,8 @@ const HeaterElement = () => {
     if (dataStream?.heater?.element) {
       // if (!isStart) setIsStart(true);
       setPower(dataStream.heater.element[0]);
+      setisTemperature(dataStream.heater.element[1]);
+    
     }
     // if (dataStream?.heater === null) {
     //   setIsStart(false);
@@ -179,13 +181,22 @@ const HeaterElement = () => {
   }, [status?.operation,status?.heaterConnected, isStart]);
 
   useEffect(() => { // stop element experiment and show a modal that sensor disconnected and for go back
-    if(!status?.heaterConnected){
+    if(!status?.chargerConnected || !status?.heaterConnected){
       if(status?.operation === "heater_control"){
         // setIsStart(false);
         stopHeaterExperiment();
         setSensorDisconnectCheckForSave(true)
         if(connected)
-        setModal("Heater Element disconnected")
+        {
+           if(!status?.chargerConnected)
+           {
+              setModal("Power disconnected")
+           }
+           else
+           {
+              setModal("Heater Element disconnected")
+           }
+        }
         // setModal("Temperature Sensor disconnected")
       }else if(!sensorDisconnectCheckForSave){
         if(connected)
@@ -363,7 +374,7 @@ const HeaterElement = () => {
   //     ? { backgroundColor: "#989DA3", cursor: "not-allowed" }
   //     : {};
       const extraStyle = { backgroundColor: "#989DA3", cursor: "not-allowed" };
-  
+
   return (
     <>
      <Header 
@@ -495,6 +506,11 @@ const HeaterElement = () => {
         <div aria-label="heater element sub header">Heater Element</div>
       </div>
       <div className={styles.HeaterElementWraper}>
+      <div aria-label={"temperatue is "+isTemperature && (Number(isTemperature)).toFixed(0)+"degree celcius"} className={styles.HeaterElementTemperatureText} style={{visibility: "visible"}}>
+          <div>{isTemperature && (Number(isTemperature)).toFixed(1)}</div>
+          <div className={styles.TemperatureDegree}> </div>
+          <div>C</div>
+        </div>
         <div className={styles.HeaterElementSubWraper}>
           <div aria-label="heater element image" style={{ height: 120 }}>
             <img
@@ -682,10 +698,15 @@ const HeaterElement = () => {
         message={isOpen === "Heater disconnected Do you want to save the experiment data?" ? "Do you want to save the experiment data?" : `Do you want to ${isOpen} the experiment.`}
         handleCancel = {handleCancelModal}
       />}
+      {isOpen === "Power disconnected" && <SensorDisconnectModal 
+          isOpen={isOpen ? true : false}
+          setModal={(value) => handleSensorDisconnected(value)}
+          message= {clientId === status?.leaderSelected ? "The heater is disconnected due to no power supply, please connect the power to continue the heater experiment." : "The heater is disconnected due to no power supply."}
+      />}
       {isOpen === "Heater Element disconnected" && <SensorDisconnectModal 
           isOpen={isOpen ? true : false}
           setModal={(value) => handleSensorDisconnected(value)}
-          message= {clientId === status?.leaderSelected ? "Heater is disconnected, please connect the heater to start the experiment again." : "Heater is disconnected."}
+          message= {clientId === status?.leaderSelected ? "The heater is disconnected, please connect the heater to continue the heater experiment." : "The heater is disconnected."}
       />}
       <RightArrow
         isSelected={

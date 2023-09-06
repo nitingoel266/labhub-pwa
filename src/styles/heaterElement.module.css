@@ -260,4 +260,21 @@
         width: 420px;
         margin-right: 60px;
     }
+    .HeaterElementTemperatureText {
+        display: flex;
+        flex-direction: row;
+        color:red;
+        font-weight: 500;
+        font-size: 13px;
+        width: 120px;
+        margin-top: 20px;
+        justify-content: flex-end;
+    }
+    .TemperatureDegree {
+        border: 2px solid red;
+        border-radius: 100px;
+        width:2px;
+        height: 2px;
+        margin-right: 4px;
+    }
 }

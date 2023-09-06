@@ -33,9 +33,11 @@ type Props = {
   temperatureUnit ? :string;
   maxTempValue ? : number;
   labels ?: [];
+  xAxisTitle?: string;
+  yAxisTitle?: string
 };
 
-const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,temperatureUnit='c',maxTempValue,labels}: Props) => {
+const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,temperatureUnit='c',maxTempValue,labels, xAxisTitle="",yAxisTitle=""}: Props) => {
   const [graphData ,setGraphData] = useState<any>(data);
   const [enableZoom, setEnableZoom] = useState<boolean>(true);
   const yAxisScale =  title === "Voltage"  ? {min: -12,max: 12,stepSize:1} : {min:0,max:maxTempValue ? (temperatureUnit === "c" ? maxTempValue : Number(Number((9 / 5) * Number(maxTempValue) + 32).toFixed(0) )) : 50};
@@ -67,11 +69,19 @@ const TemperatureGraph = React.memo(({ data, showPoint ,capturePoint,title,tempe
   const options:any = {
     scales: {
       x: {
+        title:{
+          display:true,
+          text: xAxisTitle,
+        },
         grid: {
           display: false,
-        },
+        }, 
       },
       y: {
+        title:{
+          display:true,
+          text:yAxisTitle,
+        },
         grid: {
           display: false,
         },

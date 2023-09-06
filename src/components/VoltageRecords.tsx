@@ -32,7 +32,7 @@ const VoltageRecord = () => {
               state.data.selectedData &&
               state.data.selectedData.data.map((item: any) => (
                 <div key={item.time} className={styles.ColumnBody}>
-                  {el.key && el.key === "time" ? item[el.key] : (item[el.key] === '0' ? "0.0" : `${item[el.key] > 0 ? "+" : ""} ${item[el.key] === 0 ? Number(item[el.key]).toFixed(1) : Number(item[el.key]).toFixed(2)}`)}
+                  {el.key && el.key === "time" ? item[el.key] : (item[el.key] === '0' ? "0.0" : `${item[el.key] > 0 ? "+" : ""} ${item[el.key] === 0 ? Number(item[el.key]).toFixed(1) : Number(item[el.key]).toFixed(1)}`)}
                 </div>
               ))}
           </div>

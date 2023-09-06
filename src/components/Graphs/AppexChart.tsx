@@ -10,6 +10,8 @@ type Props = {
   maxTempValue?: number;
   labels: [];
   isRunning: boolean;
+  xAxisTitle?:string,
+  yAxisTitle?:string
 };
 
 const AppexCharts = React.memo(
@@ -22,6 +24,8 @@ const AppexCharts = React.memo(
     maxTempValue,
     labels,
     isRunning = false,
+    xAxisTitle="",
+    yAxisTitle=""
   }: Props) => {
     const [graphData, setGraphData] = useState<any>(data);
     const [graphCapturedPoints, setGraphCapturedPonts] =
@@ -199,20 +203,45 @@ const AppexCharts = React.memo(
           min: graphData?.length > 10 ? graphData?.length - 10 : 0,
           decimalsInFloat:0,// to show how many values will show in decimal
           // max: graphData?.length > 8 ? labels?.length - graphData?.length : 9
-          offsetX:0
+          offsetX:0,
+          title: {
+            text: xAxisTitle,
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+                color: undefined,
+                fontSize: '12px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 600,
+                cssClass: 'apexcharts-xaxis-title',
+            },
+        },
         },
         yaxis: {
           ...yAxisScale,
           decimalsInFloat:0, // to show how many values will show in decimal
           // max:24,
           // min:-26
+          title: {
+            text: yAxisTitle,
+            rotate: -90,
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+                color: undefined,
+                fontSize: '12px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 600,
+                cssClass: 'apexcharts-yaxis-title',
+            },
+        },
         },
         grid: {
           show: false, // to hilde background horizontial lines
           padding:{
             left:15, // add padding from left(y-axis) 
           }
-        },
+        },  
         //   colors: ["#008FFB"],
       },
     };

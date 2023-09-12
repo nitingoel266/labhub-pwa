@@ -21,25 +21,19 @@ const CalibrationTesting = () => {
 
     const calibratedRef:any = useRef(null);
 
-    const clickHandler = (item:string) => {
-        if(selectedItem && selectedItem === item)
-        setSelectedItem("")
-        else setSelectedItem(item)
+    const clickHandler = () => {
+        if(clientId === status?.leaderSelected){
+            if(status?.rgbConnected !== "calibrate_test")
+            simulateRgb('calibrate_test')
+            startRgbExperiment()
+        }
+        navigate("/spectrophotometer-testing")
+        if(clientId === status?.leaderSelected)
+        showLoader.next(true)
     }
 
     const handleSubmit = async () => {
-        if(selectedItem){
-            if(clientId === status?.leaderSelected){
-                if(status?.rgbConnected !== "calibrate_test")
-                simulateRgb('calibrate_test')
-                startRgbExperiment()
-            }
-            // await delay(1000)
-            navigate("/spectrophotometer-testing")
-            if(clientId === status?.leaderSelected)
-            showLoader.next(true)
-        }
-
+        
     }
     const handleIModal = (title:string) => {
         if(isOpen === title) setModal("")
@@ -54,7 +48,7 @@ const CalibrationTesting = () => {
         <h4 className={styles.HeaderHighLightText}><button aria-label="Spectrophotometer calibrated successfully. Test calibration by measuring absorbance of reference solution." style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={calibratedRef} >Spectrophotometer calibrated successfully. Test calibration by measuring absorbance of reference solution.</button></h4>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <button aria-label={`${TEST_CALIBRATE} ${getDescription(TEST_CALIBRATE)}`} onClick={() => clickHandler(TEST_CALIBRATE)} className={styles.SubButton} style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+                 <button aria-label={`${TEST_CALIBRATE} ${getDescription(TEST_CALIBRATE)}`} onClick={() => clickHandler()} className={styles.SubButton} style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
                      <p style={{marginLeft:10,fontSize:15,fontWeight:500}}>{TEST_CALIBRATE}</p>
                  </button>
                  <div onClick={() => handleIModal(TEST_CALIBRATE)} className={styles.IButtonWrapper}>

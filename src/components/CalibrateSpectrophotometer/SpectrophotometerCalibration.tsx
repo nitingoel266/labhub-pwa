@@ -4,7 +4,7 @@ import IButtonModal from '../Modal/IButtonModal';
 import RightArrow from '../RightArrow';
 import {IButtonIcon} from "../../images/index";
 import { useNavigate } from 'react-router-dom';
-import {mobileWidth,getDescription,CALIBRATE,HIGHLIGHT_BACKGROUND, showLoader} from "../Constants";
+import {mobileWidth,getDescription,CALIBRATE, showLoader, useShowLoader} from "../Constants";
 import {WhiteTickIcon} from "../../images/index";
 import IButtonComponent from '../IButtonComponent';
 import { useDeviceDataFeed, useDeviceStatus } from '../../labhub/status';
@@ -20,12 +20,12 @@ const SpectrophotometerCalibration = () => {
     const clientId = getClientId()
     const [status] = useDeviceStatus();
     const [dataStream] = useDeviceDataFeed();
-
+    const [loader] = useShowLoader();
     const [audio] = useState(new Audio(sound));
 
 
     const isMobile = window.innerWidth <= mobileWidth ? true : false;
-    const [selectedItem,setSelectedItem] = useState<any>("")
+    //const [selectedItem,setSelectedItem] = useState<any>("")
     // const [calibrate,setCalibrate] = useState<any>(null)
     const [testCalibrate, setTestCalibrate] = useState<any>([]);
 
@@ -36,34 +36,29 @@ const SpectrophotometerCalibration = () => {
 
     const calibrateRef:any = useRef(null)
 
-    const clickHandler = (item:string) => {
-        if(selectedItem && selectedItem === item)
-        setSelectedItem("")
-        else setSelectedItem(item)
+    const clickHandler = async () => {
+        if(clientId === status?.leaderSelected){
+            // setCalibrate(null)
+            // calibrateRgb()
+            stopRgbExperiment()
+            await delay(1000)
+            
+            if (status?.rgbConnected !== "calibrate")
+                simulateRgb("calibrate");
+            startRgbExperiment();
+            setTestCalibrateInitial([])
+            setTestCalibrate([]);
+        }
     }
 
     const handleSubmit = async() => {
-        if(selectedItem){
-            setSelectedItem("")
             if(clientId === status?.leaderSelected){
-                // setCalibrate(null)
-                // calibrateRgb()
                 stopRgbExperiment()
-                await delay(1000)
-                
-                if (status?.rgbConnected !== "calibrate")
-                    simulateRgb("calibrate");
-                startRgbExperiment();
-                setTestCalibrateInitial([])
-                setTestCalibrate([]);
-            }
-        }else {
-            if(clientId === status?.leaderSelected){
                 simulateRgb('calibrate_test')
+                setTestCalibrateInitial([])
+            setTestCalibrate([]);
             }
             navigate("/calibration-testing") 
-        }
-
     }
     const handleIModal = (title:string) => {
         if(isOpen === title) setModal("")
@@ -166,8 +161,8 @@ const SpectrophotometerCalibration = () => {
 
    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */>
         <div className={styles.ButtonWrapper}>
-              <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <button ref={calibrateRef} aria-label={`${CALIBRATE} ${getDescription(CALIBRATE)}`} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+              <div className={styles.Button} >
+                 <button ref={calibrateRef} aria-label={`${CALIBRATE} ${getDescription(CALIBRATE)}`} onClick={() => clickHandler()} className={styles.SubButton}>
                     <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{CALIBRATE}</p>
                  </button>
                  <div onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>
@@ -197,7 +192,7 @@ const SpectrophotometerCalibration = () => {
             </div>
         </div>
         <div className={styles.FooterText}>{message}</div>
-        <RightArrow isSelected={((status?.rgbCalibratedFromDevice && (status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test")) || testCalibrate?.length === 3) || selectedItem ? true : false} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={((status?.rgbCalibratedFromDevice && !loader &&(status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test")) || testCalibrate?.length === 3) ? true : false} handleSubmit={handleSubmit}/>
         {!isMobile && isOpen && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }

@@ -20,24 +20,15 @@ const InsertReferenceCuvette = () => {
 
     const insertCuvetteRef:any = useRef(null)
 
-    const clickHandler = (item:string) => {
-        if(selectedItem && selectedItem === item)
-        setSelectedItem("")
-        else setSelectedItem(item)
+    const clickHandler = () => {
+        if(clientId === status?.leaderSelected){
+            simulateRgb('calibrate')
+            startRgbExperiment()
+        }
+        navigate("/spectrophotometer-calibration")
     }
 
     const handleSubmit = () => {
-        if(selectedItem){
-            // if(clientId === status?.leaderSelected)
-            //    calibrateRgb()
-
-            if(clientId === status?.leaderSelected){
-                simulateRgb('calibrate')
-                startRgbExperiment()
-            }
-            navigate("/spectrophotometer-calibration")
-        }
-
     }
     const handleIModal = (title:string) => {
         if(isOpen === title) setModal("")
@@ -51,8 +42,8 @@ const InsertReferenceCuvette = () => {
     return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */>
         <h4 className={styles.HeaderText}><button aria-label="Please Insert Reference Cuvette and press calibrate" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} ref={insertCuvetteRef} >Please Insert Reference Cuvette and press calibrate</button></h4>
         <div className={styles.ButtonWrapper}>
-              <div className={styles.Button} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
-                 <button aria-label={`${CALIBRATE} ${getDescription(CALIBRATE)}`} onClick={() => clickHandler(CALIBRATE)} className={styles.SubButton} style={CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}>
+              <div className={styles.Button}>
+                 <button aria-label={`${CALIBRATE} ${getDescription(CALIBRATE)}`} onClick={() => clickHandler()} className={styles.SubButton}>
                     <p style={{ marginLeft: 10,fontSize:15,fontWeight:500 }}>{CALIBRATE}</p>
                  </button>
                  <div onClick={() => handleIModal(CALIBRATE)} className={styles.IButtonWrapper}>

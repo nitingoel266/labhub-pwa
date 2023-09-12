@@ -406,7 +406,7 @@ const MeasuringTemprature = () => {
               labels={labels}
               isRunning = {status?.operation === "measure_temperature" ? true : false}
               xAxisTitle="Time(sec)"
-              yAxisTitle={tempratureUnit==='c'?"Temperature (oC)" : "Temperature (oF)" }
+              yAxisTitle={tempratureUnit==='c'?"Temperature (°C)" : "Temperature (°F)" }
           />
             {/* <TemperatureGraph
               data={graphData}

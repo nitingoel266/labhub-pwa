@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/SpectrophotometerCalibration.module.css";
-import sound from "../../assets/sound/beep-sound.mp3";
+//import sound from "../../assets/sound/beep-sound.mp3";
 import IButtonModal from "../Modal/IButtonModal";
 import RightArrow from "../RightArrow";
 import { IButtonIcon } from "../../images/index";
@@ -9,7 +9,6 @@ import {
   mobileWidth,
   getDescription,
   TEST_CALIBRATE,
-  HIGHLIGHT_BACKGROUND,
   toastMessage,
   showLoader
 } from "../Constants";
@@ -24,11 +23,11 @@ import {delay} from "../../utils/utils";
 const SpectrophotometerTesting = () => {
   const navigate = useNavigate();
   const clientId = getClientId();
-  const [audio] = useState(new Audio(sound));
+  //const [audio] = useState(new Audio(sound));
   const [status] = useDeviceStatus();
   const [dataStream] = useDeviceDataFeed();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
-  const [selectedItem, setSelectedItem] = useState<any>("");
+  //const [selectedItem, setSelectedItem] = useState<any>("");
   const [testCalibrate, setTestCalibrate] = useState<any>([]);
   const [testCalibrateInitial, setTestCalibrateInitial] = useState<any>([]);
 
@@ -37,29 +36,28 @@ const SpectrophotometerTesting = () => {
 
   const calibrateRef:any = useRef(null);
 
-  const clickHandler = (item: string) => {
-    if (selectedItem && selectedItem === item) setSelectedItem("");
-    else setSelectedItem(item);
+  const clickHandler = async() => {
+    if (clientId === status?.leaderSelected) {
+      stopRgbExperiment()
+      await delay(1000)
+      if (status?.rgbConnected !== "calibrate_test")
+        simulateRgb("calibrate_test");
+      startRgbExperiment();
+      showLoader.next(true);
+      setTestCalibrate([]);
+      setTestCalibrateInitial([]);
+    }
   };
 
   const handleSubmit = async() => {
-    if (selectedItem) {
-      setSelectedItem("");
-      if (clientId === status?.leaderSelected) {
-        stopRgbExperiment()
-        await delay(1000)
-        if (status?.rgbConnected !== "calibrate_test")
-          simulateRgb("calibrate_test");
-        startRgbExperiment();
-        showLoader.next(true)
+      if(clientId === status?.leaderSelected)
+      {
+        stopRgbExperiment();
         setTestCalibrate([]);
         setTestCalibrateInitial([]);
+        setModal("measure now");
       }
-    } else {
-      if(clientId === status?.leaderSelected)
-      setModal("measure now");
       else navigate("/measure-absorbance");
-    }
   };
   const handleIModal = (title: string) => {
     if (isOpen === title) setModal("");
@@ -154,14 +152,12 @@ const SpectrophotometerTesting = () => {
       <div className={styles.ButtonWrapper}>
         <div
           className={styles.Button}
-          style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
         >
           <button
             ref={calibrateRef}
             aria-label={`${TEST_CALIBRATE} ${getDescription(TEST_CALIBRATE)}`}
-            onClick={() => clickHandler(TEST_CALIBRATE)}
+            onClick={() => clickHandler()}
             className={styles.SubButton}
-            style={TEST_CALIBRATE === selectedItem ? HIGHLIGHT_BACKGROUND : {}}
           >
             <p style={{ marginLeft: 10 ,fontSize:15,fontWeight:500}}>{TEST_CALIBRATE}</p>
           </button>
@@ -207,7 +203,7 @@ const SpectrophotometerTesting = () => {
         handleDisconnect={handleMeasure}
         message={`Do you want to ${isOpen}?`}
       />}
-      <RightArrow isSelected={testCalibrate?.length === 3 || selectedItem ? true : false} handleSubmit={handleSubmit} />
+      <RightArrow isSelected={testCalibrate?.length === 3} handleSubmit={handleSubmit} />
       {!isMobile && isOpen && (
         <IButtonModal
           isOpen={isOpen === TEST_CALIBRATE ? true : false}

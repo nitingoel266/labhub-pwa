@@ -34,7 +34,7 @@ const SelectFunction = () => {
                     simulateRgb('measure')
                 }
             }
-            navigate(selectedItem === CALIBRATE_SPECTROPHOTOMETER ? "/calibrate-spectrophotometer" : "/measure-absorbance")
+            navigate(selectedItem === CALIBRATE_SPECTROPHOTOMETER ? "/spectrophotometer-calibration" : "/measure-absorbance")
         }
 
     }

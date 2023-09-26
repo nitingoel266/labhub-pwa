@@ -109,3 +109,13 @@
  font-size: 12px;
  margin-top: 20px;
 }
+.HeaderText {
+    margin: 50px 10px 25px 10px;
+    text-align: center;
+}
+.HeaderHighLightText {
+    margin: 50px 10px 25px 10px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+}

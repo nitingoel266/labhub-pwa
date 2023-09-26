@@ -33,7 +33,8 @@ const SpectrophotometerTesting = () => {
 
   const [isOpen, setModal] = useState("");
 
-
+  const [message,setMessage] = useState<String>("");
+  const [textMessage,setTextMessage] = useState<String>("");
   const calibrateRef:any = useRef(null);
 
   const clickHandler = async() => {
@@ -69,12 +70,20 @@ const SpectrophotometerTesting = () => {
     navigate("/measure-absorbance");
   };
 
+  useEffect(()=>{
+    setTestCalibrate([])
+    setMessage("")
+    setTextMessage("")
+  },[])
   useEffect(() => {
     const setData = async() => {
       if (clientId === status?.leaderSelected) {
-        showLoader.next(true)
+
+       // showLoader.next(true)
       }
         if(testCalibrateInitial?.length === 3){
+          setMessage("Spectrophotometer tested for calibration successfully.")
+          setTextMessage(" These values should be within the range of -0.2 to 0.2. If these values are outside of the range, please check with your teacher.")
             for(let i = 0;i<testCalibrateInitial?.length;i++){
                 // audio.play();
                 setTestCalibrate((prevdata:[]) => {
@@ -149,6 +158,7 @@ const SpectrophotometerTesting = () => {
 
   return (
     <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */ >
+       <h4 className={styles.HeaderHighLightText}><button aria-label="Spectrophotometer calibrated successfully. Test calibration by measuring absorbance of reference solution." style={{outline:"none",border:"none",fontSize:16,fontWeight:550}} >Spectrophotometer calibrated successfully. Test calibration by measuring absorbance of reference solution.</button></h4>
       <div className={styles.ButtonWrapper}>
         <div
           className={styles.Button}
@@ -190,12 +200,11 @@ const SpectrophotometerTesting = () => {
         </div>
       </div>
       <div aria-label="Spectrophotometer tested for calibration successfully." className={styles.FooterText}>
-        Spectrophotometer tested for calibration successfully.
+       {message}
       </div>
       <div aria-label="These values should be within the range of -0.2 to 0.2. If these values
         are outside of the range, please check with your teacher." className={styles.FooterText}>
-        These values should be within the range of -0.2 to 0.2. If these values
-        are outside of the range, please check with your teacher.
+       {textMessage}
       </div>
       {isOpen && <MemberDisconnect
         isOpen={isOpen === "measure now" ? true : false}

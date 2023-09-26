@@ -71,6 +71,10 @@ const TemperatureProbe = () => {
   const handleTemp=(temp:number)=>
   {
     setTemperature(temp);
+    if(clientId === status?.leaderSelected && temp !== status?.setpointTemp)
+    {
+      changeSetpointTemp(temp);
+    }
   }
 
   const handleStart = () => {
@@ -91,9 +95,9 @@ const TemperatureProbe = () => {
     setModal("");
     stopHeaterExperiment(true);
   };
-  const handleSubmit = () => {
-    changeSetpointTemp(temperature);
-  };
+  // const handleSubmit = () => {
+  //   changeSetpointTemp(temperature);
+  // };
   //   if(eventIs !== event)
   //   setEventIs(event)
 
@@ -655,12 +659,13 @@ const TemperatureProbe = () => {
       />}
       <RightArrow
         isSelected={
-          clientId === status?.leaderSelected &&
-          temperature !== status?.setpointTemp
-            ? true
-            : false
+          // clientId === status?.leaderSelected &&
+          // temperature !== status?.setpointTemp
+          //   ? true
+          //   : false
+          false
         }
-        handleSubmit={handleSubmit}
+        //handleSubmit={handleSubmit}
       />
       {!isMobile && isOpen && (
         <IButtonModal

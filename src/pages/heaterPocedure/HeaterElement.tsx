@@ -72,6 +72,12 @@ const[modalType,setModalType] =useState<string>("")
   const handleTemp=(temp:number)=>
   {
     setTemperature(temp);
+
+
+    if((clientId === status?.leaderSelected) && (temp !== status?.setpointTemp))
+    {
+      changeSetpointTemp(temp);
+    }
   }
 
 
@@ -95,9 +101,9 @@ const[modalType,setModalType] =useState<string>("")
     stopHeaterExperiment();
   };
 
-  const handleSubmit = () => {
-    changeSetpointTemp(temperature);
-  };
+  // const handleSubmit = () => {
+  //   changeSetpointTemp(temperature);
+  // };
 
 
   // const handleTemperature = (title: string) => {
@@ -652,12 +658,13 @@ const[modalType,setModalType] =useState<string>("")
       />}
       <RightArrow
         isSelected={
-          clientId === status?.leaderSelected &&
-          temperature !== status?.setpointTemp
-            ? true
-            : false
+          // clientId === status?.leaderSelected &&
+          // temperature !== status?.setpointTemp
+          //   ? true
+           // : false
+           false
         }
-        handleSubmit={handleSubmit}
+        // handleSubmit={handleSubmit}
       />
       {!isMobile && isOpen && (
         <IButtonModal

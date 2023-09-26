@@ -21,7 +21,7 @@ const TempratureSettingModal = ({setModal,isOpen, handleTemp} : Props)=> {
     const [status] = useDeviceStatus();
     const clientId = getClientId();
     const [eventIs,setEventIs] = useState<any>(null);
-    const [temp, setTemp] = useState(20)
+    const [temp, setTemp] = useState(status?.setpointTemp || 20)
     const [temperatureShouldBe, setTemperatureShouldBe] = useState<number>(0);
     
 
@@ -180,7 +180,7 @@ const TempratureSettingModal = ({setModal,isOpen, handleTemp} : Props)=> {
                     <div className={styles.ButtonWrapper}>
                         <button onClick={() =>  setModal("")} className={styles.CancelButton}>Cancel</button>
                         <button onClick={()=>{
-                            handleTemp(temp)
+                            clientId === status?.leaderSelected && handleTemp(temp)
                             setModal("");
                             }} className={styles.YesButton}>Set</button>
                     </div>

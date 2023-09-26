@@ -58,7 +58,7 @@ const SpectrophotometerCalibration = () => {
                 setTestCalibrateInitial([])
             setTestCalibrate([]);
             }
-            navigate("/calibration-testing") 
+            navigate("/spectrophotometer-testing") 
     }
     const handleIModal = (title:string) => {
         if(isOpen === title) setModal("")
@@ -160,6 +160,7 @@ const SpectrophotometerCalibration = () => {
     },[testCalibrate,status?.rgbCalibratedFromDevice])
 
    return <div /* role="alert" aria-labelledby="dialog_label" aria-describedby="screen_desc" */>
+    <h4 className={styles.HeaderText}><button aria-label="Please Insert Reference Cuvette and press calibrate" style={{outline:"none",border:"none",fontSize:16,fontWeight:550}}>Please Insert Reference Cuvette and press calibrate</button></h4>
         <div className={styles.ButtonWrapper}>
               <div className={styles.Button} >
                  <button ref={calibrateRef} aria-label={`${CALIBRATE} ${getDescription(CALIBRATE)}`} onClick={() => clickHandler()} className={styles.SubButton}>
@@ -192,7 +193,7 @@ const SpectrophotometerCalibration = () => {
             </div>
         </div>
         <div className={styles.FooterText}>{message}</div>
-        <RightArrow isSelected={((status?.rgbCalibratedFromDevice && !loader &&(status?.operation === "rgb_calibrate" || status?.operation === "rgb_calibrate_test")) || testCalibrate?.length === 3) ? true : false} handleSubmit={handleSubmit}/>
+        <RightArrow isSelected={status?.rgbCalibratedFromDevice && !loader && status?.operation === "rgb_calibrate" && testCalibrate?.length === 3 ? true : false} handleSubmit={handleSubmit}/>
         {!isMobile && isOpen && <IButtonModal isOpen={isOpen ? true : false} title={isOpen} description={getDescription(isOpen)} setModal={(value) => setModal(value)}/>}
     </div>
 }

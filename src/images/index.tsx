@@ -6,7 +6,8 @@ import WarningIcon from "../assets/Warning-Icon.png";
 import DataSetupIcon from "../assets/DataSetup-Icon.png";
 import IButtonIcon from "../assets/I-Button-Icon.png";
 import SensorIcon from "../assets/Sensor-Icon.png";
-import HeaterIcon from "../assets/Heater-Icon.png";
+import HeaterIcon from "../assets/icon_heater_without_probe.png";
+import HeaterIconWithProbe from "../assets/icon_heater_with_probe.png";
 import RGBSpectIcon from "../assets/RGB-Spect-Icon.png";
 import RightArrowIcon from "../assets/Right-Arrow-Icon.png";
 import RightArrowDisabedIcon from "../assets/Right-Arrow-Disabed-Icon.png";
@@ -36,7 +37,8 @@ import BlackBluetoothIcon from "../assets/Black-Bluetooth-Icon.png";
 import WhiteWarningIcon from "../assets/White-Warning-Icon.png";
 import DataIcon from "../assets/Data-Icon.png";
 import MyRecordsIcon from "../assets/My-Records.png";
-import HeaterAnimation from "../assets/Heater-Animation.gif";
+import HeaterAnimation from "../assets/gif_heater_without_probe.gif";
+import HeaterAnimationWithProbe  from "../assets/gif_heater_with_probe.gif";
 import MoreIcon from "../assets/more-Icon.png";
 import EmailIcon from "../assets/Email-Icon.png";
 import WhatsappIcon from "../assets/Whatsapp-Icon.png";
@@ -95,5 +97,7 @@ export {
     TwitterIcon,
     WhiteCrossIcon,
     LoaderImage,
-    UpdateIcon
+    UpdateIcon,
+    HeaterAnimationWithProbe,
+    HeaterIconWithProbe
 };

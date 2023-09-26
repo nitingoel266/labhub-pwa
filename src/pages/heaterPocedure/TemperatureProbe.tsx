@@ -3,8 +3,8 @@ import {
   ExpandIcon,
   CollapsedIcon,
   // BlackIButtonIcon,
-  HeaterIcon,
-  HeaterAnimation,
+  HeaterIconWithProbe,
+  HeaterAnimationWithProbe,
 } from "../../images/index";
 import { useEffect, useRef, useState } from "react";
 import IButtonModal from "../../components/Modal/IButtonModal";
@@ -21,7 +21,6 @@ import {
   mobileWidth,
   SETPOINT_TEMPERATURE,
   getDescription,
-  useIsTouchDeviceDetect,
   getTitle,
   toastMessage,
   validateFileName,
@@ -37,15 +36,13 @@ import SensorDisconnectModal from "../../components/Modal/SensorDisconnectModal"
 import { useNavigate } from "react-router-dom";
 import AppexCharts from "../../components/Graphs/AppexChart";
 import { TEMPERATURE_DATA } from "../../utils/const";
+import TempratureSettingModal from "../../components/Modal/TempratureSettingModal";
 
-
-let temperatureTimmer: any;
 const TemperatureProbe = () => {
   const clientId = getClientId();
   const navigate = useNavigate();
   const [status] = useDeviceStatus();
   const [connected] = useDeviceConnected();
-  const isDeviceTouchable = useIsTouchDeviceDetect();
   const isMobile = window.innerWidth <= mobileWidth ? true : false;
   const [dataStream] = useDeviceDataFeed();
 
@@ -54,9 +51,7 @@ const TemperatureProbe = () => {
 
   const [isOpen, setModal] = useState("");
   const [isStart, setIsStart] = useState<boolean>(false);
-  const [eventIs,setEventIs] = useState<any>(null);
   const [temperature, setTemperature] = useState<number>(20);
-  const [temperatureShouldBe, setTemperatureShouldBe] = useState<number>(0);
   const [power, setPower] = useState<number>(0);
   const [istemperature, setisTemperature] = useState<number>(0);
 
@@ -66,19 +61,18 @@ const TemperatureProbe = () => {
   const [graphData, setGraphData] = useState<any>([]); // {time:in sec,temp,power,setPoint}
   const [maxTempValue,setMaxTempValue] = useState<number>(50)
   const [labels,setLabels] = useState<any>([]);
-
+  const[modalType,setModalType] =useState<string>("")
   const [sensorDisconnectCheckForSave , setSensorDisconnectCheckForSave] = useState<boolean>(false);
 
 
 
   const setPointTempRef:any = useRef(null)
 
-  const handleTemperature = (title: string) => {
-    if (title === "sub" && temperature > 20)
-      setTemperature((temp) => (temp > 20 ? temp - 1 : temp));
-    if (title === "add" && temperature < 150)
-      setTemperature((temp) => (temp < 150 ? temp + 1 : temp));
-  };
+  const handleTemp=(temp:number)=>
+  {
+    setTemperature(temp);
+  }
+
   const handleStart = () => {
     // setIsStart(true);
     startHeaterExperiment(true);
@@ -100,33 +94,32 @@ const TemperatureProbe = () => {
   const handleSubmit = () => {
     changeSetpointTemp(temperature);
   };
-  const handleMouseDownEvent = (event: string, title: string) => {
-    if(eventIs !== event)
-    setEventIs(event)
+  //   if(eventIs !== event)
+  //   setEventIs(event)
 
-    if (title === "add"  && event !== eventIs) {
-      if (event === "enter") {
-        temperatureTimmer = setInterval(() => handleTemperature(title), 100);
-        setTemperatureShouldBe(temperature + 1);
-      }
-      if (event === "leave") {
-        clearInterval(temperatureTimmer);
-        if (temperatureShouldBe > temperature) handleTemperature(title);
-        setTemperatureShouldBe(0);
-      }
-    }
-    if (title === "sub"  && event !== eventIs) {
-      if (event === "enter") {
-        temperatureTimmer = setInterval(() => handleTemperature(title), 100);
-        setTemperatureShouldBe(temperature - 1);
-      }
-      if (event === "leave") {
-        clearInterval(temperatureTimmer);
-        if (temperatureShouldBe < temperature) handleTemperature(title);
-        setTemperatureShouldBe(0);
-      }
-    }
-  };
+  //   if (title === "add"  && event !== eventIs) {
+  //     if (event === "enter") {
+  //       temperatureTimmer = setInterval(() => handleTemperature(title), 100);
+  //       setTemperatureShouldBe(temperature + 1);
+  //     }
+  //     if (event === "leave") {
+  //       clearInterval(temperatureTimmer);
+  //       if (temperatureShouldBe > temperature) handleTemperature(title);
+  //       setTemperatureShouldBe(0);
+  //     }
+  //   }
+  //   if (title === "sub"  && event !== eventIs) {
+  //     if (event === "enter") {
+  //       temperatureTimmer = setInterval(() => handleTemperature(title), 100);
+  //       setTemperatureShouldBe(temperature - 1);
+  //     }
+  //     if (event === "leave") {
+  //       clearInterval(temperatureTimmer);
+  //       if (temperatureShouldBe < temperature) handleTemperature(title);
+  //       setTemperatureShouldBe(0);
+  //     }
+  //   }
+  // };
   // const handleIModal = (title: string) => {
   //   if (isOpen === title) setModal("");
   //   else setModal(title);
@@ -407,94 +400,26 @@ const TemperatureProbe = () => {
           <h4 ><button aria-label="Set Point Temperature degree C" style={{outline:"none",border:"none",fontSize:16,fontWeight:550,marginBottom:10}} ref={setPointTempRef} >Set Point Temperature (°C)</button></h4>
         </div>
         <div className={styles.RateMeasureRightSide}>
-          <div className={styles.DataMeasureButtom}>
+        <div className={styles.DataMeasureButtom} onClick={()=>{setModalType("Temprature Selection")}}>
             <button
-            aria-label="setpoint temperature decrease button"
-            className={styles.ArrowButtonContainer}
-            onMouseDown={() =>
-              clientId === status?.leaderSelected && !isDeviceTouchable
-                ? handleMouseDownEvent("enter", "sub")
-                : {}
-            }
-            onMouseUp={() =>
-              clientId === status?.leaderSelected && !isDeviceTouchable
-                ? handleMouseDownEvent("leave", "sub")
-                : {}
-            }
-
-            onKeyDown={(e:any) => 
-              clientId === status?.leaderSelected && (e.key === "Enter" || e.key === " ") && !isDeviceTouchable
-                ? handleMouseDownEvent("enter", "sub")
-                : {}
-            }
-            onKeyUp={(e:any) =>
-              clientId === status?.leaderSelected && (e.key === "Enter" || e.key === " ") && !isDeviceTouchable
-                ? handleMouseDownEvent("leave", "sub")
-                : {}
-            }
-
-              onTouchStart={
-              () =>
-              clientId === status?.leaderSelected && isDeviceTouchable
-                ? handleMouseDownEvent("enter", "sub")
-                : {}
-            }
-            onPointerOut={
-              () =>
-              clientId === status?.leaderSelected && isDeviceTouchable
-                ? handleMouseDownEvent("leave", "sub")
-                : {}
-            }
+                aria-label="setpoint temperature decrease button"
+                className={styles.ArrowButtonContainer}
             >
             <img
               src={ExpandIcon}
               alt="subtract"
-              />
-              </button>
-            <div aria-label={"setpoint temperature is "+temperature} className={styles.TextStyle}>{temperature}</div>
-            <button 
+            />
+            </button>
+            <div aria-label={"setpoint temperature is"+ temperature} className={styles.TextStyle}>{temperature}</div>
+            <button
               aria-label="setpoint temperature increase button"
-              className={styles.ArrowButtonContainer}
-              onMouseDown={() =>
-                clientId === status?.leaderSelected && !isDeviceTouchable
-                  ? handleMouseDownEvent("enter", "add")
-                  : {}
-              }
-              onMouseUp={() =>
-                clientId === status?.leaderSelected && !isDeviceTouchable
-                  ? handleMouseDownEvent("leave", "add")
-                  : {}
-              }
-
-              onKeyDown={(e:any) => 
-                clientId === status?.leaderSelected && (e.key === "Enter" || e.key === " ") && !isDeviceTouchable
-                  ? handleMouseDownEvent("enter", "add")
-                  : {}
-              }
-              onKeyUp={(e:any) =>
-                clientId === status?.leaderSelected && (e.key === "Enter" || e.key === " ") && !isDeviceTouchable
-                  ? handleMouseDownEvent("leave", "add")
-                  : {}
-              }
-              
-              onTouchStart={
-                () =>
-                clientId === status?.leaderSelected && isDeviceTouchable
-                  ? handleMouseDownEvent("enter", "add")
-                  : {}
-              }
-              onPointerOut={
-                () =>
-                clientId === status?.leaderSelected && isDeviceTouchable
-                  ? handleMouseDownEvent("leave", "add")
-                  : {}
-              }
+                className={styles.ArrowButtonContainer}
             >
             <img
               src={CollapsedIcon}
               alt="add"
-              />
-              </button>
+            />
+            </button>
           </div>
           {/* <button
             aria-label="i button"
@@ -532,7 +457,7 @@ const TemperatureProbe = () => {
         <div className={styles.HeaterElementSubWraper}>
           <div aria-label="temperatuee probe image" style={{ height: 120 }}>
             <img
-              src={isStart ? HeaterAnimation : HeaterIcon}
+              src={isStart ? HeaterAnimationWithProbe : HeaterIconWithProbe}
               className={styles.HeaterEelementImage}
               style={isStart ? { height: 148 } : { height: 120,marginTop:14 }}
               alt="temperaure probe icon"
@@ -722,6 +647,11 @@ const TemperatureProbe = () => {
           setModal={(value) => handleSensorDisconnected(value)}
           message={isOpen === "Heater disconnected" ? (clientId === status?.leaderSelected ? "Heater is disconnected, please connect the heater to start the experiment again." : "Heater is disconnected.") : "Please connect temperature probe to proceed."}
 
+      />}
+      {modalType === "Temprature Selection" && <TempratureSettingModal
+          isOpen={modalType ? true : false}
+          setModal={(value) => setModalType(value)}
+          handleTemp ={handleTemp}
       />}
       <RightArrow
         isSelected={

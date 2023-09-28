@@ -6,6 +6,7 @@ import WarningIcon from "../assets/Warning-Icon.png";
 import DataSetupIcon from "../assets/DataSetup-Icon.png";
 import IButtonIcon from "../assets/I-Button-Icon.png";
 import SensorIcon from "../assets/Sensor-Icon.png";
+import HeaterOldIcon from "../assets/Heater-Icon.png";
 import HeaterIcon from "../assets/icon_heater_without_probe.png";
 import HeaterIconWithProbe from "../assets/icon_heater_with_probe.png";
 import RGBSpectIcon from "../assets/RGB-Spect-Icon.png";
@@ -99,5 +100,6 @@ export {
     LoaderImage,
     UpdateIcon,
     HeaterAnimationWithProbe,
-    HeaterIconWithProbe
+    HeaterIconWithProbe,
+    HeaterOldIcon
 };

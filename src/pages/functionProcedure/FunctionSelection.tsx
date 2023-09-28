@@ -4,7 +4,7 @@ import {
   IButtonIcon,
   SensorIcon,
   RGBSpectIcon,
-  HeaterIcon,
+  HeaterOldIcon,
 } from "../../images/index";
 import styles from "../../styles/functionSelection.module.css";
 import RightArrow from "../../components/RightArrow";
@@ -56,7 +56,7 @@ const FunctionSelection = () => {
           { icon: SensorIcon, title: SENSORS },
         ],
         [
-          { icon: HeaterIcon, title: HEATER },
+          { icon: HeaterOldIcon, title: HEATER },
           { icon: RGBSpectIcon, title: RGB_SPECT },
         ],
       ].map((e: any) => (
